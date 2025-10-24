@@ -5,3 +5,6 @@ __pycache__/
 /build
 /dist
 *.log
+
+# Ignore legacy modular ZIP folders
+quanux-*_*/
