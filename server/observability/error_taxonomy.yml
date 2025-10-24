@@ -1,0 +1,10 @@
+errors:
+  - code: E_INTERNAL
+    message: Unexpected internal error
+    severity: CRITICAL
+  - code: E_VENDOR
+    message: Upstream vendor error
+    severity: ERROR
+  - code: E_RATE_LIMIT
+    message: Rate limit exceeded
+    severity: WARN

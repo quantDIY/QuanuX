@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Order Request",
+  "type": "object",
+  "required": [
+    "symbol",
+    "side",
+    "quantity",
+    "type",
+    "time_in_force",
+    "client_order_id"
+  ],
+  "properties": {
+    "symbol": {
+      "type": "string"
+    },
+    "exchange": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "side": {
+      "type": "string",
+      "enum": [
+        "BUY",
+        "SELL"
+      ]
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "MARKET",
+        "LIMIT",
+        "STOP",
+        "STOP_LIMIT"
+      ]
+    },
+    "price": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "stop_price": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "time_in_force": {
+      "type": "string",
+      "enum": [
+        "DAY",
+        "GTC",
+        "IOC",
+        "FOK"
+      ]
+    },
+    "quantity": {
+      "type": "number",
+      "minimum": 0
+    },
+    "client_order_id": {
+      "type": "string"
+    },
+    "flags": {
+      "type": "object",
+      "description": "vendor-specific flags (adapter-local)"
+    },
+    "idempotency_key": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

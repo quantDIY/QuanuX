@@ -1,0 +1,5 @@
+vendors:
+  _example:
+    rate_limits:
+      rpm: TBD
+      burst: TBD

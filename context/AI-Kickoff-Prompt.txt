@@ -1,0 +1,1 @@
+Honor Decision Board v1. Adapters via entry points. OpenAPI v0.0.1 frozen.

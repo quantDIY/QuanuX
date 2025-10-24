@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Instrument Precision",
+  "type": "object",
+  "required": [
+    "symbol",
+    "price_tick",
+    "quantity_step"
+  ],
+  "properties": {
+    "symbol": {
+      "type": "string"
+    },
+    "price_tick": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "quantity_step": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "multiplier": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "decimals": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}
