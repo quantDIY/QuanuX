@@ -8,3 +8,8 @@ __pycache__/
 
 # Ignore legacy modular ZIP folders
 quanux-*_*/
+dist/
+*.zip
+.env
+__pycache__/
+node_modules/
