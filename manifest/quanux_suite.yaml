@@ -1,0 +1,46 @@
+# QuanuX Suite Manifest (v0.0.1)
+# Source of truth for build targets, dependencies, and version matrix
+
+suite_version: 0.0.1
+maintainer: "quantDIY"
+generated: "2025-10-25T00:00:00Z"
+
+components:
+  - server
+  - client
+  - suite
+
+targets:
+  linux_x86_64:
+    os: "Ubuntu LTS / Debian"
+    flavor: "Desktop + Server"
+  nvidia_dgx_x86_64:
+    os: "DGX OS"
+    flavor: "Server + QuantX Suite"
+  nvidia_dgx_arm64:
+    os: "DGX OS (ARM64 Spark)"
+    flavor: "Server + QuantX Suite"
+  macos_universal:
+    os: "macOS 13+"
+  windows_11:
+    os: "Windows 11"
+
+dependencies:
+  python: ">=3.11"
+  node: ">=20"
+  rust: "stable"
+  redis: "latest"
+  docker: "latest"
+  conda_channels:
+    - conda-forge
+    - defaults
+
+integrations:
+  brokers: placeholder
+  ai_providers: placeholder
+  charting: placeholder
+
+notes: |
+  The QuanuX Suite manifest defines how the client, server, and combined builds
+  are structured. It will later drive `quanuxctl build`, which compiles or
+  bundles each component according to this matrix.
