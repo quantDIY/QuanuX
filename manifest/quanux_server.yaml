@@ -1,0 +1,68 @@
+# QuanuX Server Manifest (v0.0.1)
+# Python runtime, adapters, data lake, observability, scheduler, event bus.
+
+server_version: 0.0.1
+maintainer: "quantDIY"
+generated: "2025-10-25T00:00:00Z"
+
+runtime:
+  language: "python"
+  min_version: "3.11"
+  package_manager: "conda"
+  entrypoint: "python -m quanux.server"
+  process_model:
+    multi_process: true
+    gpu_aware: true
+    hot_restart: true
+
+security:
+  auth:
+    modes: ["webauthn", "yubikey", "oauth2"]
+    mtls: true
+  secrets:
+    store: ["os_keychain", "vault", "redis_cache"]
+    plaintext_allowed: false
+  egress:
+    policy_file: "server/security/outbound_policies.yaml"
+
+data:
+  lake:
+    local: "duckdb"
+    cloud_sync: "motherduck"
+    accepted_formats: ["dbn", "parquet", "csv", "json"]
+  external_mounts: true
+
+integrations:
+  categories: ["brokers", "data_feeds", "charting", "ai_providers", "anaconda"]
+  layout: "server/integrations/<category>/<provider>/"
+  template: "server/integrations/_templates/"
+
+observability:
+  otel: true
+  error_taxonomy: "server/observability/error_taxonomy.yml"
+  metrics: ["prometheus"]
+  logs: ["otlp", "file"]
+
+scheduler:
+  engine: "built-in"
+  temporal_feature_flag: true
+
+networking:
+  api:
+    protocols: ["http", "ws"]
+    openapi_version: "0.0.1"
+  event_bus: "nats_jetstream"
+  ports:
+    http: 8080
+    ws: 8081
+
+targets:
+  linux_x86_64: true
+  nvidia_dgx_x86_64: true
+  nvidia_dgx_arm64: true
+  macos_universal: dev_only
+  windows_11: dev_only
+
+notes: |
+  This manifest governs the backend service only and may be consumed by
+  `quanuxctl build --server` and orchestration scripts.

@@ -1,0 +1,57 @@
+# QuanuX Client Manifest (v0.0.1)
+# Tauri + React (desktop/web), React Native shells (mobile/tablet/TV).
+
+client_version: 0.0.1
+maintainer: "quantDIY"
+generated: "2025-10-25T00:00:00Z"
+
+frontend:
+  web_stack:
+    spa: "Vite + React"
+    typescript: true
+    css: "Tailwind (stable)"
+  desktop:
+    tauri: "2.x"
+    rust_toolchain: "stable"
+  native:
+    react_native:
+      targets: ["android", "ios", "android_tv", "tablet"]
+      status: "shells (observation layer)"
+
+security:
+  transport:
+    mtls_support: true
+  auth_ui:
+    supports: ["webauthn", "yubikey", "oauth2"]
+  storage:
+    use_keychain_when_available: true
+
+api_bindings:
+  mode: "display-only; no heavy compute"
+  protocols: ["http", "ws"]
+  openapi_version: "0.0.1"
+  selection:
+    local: "http://localhost:8080"
+    remote: "https://<yourserver.domain>"
+
+build:
+  node: ">=20"
+  package_manager: "pnpm"
+  scripts:
+    dev: "pnpm dev"
+    build: "pnpm build"
+    preview: "pnpm preview"
+
+targets:
+  linux_x86_64: true
+  macos_universal: true
+  windows_11: true
+  android: shells
+  ios: shells
+  android_tv: shells
+  tablet: shells
+
+notes: |
+  Client renders data sent from the server; it avoids doing calculations.
+  This manifest will drive `quanuxctl build --client` and packaging per
+  OS store (Deb/Snap/AppImage/Flatpak, DMG, MSIX, etc.) later.
