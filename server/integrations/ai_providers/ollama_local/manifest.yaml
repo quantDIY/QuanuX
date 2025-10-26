@@ -1,0 +1,24 @@
+id: ollama_local
+name: Ollama (Local)
+kind: local
+base_url: http://localhost:11434
+auth:
+  mode: none
+  env_keys: []
+capabilities:
+  chat: true
+  embeddings: true
+  tools: false
+  streaming: true
+  json_output: supported
+models:
+  chat: []
+  embeddings: []
+headers:
+  default: {}
+rate_limits:
+  policy: local
+  rpm: null
+  tpm: null
+notes: |
+  For developer offline workflows. Ensure CORS/loopback policies at wiring.

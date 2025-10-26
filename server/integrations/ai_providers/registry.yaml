@@ -1,0 +1,41 @@
+# QuanuX AI Providers Registry — v0.0.1
+version: 0.0.1
+
+defaults:
+  timeout_seconds: 60
+  retry:
+    max_retries: 3
+    backoff: exponential
+  model_selection: explicit # require explicit model id per call in v0.0.1
+
+providers:
+  - id: openai
+    path: server/integrations/ai_providers/openai/manifest.yaml
+    enabled: true
+  - id: anthropic
+    path: server/integrations/ai_providers/anthropic/manifest.yaml
+    enabled: true
+  - id: deepseek
+    path: server/integrations/ai_providers/deepseek/manifest.yaml
+    enabled: true
+  - id: google_gemini
+    path: server/integrations/ai_providers/google_gemini/manifest.yaml
+    enabled: true
+  - id: azure_openai
+    path: server/integrations/ai_providers/azure_openai/manifest.yaml
+    enabled: true
+  - id: cohere
+    path: server/integrations/ai_providers/cohere/manifest.yaml
+    enabled: true
+  - id: mistral
+    path: server/integrations/ai_providers/mistral/manifest.yaml
+    enabled: true
+  - id: meta_llama
+    path: server/integrations/ai_providers/meta_llama/manifest.yaml
+    enabled: true
+  - id: ollama_local
+    path: server/integrations/ai_providers/ollama_local/manifest.yaml
+    enabled: true
+  - id: vllm_local
+    path: server/integrations/ai_providers/vllm_local/manifest.yaml
+    enabled: true

@@ -1,0 +1,24 @@
+id: vllm_local
+name: vLLM (Local)
+kind: local
+base_url: http://localhost:8000
+auth:
+  mode: none
+  env_keys: []
+capabilities:
+  chat: true
+  embeddings: true
+  tools: false
+  streaming: true
+  json_output: supported
+models:
+  chat: []
+  embeddings: []
+headers:
+  default: {}
+rate_limits:
+  policy: local
+  rpm: null
+  tpm: null
+notes: |
+  Point to your vLLM HTTP server. Tune batch sizes and tensor parallel in runtime configs later.

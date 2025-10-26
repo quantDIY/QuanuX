@@ -1,0 +1,25 @@
+id: meta_llama
+name: Meta Llama (via gateway)
+kind: external
+base_url: https://gateway.example.com/llama
+auth:
+  mode: api_key
+  env_keys:
+    - LLAMA_API_KEY
+capabilities:
+  chat: true
+  embeddings: true
+  tools: true
+  streaming: true
+  json_output: supported
+models:
+  chat: []
+  embeddings: []
+headers:
+  default: {}
+rate_limits:
+  policy: best_effort
+  rpm: null
+  tpm: null
+notes: |
+  If using a third-party gateway, capture its TOS and rate limits here.

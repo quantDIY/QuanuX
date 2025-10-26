@@ -1,0 +1,26 @@
+id: anthropic
+name: Anthropic
+kind: external
+base_url: https://api.anthropic.com
+auth:
+  mode: api_key
+  env_keys:
+    - ANTHROPIC_API_KEY
+capabilities:
+  chat: true
+  embeddings: false
+  tools: true
+  streaming: true
+  json_output: supported
+models:
+  chat: []
+  embeddings: []
+headers:
+  default:
+    anthropic-version: "" # set at runtime when wiring if required
+rate_limits:
+  policy: best_effort
+  rpm: null
+  tpm: null
+notes: |
+  Store ANTHROPIC_API_KEY via Secrets Broker.

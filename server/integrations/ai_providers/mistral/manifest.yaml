@@ -1,0 +1,25 @@
+id: mistral
+name: Mistral
+kind: external
+base_url: https://api.mistral.ai
+auth:
+  mode: api_key
+  env_keys:
+    - MISTRAL_API_KEY
+capabilities:
+  chat: true
+  embeddings: true
+  tools: true
+  streaming: true
+  json_output: supported
+models:
+  chat: []
+  embeddings: []
+headers:
+  default: {}
+rate_limits:
+  policy: best_effort
+  rpm: null
+  tpm: null
+notes: |
+  Store MISTRAL_API_KEY via Secrets Broker.

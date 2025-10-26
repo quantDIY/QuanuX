@@ -1,0 +1,25 @@
+id: google_gemini
+name: Google Gemini
+kind: external
+base_url: https://generativelanguage.googleapis.com
+auth:
+  mode: api_key
+  env_keys:
+    - GOOGLE_API_KEY
+capabilities:
+  chat: true
+  embeddings: true
+  tools: true
+  streaming: true
+  json_output: supported
+models:
+  chat: []
+  embeddings: []
+headers:
+  default: {}
+rate_limits:
+  policy: best_effort
+  rpm: null
+  tpm: null
+notes: |
+  Store GOOGLE_API_KEY via Secrets Broker.

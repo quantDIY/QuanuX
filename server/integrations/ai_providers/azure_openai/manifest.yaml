@@ -1,0 +1,26 @@
+id: azure_openai
+name: Azure OpenAI
+kind: external
+base_url: https://\{your-resource\}.openai.azure.com
+auth:
+  mode: api_key
+  env_keys:
+    - AZURE_OPENAI_API_KEY
+capabilities:
+  chat: true
+  embeddings: true
+  tools: true
+  streaming: true
+  json_output: supported
+models:
+  chat: []
+  embeddings: []
+headers:
+  default:
+    api-version: "" # set at runtime per deployment
+rate_limits:
+  policy: best_effort
+  rpm: null
+  tpm: null
+notes: |
+  Requires both endpoint URL and API key stored via Secrets Broker.
