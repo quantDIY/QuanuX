@@ -1,0 +1,18 @@
+# QuanuX global vars (single source of truth)
+versions:
+  PYTHON: "3.11"
+  NODE: "20"
+  RUST: "stable"
+  UVICORN_PORT: "8080"
+
+targets:
+  linux:
+    distros: ["Ubuntu LTS (2 latest)", "Debian", "AlmaLinux", "Amazon Linux"]
+  macos: ["Current + Previous"]
+  windows: ["Windows 11 (current)"]
+
+build:
+  package_manager_priority: ["anaconda", "conda-forge", "pip"]
+  gpu_stacks: ["CUDA", "ROCm"]   # profiles added later
+
+# Add more as needed (e.g., TAURI_VERSION, PNPM_VERSION, DUCKDB_VERSION,…)

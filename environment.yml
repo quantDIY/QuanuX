@@ -7,7 +7,7 @@ dependencies:
   - python=3.11
   - pip
   # Core CLI/dev tools
-  - nodejs>=20
+  - Node {{NODE_VERSION}}+
   - yarn  # optional; pnpm preferred but keep yarn as fallback
   - git
   # Server-side libs (minimal baseline; expand during wiring)

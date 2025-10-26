@@ -5,11 +5,11 @@ on:
     branches: [ main ]
     paths:
       - ".github/**"
-      - "manifest/**"
-      - "docs/**"
+      - "meta/manifests/**"
+      - "meta/docs/**"
       - "server/**"
-      - "schemas/**"
-      - "cli/**"
+      - "meta/schemas/**"
+      - "server/server/cli/**"
       - "client/**"
       - "environment.yml"
       - "requirements*.txt"
@@ -17,11 +17,11 @@ on:
     branches: [ main ]
     paths:
       - ".github/**"
-      - "manifest/**"
-      - "docs/**"
+      - "meta/manifests/**"
+      - "meta/docs/**"
       - "server/**"
-      - "schemas/**"
-      - "cli/**"
+      - "meta/schemas/**"
+      - "server/server/cli/**"
       - "client/**"
       - "environment.yml"
       - "requirements*.txt"
