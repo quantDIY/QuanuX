@@ -1,0 +1,14 @@
+{
+  "name": "quanux-client",
+  "version": "0.0.1",
+  "private": true,
+  "description": "QuanuX Client (Tauri + React) — scaffold only",
+  "scripts": {
+    "dev": "echo \"TODO: start Vite dev server (wired later)\"",
+    "build": "echo \"TODO: build client (wired later)\"",
+    "preview": "echo \"TODO: vite preview (wired later)\""
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

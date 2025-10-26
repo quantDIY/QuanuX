@@ -1,0 +1,40 @@
+name: quanux
+channels:
+  # Primary source of truth: Anaconda defaults; conda-forge as secondary
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  # Core CLI/dev tools
+  - nodejs>=20
+  - yarn  # optional; pnpm preferred but keep yarn as fallback
+  - git
+  # Server-side libs (minimal baseline; expand during wiring)
+  - duckdb
+  - pandas
+  - polars
+  - numpy
+  - dask
+  # Runtime helpers (placeholders; wire later)
+  - redis-py
+  - requests
+  - pydantic
+  - uvicorn
+  - fastapi
+  # Observability stubs
+  - opentelemetry-api
+  - opentelemetry-sdk
+  # Testing
+  - pytest
+  - pytest-cov
+  # Lint/format (Python)
+  - ruff
+  - black
+  - mypy
+
+  # Pip section: ONLY for packages not available via Anaconda/conda-forge.
+  # Ask user confirmation before installing from here in the future.
+  - pip:
+      # - example-package==0.0.0  # (empty by default)
+      []
