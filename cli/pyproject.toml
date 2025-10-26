@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "quanuxctl"
+version = "0.0.1"
+description = "QuanuX CLI (scaffold) — Server/Client/Suite helper"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{name = "quantDIY"}]
+dependencies = []
+
+[project.scripts]
+quanuxctl = "quanuxctl.main:app"
