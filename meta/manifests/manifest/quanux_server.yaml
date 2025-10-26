@@ -6,10 +6,10 @@ maintainer: "quantDIY"
 generated: "2025-10-25T00:00:00Z"
 
 runtime:
-  language: "python"
+  language: "python3"
   min_version: "3.11"
   package_manager: "conda"
-  entrypoint: "python -m quanux.server"
+  entrypoint: "python3 -m quanux.server"
   process_model:
     multi_process: true
     gpu_aware: true

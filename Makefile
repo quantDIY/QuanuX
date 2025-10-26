@@ -10,7 +10,7 @@ client:
 	cd client && pnpm run dev
 
 server:
-	python server/run_dev.py
+	python3 server/run_dev.py
 	@echo "TODO: start server runtime when wired"
 
 test:

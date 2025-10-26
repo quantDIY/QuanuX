@@ -131,14 +131,14 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python3@v5
         with:
-          python-version: '3.11'
+          python3-version: '3.11'
 
       - name: Editable install CLI if present
         run: |
           if [ -f "cli/pyproject.toml" ]; then
-            python -m pip install --upgrade pip
+            python3 -m pip install --upgrade pip
             pip install -e ./cli || echo "::warning title=CLI install failed::This is fine until wiring"
             quanuxctl --help || true
           else
