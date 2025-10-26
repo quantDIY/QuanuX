@@ -1,0 +1,146 @@
+name: QuanuX CI (Scaffold)
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - ".github/**"
+      - "manifest/**"
+      - "docs/**"
+      - "server/**"
+      - "schemas/**"
+      - "cli/**"
+      - "client/**"
+      - "environment.yml"
+      - "requirements*.txt"
+  pull_request:
+    branches: [ main ]
+    paths:
+      - ".github/**"
+      - "manifest/**"
+      - "docs/**"
+      - "server/**"
+      - "schemas/**"
+      - "cli/**"
+      - "client/**"
+      - "environment.yml"
+      - "requirements*.txt"
+
+jobs:
+  sanity:
+    name: Sanity & Structure
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show repo tree (top 2 levels)
+        run: |
+          find . -maxdepth 2 -type d -print | sort
+
+      - name: Ensure required top-level folders exist
+        run: |
+          need=(docs manifest server schemas)
+          missing=0
+          for d in "${need[@]}"; do
+            if [ ! -d "$d" ]; then
+              echo "::warning title=Missing folder::$d not found (ok during early scaffolding)"
+              missing=1
+            fi
+          done
+          exit 0 # never fail scaffolding
+
+  validate_yaml_json:
+    name: Lint YAML & JSON
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install yamllint & jq
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y yamllint jq
+
+      - name: Validate YAML
+        run: |
+          set -e
+          shopt -s nullglob
+          files=( $(git ls-files '*.yml' '*.yaml') )
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "No YAML files to lint."
+            exit 0
+          fi
+          yamllint -s "${files[@]}"
+
+      - name: Validate JSON syntax
+        run: |
+          set -e
+          shopt -s nullglob
+          files=( $(git ls-files '*.json') )
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "No JSON files to check."
+            exit 0
+          fi
+          for f in "${files[@]}"; do
+            jq empty "$f"
+          done
+
+  markdown_lint:
+    name: Lint Markdown
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install markdownlint-cli
+        run: npm i -g markdownlint-cli@0.41.0
+
+      - name: Run markdownlint (non-blocking)
+        run: |
+          set +e
+          md_files=$(git ls-files '*.md' '*.MD' || true)
+          if [ -z "$md_files" ]; then
+            echo "No markdown files found."
+            exit 0
+          fi
+          markdownlint $md_files || echo "::warning title=Markdown issues detected::Review markdownlint output above"
+
+  manifest_summary:
+    name: Manifest Summary
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Print manifest summary
+        run: |
+          echo "== QuanuX Manifests =="
+          for f in manifest/*.yaml; do
+            [ -e "$f" ] || continue
+            echo "::group::$f"
+            sed -n '1,200p' "$f"
+            echo "::endgroup::"
+          done
+
+  python_pkg_smoke:
+    name: Python packaging smoke-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Editable install CLI if present
+        run: |
+          if [ -f "cli/pyproject.toml" ]; then
+            python -m pip install --upgrade pip
+            pip install -e ./cli || echo "::warning title=CLI install failed::This is fine until wiring"
+            quanuxctl --help || true
+          else
+            echo "No CLI package yet."
+          fi
