@@ -38,3 +38,28 @@ build/
 # IDE
 .vscode/
 .idea/
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Node
+node_modules/
+
+# Env/venv
+.venv/
+.venvs/
+env/
+venv/
+
+# OS
+.DS_Store
+
+# Build/artifacts
+dist/
+build/
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
