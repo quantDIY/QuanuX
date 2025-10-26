@@ -1,15 +1,17 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling>=1.18"]
+build-backend = "hatchling.build"
 
 [project]
 name = "quanuxctl"
 version = "0.0.1"
-description = "QuanuX CLI (scaffold) — Server/Client/Suite helper"
+description = "QuanuX CLI (scaffold)"
 readme = "README.md"
-requires-python3 = ">=3.11"
-authors = [{name = "quantDIY"}]
+requires-python = ">=3.10"
 dependencies = []
 
 [project.scripts]
-quanuxctl = "quanuxctl.main:app"
+quanuxctl = "quanuxctl.main:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/quanuxctl"]

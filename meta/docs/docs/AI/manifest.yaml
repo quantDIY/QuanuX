@@ -1,6 +1,0 @@
-training_sources:
-  - docs/architecture
-  - docs/Config
-  - docs/Security
-  - docs/DataLake
-  - docs/API
