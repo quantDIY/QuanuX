@@ -37,3 +37,8 @@ const subscribe = () => {
     process.exit(1);
   }
 })();
+
+// Minimal stub — no real connection yet.
+// Later: read env (HUB_URL, TOKEN), build HubConnection, register handlers.
+console.log("[SignalR Node Bridge] scaffold online (no-op)");
+setInterval(() => process.stdout.write("."), 1000);

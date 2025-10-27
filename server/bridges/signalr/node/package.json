@@ -1,13 +1,12 @@
 {
-  "name": "@quanux/bridge-signalr",
-  "version": "0.0.1",
-  "type": "module",
+  "name": "@quanux/signalr-bridge",
   "private": true,
-  "dependencies": {
-    "@microsoft/signalr": "^8.0.0",
-    "yargs": "^17.7.2"
-  },
+  "type": "module",
+  "version": "0.0.1",
   "scripts": {
-    "start": "node index.mjs"
+    "start": "node ./index.mjs"
+  },
+  "dependencies": {
+    "@microsoft/signalr": "^8.0.0"
   }
 }

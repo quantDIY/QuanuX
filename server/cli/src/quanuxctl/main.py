@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
 QuanuX Control (quanuxctl) — scaffold dispatcher.
-Safe to run even when some subcommands aren't implemented yet.
 """
 
+from __future__ import annotations
 import sys
 
 HELP = """\
@@ -20,18 +20,17 @@ Commands:
   pack-docs    Bundle docs (no-op scaffold)
   docs         List docs entry points
   backlog      Print backlog summary
+  bridge       Manage SignalR bridge (flask|node)
 """
 
-def main(argv=None) -> int:
-    # Lazy imports so missing subcommands don't crash the dispatcher
-    # Each import is wrapped with a fallback stub to keep things resilient.
-    def _try_import(module, func):
-        try:
-            mod = __import__(module, fromlist=[func])
-            return getattr(mod, func)
-        except Exception:
-            return None
+def _try_import(module: str, func: str):
+    try:
+        mod = __import__(module, fromlist=[func])
+        return getattr(mod, func)
+    except Exception:
+        return None
 
+def main(argv=None) -> int:
     cmd_start     = _try_import("quanuxctl.commands.start", "cmd_start")
     cmd_build     = _try_import("quanuxctl.commands.build", "cmd_build")
     cmd_diag      = _try_import("quanuxctl.commands.diagnose", "cmd_diagnose")
@@ -39,40 +38,39 @@ def main(argv=None) -> int:
     cmd_pack_docs = _try_import("quanuxctl.commands.pack_docs", "cmd_pack_docs")
     cmd_docs      = _try_import("quanuxctl.commands.docs", "cmd_docs")
     cmd_backlog   = _try_import("quanuxctl.commands.docs", "cmd_backlog")
+    cmd_bridge    = _try_import("quanuxctl.commands.bridge", "cmd_bridge")
 
-    argv = list(sys.argv[1:] if argv is None else argv)
-    if not argv or argv[0] in {"-h", "--help", "help"}:
+    args = list(sys.argv[1:] if argv is None else argv)
+    if not args or args[0] in {"-h", "--help", "help"}:
         print(HELP)
         return 0
 
-    cmd = argv[0]
+    cmd, rest = args[0], args[1:]
 
     if cmd == "start":
-        if cmd_start: cmd_start(argv[1:])
-        else: print("start scaffold not available yet.")
-    elif cmd == "build":
-        if cmd_build: cmd_build(argv[1:])
-        else: print("build scaffold not available yet.")
-    elif cmd == "diagnose":
-        if cmd_diag: cmd_diag(argv[1:])
-        else: print("diagnose scaffold not available yet.")
-    elif cmd in {"ai-train", "ai_train"}:
-        if cmd_ai_train: cmd_ai_train(argv[1:])
-        else: print("ai-train scaffold not available yet.")
-    elif cmd in {"pack-docs", "pack_docs"}:
-        if cmd_pack_docs: cmd_pack_docs(argv[1:])
-        else: print("pack-docs scaffold not available yet.")
-    elif cmd == "docs":
-        if cmd_docs: cmd_docs(argv[1:])
-        else: print("docs index not available yet.")
-    elif cmd == "backlog":
-        if cmd_backlog: cmd_backlog(argv[1:])
-        else: print("backlog not available yet.")
-    else:
-        print(f"Unknown command: {cmd}\n")
-        print(HELP)
-        return 2
-    return 0
+        return cmd_start(rest) if cmd_start else _missing("start")
+    if cmd == "build":
+        return cmd_build(rest) if cmd_build else _missing("build")
+    if cmd == "diagnose":
+        return cmd_diag(rest) if cmd_diag else _missing("diagnose")
+    if cmd in {"ai-train", "ai_train"}:
+        return cmd_ai_train(rest) if cmd_ai_train else _missing("ai-train")
+    if cmd in {"pack-docs", "pack_docs"}:
+        return cmd_pack_docs(rest) if cmd_pack_docs else _missing("pack-docs")
+    if cmd == "docs":
+        return cmd_docs(rest) if cmd_docs else _missing("docs")
+    if cmd == "backlog":
+        return cmd_backlog(rest) if cmd_backlog else _missing("backlog")
+    if cmd == "bridge":
+        return cmd_bridge(rest) if cmd_bridge else _missing("bridge")
+
+    print(f"Unknown command: {cmd}\n")
+    print(HELP)
+    return 2
+
+def _missing(name: str) -> int:
+    print(f"{name} scaffold not available yet.")
+    return 1
 
 if __name__ == "__main__":
     raise SystemExit(main())

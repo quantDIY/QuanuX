@@ -1,32 +1,49 @@
 name: quanux-bridge-signalr
 version: v0.0.1
 owner: platform
-description: SignalR bridge via Node client supervised by Flask.
+description: "Real-time SignalR bridge for QuanuX (scaffold). Choose Flask or Node runtime."
+
+default_runtime: flask
+alternatives:
+  - node
+
+config:
+  env:
+    QUANUX_BRIDGE_PORT: 8077
+    QUANUX_LOG_LEVEL: INFO
+    QUANUX_BRIDGE_CORS: "*"
+
 endpoints:
   flask:
     http: "/bridge/signalr"
-    ws:   "/bridge/signalr/ws"   # future
+    ws: "/bridge/signalr/ws" # future
+
+runtimes:
+  flask:
+    entry: "python3 server/bridges/signalr/flask/app.py"
+  node:
+    entry: "node server/bridges/signalr/node/index.mjs"
+
 process_model:
   node_worker:
     entry: "server/bridges/signalr/node/index.mjs"
     env:
       SIGNALR_HUB_URL: "${SIGNALR_HUB_URL}"
-      SIGNALR_ACCESS_TOKEN: "${SIGNALR_ACCESS_TOKEN}"   # stored in secrets store
+      SIGNALR_ACCESS_TOKEN: "${SIGNALR_ACCESS_TOKEN}"
       SIGNALR_PROTOCOL: "json"
+
 contracts:
   events:
     - type: "tick"
     - type: "order_update"
     - type: "heartbeat"
+
 security:
   secrets:
     - key: "SIGNALR_ACCESS_TOKEN"
       provider: "quanux.secrets"
+
 health:
   checks:
     - type: http
-      target: "http://127.0.0.1:8091/bridge/signalr/health"
-default_runtime: flask
-alternatives:
-  - node
-description: Real-time SignalR bridge for QuantX runtime.
+      target: "http://127.0.0.1:8077/health"

@@ -1,14 +1,9 @@
-flask
+# SignalR Flask Bridge (scaffold)
+Flask>=3.0
 flask-sock
 gunicorn
-
-# --- SignalR Flask Bridge (scaffold) ---
-Flask>=3.0
 Werkzeug>=3.0
 itsdangerous>=2.1
 
-# For async WS echo in the Python server (optional; you already have FastAPI stubs)
-# uvicorn[standard]>=0.30
-
-# If/when you want a Python SignalR client for ASP.NET Core:
-# signalrcore>=0.9.5  # COMMENTED: enable when wiring real hubs
+# Optional future Python SignalR client (enable when wiring real hubs)
+# signalrcore>=0.9.5

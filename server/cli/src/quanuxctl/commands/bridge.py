@@ -1,45 +1,45 @@
-import click, subprocess, os, sys, json, time, requests
+#!/usr/bin/env python3
+from __future__ import annotations
+"""
+quanuxctl bridge — manage the SignalR bridge (scaffold)
+Usage:
+  quanuxctl bridge up [--runtime flask|node] [--port 8077]
+  quanuxctl bridge down
+"""
 
-BASE = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", ".."))
-FLASK_APP = os.path.join(BASE, "server", "bridges", "signalr", "flask", "app.py")
-HEALTH = "http://127.0.0.1:8091/bridge/signalr/health"
+import argparse, os, sys, subprocess, shlex
+from pathlib import Path
 
-@click.group("bridge")
-def bridge():
-    """Manage SignalR bridge (scaffold)."""
-    pass
+# Correct path: supervisor lives at repo/server/bridges/signalr/supervisor.py
+# We are in repo/server/cli/src/quanuxctl/commands/, so we go up 5 levels to the repo root.
+REPO_ROOT = Path(__file__).resolve().parents[5]
+SUPERVISOR = REPO_ROOT / "server" / "bridges" / "signalr" / "supervisor.py"
 
-@bridge.command("flask")
-def run_flask():
-    """Run Flask supervisor (foreground)."""
-    env = os.environ.copy()
-    # NOTE: in wiring, inject secrets from secrets provider
-    cmd = [sys.executable, FLASK_APP]
-    subprocess.call(cmd, env=env)
+def _run(cmd: str, env=None) -> int:
+    return subprocess.call(shlex.split(cmd), env=env or os.environ.copy())
 
-@bridge.command("start")
-def start():
-    """Start Node worker via Flask supervisor."""
-    try:
-        requests.post("http://127.0.0.1:8091/bridge/signalr/start", timeout=2)
-        click.echo("Bridge start requested.")
-    except Exception as e:
-        click.echo(f"Flask not up? Run: quanuxctl bridge flask\n{e}")
+def cmd_bridge(argv: list[str]) -> int:
+    parser = argparse.ArgumentParser(prog="quanuxctl bridge", description="Manage SignalR bridge (scaffold)")
+    sub = parser.add_subparsers(dest="cmd", required=True)
 
-@bridge.command("stop")
-def stop():
-    """Stop Node worker via Flask supervisor."""
-    try:
-        r = requests.post("http://127.0.0.1:8091/bridge/signalr/stop", timeout=2)
-        click.echo(r.text)
-    except Exception as e:
-        click.echo(f"Flask not up? {e}")
+    up_p = sub.add_parser("up", help="start the bridge")
+    up_p.add_argument("--runtime", choices=["flask", "node"], default="flask")
+    up_p.add_argument("--port", type=int, default=8077)
 
-@bridge.command("status")
-def status():
-    """Bridge status."""
-    try:
-        r = requests.get("http://127.0.0.1:8091/bridge/signalr/status", timeout=2)
-        click.echo(r.text)
-    except Exception as e:
-        click.echo(f"Flask not up? {e}")
+    sub.add_parser("down", help="stop the bridge (scaffold)")
+
+    args = parser.parse_args(argv)
+
+    if args.cmd == "up":
+        env = os.environ.copy()
+        env["QUANUX_BRIDGE_PORT"] = str(args.port)
+        env["QUANUX_BRIDGE_RUNTIME"] = args.runtime
+        return _run(f"python3 {SUPERVISOR}", env)
+    elif args.cmd == "down":
+        return _run(f"python3 {SUPERVISOR} --down")
+    else:
+        parser.print_help()
+        return 2
+
+if __name__ == "__main__":
+    sys.exit(cmd_bridge(sys.argv[1:]))
