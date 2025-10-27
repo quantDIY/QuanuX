@@ -1,0 +1,28 @@
+name: quanux-bridge-signalr
+version: v0.0.1
+owner: platform
+description: SignalR bridge via Node client supervised by Flask.
+endpoints:
+  flask:
+    http: "/bridge/signalr"
+    ws:   "/bridge/signalr/ws"   # future
+process_model:
+  node_worker:
+    entry: "server/bridges/signalr/node/index.mjs"
+    env:
+      SIGNALR_HUB_URL: "${SIGNALR_HUB_URL}"
+      SIGNALR_ACCESS_TOKEN: "${SIGNALR_ACCESS_TOKEN}"   # stored in secrets store
+      SIGNALR_PROTOCOL: "json"
+contracts:
+  events:
+    - type: "tick"
+    - type: "order_update"
+    - type: "heartbeat"
+security:
+  secrets:
+    - key: "SIGNALR_ACCESS_TOKEN"
+      provider: "quanux.secrets"
+health:
+  checks:
+    - type: http
+      target: "http://127.0.0.1:8091/bridge/signalr/health"

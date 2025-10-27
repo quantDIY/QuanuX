@@ -1,0 +1,13 @@
+{
+  "name": "@quanux/bridge-signalr",
+  "version": "0.0.1",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@microsoft/signalr": "^8.0.0",
+    "yargs": "^17.7.2"
+  },
+  "scripts": {
+    "start": "node index.mjs"
+  }
+}

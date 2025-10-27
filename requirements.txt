@@ -1,2 +1,4 @@
 # QuanuX pip fallback (prefer Anaconda/conda-forge first)
 # Intentionally empty at v0.0.1
+
+flask
