@@ -1,26 +1,96 @@
-# Python
+# =====================================
+# QuanuX Global .gitignore
+# =====================================
+
+# ---- Python / Virtual Envs ----
 __pycache__/
 *.py[cod]
 *.pyo
-
-# Node
-node_modules/
-
-# Virtual envs
+*.pyd
+*.so
+*.egg-info/
+*.egg
+*.whl
+*.log
+*.tmp
+*.bak
+*.swp
+*.DS_Store
 .venv/
 .venvs/
 env/
 venv/
-
-# OS
-.DS_Store
-
-# Build/artifacts
-dist/
+ENV/
 build/
-*.egg-info/
+dist/
+.eggs/
 
-# IDE
+# ---- Anaconda / Conda ----
+*.conda
+*.ipynb_checkpoints
+.env/
+*.env
+.envrc
+*.yml
+*.yaml
+
+# ---- System / Editor ----
 .vscode/
 .idea/
+*.code-workspace
+*.sublime-project
+*.sublime-workspace
+
+# ---- Node / Frontend ----
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-store/
+dist/
+build/
+*.lock
+*.tsbuildinfo
+
+# ---- Local Runtime ----
+server/runtime/
+server/control/state/
+server/logs/
+logs/
+*.pid
+*.sock
+*.lock
+
+# ---- Redis / NATS / External binaries ----
 server/nats-server/
+server/redis/
+server/broker/
+server/data/
+*.db
+*.rdb
+*.aof
+
+# ---- Tests / Coverage ----
+.coverage
+.cache/
+.tox/
+pytest_cache/
+nosetests.xml
+coverage.xml
+htmlcov/
+.mypy_cache/
+.pytest_cache/
+
+# ---- Docs / Build Artifacts ----
+docs/_build/
+server/docs/build/
+*.pdf
+*.zip
+*.tar.gz
+
+# ---- OS-specific ----
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+Icon?
