@@ -3,6 +3,7 @@ from __future__ import annotations
 import os, subprocess, sys, shlex, argparse
 from pathlib import Path
 from typing import Optional
+from server.control.supervisor.process import main
 
 ROOT = Path(__file__).resolve().parents[2]  # repo/server/...
 FLASK_APP = ROOT / "bridges" / "signalr" / "flask" / "app.py"
@@ -50,5 +51,9 @@ def main(argv=None) -> int:
     port = int(os.getenv("QUANUX_BRIDGE_PORT", "8077"))
     return cmd_up(runtime, port)
 
+
 if __name__ == "__main__":
-    raise SystemExit(main(sys.argv[1:]))
+    raise SystemExit(main())
+
+#if __name__ == "__main__":
+ #   raise SystemExit(main(sys.argv[1:]))

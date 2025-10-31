@@ -5,10 +5,13 @@ build-backend = "hatchling.build"
 [project]
 name = "quanuxctl"
 version = "0.0.1"
-description = "QuanuX CLI (scaffold)"
+description = "QuanuX Control CLI (scaffold)"
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = []
+dependencies = [
+  "click>=8.1.7",
+  "nats-py>=2.6.0",
+]
 
 [project.scripts]
 quanuxctl = "quanuxctl.main:main"

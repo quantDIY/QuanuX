@@ -2,12 +2,12 @@
 """
 QuanuX Control (quanuxctl) — scaffold dispatcher.
 """
-
 from __future__ import annotations
-import sys
+import os, sys, traceback
 
 HELP = """\
 QuanuX Control (quanuxctl) — scaffold v0.0.1
+indicators  Indicators utilities (probe, demo-sma)
 
 Usage:
   quanuxctl <command>
@@ -28,7 +28,14 @@ def _try_import(module: str, func: str):
         mod = __import__(module, fromlist=[func])
         return getattr(mod, func)
     except Exception:
+        if os.getenv("QUANUX_DEBUG") == "1":
+            print(f"[DEBUG] Failed importing {module}:{func}", file=sys.stderr)
+            traceback.print_exc()
         return None
+
+def _missing(name: str) -> int:
+    print(f"{name} scaffold not available yet.")
+    return 1
 
 def main(argv=None) -> int:
     cmd_start     = _try_import("quanuxctl.commands.start", "cmd_start")
@@ -39,6 +46,7 @@ def main(argv=None) -> int:
     cmd_docs      = _try_import("quanuxctl.commands.docs", "cmd_docs")
     cmd_backlog   = _try_import("quanuxctl.commands.docs", "cmd_backlog")
     cmd_bridge    = _try_import("quanuxctl.commands.bridge", "cmd_bridge")
+    cmd_ind       = _try_import("quanuxctl.commands.indicators", "cmd_indicators")  # <— NEW
 
     args = list(sys.argv[1:] if argv is None else argv)
     if not args or args[0] in {"-h", "--help", "help"}:
@@ -63,14 +71,13 @@ def main(argv=None) -> int:
         return cmd_backlog(rest) if cmd_backlog else _missing("backlog")
     if cmd == "bridge":
         return cmd_bridge(rest) if cmd_bridge else _missing("bridge")
+    if cmd == "indicators":                                  # <— NEW
+        return cmd_ind(rest) if cmd_ind else _missing("indicators")   # <— NEW
 
     print(f"Unknown command: {cmd}\n")
     print(HELP)
     return 2
 
-def _missing(name: str) -> int:
-    print(f"{name} scaffold not available yet.")
-    return 1
-
 if __name__ == "__main__":
     raise SystemExit(main())
+
