@@ -1,0 +1,32 @@
+.TH QUANUXCTL 1 "October 2025" "QuanuX" "User Commands"
+.SH NAME
+quanuxctl \- QuanuX Control CLI
+.SH SYNOPSIS
+.B quanuxctl
+[\fICOMMAND\fR] [\fIOPTIONS\fR]
+.SH DESCRIPTION
+The QuanuX Control CLI manages QuanuX developer workflows, bridges, and indicators.
+.SH COMMANDS
+.TP
+.B bridge
+Manage SignalR bridge processes (via NATS control plane).
+.TP
+.B indicators
+Probe indicator backend and run quick demos (SMA, etc.).
+.SH EXAMPLES
+Run a bridge:
+.PP
+.nf
+quanuxctl bridge up --name signalr --runtime flask --port 8077
+quanuxctl bridge status --name signalr
+quanuxctl bridge down --name signalr
+.fi
+.PP
+Indicators:
+.PP
+.nf
+quanuxctl indicators probe
+quanuxctl indicators demo-sma --length 50 --rows 300
+.fi
+.SH SEE ALSO
+.BR man (1)
