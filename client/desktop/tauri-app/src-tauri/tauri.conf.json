@@ -1,11 +1,27 @@
 {
+  "$schema": "https://schema.tauri.app/config/2",
   "productName": "QuanuX Desktop",
-  "version": "0.1.0",
+  "version": "0.0.1",
+  "identifier": "dev.quantdiy.quanux.desktop",
+
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:5173"
   },
+
   "app": {
-    "windows": [{ "title": "QuanuX", "width": 1200, "height": 800 }]
-  }
+    "windows": [
+      { "label": "main", "title": "QuanuX", "width": 1200, "height": 800 }
+    ],
+    "trayIcon": {
+      "iconPath": "icons/tray-light.png",
+      "iconAsTemplate": false
+    }
+  },
+
+  "bundle": {
+    "targets": "all"
+  },
+
+  "plugins": {}
 }

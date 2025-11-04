@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=QuanuX Desktop
+Comment=QuanuX Desktop (Tauri Shell)
+Exec=/usr/bin/env bash -lc 'cd "$HOME/Projects/QuanuX/quanux-full-context-v1/client/desktop/tauri-app" && npm run tauri:dev'
+Icon=utilities-terminal
+Terminal=false
+Categories=Finance;Utility;Development;
+StartupWMClass=QuanuX
