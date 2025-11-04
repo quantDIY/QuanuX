@@ -1,0 +1,11 @@
+{
+  "productName": "QuanuX Desktop",
+  "version": "0.1.0",
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:5173"
+  },
+  "app": {
+    "windows": [{ "title": "QuanuX", "width": 1200, "height": 800 }]
+  }
+}

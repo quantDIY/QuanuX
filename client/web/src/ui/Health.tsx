@@ -1,25 +1,21 @@
+import { health } from "../../../src/lib/bridge";
 import React from "react";
 
 export const Health: React.FC = () => {
   const [status, setStatus] = React.useState<null | { ok: boolean; details?: any }>(null);
   const [err, setErr] = React.useState<string | null>(null);
-  const url = (import.meta as any).env?.VITE_BRIDGE_HEALTH ?? "http://127.0.0.1:8077/health";
 
   const ping = React.useCallback(async () => {
     try {
       setErr(null);
-      const res = await fetch(url, { headers: { "Accept": "application/json" } });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
+      const json = await health();
       setStatus({ ok: true, details: json });
     } catch (e: any) {
       setStatus({ ok: false });
       setErr(e?.message || "Request failed");
     }
-  }, [url]);
-
+  }, []);
   React.useEffect(() => { void ping(); }, [ping]);
-
   return (
     <div>
       {status === null && <div className="text-muted-foreground">Checking…</div>}

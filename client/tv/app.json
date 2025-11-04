@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "QuanuX TV",
+    "slug": "quanux-tv",
+    "android": {
+      "package": "dev.quantdiy.quanux.tv",
+      "tvBanner": "./assets/tv-banner.png",
+      "adaptiveIcon": { "foregroundImage": "./assets/icon.png", "backgroundColor": "#111111" },
+      "intentFilters": [{ "autoVerify": false, "action": "VIEW", "data": [{ "scheme": "quanux" }], "category": ["BROWSABLE","DEFAULT","LEANBACK_LAUNCHER"] }]
+    },
+    "platforms": ["android"]
+  }
+}
