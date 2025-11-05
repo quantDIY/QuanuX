@@ -1,53 +1,38 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use tauri::{
-  Manager,
-  menu::{MenuBuilder, MenuItem},
-  tray::{TrayIconBuilder, TrayIconEvent},
-};
+use tauri::Manager;
+use tauri::tray::TrayIconBuilder;
 
 fn main() {
   tauri::Builder::default()
     .setup(|app| {
-      // Tray menu
-      let show = MenuItem::with_id(app, "show", "Show", true, None::<&str>)?;
-      let quit = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
-      let menu = MenuBuilder::new(app)
-        .item(&show)
-        .item(&quit)
+      // Ensure a main window exists
+      if app.get_webview_window("main").is_none() {
+        tauri::WebviewWindowBuilder::new(
+          app,
+          "main",
+          tauri::WebviewUrl::App("index.html".into()),
+        )
+        .title("QuanuX Desktop")
+        .inner_size(1200.0, 800.0)
+        .resizable(true)
         .build()?;
+      }
 
-      // Tray icon
-      let _tray = TrayIconBuilder::new()
-        .menu(&menu)
-        .icon(app.default_window_icon().unwrap_or_default())
-        .tooltip("QuanuX")
-        .on_tray_icon_event(|tray, event| {
-          if let TrayIconEvent::DoubleClick { .. } = event {
-            let app = tray.app_handle();
-            if let Some(w) = app.get_webview_window("main") {
-              let _ = w.show();
-              let _ = w.set_focus();
-            }
+      // Build tray WITHOUT loading an icon in code.
+      // Icon is provided by tauri.conf.json => app.trayIcon.iconPath
+      TrayIconBuilder::new()
+        .on_tray_icon_event(|tray, _event| {
+          let app = tray.app_handle();
+          if let Some(win) = app.get_webview_window("main") {
+            let _ = win.show();
+            let _ = win.set_focus();
           }
-          Ok(())
         })
         .build(app)?;
 
       Ok(())
     })
-    .on_menu_event(|app, ev| {
-      match ev.id().as_ref() {
-        "show" => {
-          if let Some(w) = app.get_webview_window("main") {
-            let _ = w.show();
-            let _ = w.set_focus();
-          }
-        }
-        "quit" => app.exit(0),
-        _ => {}
-      }
-    })
     .run(tauri::generate_context!())
-    .expect("error while running QuanuX desktop");
+    .expect("error running QuanuX Desktop");
 }
