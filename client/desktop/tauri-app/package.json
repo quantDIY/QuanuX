@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "tauri:dev": "tauri dev",
-    "tauri:build": "tauri build"
+    "tauri:build": "tauri build",
+    "tauri:dev:headless": "NO_AT_BRIDGE=1 GTK_USE_PORTAL=0 dbus-run-session -- xvfb-run -s \"-screen 0 1280x800x24\" tauri dev"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.9.0",
@@ -20,6 +21,6 @@
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.7.0",
     "typescript": "^5.6.3",
-    "vite": "^5.4.10"
+    "vite": "^5.4.21"
   }
 }

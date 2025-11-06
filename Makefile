@@ -1,20 +1,21 @@
-.PHONY: env dev client server test clean
+.PHONY: dev web tauri
 
-env:
-	conda env update -f environment.yml || conda env create -f environment.yml
+web:
+	pnpm -C client/desktop/tauri-app run dev
+
+tauri:
+	tauri-dev-headless
 
 dev:
-	./scripts/local_dev.sh
+	( pnpm -C client/desktop/tauri-app run dev & ); \
+	( sleep 2; tauri-dev-headless & ); \
+	wait
 
-client:
-	cd client && pnpm run dev
-
-server:
-	python3 server/run_dev.py
-	@echo "TODO: start server runtime when wired"
-
-test:
-	pytest -q || true
-
-clean:
-	rm -rf dist .pytest_cache
+.PHONY: doctor
+doctor:
+	@echo "Node:      $$(node -v || true)"
+	@echo "Corepack:  $$(corepack -v || true)"
+	@echo "pnpm:      $$(pnpm -v || true)"
+	@echo "Rustc:     $$(rustc -V || true)"
+	@echo "XDG_RUNTIME_DIR=$${XDG_RUNTIME_DIR:-<unset>}"
+	@test -n "$$(command -v pnpm)" || (echo "pnpm missing"; exit 1)
