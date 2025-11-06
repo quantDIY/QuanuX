@@ -17,12 +17,16 @@ sudo apt-get -yq install \
   xvfb dbus-x11 x11-apps \
   xz-utils ca-certificates
 
-echo "🧰 Corepack/pnpm"
+echo "🧹 Fix cache ownership for vscode user (prevents Corepack EACCES)"
+sudo mkdir -p /home/vscode/.cache/node/corepack/v1
+sudo chown -R vscode:vscode /home/vscode/.cache
+
+echo "🧰 Corepack / pnpm"
 corepack enable || true
 corepack prepare pnpm@10.20.0 --activate || true
 
 echo "📦 workspace install (best-effort)"
-pnpm install --frozen-lockfile || pnpm install
+pnpm install -w --frozen-lockfile || pnpm install -w || true
 
 echo "🧪 headless helper"
 sudo tee /usr/local/bin/tauri-dev-headless >/dev/null <<'EOS'
@@ -30,9 +34,8 @@ sudo tee /usr/local/bin/tauri-dev-headless >/dev/null <<'EOS'
 set -euo pipefail
 export NO_AT_BRIDGE=1
 export GTK_USE_PORTAL=0
-export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/tmp/runtime-$UID}"
-mkdir -p "$XDG_RUNTIME_DIR"
-
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/tmp/xdg-runtime-1000}"
+mkdir -p "$XDG_RUNTIME_DIR" && chmod 700 "$XDG_RUNTIME_DIR"
 exec dbus-run-session -- \
   xvfb-run -s "-screen 0 1280x800x24" \
   pnpm -C client/desktop/tauri-app run tauri:dev

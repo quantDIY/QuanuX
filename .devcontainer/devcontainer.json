@@ -9,6 +9,11 @@
     }
   },
   "forwardPorts": [5173, 1420, 3000, 8000],
+  "mounts": [
+    "source=pnpm-cache,target=/home/vscode/.cache/pnpm,type=volume",
+    "source=cargo-registry-cache,target=/home/vscode/.cargo/registry,type=volume",
+    "source=cargo-git-cache,target=/home/vscode/.cargo/git,type=volume"
+  ],
   "postCreateCommand": "bash .devcontainer/postCreate.sh",
   "remoteUser": "vscode",
   "customizations": {
