@@ -2,13 +2,13 @@
   "name": "QuanuX Dev",
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
   "features": {
-    "ghcr.io/devcontainers/features/node:1": { "version": "20" },
+    "ghcr.io/devcontainers/features/node:1": { "version": "22" },
     "ghcr.io/devcontainers/features/rust:1": {
       "profile": "minimal",
       "version": "latest"
     }
   },
-  "forwardPorts": [5173, 1420, 3000, 8000],
+  "forwardPorts": [5173, 5174, 1420, 3000, 8000],
   "mounts": [
     "source=pnpm-cache,target=/home/vscode/.cache/pnpm,type=volume",
     "source=cargo-registry-cache,target=/home/vscode/.cargo/registry,type=volume",

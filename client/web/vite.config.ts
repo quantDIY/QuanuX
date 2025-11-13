@@ -1,3 +1,4 @@
+import path from "node:path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { fileURLToPath, URL } from "node:url";
@@ -7,11 +8,19 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
-      "@/shared": fileURLToPath(new URL("../shared", import.meta.url))
-    }
+      // Mirror desktop: expose client/src as @quanux/shared
+      "@quanux/shared": path.resolve(__dirname, "../src"),
+    },
   },
   server: {
-    host: true,
-    port: 5173
-  }
+    port: 5173,        // web on 5173
+    strictPort: true,  // don't silently switch
+    proxy: {
+      "/api": {
+        target: "http://127.0.0.1:8000",
+        changeOrigin: true,
+      },
+    },
+  },
 });
+

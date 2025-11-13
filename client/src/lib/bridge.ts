@@ -1,11 +1,13 @@
+// Minimal, robust joiner for API paths.
+// Assumes getApiBase() returns "", "/", "/api", "http://host:port", etc.
+// We ensure we end up with exactly one slash between base and path.
+
 import { getApiBase } from "./config";
 
-export type HealthResponse = { status: string; version?: string; detail?: unknown };
-
-export async function health(): Promise<HealthResponse> {
-  const base = getApiBase().replace(/\/+$/, "");
-  const url = `${base}/api/health`;
-  const res = await fetch(url, { headers: { Accept: "application/json" } });
-  if (!res.ok) return { status: `error:${res.status}` };
-  try { return await res.json(); } catch { return { status: "ok" }; }
+// If base = "/api", DO NOT prefix another "/api" here
+export async function health() {
+  const base = getApiBase(); // "/api" in dev via index.html or config default
+  const res = await fetch(`${base}/health`);
+  if (!res.ok) throw new Error(`Health ${res.status}`);
+  return res.json();
 }

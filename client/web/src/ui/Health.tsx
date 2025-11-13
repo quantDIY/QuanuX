@@ -1,5 +1,5 @@
-import { health } from "../../../src/lib/bridge";
 import React from "react";
+import { health } from "@quanux/shared/lib/bridge";
 
 export const Health: React.FC = () => {
   const [status, setStatus] = React.useState<null | { ok: boolean; details?: any }>(null);
@@ -15,7 +15,9 @@ export const Health: React.FC = () => {
       setErr(e?.message || "Request failed");
     }
   }, []);
+
   React.useEffect(() => { void ping(); }, [ping]);
+
   return (
     <div>
       {status === null && <div className="text-muted-foreground">Checking…</div>}
@@ -36,3 +38,4 @@ export const Health: React.FC = () => {
     </div>
   );
 };
+

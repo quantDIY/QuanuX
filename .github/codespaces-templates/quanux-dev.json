@@ -1,0 +1,8 @@
+{
+  "name": "QuanuX – Tauri + Vite (headless)",
+  "description": "Pre-baked Codespace with Rust, Node/pnpm, headless GTK/WebKit, and a quiet Tauri dev launcher.",
+  "icon": "terminal",
+  "tags": ["rust", "tauri", "vite", "pnpm", "web"],
+  "onCreateCommand": "",
+  "dotfiles": null
+}

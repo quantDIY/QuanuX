@@ -1,7 +1,8 @@
-import "./styles/tailwind.css";
-import React from "react";
+// client/web/src/main.tsx
+import "./styles/tailwind.css";  // load v4 CSS here only
 import { createRoot } from "react-dom/client";
 import { App } from "./ui/App";
 
-const root = createRoot(document.getElementById("root")!);
-root.render(<App />);
+createRoot(document.getElementById("root")!).render(<App />);
+
+

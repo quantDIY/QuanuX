@@ -23,10 +23,50 @@ sudo chown -R vscode:vscode /home/vscode/.cache
 
 echo "🧰 Corepack / pnpm"
 corepack enable || true
-corepack prepare pnpm@10.20.0 --activate || true
+corepack prepare pnpm@10.21.0 --activate || true
 
 echo "📦 workspace install (best-effort)"
 pnpm install -w --frozen-lockfile || pnpm install -w || true
+
+# --------------------------------------------------------------------
+# 🔧 NEW: Align Node typings and clear Vite caches
+# --------------------------------------------------------------------
+echo "🔧 Aligning @types/node to 22 in web and desktop..."
+pnpm -C /workspaces/QuanuX/client/web add -D @types/node@22 || true
+pnpm -C /workspaces/QuanuX/client/desktop/tauri-app add -D @types/node@22 || true
+
+echo "🧹 Clearing Vite caches..."
+rm -rf \
+  /workspaces/QuanuX/client/web/node_modules/.vite \
+  /workspaces/QuanuX/client/desktop/tauri-app/node_modules/.vite \
+  || true
+
+# --------------------------------------------------------------------
+# 🧪 NEW: Minimal mock API so /api/health returns 200 on port 8000
+# --------------------------------------------------------------------
+echo "🧩 Installing mock API (port 8000) for /api/health..."
+mkdir -p /workspaces/QuanuX/dev/mock-api
+cat >/workspaces/QuanuX/dev/mock-api/server.mjs <<'EOF'
+import http from "node:http";
+
+const server = http.createServer((req, res) => {
+  if (req.url === "/api/health") {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({
+      ok: true,
+      service: "mock-api",
+      time: new Date().toISOString()
+    }));
+    return;
+  }
+  res.writeHead(404);
+  res.end();
+});
+
+server.listen(8000, "0.0.0.0", () => {
+  console.log("Mock API listening on http://0.0.0.0:8000  (GET /api/health)");
+});
+EOF
 
 # --------------------------------------------------------------------
 # 🧪 headless Tauri helper (quiet, portable, disables portals)
@@ -79,4 +119,4 @@ if (fs.existsSync(path)) {
 }
 NODE
 
-echo "✅ postCreate complete (quiet headless Tauri configured)"
+echo "✅ postCreate complete (Node typings aligned, Vite caches cleared, mock API ready, headless Tauri configured)"

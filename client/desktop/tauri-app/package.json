@@ -8,7 +8,7 @@
     "build": "vite build",
     "tauri:dev": "tauri dev",
     "tauri:build": "tauri build",
-    "tauri:dev:headless": "NO_AT_BRIDGE=1 GTK_USE_PORTAL=0 dbus-run-session -- xvfb-run -s \"-screen 0 1280x800x24\" tauri dev"
+    "tauri:dev:headless": "NO_AT_BRIDGE=1 GTK_USE_PORTAL=0 XDG_DESKTOP_PORTAL_DIR=/dev/null WEBKIT_DISABLE_DMABUF_RENDERER=1 GDK_BACKEND=x11 GTK_A11Y=0 dbus-run-session -- xvfb-run -a -s '-screen 0 1280x800x24 +extension RANDR' tauri dev"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.9.0",
@@ -16,11 +16,16 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.17",
     "@tauri-apps/cli": "^2.9.3",
-    "@types/react": "^18.3.5",
-    "@types/react-dom": "^18.3.0",
+    "@types/node": "22",
+    "@types/react": "^18.3.26",
+    "@types/react-dom": "^18.3.7",
     "@vitejs/plugin-react": "^4.7.0",
-    "typescript": "^5.6.3",
+    "autoprefixer": "^10.4.22",
+    "tailwindcss": "^4.1.17",
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "^5.9.3",
     "vite": "^5.4.21"
   }
 }
