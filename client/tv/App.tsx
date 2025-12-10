@@ -1,11 +1,11 @@
-import React from "react";
-import { View, Text } from "react-native";
+import { StatusBar } from 'expo-status-bar';
+import { StyledView, StyledText } from '@quanux/ui';
 
 export default function App() {
   return (
-    <View style={{ flex: 1, backgroundColor: "#000", alignItems: "center", justifyContent: "center" }}>
-      <Text style={{ color: "#fff", fontSize: 28 }}>QuanuX TV</Text>
-      <Text style={{ color: "#aaa" }}>Android TV focused UI goes here.</Text>
-    </View>
+    <StyledView className="flex-1 items-center justify-center bg-black">
+      <StyledText className="text-5xl font-bold text-white">Welcome to QuanuX TV</StyledText>
+      <StatusBar style="light" />
+    </StyledView>
   );
 }

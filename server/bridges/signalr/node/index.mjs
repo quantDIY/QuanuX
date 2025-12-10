@@ -2,7 +2,7 @@
 import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 
 const HUB_URL = process.env.SIGNALR_HUB_URL || "https://example.invalid/hub";
-const TOKEN   = process.env.SIGNALR_ACCESS_TOKEN || null;
+const TOKEN = process.env.SIGNALR_ACCESS_TOKEN || null;
 
 const connection = new HubConnectionBuilder()
   .withUrl(HUB_URL, TOKEN ? { accessTokenFactory: () => TOKEN } : undefined)
@@ -32,13 +32,15 @@ const subscribe = () => {
     await connection.start();
     console.log(JSON.stringify({ type: "signalr.ready" }));
     subscribe();
+
+    // Keep process alive
+    setInterval(() => { }, 10000);
   } catch (e) {
     console.error(JSON.stringify({ type: "signalr.error", error: e.message }));
     process.exit(1);
   }
 })();
 
-// Minimal stub — no real connection yet.
-// Later: read env (HUB_URL, TOKEN), build HubConnection, register handlers.
-console.log("[SignalR Node Bridge] scaffold online (no-op)");
-setInterval(() => process.stdout.write("."), 1000);
+// Minimal stub removed. Main logic above will run.
+// console.log("[SignalR Node Bridge] scaffold online (no-op)");
+// setInterval(() => process.stdout.write("."), 1000);

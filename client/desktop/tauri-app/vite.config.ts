@@ -9,7 +9,7 @@ export default defineConfig({
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
       "@/shared": fileURLToPath(new URL("../shared", import.meta.url)),
-      "@quanux/shared": path.resolve(__dirname, "../../src"),
+      "@quanux/shared": fileURLToPath(new URL("../../shared", import.meta.url)),
     },
   },
   server: {
@@ -17,7 +17,7 @@ export default defineConfig({
     strictPort: true,   // <- never auto-switch
     proxy: {
       "/api": {
-        target: "http://127.0.0.1:8000",
+        target: "http://127.0.0.1:8080",
         changeOrigin: true,
       },
     },

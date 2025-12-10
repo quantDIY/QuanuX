@@ -15,6 +15,11 @@ ALLOW_ORIGINS = os.getenv("QUANUX_BRIDGE_CORS", "*")
 # NOTE: Real SignalR plumbing is NOT active yet. This is a scaffold surface.
 #       We’ll later add: hub negotiation, access tokens, channel (hub) map, subscriptions, etc.
 
+from .signalr_client import SignalRClient
+
+# Global client instance (for prototype simplicity)
+signalr_client: SignalRClient | None = None
+
 @app.get("/health")
 def health() -> Any:
     return jsonify({
@@ -23,6 +28,7 @@ def health() -> Any:
         "port": BRIDGE_PORT,
         "runtime": "flask",
         "message": "SignalR bridge scaffold alive",
+        "connected": signalr_client.connection.transport.state if signalr_client and signalr_client.connection else "disconnected"
     })
 
 @app.post("/connect")
@@ -31,41 +37,63 @@ def connect() -> Any:
     BODY (sample):
     {
       "hub_url": "https://example.signalr/hub",
-      "access_token": "token or null",
-      "headers": {"X-Custom": "v"},
-      "channels": ["ticker", "orders"],  # semantic; hub methods later
-      "metadata": {"source": "QuanuX"}
+      "access_token": "token or null"
     }
     """
+    global signalr_client
     payload: Dict[str, Any] = request.get_json(force=True, silent=True) or {}
-    # TODO: validate & establish connection; store handle in in-memory registry.
-    app.logger.info("connect(): received payload=%s", json.dumps(payload)[:400])
-    return jsonify({"ok": True, "note": "scaffold only; no real hub yet"})
+    hub_url = payload.get("hub_url")
+    access_token = payload.get("access_token")
+
+    if not hub_url:
+        return jsonify({"error": "hub_url required"}), 400
+
+    try:
+        if signalr_client:
+            signalr_client.stop()
+        
+        signalr_client = SignalRClient(hub_url, access_token)
+        signalr_client.start()
+        
+        return jsonify({"ok": True, "message": f"Connecting to {hub_url}"})
+    except Exception as e:
+        log.error(f"Connection failed: {e}")
+        return jsonify({"error": str(e)}), 500
 
 @app.post("/subscribe")
 def subscribe() -> Any:
     """
     BODY (sample):
     {
-      "channel": "ticker",
-      "symbols": ["ESZ4", "NQZ4"],
-      "throttle_ms": 100
+      "method": "Subscribe",
+      "args": ["ESZ4"]
     }
     """
+    global signalr_client
     payload: Dict[str, Any] = request.get_json(force=True, silent=True) or {}
-    app.logger.info("subscribe(): %s", json.dumps(payload)[:400])
-    # TODO: map to hub method (e.g., connection.on("Ticker"), invoke("Subscribe", ...))
-    return jsonify({"ok": True, "note": "scaffold; no live subscription yet"})
+    method = payload.get("method")
+    args = payload.get("args", [])
+
+    if not signalr_client or not signalr_client.connection:
+         return jsonify({"error": "SignalR not connected"}), 400
+
+    if not method:
+        return jsonify({"error": "method required"}), 400
+
+    try:
+        signalr_client.invoke(method, *args)
+        return jsonify({"ok": True, "message": f"Invoked {method} with {args}"})
+    except Exception as e:
+        log.error(f"Subscription failed: {e}")
+        return jsonify({"error": str(e)}), 500
 
 @app.post("/disconnect")
 def disconnect() -> Any:
-    """
-    BODY (sample): { "connection_id": "abc123" }
-    """
-    payload: Dict[str, Any] = request.get_json(force=True, silent=True) or {}
-    app.logger.info("disconnect(): %s", json.dumps(payload)[:400])
-    # TODO: locate connection handle & close
-    return jsonify({"ok": True, "note": "scaffold; nothing closed"})
+    global signalr_client
+    if signalr_client:
+        signalr_client.stop()
+        signalr_client = None
+    return jsonify({"ok": True, "message": "Disconnected"})
 
 if __name__ == "__main__":
     # Dev-only run (CLI supervisor will normally start this)

@@ -27,6 +27,18 @@ def create_app() -> FastAPI:
     add_cors(app, cfg.security.cors_allowed_origins)
     app.include_router(health_router)
     app.include_router(ws_router)
+    
+    from strawberry.fastapi import GraphQLRouter
+    from .graphql.schema import schema
+    graphql_app = GraphQLRouter(schema)
+    app.include_router(graphql_app, prefix="/graphql")
+
+    from .routers.topstep import router as topstep_router
+    app.include_router(topstep_router)
+    
+    from .routers.auth import router as auth_router
+    app.include_router(auth_router)
+    
     return app
 
 app = create_app()

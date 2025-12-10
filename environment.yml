@@ -19,6 +19,7 @@ dependencies:
   # Runtime helpers (placeholders; wire later)
   - redis-py
   - requests
+  - httpx
   - pydantic
   - uvicorn
   - fastapi

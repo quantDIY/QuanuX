@@ -42,9 +42,30 @@ class SecretsBroker:
 
 # --- Backends (stubs) ---
 class KeyringBackend:
-    """OS Keyring placeholder. Actual impl will call `keyring` lib."""
-    def get(self, key: str) -> Optional[str]: return None
-    def set(self, key: str, value: str, *, ttl_seconds: int | None = None) -> None: ...
+    """OS Keyring implementation using `keyring` lib."""
+    def __init__(self, service_name: str = "QuanuX"):
+        self.service_name = service_name
+        try:
+            import keyring
+            self._keyring = keyring
+        except ImportError:
+            self._keyring = None
+
+    def get(self, key: str) -> Optional[str]:
+        if not self._keyring:
+            return None
+        try:
+            return self._keyring.get_password(self.service_name, key)
+        except Exception:
+            return None
+
+    def set(self, key: str, value: str, *, ttl_seconds: int | None = None) -> None:
+        if not self._keyring:
+            return
+        try:
+            self._keyring.set_password(self.service_name, key, value)
+        except Exception:
+            pass
 
 class VaultBackend:
     """Vault placeholder. Actual impl will use hvac or REST."""

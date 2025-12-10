@@ -1,2 +1,16 @@
 packages:
   - client
+  - client/web
+  - client/desktop/tauri-app
+  - client/mobile
+  - client/tv
+  - client/ui
+  - client/tablet
+  - client/car
+  - client/vision
+  - client/wear
+  - client/foldables
+  - client/mega
+  - reference/QuantX
+  - server/bridges/signalr/node
+  - client/data

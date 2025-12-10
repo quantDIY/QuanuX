@@ -1,0 +1,9 @@
+{
+  "expo": {
+    "name": "QuanuX Mobile",
+    "slug": "quanux-mobile",
+    "scheme": "quanux",
+    "android": { "package": "dev.quantdiy.quanux.mobile" },
+    "ios": { "bundleIdentifier": "dev.quantdiy.quanux.mobile" }
+  }
+}

@@ -10,6 +10,9 @@
   "dependencies": {
     "expo": "^51.0.0",
     "react": "18.3.1",
-    "react-native": "0.76.3"
+    "react-native": "0.76.3",
+    "@quanux/ui": "workspace:*",
+    "expo-status-bar": "~1.12.1",
+    "nativewind": "^4.0.1"
   }
 }

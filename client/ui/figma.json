@@ -1,0 +1,8 @@
+{
+    "fileId": "YOUR_FIGMA_FILE_ID",
+    "tokens": {
+        "colors": "Local Styles/Colors",
+        "typography": "Local Styles/Typography"
+    },
+    "output": "src/theme/figma.ts"
+}

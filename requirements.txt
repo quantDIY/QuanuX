@@ -1,4 +1,10 @@
 # QuanuX pip fallback (prefer Anaconda/conda-forge first)
 # Intentionally empty at v0.0.1
 
-flask
+# flask (moved to server/bridges/signalr/flask/requirements.txt)
+httpx>=0.27.0
+strawberry-graphql[fastapi]
+keyring>=24.0.0
+webauthn>=2.0.0
+pyotp>=2.9.0
+mcp

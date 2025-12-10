@@ -9,7 +9,7 @@ export default defineConfig({
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
       // Mirror desktop: expose client/src as @quanux/shared
-      "@quanux/shared": path.resolve(__dirname, "../src"),
+      "@quanux/shared": fileURLToPath(new URL("../shared", import.meta.url)),
     },
   },
   server: {
@@ -17,9 +17,12 @@ export default defineConfig({
     strictPort: true,  // don't silently switch
     proxy: {
       "/api": {
-        target: "http://127.0.0.1:8000",
+        target: "http://127.0.0.1:8080",
         changeOrigin: true,
       },
+    },
+    fs: {
+      allow: [".."], // Allow serving files from client/shared
     },
   },
 });

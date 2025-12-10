@@ -1,0 +1,17 @@
+{
+    "extends": "../../client/tsconfig.json",
+    "compilerOptions": {
+        "jsx": "react-jsx",
+        "baseUrl": ".",
+        "paths": {
+            "@/*": [
+                "./src/*"
+            ]
+        }
+    },
+    "include": [
+        "src/**/*",
+        "tailwind.config.ts",
+        "nativewind-env.d.ts"
+    ]
+}
