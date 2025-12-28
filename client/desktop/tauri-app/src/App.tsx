@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { LaunchAnimation } from './components/LaunchAnimation';
 import { ConnectServer } from './components/ConnectServer';
 import { Sidebar } from './components/Sidebar';
+import { StrategyBuilder } from './pages/StrategyBuilder';
+import { Backtests } from './pages/Backtests';
 
 export const App = () => {
     const [stage, setStage] = useState<'launch' | 'connect' | 'dashboard'>('launch');
+    const [currentView, setCurrentView] = useState('dashboard');
 
     const handleAnimationComplete = () => {
         setStage('connect');
@@ -22,23 +25,15 @@ export const App = () => {
         return <ConnectServer onConnect={handleConnect} />;
     }
 
-    // Dashboard / Logged In State
-    return (
-        <div className="flex h-screen bg-background text-foreground overflow-hidden fade-in">
-            <Sidebar />
-
-            <div className="flex-1 flex flex-col min-w-0 overflow-auto">
-                <header className="flex justify-between items-center p-8 pb-4">
-                    <h1 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary drop-shadow-[0_0_15px_rgba(255,0,255,0.3)]">
-                        QuanuX
-                    </h1>
-                    <div className="flex items-center gap-4">
-                        <div className="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_10px_#00ff00] animate-pulse"></div>
-                        <span className="text-sm font-mono text-muted-foreground">SYSTEM ONLINE</span>
-                    </div>
-                </header>
-
-                <main className="flex-1 p-8 pt-0">
+    const renderContent = () => {
+        switch (currentView) {
+            case 'strategy':
+                return <StrategyBuilder />;
+            case 'backtests':
+                return <Backtests />;
+            case 'dashboard':
+            default:
+                return (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {/* Placeholder cards */}
                         <div className="p-6 rounded-xl bg-card border border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,0,255,0.1)] group cursor-pointer">
@@ -69,6 +64,28 @@ export const App = () => {
                             </div>
                         </div>
                     </div>
+                );
+        }
+    };
+
+    // Dashboard / Logged In State
+    return (
+        <div className="flex h-screen bg-background text-foreground overflow-hidden fade-in">
+            <Sidebar currentView={currentView} onNavigate={setCurrentView} />
+
+            <div className="flex-1 flex flex-col min-w-0 overflow-auto">
+                <header className="flex justify-between items-center p-8 pb-4">
+                    <h1 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary drop-shadow-[0_0_15px_rgba(255,0,255,0.3)]">
+                        QuanuX
+                    </h1>
+                    <div className="flex items-center gap-4">
+                        <div className="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_10px_#00ff00] animate-pulse"></div>
+                        <span className="text-sm font-mono text-muted-foreground">SYSTEM ONLINE</span>
+                    </div>
+                </header>
+
+                <main className="flex-1 p-8 pt-0 h-full overflow-hidden">
+                    {renderContent()}
                 </main>
             </div>
         </div>

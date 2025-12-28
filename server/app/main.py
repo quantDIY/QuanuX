@@ -19,6 +19,7 @@ async def lifespan(app: FastAPI):
 def create_app() -> FastAPI:
     setup_logging()
     cfg = ServerConfig()
+
     app = FastAPI(
         title=cfg.app_name,
         version=cfg.version,
@@ -38,6 +39,9 @@ def create_app() -> FastAPI:
     
     from .routers.auth import router as auth_router
     app.include_router(auth_router)
+
+    from .routers.strategy import router as strategy_router
+    app.include_router(strategy_router)
     
     return app
 

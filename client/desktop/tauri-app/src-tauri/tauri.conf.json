@@ -4,6 +4,8 @@
   "version": "0.0.1",
   "identifier": "dev.quantdiy.quanux.desktop",
   "build": {
+    "beforeDevCommand": "pnpm dev",
+    "beforeBuildCommand": "pnpm build",
     "frontendDist": "../dist",
     "devUrl": "http://localhost:5174"
   },

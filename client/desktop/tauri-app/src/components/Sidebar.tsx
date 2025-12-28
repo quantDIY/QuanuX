@@ -5,18 +5,19 @@ import {
     Network,
     Briefcase,
     Database,
+    LineChart,
     Settings,
     User
 } from 'lucide-react';
-import { Button } from './ui/button';
-import { Separator } from './ui/separator';
+import { Button } from '@quanux/shared/components/ui/button';
+import { Separator } from '@quanux/shared/components/ui/separator';
 import {
     Tooltip,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger
-} from './ui/tooltip';
-import { cn } from '@/lib/utils';
+} from '@quanux/shared/components/ui/tooltip';
+import { cn } from '@quanux/shared/lib/utils';
 
 interface SidebarProps {
     className?: string;
@@ -33,6 +34,7 @@ interface SidebarItem {
 const mainItems: SidebarItem[] = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'strategy', label: 'Strategy Builder', icon: Workflow },
+    { id: 'backtests', label: 'Backtests', icon: LineChart },
     { id: 'integrations', label: 'Integrations', icon: Network },
     { id: 'brokers', label: 'Brokers', icon: Briefcase },
     { id: 'data', label: 'Data', icon: Database },
