@@ -3,11 +3,18 @@ import { LaunchAnimation } from './components/LaunchAnimation';
 import { ConnectServer } from './components/ConnectServer';
 import { Sidebar } from './components/Sidebar';
 import { StrategyBuilder } from './pages/StrategyBuilder';
+import { Integrations } from './pages/Integrations';
 import { Backtests } from './pages/Backtests';
 
 export const App = () => {
     const [stage, setStage] = useState<'launch' | 'connect' | 'dashboard'>('launch');
-    const [currentView, setCurrentView] = useState('dashboard');
+    const [currentView, setCurrentView] = useState(() => {
+        const path = window.location.pathname;
+        if (path.includes('strategy')) return 'strategy';
+        if (path.includes('integrations')) return 'integrations';
+        if (path.includes('backtests')) return 'backtests';
+        return 'dashboard';
+    });
 
     const handleAnimationComplete = () => {
         setStage('connect');
@@ -29,6 +36,8 @@ export const App = () => {
         switch (currentView) {
             case 'strategy':
                 return <StrategyBuilder />;
+            case 'integrations':
+                return <Integrations />;
             case 'backtests':
                 return <Backtests />;
             case 'dashboard':
