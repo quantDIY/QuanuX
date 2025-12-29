@@ -1,86 +1,143 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Button } from '@quanux/shared/components/ui/button';
-import { Card } from '@quanux/shared/components/ui/card';
-import { Separator } from '@quanux/shared/components/ui/separator';
-import { Bot, Play, Terminal, Code, Send, Cpu, ChevronRight } from 'lucide-react';
+import { StrategyWizard } from '../components/StrategyWizard';
+import { FileExplorer } from '../components/FileExplorer';
+import { EditorTabs } from '../components/EditorTabs';
+import { Terminal, Code, Play, ChevronLeft, ChevronRight, Menu, Loader2, Save } from 'lucide-react';
+import { useToast } from '@quanux/shared/hooks/use-toast';
 
 export const StrategyBuilder = () => {
-    const [input, setInput] = useState('');
-    const [messages, setMessages] = useState<{ role: 'user' | 'ai', content: string }[]>([
-        { role: 'ai', content: "Hello! I'm your Quant Assistant. I can help you build a trading strategy using vectorbt, backtrader, or other frameworks. What kind of strategy would you like to build today?" }
-    ]);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-    const handleSend = () => {
-        if (!input.trim()) return;
-        setMessages([...messages, { role: 'user', content: input }]);
-        setInput('');
-        // Mock AI response for now
-        setTimeout(() => {
-            setMessages(prev => [...prev, { role: 'ai', content: "That sounds interesting. Could you specify the timeframe and the asset class you are interested in?" }]);
-        }, 1000);
+    // File Management State
+    const [files, setFiles] = useState<Record<string, string>>({});
+    const [openFiles, setOpenFiles] = useState<string[]>([]);
+    const [activeFile, setActiveFile] = useState<string | null>(null);
+
+    const [messages, setMessages] = useState<string[]>([]);
+    const [isGenerating, setIsGenerating] = useState(false);
+    const { toast } = useToast();
+
+    const handleStrategyComplete = async (answers: Record<string, any>) => {
+        setIsGenerating(true);
+        setMessages(prev => [...prev, `[*] Sending requirements to Strategy Architect...`]);
+
+        try {
+            const response = await fetch('/api/strategy/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    provider: 'mock',
+                    model: 'gpt-4o',
+                    requirements: answers,
+                    api_key: 'byo-key-placeholder'
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Build failed: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+
+            if (data.files) {
+                setFiles(data.files);
+                const fileList = Object.keys(data.files);
+                // Open main.py by default if exists, else first file
+                const initialFile = fileList.find(f => f.includes('main.py')) || fileList[0];
+                if (initialFile) {
+                    setOpenFiles([initialFile]);
+                    setActiveFile(initialFile);
+                }
+                setMessages(prev => [...prev, `[+] Success: Strategy generated at ${new Date().toLocaleTimeString()}`]);
+
+                toast({
+                    title: "Strategy Generated",
+                    description: "Your modular strategy has been built successfully.",
+                });
+            } else {
+                throw new Error("Invalid response format: No files returned");
+            }
+
+        } catch (error) {
+            console.error(error);
+            setMessages(prev => [...prev, `[!] Error: ${error instanceof Error ? error.message : 'Unknown error'}`]);
+            toast({
+                title: "Generation Failed",
+                description: error instanceof Error ? error.message : "An error occurred",
+                variant: "destructive"
+            });
+        } finally {
+            setIsGenerating(false);
+        }
     };
 
+    const handleFileSelect = (filename: string, content: string) => {
+        if (!openFiles.includes(filename)) {
+            setOpenFiles(prev => [...prev, filename]);
+        }
+        setActiveFile(filename);
+    };
+
+    const handleTabClose = (filename: string) => {
+        const newOpenFiles = openFiles.filter(f => f !== filename);
+        setOpenFiles(newOpenFiles);
+        if (activeFile === filename) {
+            setActiveFile(newOpenFiles[newOpenFiles.length - 1] || null);
+        }
+    };
+
+    // Auto-scroll terminal
+    useEffect(() => {
+        const terminal = document.getElementById('terminal-output');
+        if (terminal) terminal.scrollTop = terminal.scrollHeight;
+    }, [messages]);
+
     return (
-        <div className="flex h-full bg-background text-foreground animate-in fade-in duration-500">
-            {/* Left Panel: Strategy Wizard / Chat */}
-            <div className="w-1/3 border-r border-border flex flex-col bg-muted/10 backdrop-blur-sm">
+        <div className="flex h-full bg-background text-foreground animate-in fade-in duration-500 overflow-hidden">
+            {/* Left Panel: Strategy Wizard */}
+            <div className={`
+                ${isSidebarOpen ? 'w-1/3 min-w-[350px]' : 'w-0 opacity-0'} 
+                border-r border-border flex flex-col bg-muted/10 backdrop-blur-sm transition-all duration-300 ease-in-out relative
+            `}>
                 <div className="p-4 border-b border-border flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <Bot className="w-5 h-5 text-primary" />
-                        <h2 className="font-bold text-lg">Strategy Wizard</h2>
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <Cpu className="w-3 h-3" />
-                        <span>Model: GPT-4o</span>
-                    </div>
+                    <h2 className="font-bold text-lg whitespace-nowrap">Strategy Wizard</h2>
+                    <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(false)} className="h-8 w-8">
+                        <ChevronLeft className="w-4 h-4" />
+                    </Button>
                 </div>
 
-                <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                    {messages.map((msg, idx) => (
-                        <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                            <div className={`max-w-[85%] p-3 rounded-2xl text-sm ${msg.role === 'user'
-                                ? 'bg-primary text-primary-foreground rounded-tr-none'
-                                : 'bg-card border border-border rounded-tl-none shadow-sm'
-                                }`}>
-                                {msg.content}
-                            </div>
+                {/* Wizard Container */}
+                <div className="flex-1 overflow-hidden relative">
+                    {isGenerating && (
+                        <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center flex-col gap-4">
+                            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                            <p className="text-sm font-medium animate-pulse">Designing Strategy...</p>
                         </div>
-                    ))}
-                </div>
-
-                <div className="p-4 border-t border-border bg-background/50">
-                    <div className="relative">
-                        <textarea
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSend())}
-                            placeholder="Describe your strategy..."
-                            className="w-full bg-muted/50 border border-border rounded-xl p-3 pr-12 resize-none focus:outline-none focus:ring-1 focus:ring-primary h-20 text-sm"
-                        />
-                        <Button
-                            size="icon"
-                            className="absolute right-2 bottom-2 h-8 w-8"
-                            onClick={handleSend}
-                        >
-                            <Send className="w-4 h-4" />
-                        </Button>
-                    </div>
+                    )}
+                    <StrategyWizard onComplete={handleStrategyComplete} />
                 </div>
             </div>
 
-            {/* Right Panel: Code & Results */}
-            <div className="flex-1 flex flex-col bg-background">
+            {/* Right Panel: Code Workspace */}
+            <div className="flex-1 flex flex-col bg-background min-w-0">
                 {/* Toolbar */}
                 <div className="p-2 border-b border-border flex items-center justify-between bg-muted/20">
                     <div className="flex items-center gap-2 px-2">
-                        <Code className="w-4 h-4 text-muted-foreground" />
-                        <span className="text-sm font-medium">strategy.py</span>
-                        <span className="text-xs text-muted-foreground ml-2">(Python 3.11)</span>
+                        {!isSidebarOpen && (
+                            <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(true)} className="h-8 w-8 mr-2">
+                                <Menu className="w-4 h-4" />
+                            </Button>
+                        )}
+                        <span className="text-sm font-medium flex items-center gap-2">
+                            <Code className="w-4 h-4 text-primary" /> Strategy Workspace
+                        </span>
                     </div>
                     <div className="flex items-center gap-2">
                         <Button variant="outline" size="sm" className="h-8 gap-2">
-                            <Terminal className="w-3 h-3" />
-                            Console
+                            <Save className="w-3 h-3" />
+                            Save
                         </Button>
                         <Button size="sm" className="h-8 gap-2 bg-green-600 hover:bg-green-700 text-white">
                             <Play className="w-3 h-3" />
@@ -89,39 +146,67 @@ export const StrategyBuilder = () => {
                     </div>
                 </div>
 
-                {/* Editor Area (Placeholder) */}
-                <div className="flex-1 p-0 relative font-mono text-sm group">
-                    <div className="absolute inset-0 p-4 overflow-auto text-muted-foreground bg-slate-950/50">
-                        <span className="text-primary">import</span> vectorbt <span className="text-primary">as</span> vbt<br />
-                        <span className="text-primary">import</span> numpy <span className="text-primary">as</span> np<br />
-                        <br />
-                        <span className="text-muted-foreground/60"># Strategy code will be generated here...</span><br />
-                        <br />
-                        price = vbt.YFData.download(<span className="text-yellow-500">'BTC-USD'</span>).get(<span className="text-yellow-500">'Close'</span>)<br />
-                        fast_ma = vbt.MA.run(price, <span className="text-orange-400">10</span>)<br />
-                        slow_ma = vbt.MA.run(price, <span className="text-orange-400">50</span>)<br />
-                        entries = fast_ma.ma_crossed_above(slow_ma)<br />
-                        exits = fast_ma.ma_crossed_below(slow_ma)<br />
-                        <br />
-                        pf = vbt.Portfolio.from_signals(price, entries, exits)<br />
-                        print(pf.total_return())
+                {/* Workspace Content: Split Explorer & Editor */}
+                <div className="flex-1 flex overflow-hidden">
+                    {/* File Explorer Pane */}
+                    <div className="w-64 border-r border-border bg-muted/5 flex flex-col">
+                        {Object.keys(files).length > 0 ? (
+                            <FileExplorer
+                                files={files}
+                                onFileSelect={handleFileSelect}
+                                selectedFile={activeFile}
+                            />
+                        ) : (
+                            <div className="p-4 text-xs text-muted-foreground text-center">
+                                No strategy generated yet.
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Editor Pane */}
+                    <div className="flex-1 flex flex-col min-w-0 bg-slate-950/30">
+                        <EditorTabs
+                            openFiles={openFiles}
+                            activeFile={activeFile}
+                            onTabSelect={setActiveFile}
+                            onTabClose={handleTabClose}
+                        />
+
+                        <div className="flex-1 relative font-mono text-sm overflow-auto">
+                            {activeFile && files[activeFile] ? (
+                                <textarea
+                                    className="w-full h-full bg-transparent p-4 text-muted-foreground resize-none focus:outline-none font-mono text-sm leading-relaxed"
+                                    value={files[activeFile]}
+                                    onChange={(e) => {
+                                        setFiles(prev => ({ ...prev, [activeFile]: e.target.value }));
+                                    }}
+                                    spellCheck={false}
+                                />
+                            ) : (
+                                <div className="flex items-center justify-center h-full text-muted-foreground/40">
+                                    <div className="text-center">
+                                        <Code className="w-12 h-12 mx-auto mb-2 opacity-20" />
+                                        <p>Select a file to view code</p>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
 
-                {/* Integrated Terminal (Collapsed State) */}
-                <div className="h-32 border-t border-border bg-black/90 p-2 font-mono text-xs text-green-400 overflow-y-auto">
-                    <div className="flex items-center gap-2 text-muted-foreground mb-2 px-2">
-                        <ChevronRight className="w-3 h-3" />
-                        <span>Terminal</span>
+                {/* Terminal Pane */}
+                <div className="h-40 border-t border-border bg-black/90 p-2 font-mono text-xs text-green-400 overflow-y-auto" id="terminal-output">
+                    <div className="flex items-center gap-2 text-muted-foreground mb-2 px-2 sticky top-0 bg-black/90 pb-2 border-b border-zinc-800">
+                        <Terminal className="w-3 h-3" />
+                        <span>System Console</span>
                     </div>
-                    <div className="px-4">
-                        <span className="text-blue-400">USER@QUANUX</span>:<span className="text-blue-200">~</span>$ python strategy.py<br />
-                        [+] Market Data Connection: OK<br />
-                        [+] Strategy Loaded: moving_average_crossover<br />
-                        [+] Backtest Complete. Total Return: 124.5%<br />
+                    <div className="px-4 space-y-1">
+                        <span className="text-blue-400">USER@QUANUX</span>:<span className="text-blue-200">~</span>$ system_ready<br />
+                        {messages.map((msg, i) => (
+                            <div key={i} className="break-all">{msg}</div>
+                        ))}
                     </div>
                 </div>
-
             </div>
         </div>
     );

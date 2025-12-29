@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Body
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
 
-router = APIRouter(prefix="/strategy", tags=["strategy"])
+router = APIRouter(prefix="/api/strategy", tags=["strategy"])
 
 class StrategyRequest(BaseModel):
     provider: str
@@ -14,39 +14,27 @@ class StrategyResponse(BaseModel):
     code: str
     explanation: str
 
+from server.strategies.builder import StrategyBuilder
+
 @router.post("/generate", response_model=StrategyResponse)
 async def generate_strategy(request: StrategyRequest):
-    # TODO: Integrate with actual AI provider logic
-    # For now, return a mocked response based on templates
+    builder = StrategyBuilder()
     
-    symbol = request.requirements.get("symbol", "BTC-USD")
-    timeframe = request.requirements.get("timeframe", "1h")
+    # Generate the strategy using the builder
+    # result contains {"status": "success", "path": "...", "files": {...}}
+    result = builder.generate_strategy(request.requirements, request.api_key)
     
-    code = f"""
-import vectorbt as vbt
-import numpy as np
-
-# Generated Strategy for {symbol} ({timeframe})
-
-# 1. Data
-price = vbt.YFData.download('{symbol}', interval='{timeframe}').get('Close')
-
-# 2. Signals
-fast_ma = vbt.MA.run(price, 10)
-slow_ma = vbt.MA.run(price, 50)
-entries = fast_ma.ma_crossed_above(slow_ma)
-exits = fast_ma.ma_crossed_below(slow_ma)
-
-# 3. Portfolio
-pf = vbt.Portfolio.from_signals(price, entries, exits, fees=0.001)
-
-# 4. Stats
-print(pf.stats())
-pf.plot().show()
-"""
+    # Format the response
+    # We'll combine the file contents for the code preview
+    code_preview = ""
+    for fname, content in result.get("files", {}).items():
+        code_preview += f"#File: {fname}\n{content}\n\n"
+        
+    strategy_name = request.requirements.get('naming', 'MyStrategy')
+    
     return StrategyResponse(
-        code=code,
-        explanation=f"Generated a Moving Average Crossover strategy for {symbol} on {timeframe} timeframe."
+        code=code_preview,
+        explanation=f"Strategy '{strategy_name}' generated successfully in {result.get('path')}."
     )
 @router.post("/backtest/run", response_model=Dict[str, Any])
 async def run_backtest(request: StrategyResponse):
