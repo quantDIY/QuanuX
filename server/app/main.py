@@ -48,6 +48,9 @@ def create_app() -> FastAPI:
 
     from .routers.auth_integration import router as auth_integration_router
     app.include_router(auth_integration_router)
+
+    from .routers.terminal import router as terminal_router
+    app.include_router(terminal_router)
     
     return app
 

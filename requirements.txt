@@ -8,3 +8,8 @@ keyring>=24.0.0
 webauthn>=2.0.0
 pyotp>=2.9.0
 mcp
+
+openai>=1.0.0
+google-generativeai>=0.3.0
+typer>=0.9.0
+rich>=13.0.0

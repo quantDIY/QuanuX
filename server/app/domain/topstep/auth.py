@@ -11,7 +11,11 @@ async def authenticate(creds: LoginRequest, base_url: str = DEFAULT_API_URL) -> 
         "accept": "text/plain",
         "Content-Type": "application/json"
     }
-    payload = {"userName": creds.username, "apiKey": creds.api_key}
+    payload = {
+        "userName": creds.username,
+        "password": creds.password,
+        "apiKey": creds.api_key
+    }
     
     async with httpx.AsyncClient() as client:
         response = await client.post(url, json=payload, headers=headers)

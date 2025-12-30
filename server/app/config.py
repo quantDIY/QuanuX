@@ -29,6 +29,7 @@ class ServerConfig(BaseSettings):
     
     class TopstepConfig(BaseModel):
         username: str | None = None
+        password: str | None = None
         api_key: str | None = None
         session_token: str | None = None
         base_api_url: str = "https://api.topstepx.com"
@@ -125,7 +126,7 @@ class KeyringSettingsSource(PydanticBaseSettingsSource):
             if field_name == "topstep":
                 # Look for QUANUX__TOPSTEP__USERNAME, QUANUX__TOPSTEP__API_KEY
                 ts_d = {}
-                for sub_field in ["username", "api_key", "session_token", "market_hub_url"]:
+                for sub_field in ["username", "password", "api_key", "session_token", "market_hub_url"]:
                     sub_key = f"{prefix}TOPSTEP{delimiter}{sub_field.upper()}"
                     sub_val = kb.get(sub_key)
                     print(f"DEBUG: Checking {sub_key} -> {sub_val is not None}")

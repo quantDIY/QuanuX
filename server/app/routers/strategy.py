@@ -22,7 +22,11 @@ async def generate_strategy(request: StrategyRequest):
     
     # Generate the strategy using the builder
     # result contains {"status": "success", "path": "...", "files": {...}}
-    result = builder.generate_strategy(request.requirements, request.api_key)
+    result = builder.generate_strategy(
+        answers=request.requirements, 
+        api_key=request.api_key,
+        provider=request.provider
+    )
     
     # Format the response
     # We'll combine the file contents for the code preview

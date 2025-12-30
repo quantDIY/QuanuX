@@ -45,27 +45,37 @@ class KeyringBackend:
     """OS Keyring implementation using `keyring` lib."""
     def __init__(self, service_name: str = "QuanuX"):
         self.service_name = service_name
+        self._keyring = None
         try:
             import keyring
+            # Basic sanity check to ensure we can access a backend
+            # This helps catch cases where it imports but fails to find a backend
+            keyring.get_keyring()
             self._keyring = keyring
         except ImportError:
-            self._keyring = None
+             print("KeyringBackend: 'keyring' library not found.")
+        except Exception as e:
+             import traceback
+             print(f"KeyringBackend: Failed to initialize keyring: {e}")
+             # traceback.print_exc() # Optional: verbose debugging
 
     def get(self, key: str) -> Optional[str]:
         if not self._keyring:
             return None
         try:
             return self._keyring.get_password(self.service_name, key)
-        except Exception:
+        except Exception as e:
+            print(f"KeyringBackend.get error: {e}")
             return None
 
     def set(self, key: str, value: str, *, ttl_seconds: int | None = None) -> None:
         if not self._keyring:
-            return
+            raise RuntimeError("Keyring is not available on this system.")
         try:
             self._keyring.set_password(self.service_name, key, value)
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"KeyringBackend.set error: {e}")
+            raise e
 
 class VaultBackend:
     """Vault placeholder. Actual impl will use hvac or REST."""

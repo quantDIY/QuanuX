@@ -46,6 +46,7 @@ def main():
         ("TOPSTEP__USERNAME", "Topstep Username"),
         ("TOPSTEP__API_KEY", "Topstep API Key"),
         ("TRADINGVIEW_CLIENT_ID", "TradingView Client ID"),
+        ("OPENAI_API_KEY", "OpenAI API Key"),
         ("BROKER_API_KEY", "Broker API Key"),
     ]
 

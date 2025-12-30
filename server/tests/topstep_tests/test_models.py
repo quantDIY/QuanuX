@@ -9,8 +9,9 @@ from server.app.domain.topstep.models import (
 )
 
 def test_login_request_model():
-    req = LoginRequest(username="user", api_key="key")
+    req = LoginRequest(username="user", password="secret", api_key="key")
     assert req.username == "user"
+    assert req.password == "secret"
     assert req.api_key == "key"
 
 def test_login_response_model():

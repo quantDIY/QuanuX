@@ -7,12 +7,13 @@ from server.app.config import ServerConfig
 async def test_authentication(config: ServerConfig):
     """Verify we can authenticate with stored credentials."""
     username = config.topstep.username
+    password = config.topstep.password
     api_key = config.topstep.api_key
     
-    if not username or not api_key:
+    if not username or not password or not api_key:
         pytest.skip("Missing Topstep credentials in Keyring.")
 
-    creds = LoginRequest(username=username, api_key=api_key)
+    creds = LoginRequest(username=username, password=password, api_key=api_key)
     token = await authenticate(creds)
     
     assert token is not None

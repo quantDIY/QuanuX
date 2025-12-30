@@ -2,6 +2,9 @@ import os
 import json
 from pathlib import Path
 from typing import Dict, Any
+import openai
+import google.generativeai as genai
+from server.security.secrets import KeyringBackend
 
 class StrategyBuilder:
     def __init__(self, strategies_dir: str = "server/strategies"):
@@ -23,6 +26,21 @@ class StrategyBuilder:
         prompt = f"""
 {guidelines}
 
+TOPSTEP API GUIDELINES:
+If the user selects 'Topstep' as the broker, your Python code must call the domain methods in 'server.app.domain.topstep'.
+
+1. **Authentication**:
+   Use `server.app.domain.topstep.auth.authenticate` with `LoginRequest(username, password, api_key)`.
+   Retrieve credentials from `KeyringBackend` (e.g., `kb.get("QUANUX_TOPSTEP__USERNAME")`).
+
+2. **Market Data**:
+   Use `server.app.domain.topstep.contracts.search_contracts(token, "NQ")` to find Contract ID (e.g. `CON.F.US.ENQ.H26`).
+
+3. **Trading**:
+   Use `server.app.domain.topstep.orders.send_order(token, order_request)`.
+
+Structure your 'main.py' to login first, then run the strategy loop.
+
 TASK:
 Based on the above guidelines and the following User Answers, generate a complete Python Strategy Package.
 Return a JSON object where keys are filenames (e.g., 'signal.py') and values are the file content.
@@ -33,77 +51,97 @@ Ensure you generate: __init__.py, main.py, signal.py, entry.py, risk.py, sizing.
 """
         return prompt
 
-    def generate_strategy(self, answers: Dict[str, Any], api_key: str = None) -> Dict[str, str]:
+    def generate_strategy(self, answers: Dict[str, Any], api_key: str = None, provider: str = "openai") -> Dict[str, str]:
         """
         Orchestrates the generation flow.
+        Providers: "openai" (default), "gemini"
         """
         # 1. Construct Prompt
         prompt = self.construct_prompt(answers)
 
-        # 2. Call AI (Mocked for now)
-        # TODO: Integrate valid AI Client using api_key
-        print(f"DEBUG: Mocking AI Call with Prompt length {len(prompt)}")
-        
+        kb = KeyringBackend()
+        generated_files = {}
+
+        print(f"DEBUG: Generating strategy using provider: {provider}")
+
+        # --- MOCK ---
+        if provider == "mock":
+            generated_files = {
+                "__init__.py": "",
+                "main.py": "print('Hello Mock Strategy')",
+                "signal.py": "class MockSignal: pass",
+                "entry.py": "class MockEntry: pass",
+                "risk.py": "class MockRisk: pass",
+                "sizing.py": "class MockSizing: pass"
+            }
+
+        # --- GOOGLE GEMINI ---
+        elif provider == "gemini":
+            real_key = api_key or os.getenv("GEMINI_API_KEY")
+            if not real_key and kb._keyring:
+                real_key = kb.get("QUANUX_GEMINI_API_KEY")
+            
+            if not real_key:
+                raise ValueError("Gemini API Key not found. Please add QUANUX_GEMINI_API_KEY to secrets.")
+
+            genai.configure(api_key=real_key)
+            model = genai.GenerativeModel('gemini-3-flash-preview')
+            
+            try:
+                # Force JSON structure in prompt
+                json_prompt = prompt + "\n\nIMPORTANT: Output ONLY valid JSON."
+                response = model.generate_content(
+                    json_prompt,
+                    generation_config=genai.types.GenerationConfig(
+                        response_mime_type="application/json"
+                    )
+                )
+                
+                content = response.text
+                if not content:
+                    raise ValueError("Received empty response from Gemini")
+                
+                generated_files = json.loads(content)
+
+            except Exception as e:
+                print(f"ERROR: Gemini call failed: {e}")
+                raise RuntimeError(f"Strategy generation failed (Gemini): {e}")
+
+        # --- OPENAI (Default) ---
+        else:
+            # Retrieve Key
+            # Prefer argument, then env, then keyring
+            real_key = api_key or os.getenv("OPENAI_API_KEY") 
+            if not real_key and kb._keyring:
+                real_key = kb.get("QUANUX_OPENAI_API_KEY")
+            
+            if not real_key:
+                 raise ValueError("OpenAI API Key not found. Please add it in the Integrations page.")
+
+            client = openai.OpenAI(api_key=real_key)
+            
+            print(f"DEBUG: Calling OpenAI with Prompt length {len(prompt)}")
+            
+            try:
+                completion = client.chat.completions.create(
+                    model="gpt-4o",
+                    messages=[
+                        {"role": "system", "content": "You are an expert Python algorithmic trading developer. Output only valid JSON."},
+                        {"role": "user", "content": prompt}
+                    ],
+                    response_format={"type": "json_object"}
+                )
+                content = completion.choices[0].message.content
+                if not content:
+                    raise ValueError("Received empty response from OpenAI")
+                    
+                generated_files = json.loads(content)
+                
+            except Exception as e:
+                print(f"ERROR: OpenAI call failed: {e}")
+                raise RuntimeError(f"Strategy generation failed: {e}")
+
         strategy_name = answers.get('naming', 'MyStrategy').replace(" ", "_")
-        
-        # MOCK RESPONSE
-        generated_files = {
-            "__init__.py": f"from .main import {strategy_name}",
-            "main.py": f"""
-from server.strategies.base import CompositeStrategy
-from .signal import CustomSignal
-from .entry import CustomEntry
-from .risk import CustomRisk
-from .sizing import CustomSizing
-
-class {strategy_name}(CompositeStrategy):
-    def __init__(self):
-        super().__init__(
-            name="{strategy_name}",
-            signal_module=CustomSignal("SignalLogic"),
-            entry_module=CustomEntry("EntryLogic"),
-            risk_module=CustomRisk("RiskLogic"),
-            position_sizing_module=CustomSizing("SizingLogic")
-        )
-""",
-            "signal.py": """
-from server.strategies.base import SignalModule, SignalType, BaseParameters
-
-class CustomSignal(SignalModule):
-    def define_parameters(self):
-        class Params(BaseParameters):
-            period: int = 14
-        return Params
-
-    def on_bar(self, bar_data):
-        # Placeholder Logic
-        return SignalType.NEUTRAL
-""",
-            "entry.py": """
-from server.strategies.base import EntryModule
-
-class CustomEntry(EntryModule):
-    def generate_entry(self, signal, bar_data):
-        return None
-""",
-            "risk.py": """
-from server.strategies.base import RiskModule
-
-class CustomRisk(RiskModule):
-    def calculate_risk(self, entry_price, signal, bar_data):
-        return {"stop_loss": 0.0, "take_profit": 0.0}
-""",
-            "sizing.py": """
-from server.strategies.base import PositionSizingModule, SignalType
-
-class CustomSizing(PositionSizingModule):
-    def define_parameters(self):
-        return None
-
-    def calculate_size(self, signal, price, account_equity):
-        return 1.0
-"""
-        }
         
         if answers.get('broker') == 'Topstep':
             topstep_src = Path("server/app/domain/topstep")

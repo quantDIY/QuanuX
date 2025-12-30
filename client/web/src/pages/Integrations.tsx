@@ -46,6 +46,13 @@ export const Integrations = () => {
             connectUrl: '/api/auth/openai/start'
         },
         {
+            id: 'gemini',
+            name: 'Google Gemini',
+            description: 'Use Google\'s Gemini Flash for high-speed strategy generation.',
+            icon: <Plug className="w-8 h-8 text-purple-500" />,
+            fields: [{ key: 'QUANUX_GEMINI_API_KEY', label: 'API Key', placeholder: 'AIza...' }]
+        },
+        {
             id: 'topstep',
             name: 'Topstep',
             description: 'Connect your Topstep account for live trading and data.',

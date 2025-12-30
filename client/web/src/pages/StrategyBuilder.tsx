@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@quanux/shared/components/ui/button';
 import { StrategyWizard } from '../components/StrategyWizard';
+import { XTerm } from '../components/Terminal/XTerm';
 import { FileExplorer } from '../components/FileExplorer';
 import { EditorTabs } from '../components/EditorTabs';
 import { Terminal, Code, Play, ChevronLeft, ChevronRight, Menu, Loader2, Save } from 'lucide-react';
@@ -28,10 +29,10 @@ export const StrategyBuilder = () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    provider: 'mock',
-                    model: 'gpt-4o',
+                    provider: answers.provider || 'openai',
+                    model: answers.provider === 'gemini' ? 'gemini-3-flash-preview' : 'gpt-4o',
                     requirements: answers,
-                    api_key: 'byo-key-placeholder'
+                    api_key: null
                 })
             });
 
@@ -194,17 +195,10 @@ export const StrategyBuilder = () => {
                     </div>
                 </div>
 
-                {/* Terminal Pane */}
-                <div className="h-40 border-t border-border bg-black/90 p-2 font-mono text-xs text-green-400 overflow-y-auto" id="terminal-output">
-                    <div className="flex items-center gap-2 text-muted-foreground mb-2 px-2 sticky top-0 bg-black/90 pb-2 border-b border-zinc-800">
-                        <Terminal className="w-3 h-3" />
-                        <span>System Console</span>
-                    </div>
-                    <div className="px-4 space-y-1">
-                        <span className="text-blue-400">USER@QUANUX</span>:<span className="text-blue-200">~</span>$ system_ready<br />
-                        {messages.map((msg, i) => (
-                            <div key={i} className="break-all">{msg}</div>
-                        ))}
+                <div className="h-40 border-t border-border bg-black p-0 overflow-hidden relative" id="terminal-output">
+                    {/* Render XTerm, passing any auth token if we had one */}
+                    <div className="absolute inset-0">
+                        <XTerm wsUrl={`ws://${window.location.host}/api/terminal/ws`} />
                     </div>
                 </div>
             </div>

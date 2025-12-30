@@ -1,6 +1,6 @@
 # QuanuX User Agents
 
-This document outlines the architecture and guidelines for AI Agents operating within the QuanuX ecosystem. Specifically, it details how agents should construct Modular Trading Strategies.
+This document outlines the architecture and guidelines for AI Agents operating within the QuanuX ecosystem.
 
 ## Modular Strategy Architecture
 
@@ -43,15 +43,9 @@ class MyRisk(RiskModule):
 
 ## Agent Prompts & Interactions
 
-### Strategy Building Wizard
-When the user uses the Strategy Builder Wizard, the AI Agent will receive:
-1.  **Context**: This `agents.md` file.
-2.  **User Answers**: The data collected from the wizard questions.
-    - *Example*: "I want an RSI Strategy on 15m timeframe that buys when RSI < 30 and sells when RSI > 70. Use a 20 tick stop loss."
-
-### Agent Output Requirements
+### Strategy Building Output
 The agent must generate a **Code Structure** representing the full strategy package.
--   Target Directory: `server/strategies/full/<StrategyName>/` (or `entry/`, `exit/` based on type).
+-   **Target Directory**: `server/strategies/full/<StrategyName>/` (or `entry/`, `exit/` based on type).
 -   **Output Format**: A JSON object where keys are filenames and values are the file content. 
 -   **NO MONOLITHS**: Do NOT generate a single large file. Usage of `from . import` is mandatory.
 
@@ -94,6 +88,21 @@ strategies/full/MyStrategy/
     ├── auth.py
     └── ...
 ```
+
+## Core Architectural Patterns (Agent Knowledge)
+
+### 1. Secrets Management
+-   **Storage**: Secrets (API Keys, Tokens) are stored in the OS Keyring via `POST /api/secrets`.
+-   **Retrieval**: The `KeyringSettingsSource` in `config.py` automatically injects them into Pydantic settings.
+-   **Prefix**: Keys MUST be prefixed with `QUANUX_` (e.g. `QUANUX_OPENAI_API_KEY`) to be discovered.
+
+### 2. Integrations & Auth
+-   **OAuth Flow**: Third-party auth uses a redirect flow (`/api/auth/{provider}/start` -> Provider -> `/api/auth/{provider}/callback`).
+-   **Smart Routing**: The frontend `App.tsx` initializes `currentView` based on `window.location.pathname` to support deep linking (e.g., landing on `/integrations` after an OAuth redirect).
+
+### 3. File System
+-   **Strategies**: Stored in `server/strategies/`. Subdirectories: `full/` (complete strats), `entry/`, `exit/` (snippets).
+-   **Recursive UI**: The `FileExplorer` component handles nested directories for strategies.
 
 ## Strategy Wizard Questions
 The following questions will be used by the Frontend Wizard to collect requirements:

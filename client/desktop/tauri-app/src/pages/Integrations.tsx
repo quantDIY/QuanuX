@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@quanux/shared/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@quanux/shared/components/ui/card';
@@ -44,6 +45,13 @@ export const Integrations = () => {
             fields: [{ key: 'OPENAI_API_KEY', label: 'API Key', placeholder: 'sk-...' }],
             // Mock OAuth for OpenAI just to demonstrate the flow requested
             connectUrl: '/api/auth/openai/start'
+        },
+        {
+            id: 'gemini',
+            name: 'Google Gemini',
+            description: 'Use Google\'s Gemini Flash for high-speed strategy generation.',
+            icon: <Plug className="w-8 h-8 text-purple-500" />,
+            fields: [{ key: 'QUANUX_GEMINI_API_KEY', label: 'API Key', placeholder: 'AIza...' }]
         },
         {
             id: 'topstep',

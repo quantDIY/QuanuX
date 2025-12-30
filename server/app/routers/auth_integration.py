@@ -12,8 +12,8 @@ async def start_auth_flow(provider: str):
     In a real app, this would redirect to the provider's authorization page.
     """
     provider = provider.lower()
-    if provider not in ["openai", "topstep", "google"]:
-        raise HTTPException(status_code=400, detail="Unsupported provider")
+    if provider not in ["topstep", "google"]:
+        raise HTTPException(status_code=400, detail="Unsupported provider (OpenAI requires manual API key entry)")
 
     # MOCK: In dev, we just redirect straight to our callback with a fake code
     # Real World: return RedirectResponse("https://provider.com/oauth/authorize?...")

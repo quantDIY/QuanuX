@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@quanux/shared/components/ui/button';
 import { Input } from '@quanux/shared/components/ui/input';
@@ -263,6 +264,15 @@ export const StrategyWizard: React.FC<WizardProps> = ({ onComplete }) => {
                             value={answers.naming || ''}
                             onChange={e => updateAnswer('naming', e.target.value)}
                         />
+
+                        <Label>AI Provider (Architect)</Label>
+                        <Select onValueChange={(v) => updateAnswer('provider', v)} defaultValue={answers.provider || 'openai'}>
+                            <SelectTrigger><SelectValue placeholder="Select Provider" /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="openai">OpenAI (GPT-4o)</SelectItem>
+                                <SelectItem value="gemini">Google Gemini (Flash 2.0)</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
                 );
             case 17:
