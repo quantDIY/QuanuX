@@ -17,7 +17,7 @@ models:
   embeddings: []
 headers:
   default:
-    anthropic-version: "" # set at runtime when wiring if required
+    anthropic-version: ""  # set at runtime when wiring if required
 rate_limits:
   policy: best_effort
   rpm: null

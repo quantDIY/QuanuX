@@ -16,7 +16,7 @@ config:
 endpoints:
   flask:
     http: "/bridge/signalr"
-    ws: "/bridge/signalr/ws" # future
+    ws: "/bridge/signalr/ws"  # future
 
 runtimes:
   flask:

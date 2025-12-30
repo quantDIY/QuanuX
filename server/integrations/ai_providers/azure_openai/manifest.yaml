@@ -17,7 +17,7 @@ models:
   embeddings: []
 headers:
   default:
-    api-version: "" # set at runtime per deployment
+    api-version: ""  # set at runtime per deployment
 rate_limits:
   policy: best_effort
   rpm: null

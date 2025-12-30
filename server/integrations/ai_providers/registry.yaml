@@ -6,7 +6,7 @@ defaults:
   retry:
     max_retries: 3
     backoff: exponential
-  model_selection: explicit # require explicit model id per call in v0.0.1
+  model_selection: explicit  # require explicit model id per call in v0.0.1
 
 providers:
   - id: openai

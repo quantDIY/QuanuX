@@ -1,13 +1,13 @@
 # Template: AI Provider Manifest — v0.0.1
 id: provider_id_here
 name: Provider Display Name
-kind: external # or local
+kind: external  # or local
 base_url: https://api.example.com
 auth:
-  mode: api_key # api_key | oauth2 | none
+  mode: api_key  # api_key | oauth2 | none
   env_keys:
-    - PROVIDER_API_KEY # example key name, value not stored in git
-  oauth2: # only if mode = oauth2
+    - PROVIDER_API_KEY  # example key name, value not stored in git
+  oauth2:  # only if mode = oauth2
     auth_url: https://example.com/oauth/authorize
     token_url: https://example.com/oauth/token
     scopes: []
@@ -16,7 +16,7 @@ capabilities:
   embeddings: true
   tools: true   # function/tool calling
   streaming: true
-  json_output: preferred # preferred | supported | none
+  json_output: preferred  # preferred | supported | none
 models:
   chat: []        # e.g., ["gpt-4.1", "sonnet-3.5"]
   embeddings: []  # e.g., ["text-embedding-3-large"]
