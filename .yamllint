@@ -1,0 +1,11 @@
+extends: default
+
+ignore: |
+  **/node_modules/**
+  .git/**
+  client/dist/**
+  server/venv/**
+
+rules:
+  line-length: disable
+  document-start: disable
