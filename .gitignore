@@ -31,8 +31,8 @@ dist/
 .env/
 *.env
 .envrc
-*.yml
-*.yaml
+# *.yml
+# *.yaml
 
 # ---- System / Editor ----
 .vscode/
@@ -49,7 +49,7 @@ yarn-error.log*
 .pnpm-store/
 dist/
 build/
-*.lock
+# *.lock
 *.tsbuildinfo
 
 # ---- Local Runtime ----
@@ -59,7 +59,7 @@ server/logs/
 logs/
 *.pid
 *.sock
-*.lock
+# *.lock
 
 # ---- Redis / NATS / External binaries ----
 server/nats-server/
