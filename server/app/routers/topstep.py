@@ -30,6 +30,7 @@ from typing import List, Optional
 class ConnectRequest(BaseModel):
     hub_url: str
     access_token: Optional[str] = None
+    skip_negotiation: bool = False
 
 class SubscribeRequest(BaseModel):
     method: str

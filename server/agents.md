@@ -132,3 +132,41 @@ The following questions will be used by the Frontend Wizard to collect requireme
 15. **Backtest**: Create a corresponding backtest? (Symbols, Timeframes).
 16. **Naming**: What should we call this strategy? What should we call the backtest?
 17. **Custom Questions**: Any additional context or specific instructions for the agent? (Allow multiple custom entries).
+
+## Live Strategy Implementation Guidelines (Topstep)
+Based on live testing verification, the following patterns **MUST** be used for Topstep strategies.
+
+### Orchestrator Pattern (`main.py`)
+Do not put all logic in one file. Use an **Orchestrator** script (`main.py`) to handle infrastructure and a **Logic** module (`strategy.py`) for the trading rules.
+
+**Responsibilities of `main.py`:**
+1.  **Authentication**: Use `server.security.secrets.KeyringBackend` to fetch `QUANUX_TOPSTEP__USERNAME`, `QUANUX_TOPSTEP__PASSWORD`, `QUANUX_TOPSTEP__API_KEY`. Authenticate using `server.app.domain.topstep.auth.authenticate`.
+2.  **Bridge Management**: 
+    -   Check if the SignalR bridge is running at `http://localhost:8077/health`.
+    -   If not, start it using `subprocess` or warn the user.
+    -   Connecting to the bridge requires the Topstep Auth Token.
+3.  **Account & Contract Selection**:
+    -   Fetch accounts via `server.app.domain.topstep.accounts.search_accounts`.
+    -   **CRITICAL**: Prefer "Simulated" or "Demo" accounts for safety.
+    -   Fetch Contract ID (e.g., "CON.F.US.ENQ.H26") using `server.app.domain.topstep.contracts.search_contracts`.
+4.  **Historical Data**:
+    -   Use `server.app.domain.topstep.history.retrieve_bars` to prime the strategy.
+5.  **Event Loop**:
+    -   Run an `asyncio` loop that feeds real-time data (from Bridge/Websocket) to the `Strategy` instance.
+
+### Strategy Logic Pattern (`strategy.py`)
+Keep the trading logic pure and testable.
+-   **Class**: `TestStrategy` (or specific name).
+-   **Inputs**: `on_tick(price)`, `on_bar(bar)`.
+-   **Outputs**: Return clear ACTIONS (e.g., "BUY", "SELL", "CLOSE") or Order Objects rather than executing API calls directly inside the strategy class. Let the Orchestrator handle the API execution.
+
+### Verified Imports for Topstep
+Use these exact paths:
+-   `from server.security.secrets import KeyringBackend`
+-   `from server.app.domain.topstep.auth import authenticate`
+-   `from server.app.domain.topstep.models import LoginRequest`
+-   `from server.app.domain.topstep.accounts import search_accounts`
+-   `from server.app.domain.topstep.contracts import search_contracts`
+-   `from server.app.domain.topstep.history import retrieve_bars`
+-   `from server.app.domain.topstep.orders import place_order`
+
