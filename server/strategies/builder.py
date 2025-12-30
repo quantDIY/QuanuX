@@ -47,6 +47,8 @@ Return a JSON object where keys are filenames (e.g., 'signal.py') and values are
 
 Ensure you generate: __init__.py, main.py, signal.py, entry.py, risk.py, sizing.py.
 
+IMPORTANT: 'sizing.py' MUST define a class inheriting from 'PositionSizingModule'.
+
 {user_context}
 """
         return prompt

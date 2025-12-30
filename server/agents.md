@@ -41,6 +41,13 @@ class MyRisk(RiskModule):
         # Return dict with stop_loss, take_profit
 ```
 
+#### 4. PositionSizingModule
+```python
+class MySizing(PositionSizingModule):
+    def calculate_size(self, signal, price, account_equity):
+        # Return float size (e.g. 1.0 or 100.0)
+```
+
 ## Agent Prompts & Interactions
 
 ### Strategy Building Output
