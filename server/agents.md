@@ -170,3 +170,21 @@ Use these exact paths:
 -   `from server.app.domain.topstep.history import retrieve_bars`
 -   `from server.app.domain.topstep.orders import place_order`
 
+-   `from server.app.domain.topstep.orders import place_order`
+
+### 4. Connection Specification (ProjectX / SignalR)
+**CRITICAL**: The TopstepX API uses a modified SignalR implementation that requires specific handling:
+1.  **Endpoint**: `https://rtc.topstepx.com/hubs/market`
+2.  **Transport Layer**: ALWAYS use `WebSockets` transport. Do NOT use Long Polling or negotiation.
+3.  **Authentication (The "ProjectX" Fix)**:
+    -   When `skipNegotiation=True` is set, the standard SignalR client may NOT send headers correctly.
+    -   You **MUST** manually append the Access Token to the URL query string: `?access_token=<TOKEN>`.
+    -   Example: `hub_url + "?access_token=" + token`.
+4.  **Subscription**:
+    -   Method: `Subscribe`
+    -   Payload: `{"listener": "T", "method": "Subscribe", "args": ["marketdata:<ContractId>"]}`
+    -   Event to Listen: `T` (Tick Data).
+
+### 5. Market Closed Handling
+-   **Order Rejection**: Placing orders when the market is closed (e.g. 16:00-17:00 CST) will raise specific exceptions.
+-   **Simulation**: Strategies intended for testing MUST implement a "Simulation Fallback" if no tick data is received for X seconds, allowing the logic pipeline to be verified even during off-hours.
