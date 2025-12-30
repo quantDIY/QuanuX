@@ -96,8 +96,20 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
       - name: Install generator deps
         run: |
+          pnpm install
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
