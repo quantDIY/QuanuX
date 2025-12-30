@@ -9,7 +9,7 @@
     "preview": "echo \"TODO: vite preview (wired later)\"",
     "check": "tsc --noEmit",
     "build:mcp": "tsc -p mcp/tsconfig.json",
-    "mcp": "npm run build:mcp && node dist/mcp/index.js"
+    "mcp": "pnpm run build:mcp && node dist/mcp/index.js"
   },
   "engines": {
     "node": ">=20"
