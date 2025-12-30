@@ -19,6 +19,22 @@ console = Console()
 app.add_typer(secrets.app, name="secrets", help="Manage API keys and secrets via OS Keyring.")
 app.add_typer(bridge.app, name="bridge", help="Manage the SignalR Bridge.")
 
+@app.command()
+def mcp():
+    """
+    Start the QuanuX MCP Server (Stdio Mode).
+    Connect your Agent (VS Code/Cursor) to this command:
+    'quanuxctl mcp'
+    """
+    import sys
+    from server.mcp.server import mcp as mcp_server
+    # Run the fastmcp server
+    # FastMCP.run() by default handles sys.argv, but here we want to force run it directly
+    # Since we are inside a typer command, we might need to be careful with args.
+    # Actually, mcp.run() usually takes over.
+    mcp_server.run()
+
+
 @app.callback()
 def main(
     version: bool = typer.Option(

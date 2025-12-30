@@ -3,6 +3,7 @@
     "corepack": "^0.34.2"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.17"
+    "@tailwindcss/postcss": "^4.1.17",
+    "json-schema-to-typescript": "^15.0.4"
   }
 }

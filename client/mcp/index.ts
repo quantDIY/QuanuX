@@ -1,94 +1,37 @@
-import { Server } from "@modelcontextprotocol/sdk/server/index.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import {
-    CallToolRequestSchema,
-    ListToolsRequestSchema,
-} from "@modelcontextprotocol/sdk/types.js";
 
-// Create an MCP server
-const server = new Server(
-    {
-        name: "QuanuX Client GUI",
-        version: "0.0.1",
-    },
-    {
-        capabilities: {
-            tools: {},
-        },
-    }
-);
+/**
+ * QuanuX Shared MCP Client
+ * Protocol-agnostic definitions for connecting to the Tool Authority.
+ */
 
-// List available tools
-server.setRequestHandler(ListToolsRequestSchema, async () => {
-    return {
-        tools: [
-            {
-                name: "get_client_info",
-                description: "Get information about the QuanuX Client",
-                inputSchema: {
-                    type: "object",
-                    properties: {},
-                },
-            },
-            {
-                name: "list_components",
-                description: "List available UI components",
-                inputSchema: {
-                    type: "object",
-                    properties: {},
-                },
-            },
-        ],
-    };
-});
+export type MCPToolCall = {
+    name: string;
+    args?: Record<string, unknown>;
+};
 
-// Handle tool execution
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
-    switch (request.params.name) {
-        case "get_client_info": {
-            return {
-                content: [
-                    {
-                        type: "text",
-                        text: JSON.stringify(
-                            {
-                                name: "QuanuX Client",
-                                version: "0.0.1",
-                                status: "Active",
-                            },
-                            null,
-                            2
-                        ),
-                    },
-                ],
-            };
-        }
-        case "list_components": {
-            return {
-                content: [
-                    {
-                        type: "text",
-                        text: JSON.stringify(
-                            ["Button", "Card", "Input", "Dialog"],
-                            null,
-                            2
-                        ),
-                    },
-                ],
-            };
-        }
-        default:
-            throw new Error("Unknown tool");
-    }
-});
+export type MCPResult<T = unknown> = {
+    ok: boolean;
+    data?: T;
+    error?: string;
+};
 
-async function main() {
-    const transport = new StdioServerTransport();
-    await server.connect(transport);
-    console.error("QuanuX Client MCP Server running on stdio");
+export interface MCPTransport {
+    call(tool: MCPToolCall): Promise<MCPResult>;
 }
 
-main().catch((error) => {
-    console.error("Fatal error in main():", error);
-    process.exit(1);
-});
+// Registry-aware types (could be code-generated from registry.yaml later)
+export type ToolName =
+    | 'repo.search'
+    | 'repo.open'
+    | 'build.web'
+    | 'build.desktop'
+    | 'test.server'
+    | 'duckdb.query_readonly';
+
+export class MCPClient {
+    constructor(private transport: MCPTransport) { }
+
+    async call<T>(name: ToolName, args?: Record<string, unknown>): Promise<MCPResult<T>> {
+        return (await this.transport.call({ name, args })) as MCPResult<T>;
+    }
+}
