@@ -29,6 +29,88 @@ Semantic versioning will be introduced once public APIs stabilize.
 
 ---
 
+## 🚀 Getting Started
+
+### 1. Prerequisites
+
+- **Python 3.10+** (Required for the server)
+- **Node.js v20+** & **pnpm** (Required for the client)
+  - Enable pnpm via: `corepack enable`
+- **Rust & Cargo** (Required for building the Tauri desktop app)
+  - [Install Rust](https://www.rust-lang.org/tools/install)
+
+### 2. Installation
+
+Clone the repository and set up the environment:
+
+```bash
+# Clone the repository
+git clone https://github.com/quantdiy/QuanuX.git
+cd QuanuX
+
+# Set up Python Virtual Environment
+python3 -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+
+# Install Dependencies
+# This installs Python dependencies for the server
+pip install -r requirements.txt
+
+# This installs Node dependencies for ALL client packages and server bridges
+pnpm install
+```
+
+### 3. Configuration
+
+QuanuX uses the OS Keyring to securely store API keys.
+
+**Option A: Interactive Setup (Recommended)**
+
+```bash
+python -m server.cli.setup_secrets
+```
+
+This utility prompts for:
+- `TOPSTEP__USERNAME`, `TOPSTEP__PASSWORD`, & `TOPSTEP__API_KEY`
+- `OPENAI_API_KEY`
+- `QUANUX_GEMINI_API_KEY`
+- `TRADINGVIEW_CLIENT_ID`
+
+**Option B: Manual / Additional Keys**
+
+You can also add keys via the **Integrations** page in the app, or manually using Python (e.g., for Gemini):
+
+```bash
+# Example for Gemini
+# Note: Ensure the key name matches what the application expects (e.g. QUANUX_GEMINI_API_KEY)
+python -c "import keyring; keyring.set_password('QuanuX', 'QUANUX_GEMINI_API_KEY', 'your_api_key')"
+```
+
+**Option C: Import from .env**
+
+```bash
+# Create .env file with your keys (e.g. QUANUX_TOPSTEP__API_KEY=...)
+python -m server.cli.import_env
+```
+
+### 4. Running the Application
+
+You will need two terminal sessions.
+
+**Terminal 1: Start the Server**
+```bash
+# Ensure venv is active
+source .venv/bin/activate
+python -m server.app.main
+```
+
+**Terminal 2: Launch Desktop App**
+```bash
+pnpm -C client/desktop/tauri-app tauri dev
+```
+
+---
+
 ## 📜 License
 
 QuanuX is licensed under the **GNU Affero General Public License v3.0 (AGPLv3)**.

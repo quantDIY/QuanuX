@@ -44,9 +44,11 @@ def main():
     # Define secrets to capture
     secrets = [
         ("TOPSTEP__USERNAME", "Topstep Username"),
+        ("TOPSTEP__PASSWORD", "Topstep Password"),
         ("TOPSTEP__API_KEY", "Topstep API Key"),
         ("TRADINGVIEW_CLIENT_ID", "TradingView Client ID"),
         ("OPENAI_API_KEY", "OpenAI API Key"),
+        ("QUANUX_GEMINI_API_KEY", "Gemini API Key"),
         ("BROKER_API_KEY", "Broker API Key"),
     ]
 
