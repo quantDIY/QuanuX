@@ -64,6 +64,8 @@ pnpm install
 
 QuanuX uses the OS Keyring to securely store API keys.
 
+> **Note for Linux Users:** You may need to install system headers for the keyring backend (e.g., `libsecret-1-dev`, `dbus-x11`, or `gnome-keyring`). macOS and Windows use native system stores.
+
 **Option A: Interactive Setup (Recommended)**
 
 ```bash
