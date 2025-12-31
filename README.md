@@ -36,7 +36,7 @@ Semantic versioning will be introduced once public APIs stabilize.
 - **Python 3.10+** (Required for the server)
 - **Node.js v20+** & **pnpm** (Required for the client)
   - Enable pnpm via: `corepack enable`
-- **Rust & Cargo** (Required for building the Tauri desktop app)
+- **Rust & Cargo** (Required for **development** and building the Tauri desktop app)
   - [Install Rust](https://www.rust-lang.org/tools/install)
 
 ### 2. Installation
