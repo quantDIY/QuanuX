@@ -109,6 +109,16 @@ python -m server.app.main
 pnpm -C client/desktop/tauri-app tauri dev
 ```
 
+### 5. Building for Production (Optional)
+
+If you want to create a standalone executable (e.g., `.dmg`, `.exe`, or `.app`) rather than running in development mode:
+
+```bash
+pnpm -C client/desktop/tauri-app tauri build
+```
+
+This will output the installers/bundles to `client/desktop/tauri-app/src-tauri/target/release/bundle`.
+
 ---
 
 ## 📜 License
