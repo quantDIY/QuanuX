@@ -5,5 +5,12 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.17",
     "json-schema-to-typescript": "^15.0.4"
+  },
+  "pnpm": {
+    "overrides": {
+      "esbuild": ">=0.25.0",
+      "undici": ">=5.29.0",
+      "@modelcontextprotocol/sdk": ">=1.0.4"
+    }
   }
 }
