@@ -1,20 +1,18 @@
 ---
 name: Bug report
-about: Report a reproducible bug
+about: Report a reproducible issue
 ---
 
 **Describe the bug**
-A clear description of what went wrong.
+A clear description of the problem.
 
-**To reproduce**
-Steps to reproduce the behavior:
-
-1. ...
-2. ...
-3. ...
+**Steps to reproduce**
+1. …
+2. …
 
 **Expected behavior**
-What should happen?
+What should have happened?
 
-**Additional context**
-Any relevant logs or environment details.
+**Environment**
+- OS:
+- Node/Python/Rust versions:

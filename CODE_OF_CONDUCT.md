@@ -2,24 +2,16 @@
 
 ## Our Commitment
 
-We want QuanuX to be a welcoming and respectful environment for all participants. We ask that everyone interacting here does so with courtesy and professionalism.
+We want QuanuX to be welcoming and respectful to everyone.
 
 ## Expected Behavior
-
-- Be respectful in discussions and issue threads.
-- Focus on ideas and technical content, not individuals.
-- Assume good intentions when interpreting others' comments.
-- Be patient and constructive with newcomers.
+- Be respectful and constructive.
+- Focus on technical content, not individuals.
+- Be patient with newcomers.
 
 ## Unacceptable Behavior
+- Harassment, hate speech, personal attacks
+- Disruptive behavior or intimidation
 
-The following are not acceptable:
-- Harassment, hate speech, or offensive language.
-- Personal attacks or abusive behavior.
-- Disruptive conduct that interferes with project progress.
-
-## Reporting Issues
-
-If someone’s behavior makes you uncomfortable, you are encouraged to report it by opening an issue or contacting the maintainer team directly. We will review reports in confidence and take appropriate action.
-
-Thank you for helping maintain a positive collaborative environment.
+## Reporting
+If you encounter issues, please open a confidential issue or contact maintainers. We’ll review in confidence and respond respectfully.

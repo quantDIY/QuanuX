@@ -1,13 +1,13 @@
 ---
 name: Feature request
-about: Suggest a new feature
+about: Suggest something new
 ---
 
 **Summary**
-Briefly describe your idea.
+Describe your idea briefly.
 
-**Why is this valuable?**
-Explain how it would help users or improve the project.
+**Why is this valuable**
+Explain how it helps users or improves the project.
 
 **Additional context**
-Any related context or examples.
+Links, examples, etc.
