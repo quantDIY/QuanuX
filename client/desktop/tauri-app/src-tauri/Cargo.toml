@@ -12,3 +12,6 @@ tauri-plugin-notification = "2.0.0"
 
 [build-dependencies]
 tauri-build = { version = "2.5.1", features = [] }
+
+[patch.crates-io]
+glib = { path = "./patches/glib-0.18.5" }
