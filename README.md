@@ -101,7 +101,7 @@ You will need two terminal sessions.
 ```bash
 # Ensure venv is active
 source .venv/bin/activate
-python -m server.app.main
+uvicorn server.app.main:app --host 0.0.0.0 --port 8080 --reload
 ```
 
 **Terminal 2: Launch Desktop App**
