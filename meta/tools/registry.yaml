@@ -1,0 +1,55 @@
+# QuanuX MCP Tool Authority Registry
+# This file is the Single Source of Truth for platform capabilities.
+
+tools:
+  - name: repo.search
+    description: Search for files in the repository using glob patterns.
+    capability: repo_read
+    implementation: server.mcp.server:repo_search
+    input_schema:
+      type: object
+      properties:
+        pattern: { type: string, description: "Glob pattern to search for (e.g. *.py)" }
+        search_path: { type: string, default: ".", description: "Relative path to start search from" }
+      required: [pattern]
+
+  - name: repo.open
+    description: Read the contents of a file.
+    capability: repo_read
+    implementation: server.mcp.server:repo_open
+    input_schema:
+      type: object
+      properties:
+        path: { type: string, description: "Relative path to the file" }
+      required: [path]
+
+  - name: build.web
+    description: Trigger a build of the Web Client.
+    capability: build
+    implementation: server.mcp.server:build_web
+    input_schema: { type: object }
+
+  - name: build.desktop
+    description: Trigger a build of the Desktop Application.
+    capability: build
+    implementation: server.mcp.server:build_desktop
+    input_schema: { type: object }
+
+  - name: test.server
+    description: Run server-side tests (pytest).
+    capability: test
+    implementation: server.mcp.server:test_server
+    input_schema:
+      type: object
+      properties:
+        path: { type: string, default: "server/tests", description: "Path to test file or directory" }
+
+  - name: duckdb.query_readonly
+    description: Execute a read-only SQL query against the local DuckDB instance.
+    capability: data_read
+    implementation: server.mcp.server:duckdb_query
+    input_schema:
+      type: object
+      properties:
+        query: { type: string, description: "SQL query to execute" }
+      required: [query]
