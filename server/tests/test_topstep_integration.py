@@ -18,6 +18,7 @@ async def test_topstep_authentication_integration():
         
     creds = LoginRequest(
         username=cfg.topstep.username,
+        password=cfg.topstep.password,
         api_key=cfg.topstep.api_key
     )
     

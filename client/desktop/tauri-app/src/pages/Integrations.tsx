@@ -60,6 +60,7 @@ export const Integrations = () => {
             icon: <Plug className="w-8 h-8 text-blue-500" />,
             fields: [
                 { key: 'TOPSTEP__USERNAME', label: 'Username', placeholder: 'user@example.com' },
+                { key: 'TOPSTEP__PASSWORD', label: 'Password', placeholder: 'password' },
                 { key: 'TOPSTEP__API_KEY', label: 'API Key', placeholder: 'ts-...' }
             ],
             connectUrl: '/api/auth/topstep/start'
