@@ -1,0 +1,43 @@
+{
+    "source_of_truth": {
+        "file": "server/app/config.py",
+        "regex": "version: str = \"(?P<version>\\d+\\.\\d+\\.\\d+)\""
+    },
+    "targets": [
+        {
+            "file": "README.md",
+            "type": "regex",
+            "regex": "version: `v(?P<version>\\d+\\.\\d+\\.\\d+)-pre`"
+        },
+        {
+            "file": "server/app/config.py",
+            "type": "regex",
+            "regex": "version: str = \"(?P<version>\\d+\\.\\d+\\.\\d+)\""
+        },
+        {
+            "file": "server/cli/pyproject.toml",
+            "type": "toml",
+            "path": "project.version"
+        },
+        {
+            "file": "server/cli/src/quanuxctl/__init__.py",
+            "type": "regex",
+            "regex": "__version__ = \"(?P<version>\\d+\\.\\d+\\.\\d+)\""
+        },
+        {
+            "file": "client/package.json",
+            "type": "json",
+            "path": "version"
+        },
+        {
+            "file": "client/desktop/tauri-app/src-tauri/tauri.conf.json",
+            "type": "json",
+            "path": "version"
+        },
+        {
+            "file": "client/desktop/tauri-app/src-tauri/Cargo.toml",
+            "type": "toml",
+            "path": "package.version"
+        }
+    ]
+}
