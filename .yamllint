@@ -5,6 +5,7 @@ ignore: |
   .git/**
   client/dist/**
   server/venv/**
+  conda/recipe/meta.yaml
 
 rules:
   line-length: disable
