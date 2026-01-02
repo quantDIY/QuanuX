@@ -39,7 +39,33 @@ Semantic versioning will be introduced once public APIs stabilize.
 - **Rust & Cargo** (Required for **development** and building the Tauri desktop app)
   - [Install Rust](https://www.rust-lang.org/tools/install)
 
-### 2. Installation
+### 2. Installation via Anaconda (Recommended)
+
+QuanuX is available as a cross-platform package (Linux, macOS, Windows) via Anaconda.
+
+#### Option A: Command Line
+
+Configure the channel once:
+
+```bash
+conda config --add channels QuanuX
+```
+
+Then install:
+
+```bash
+conda install quanux
+```
+
+#### Option B: Anaconda Navigator
+
+1.  Open **Anaconda Navigator**.
+2.  Go to the **Environment** tab and click **Channels**.
+3.  Add `QuanuX` to your channel list.
+4.  Return to **Home** or **Environments**, search for `quanux`, and click Install.
+    *   *Look for the QuanuX card with the `>_` logo.*
+
+### 3. Manual Installation (Development)
 
 Clone the repository and set up the environment:
 
@@ -60,7 +86,7 @@ pip install -r requirements.txt
 pnpm install
 ```
 
-### 3. Configuration
+### 4. Configuration
 
 QuanuX uses the OS Keyring to securely store API keys.
 
@@ -95,7 +121,7 @@ python -c "import keyring; keyring.set_password('QuanuX', 'QUANUX_GEMINI_API_KEY
 python -m server.cli.import_env
 ```
 
-### 4. Running the Application
+### 5. Running the Application
 
 You will need two terminal sessions.
 
@@ -111,7 +137,7 @@ uvicorn server.app.main:app --host 0.0.0.0 --port 8080 --reload
 pnpm -C client/desktop/tauri-app tauri dev
 ```
 
-### 5. Building for Production (Optional)
+### 6. Building for Production (Optional)
 
 If you want to create a standalone executable (e.g., `.dmg`, `.exe`, or `.app`) rather than running in development mode:
 

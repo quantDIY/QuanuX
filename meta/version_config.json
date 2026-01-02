@@ -38,6 +38,21 @@
             "file": "client/desktop/tauri-app/src-tauri/Cargo.toml",
             "type": "toml",
             "path": "package.version"
+        },
+        {
+            "file": "client/desktop/tauri-app/package.json",
+            "type": "json",
+            "path": "version"
+        },
+        {
+            "file": "client/web/package.json",
+            "type": "json",
+            "path": "version"
+        },
+        {
+            "file": "conda/recipe/meta.yaml",
+            "type": "regex",
+            "regex": "{% set version = \"(?P<version>\\d+\\.\\d+\\.\\d+)\" %}"
         }
     ]
 }

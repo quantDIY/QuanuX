@@ -6,18 +6,21 @@ Unified Developer CLI.
 import typer
 from rich.console import Console
 from .commands import secrets, bridge
+from . import __version__
 
 app = typer.Typer(
     name="quanuxctl",
     help="QuanuX Control CLI",
     add_completion=True,
-    rich_markup_mode="rich"
+    rich_markup_mode="rich",
+    invoke_without_command=True
 )
 console = Console()
 
 # Register subcommands
 app.add_typer(secrets.app, name="secrets", help="Manage API keys and secrets via OS Keyring.")
 app.add_typer(bridge.app, name="bridge", help="Manage the SignalR Bridge.")
+
 
 @app.command()
 def mcp():
@@ -46,8 +49,12 @@ def main(
     )
 ):
     if version:
-        console.print("[bold green]QuanuX Control (quanuxctl)[/bold green] v0.1.0")
+        console.print(f"[bold green]QuanuX Control (quanuxctl)[/bold green] v{__version__}")
         raise typer.Exit()
 
-if __name__ == "__main__":
+def cli():
+    """Entry point for the CLI."""
     app()
+
+if __name__ == "__main__":
+    cli()

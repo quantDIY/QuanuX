@@ -1,0 +1,70 @@
+{% set name = "quanux" %}
+{% set version = "0.0.1" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  path: ../../
+
+build:
+  noarch: python
+  number: 0
+  string: pre
+  entry_points:
+    - quanuxctl = quanuxctl.main:cli
+
+app:
+  entry: quanuxctl
+  icon: logo.png
+  summary: "QuanuX Financial Platform"
+  own_environment: true
+
+requirements:
+  host:
+    - python >=3.11
+    - pip
+    - hatchling
+  run:
+    - python >=3.11
+    - duckdb
+    - pandas
+    - polars
+    - numpy
+    - dask
+    - redis-py
+    - requests
+    - httpx
+    - pydantic
+    - uvicorn
+    - fastapi
+    - opentelemetry-api
+    - opentelemetry-sdk
+    # CLI deps
+    - click
+    - typer
+    - rich
+    - rich
+    - nats-py
+    - strawberry-graphql
+    - keyring
+    - webauthn
+    - pyotp
+    - openai
+    - pip
+    
+test:
+  imports:
+    - quanuxctl
+  commands:
+    - quanuxctl --version
+
+about:
+  home: https://github.com/QuanuX/QuanuX
+  summary: 'QuanuX Financial Platform'
+  description: |
+    QuanuX Open Source Financial Platform
+  license: AGPL-3.0
+  license_family: AGPL
+  license_file: LICENSE
