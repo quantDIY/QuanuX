@@ -45,9 +45,10 @@ QuanuX is available as a cross-platform package (Linux, macOS, Windows) via Anac
 
 #### Option A: Command Line
 
-Configure the channel once:
+Configure the channels once (prioritizing conda-forge for dependencies):
 
 ```bash
+conda config --add channels conda-forge
 conda config --add channels QuanuX
 ```
 
@@ -61,8 +62,9 @@ conda install quanux
 
 1.  Open **Anaconda Navigator**.
 2.  Go to the **Environment** tab and click **Channels**.
-3.  Add `QuanuX` to your channel list.
-4.  Return to **Home** or **Environments**, search for `quanux`, and click Install.
+3.  Ensure `conda-forge` is in the list.
+4.  Add `QuanuX` to your channel list.
+5.  Return to **Home** or **Environments**, search for `quanux`, and click Install.
     *   *Look for the QuanuX card with the `>_` logo.*
 
 ### 3. Manual Installation (Development)
