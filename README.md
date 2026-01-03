@@ -37,42 +37,31 @@ Semantic versioning will be introduced once public APIs stabilize.
 - **Node.js v20+** & **pnpm** (Required for the client)
   - Enable pnpm via: `corepack enable`
 - **Rust & Cargo** (Required for **development** and building the Tauri desktop app)
-  - [Install Rust](https://www.rust-lang.org/tools/install)
+### 2. Installation
 
-### 2. Installation via Anaconda (Recommended)
+#### 🌟 Option A: Stable Release (Recommended)
+For the verified, cross-platform release (`v0.0.1-pre`), use Anaconda. This is the **official distribution** hosted by the QuanuX Organization.
 
-QuanuX is available as a cross-platform package (Linux, macOS, Windows) via Anaconda.
+1.  **Configure Channels** (once):
+    ```bash
+    conda config --add channels conda-forge
+    conda config --add channels QuanuX
+    ```
 
-#### Option A: Command Line
+2.  **Install**:
+    ```bash
+    conda install quanux
+    ```
 
-Configure the channels once (prioritizing conda-forge for dependencies):
+*This installs the stable application snapshot found at [QuanuX/quanux](https://github.com/QuanuX/quanux).*
 
-```bash
-conda config --add channels conda-forge
-conda config --add channels QuanuX
-```
+#### 🧪 Option B: Active Development (Experimental)
+Clone this repository (`quantdiy/QuanuX`) if you want to contribute or access bleeding-edge, experimental features.
 
-Then install:
-
-```bash
-conda install quanux
-```
-
-#### Option B: Anaconda Navigator
-
-1.  Open **Anaconda Navigator**.
-2.  Go to the **Environment** tab and click **Channels**.
-3.  Ensure `conda-forge` is in the list.
-4.  Add `QuanuX` to your channel list.
-5.  Return to **Home** or **Environments**, search for `quanux`, and click Install.
-    *   *Look for the QuanuX card with the `>_` logo.*
-
-### 3. Manual Installation (Development)
-
-Clone the repository and set up the environment:
+> **Warning**: This branch is in active flux and may contain unfinished features.
 
 ```bash
-# Clone the repository
+# Clone the development repository
 git clone https://github.com/quantdiy/QuanuX.git
 cd QuanuX
 
