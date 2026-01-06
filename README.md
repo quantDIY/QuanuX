@@ -29,6 +29,31 @@ Semantic versioning will be introduced once public APIs stabilize.
 
 ---
 
+## 🔌 Integrations
+
+QuanuX supports a wide range of connections via its unified API bridge and `async-rithmic` integration.
+
+### Supported Brokers
+-   **Ironbeam Futures**
+-   **Amp Futures**
+-   **Discount Trading**
+
+### Proprietary Trading Firms
+-   **Topstep** (Native API Integration)
+-   **Apex Trader Funding** (via Rithmic)
+-   **Elite Trader Funding** (via Rithmic)
+-   **Take Profit Trader** (via Rithmic)
+
+*Note: Rithmic connections are powered by the local QuanuX Bridge. Check the "Integrations" tab in the app to configure credentials.*
+
+---
+
+## 🌟 Credits
+
+Special thanks to **Mickael Burguet** (`rundef`) and the contributors of the **[async-rithmic](https://github.com/rundef/async_rithmic)** library. Their work on the Python Rithmic Protocol interface has been instrumental in powering QuanuX's connectivity.
+
+---
+
 ## 🚀 Getting Started
 
 ### 1. Prerequisites

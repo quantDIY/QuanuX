@@ -17,13 +17,88 @@ SECRETS_MAP = [
     ("TOPSTEP__API_KEY", "Topstep API Key"),
     ("TRADINGVIEW_CLIENT_ID", "TradingView Client ID"),
     ("BROKER_API_KEY", "Broker API Key"),
-    # Rithmic
-    ("QUANUX_RITHMIC_USER", "Rithmic Username"),
-    ("QUANUX_RITHMIC_PASS", "Rithmic Password"),
-    ("QUANUX_RITHMIC_SYSTEM", "Rithmic System (e.g. Rithmic Test)"),
-    ("QUANUX_RITHMIC_URL", "Rithmic WSS URL"),
-    ("QUANUX_RITHMIC_APP_NAME", "Rithmic App Name"),
-    ("QUANUX_RITHMIC_APP_VERSION", "Rithmic App Version"),
+    # Rithmic (Generic & Prop Firms)
+    ("QUANUX_RITHMIC_USER", "Rithmic (Generic) Username"),
+    ("QUANUX_RITHMIC_PASS", "Rithmic (Generic) Password"),
+    ("QUANUX_RITHMIC_SYSTEM", "Rithmic (Generic) System"),
+    ("QUANUX_RITHMIC_URL", "Rithmic (Generic) WSS URL"),
+    ("QUANUX_RITHMIC_APP_NAME", "Rithmic (Generic) App Name"),
+    ("QUANUX_RITHMIC_APP_VERSION", "Rithmic (Generic) App Version"),
+
+    # Brokers
+    ("QUANUX_IRONBEAM_USER", "Ironbeam Username"),
+    ("QUANUX_IRONBEAM_PASS", "Ironbeam Password"),
+    ("QUANUX_IRONBEAM_SYSTEM", "Ironbeam System (e.g. Rithmic Test)"),
+    ("QUANUX_IRONBEAM_URL", "Ironbeam WSS URL"),
+    ("QUANUX_IRONBEAM_APP_NAME", "Ironbeam App Name"),
+    ("QUANUX_IRONBEAM_APP_VERSION", "Ironbeam App Version"),
+
+    ("QUANUX_AMP_USER", "Amp Futures Username"),
+    ("QUANUX_AMP_PASS", "Amp Futures Password"),
+    ("QUANUX_AMP_SYSTEM", "Amp System"),
+    ("QUANUX_AMP_URL", "Amp WSS URL"),
+    ("QUANUX_AMP_APP_NAME", "Amp App Name"),
+    ("QUANUX_AMP_APP_VERSION", "Amp App Version"),
+
+    ("QUANUX_DISCOUNT_USER", "Discount Trading Username"),
+    ("QUANUX_DISCOUNT_PASS", "Discount Trading Password"),
+    ("QUANUX_DISCOUNT_SYSTEM", "Discount System"),
+    ("QUANUX_DISCOUNT_URL", "Discount WSS URL"),
+    ("QUANUX_DISCOUNT_APP_NAME", "Discount App Name"),
+    ("QUANUX_DISCOUNT_APP_VERSION", "Discount App Version"),
+
+    # Prop Firms
+    ("QUANUX_APEX_USER", "Apex Trader Username"),
+    ("QUANUX_APEX_PASS", "Apex Trader Password"),
+    ("QUANUX_APEX_SYSTEM", "Apex System (e.g. Apex)"),
+    ("QUANUX_APEX_URL", "Apex WSS URL"),
+    ("QUANUX_APEX_APP_NAME", "Apex App Name"),
+    ("QUANUX_APEX_APP_VERSION", "Apex App Version"),
+
+    ("QUANUX_ELITE_USER", "Elite Trader Funding Username"),
+    ("QUANUX_ELITE_PASS", "Elite Trader Funding Password"),
+    ("QUANUX_ELITE_SYSTEM", "Elite System"),
+    ("QUANUX_ELITE_URL", "Elite WSS URL"),
+    ("QUANUX_ELITE_APP_NAME", "Elite App Name"),
+    ("QUANUX_ELITE_APP_VERSION", "Elite App Version"),
+
+    ("QUANUX_TAKEPROFIT_USER", "Take Profit Trader Username"),
+    ("QUANUX_TAKEPROFIT_PASS", "Take Profit Trader Password"),
+    ("QUANUX_TAKEPROFIT_SYSTEM", "Take Profit System"),
+    ("QUANUX_TAKEPROFIT_URL", "Take Profit WSS URL"),
+    ("QUANUX_TAKEPROFIT_APP_NAME", "Take Profit App Name"),
+    ("QUANUX_TAKEPROFIT_APP_VERSION", "Take Profit App Version"),
+
+    # Charting (Placeholder)
+    # TradingView ID already exists above
+
+    # Trading Platforms (Placeholders)
+    ("QUANUX_EDGEPROX_USER", "EdgeProX Username"),
+    ("QUANUX_EDGEPROX_PASS", "EdgeProX Password"),
+
+    ("QUANUX_MOTIVEWAVE_USER", "MotiveWave Username"),
+    ("QUANUX_MOTIVEWAVE_PASS", "MotiveWave Password"),
+
+    ("QUANUX_SIERRA_USER", "Sierra Chart Username"),
+    ("QUANUX_SIERRA_PASS", "Sierra Chart Password"),
+
+    ("QUANUX_JIGSAW_USER", "Jigsaw Trading Username"),
+    ("QUANUX_JIGSAW_PASS", "Jigsaw Trading Password"),
+
+    ("QUANUX_QUANTOWER_USER", "Quantower Username"),
+    ("QUANUX_QUANTOWER_PASS", "Quantower Password"),
+
+    ("QUANUX_INVESTORRT_USER", "Investor/RT Username"),
+    ("QUANUX_INVESTORRT_PASS", "Investor/RT Password"),
+
+    ("QUANUX_MULTICHARTS_USER", "MultiCharts Username"),
+    ("QUANUX_MULTICHARTS_PASS", "MultiCharts Password"),
+
+    ("QUANUX_TRADENAV_USER", "Trade Navigator Username"),
+    ("QUANUX_TRADENAV_PASS", "Trade Navigator Password"),
+
+    ("QUANUX_BOOKMAP_USER", "Bookmap Username"),
+    ("QUANUX_BOOKMAP_PASS", "Bookmap Password"),
 ]
 
 @app.command()
