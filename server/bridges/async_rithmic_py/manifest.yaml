@@ -19,8 +19,8 @@ config:
 
 endpoints:
   python:
-    http: "/bridge/rithmic" # Health/Status
-    ws: "/bridge/rithmic/ws" # Fallback
+    http: "/bridge/rithmic"  # Health/Status
+    ws: "/bridge/rithmic/ws"  # Fallback
 
 runtimes:
   python:

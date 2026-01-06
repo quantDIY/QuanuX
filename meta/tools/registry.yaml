@@ -33,7 +33,7 @@ tools:
     description: Trigger a build of the Desktop Application.
     capability: build
     implementation: server.mcp.server:build_desktop
-    input_schema: { type: object }
+    input_schema: {type: object}
 
   - name: test.server
     description: Run server-side tests (pytest).
