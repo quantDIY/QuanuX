@@ -17,6 +17,13 @@ SECRETS_MAP = [
     ("TOPSTEP__API_KEY", "Topstep API Key"),
     ("TRADINGVIEW_CLIENT_ID", "TradingView Client ID"),
     ("BROKER_API_KEY", "Broker API Key"),
+    # Rithmic
+    ("QUANUX_RITHMIC_USER", "Rithmic Username"),
+    ("QUANUX_RITHMIC_PASS", "Rithmic Password"),
+    ("QUANUX_RITHMIC_SYSTEM", "Rithmic System (e.g. Rithmic Test)"),
+    ("QUANUX_RITHMIC_URL", "Rithmic WSS URL"),
+    ("QUANUX_RITHMIC_APP_NAME", "Rithmic App Name"),
+    ("QUANUX_RITHMIC_APP_VERSION", "Rithmic App Version"),
 ]
 
 @app.command()

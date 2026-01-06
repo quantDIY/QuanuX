@@ -185,6 +185,32 @@ Use these exact paths:
     -   Payload: `{"listener": "T", "method": "Subscribe", "args": ["marketdata:<ContractId>"]}`
     -   Event to Listen: `T` (Tick Data).
 
+
+### 6. Broker-Specific Integration Rules (Continued)
+
+#### B. Rithmic (Condition: Broker == 'Rithmic' or 'Rithmic Paper')
+If the user selects **Rithmic**, the strategy must interact with the **Local Rithmic Bridge** (`server/bridges/async_rithmic_py`) rather than connecting directly to Rithmic servers.
+
+**Architecture:**
+-   **Bridge Role**: The `async_rithmic_py` bridge maintains the single authorized session with Rithmic.
+-   **Strategy Role**: Connects to the Bridge via **ZMQ SUB** (for market data) or **WebSocket** (fallback/orders).
+-   **NO Direct Login**: Strategies MUST NOT attempt to instantiate `async_rithmic.Rithmic()` directly, as this will trigger concurrent session limits.
+
+**Integration Pattern:**
+1.  **Market Data (ZMQ)**:
+    -   Subscribe to `tcp://localhost:5557` (PUB/SUB).
+    -   Topic: `tick:{Symbol}` or `tick:ALL`.
+    -   Format: JSON `{"type": "tick", "symbol": "ESZ4", "price": 4500.25, ...}`.
+
+2.  **Order Entry (HTTP/RPC - TBD)**:
+    -   While the bridge implementation matures, strategies may receive specific instructions to use a temporary direct connection **only if** the bridge is not running, but the preferred path is the Bridge API.
+
+**Reference: async-rithmic API (For Context Only)**
+If you are tasked with writing code *for* the Bridge (e.g. extending `app.py`), use these methods:
+-   `client.market_data.subscribe(exchange, symbol)`
+-   `client.orders.place_order(account, symbol, side, qty)`
+-   `client.history.get_historical_ticks(exchange, symbol, date)`
+
 ### 5. Market Closed Handling
 -   **Order Rejection**: Placing orders when the market is closed (e.g. 16:00-17:00 CST) will raise specific exceptions.
 -   **Simulation**: Strategies intended for testing MUST implement a "Simulation Fallback" if no tick data is received for X seconds, allowing the logic pipeline to be verified even during off-hours.

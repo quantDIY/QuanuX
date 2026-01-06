@@ -1,0 +1,39 @@
+name: quanux-bridge-rithmic
+version: v0.0.1
+owner: platform
+description: "Rithmic Protocol Bridge using async-rithmic. Supports ZMQ (Primary) and WebSocket (Fallback)."
+
+default_runtime: python
+alternatives: []
+
+config:
+  env:
+    QUANUX_BRIDGE_PORT: 8078
+    QUANUX_ZMQ_PUB_PORT: 5557
+    QUANUX_ZMQ_REP_PORT: 5558
+    QUANUX_LOG_LEVEL: INFO
+    QUANUX_RITHMIC_USER: ""
+    QUANUX_RITHMIC_PASS: ""
+    QUANUX_RITHMIC_SYSTEM: "Rithmic Paper Trading"
+    QUANUX_RITHMIC_SERVER: "Chicago"
+
+endpoints:
+  python:
+    http: "/bridge/rithmic" # Health/Status
+    ws: "/bridge/rithmic/ws" # Fallback
+
+runtimes:
+  python:
+    entry: "python3 server/bridges/async_rithmic_py/app.py"
+
+security:
+  secrets:
+    - key: "QUANUX_RITHMIC_USER"
+      provider: "quanux.secrets"
+    - key: "QUANUX_RITHMIC_PASS"
+      provider: "quanux.secrets"
+
+health:
+  checks:
+    - type: http
+      target: "http://127.0.0.1:8078/health"

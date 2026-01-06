@@ -66,6 +66,20 @@ export const Integrations = () => {
             connectUrl: '/api/auth/topstep/start'
         },
         {
+            id: 'rithmic',
+            name: 'Rithmic',
+            description: 'High-performance connection to Rithmic Protocol API.',
+            icon: <Plug className="w-8 h-8 text-red-500" />,
+            fields: [
+                { key: 'QUANUX_RITHMIC_USER', label: 'Username', placeholder: 'user_123' },
+                { key: 'QUANUX_RITHMIC_PASS', label: 'Password', placeholder: 'password' },
+                { key: 'QUANUX_RITHMIC_SYSTEM', label: 'System', placeholder: 'Rithmic Test' },
+                { key: 'QUANUX_RITHMIC_URL', label: 'WSS URL', placeholder: 'wss://rituz00100.rithmic.com:443' },
+                { key: 'QUANUX_RITHMIC_APP_NAME', label: 'App Name', placeholder: 'QuanuX' },
+                { key: 'QUANUX_RITHMIC_APP_VERSION', label: 'App Version', placeholder: '17.9.0.0' },
+            ]
+        },
+        {
             id: 'tradingview',
             name: 'TradingView',
             description: 'Integration for charting data (Coming Verification).',
