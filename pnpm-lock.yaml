@@ -7,7 +7,7 @@ settings:
 overrides:
   esbuild: '>=0.25.0'
   undici: '>=5.29.0'
-  '@modelcontextprotocol/sdk': '>=1.0.4'
+  '@modelcontextprotocol/sdk': 1.25.2
   path-to-regexp@6: 6.3.0
   send: '>=0.19.0'
 
@@ -32,8 +32,8 @@ importers:
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.66.1(react@18.3.1))
       '@modelcontextprotocol/sdk':
-        specifier: '>=1.0.4'
-        version: 1.25.1(hono@4.11.3)(zod@4.1.13)
+        specifier: 1.25.2
+        version: 1.25.2(hono@4.11.3)(zod@4.1.13)
       '@radix-ui/react-avatar':
         specifier: ^1.1.11
         version: 1.1.11(@types/react-dom@18.3.7(@types/react@18.3.27))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2102,8 +2102,8 @@ packages:
   '@microsoft/signalr@8.0.17':
     resolution: {integrity: sha512-5pM6xPtKZNJLO0Tq5nQasVyPFwi/WBY3QB5uc/v3dIPTpS1JXQbaXAQAPxFoQ5rTBFE094w8bbqkp17F9ReQvA==}
 
-  '@modelcontextprotocol/sdk@1.25.1':
-    resolution: {integrity: sha512-yO28oVFFC7EBoiKdAn+VqRm+plcfv4v0xp6osG/VsCB0NlPZWi87ajbCZZ8f/RvOFLEu7//rSRmuZZ7lMoe3gQ==}
+  '@modelcontextprotocol/sdk@1.25.2':
+    resolution: {integrity: sha512-LZFeo4F9M5qOhC/Uc1aQSrBHxMrvxett+9KLHt7OhcExtoiRN9DKgbZffMP/nxjutWDQpfMDfP3nkHI4X9ijww==}
     engines: {node: '>=18'}
     peerDependencies:
       '@cfworker/json-schema': ^4.1.1
@@ -10233,7 +10233,7 @@ snapshots:
       - encoding
       - utf-8-validate
 
-  '@modelcontextprotocol/sdk@1.25.1(hono@4.11.3)(zod@4.1.13)':
+  '@modelcontextprotocol/sdk@1.25.2(hono@4.11.3)(zod@4.1.13)':
     dependencies:
       '@hono/node-server': 1.19.7(hono@4.11.3)
       ajv: 8.17.1
