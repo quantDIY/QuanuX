@@ -43,7 +43,8 @@ async def run_verification():
         token = await authenticate(creds)
         
         print(f"✅ Authentication successful!")
-        print(f"   Token: {token[:10]}...{token[-5:]}")
+        print(f"✅ Authentication successful!")
+        print(f"   Token: ******** (masked)")
         
         # 3. Fetch Accounts
         from server.app.domain.topstep.accounts import search_accounts

@@ -58,7 +58,7 @@ def connect() -> Any:
         return jsonify({"ok": True, "message": f"Connecting to {hub_url}"})
     except Exception as e:
         log.error(f"Connection failed: {e}")
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": "Internal connection error"}), 500
 
 @app.post("/subscribe")
 def subscribe() -> Any:
@@ -85,7 +85,7 @@ def subscribe() -> Any:
         return jsonify({"ok": True, "message": f"Invoked {method} with {args}"})
     except Exception as e:
         log.error(f"Subscription failed: {e}")
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": "Internal subscription error"}), 500
 
 @app.post("/disconnect")
 def disconnect() -> Any:
@@ -97,4 +97,5 @@ def disconnect() -> Any:
 
 if __name__ == "__main__":
     # Dev-only run (CLI supervisor will normally start this)
-    app.run(host="127.0.0.1", port=BRIDGE_PORT, debug=True)
+    # Security: debug=False for production use
+    app.run(host="127.0.0.1", port=BRIDGE_PORT, debug=False)

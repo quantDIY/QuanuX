@@ -35,7 +35,7 @@ export const ConnectServer = ({ onConnect }: { onConnect: () => void }) => {
         try {
             // Real Remote Login
             const res = await api.login(username, password);
-            console.log("Logged in:", res);
+            // console.log("Logged in successfully"); // Security: do not log full response
             setLoading(false);
             onConnect();
         } catch (err: any) {

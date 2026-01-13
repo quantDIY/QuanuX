@@ -26,6 +26,9 @@ name: QuanuX CI (Scaffold)
       - "environment.yml"
       - "requirements*.txt"
 
+permissions:
+  contents: read
+
 jobs:
   sanity:
     name: Sanity & Structure

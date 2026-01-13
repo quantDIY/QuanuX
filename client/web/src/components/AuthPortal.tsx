@@ -20,7 +20,7 @@ export const AuthPortal = ({ onLogin }: { onLogin: () => void }) => {
         setError(null);
         try {
             const res = await api.login(clientId || username, clientSecret || password);
-            console.log("Logged in:", res);
+            // console.log("Logged in successfully"); // Security: do not log full response
             setLoading(false);
             onLogin();
         } catch (err: any) {

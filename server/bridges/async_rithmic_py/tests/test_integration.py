@@ -4,8 +4,8 @@ import asyncio
 from async_rithmic import RithmicClient
 
 # Uses the same environment variables as the Bridge
-RITHMIC_USER = os.getenv("QUANUX_RITHMIC_USER", "duncan@quantdiy.dev")
-RITHMIC_PASS = os.getenv("QUANUX_RITHMIC_PASS", "SA_IsRqX")
+RITHMIC_USER = os.getenv("QUANUX_RITHMIC_USER")
+RITHMIC_PASS = os.getenv("QUANUX_RITHMIC_PASS")
 RITHMIC_URL = os.getenv("QUANUX_RITHMIC_URL", "wss://rituz00100.rithmic.com:443")
 APP_NAME = os.getenv("QUANUX_RITHMIC_APP_NAME", "QuanuX")
 APP_VERSION = os.getenv("QUANUX_RITHMIC_APP_VERSION", "17.9.0.0")

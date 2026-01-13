@@ -527,7 +527,7 @@ impl Uri {
 impl fmt::Display for Uri {
     #[inline]
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        f.write_str(&self.to_str())
+        f.write_str(&self.to_string_partial(UriHideFlags::PASSWORD))
     }
 }
 
