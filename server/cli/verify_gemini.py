@@ -20,7 +20,7 @@ def run_verification():
     key = kb.get("QUANUX_GEMINI_API_KEY")
     if key:
         # Show partial key if available
-        print(f"✅ Key retrieval successful: {key[:8]}...{key[-4:]}")
+        print(f"✅ Key retrieval successful: ******** (masked)")
     else:
         print("❌ Key retrieval failed. Please run 'python3 server/cli/main.py secrets setup'")
         return

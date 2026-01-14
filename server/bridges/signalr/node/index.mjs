@@ -104,7 +104,7 @@ app.post('/connect', async (req, res) => {
     // We will allow dynamic subscription via /subscribe.
 
     await hubConnection.start();
-    console.log(`Connected to ${hub_url}`);
+    console.log("Connected to", hub_url);
     broadcast("status", { state: "Connected" });
 
     res.json({ ok: true, message: "Connected" });
@@ -134,7 +134,7 @@ app.post('/subscribe', (req, res) => {
         // res.json({ ok: true, message: `Invoked ${method}` }); // We can return here or wait
       })
       .catch(err => {
-        console.error(`Invoke ${method} failed:`, err);
+        console.error("Invoke failed for method:", method, err);
         broadcast("error", { context: "invoke", method, error: err.message });
       });
   }
@@ -148,7 +148,7 @@ app.post('/subscribe', (req, res) => {
   // NOTE: For now, we'll assume we listen to 'T' (Trade/Tick) and 'Q' (Quote) and 'marketdata' by default or add a 'listener' param.
   const { listener } = req.body;
   if (listener) {
-    console.log(`Adding listener for '${listener}'`);
+    console.log("Adding listener for:", listener);
     hubConnection.off(listener); // remove prev to avoid dupes
     hubConnection.on(listener, (...data) => {
       // Forward to WS

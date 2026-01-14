@@ -16,8 +16,7 @@ def run_verification():
     kb = KeyringBackend()
     key = kb.get("QUANUX_OPENAI_API_KEY")
     if key:
-        masked = key[:8] + "..." + key[-4:]
-        print(f"✅ Key retrieval successful: {masked}")
+        print(f"✅ Key retrieval successful: ******** (masked)")
     else:
         print("❌ Key retrieval failed. Did you run setup_secrets.py?")
         return
