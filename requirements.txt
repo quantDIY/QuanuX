@@ -16,3 +16,4 @@ rich>=13.0.0
 async-rithmic>=1.4.0
 datamodel-code-generator>=0.25.0
 urllib3>=2.6.3
+PyYAML>=6.0.0

@@ -12,6 +12,37 @@ mcp = FastMCP("QuanuX Platform")
 
 BASE_DIR = Path(os.getcwd())
 
+# Initialize Skill Loader
+from server.mcp.skills import SkillLoader
+skill_loader = SkillLoader("server/skills")
+
+@mcp.tool(name="agent.skills.list")
+async def list_skills() -> str:
+    """List available agent skills."""
+    skills = skill_loader.list_skills()
+    if not skills:
+        return "No skills found."
+    
+    # Return XML-friendly format for easy context injection
+    output = "<available_skills>\n"
+    for skill in skills:
+        output += f'  <skill name="{skill.name}">\n'
+        output += f'    <description>{skill.description}</description>\n'
+        output += f'    <path>{skill.tool_authority_path}</path>\n'
+        output += '  </skill>\n'
+    output += "</available_skills>"
+    return output
+
+@mcp.tool(name="agent.skills.read")
+async def read_skill(skill_name: str) -> str:
+    """Read the full content of a specific skill."""
+    return skill_loader.read_skill(skill_name)
+
+@mcp.tool(name="agent.skills.run_script")
+async def run_skill_script(skill_name: str, script_name: str, args: List[str] = []) -> str:
+    """Run a script bundled with a skill."""
+    return await skill_loader.run_script(skill_name, script_name, args)
+
 @mcp.tool(name="repo.search")
 async def repo_search(pattern: str, search_path: str = ".") -> str:
     """Search for files matching a glob pattern."""

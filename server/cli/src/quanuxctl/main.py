@@ -5,7 +5,7 @@ Unified Developer CLI.
 """
 import typer
 from rich.console import Console
-from .commands import secrets, bridge
+from .commands import secrets, bridge, skills
 from . import __version__
 
 app = typer.Typer(
@@ -20,6 +20,7 @@ console = Console()
 # Register subcommands
 app.add_typer(secrets.app, name="secrets", help="Manage API keys and secrets via OS Keyring.")
 app.add_typer(bridge.app, name="bridge", help="Manage the SignalR Bridge.")
+app.add_typer(skills.app, name="skills", help="Manage and discover Agent Skills.")
 
 
 @app.command()

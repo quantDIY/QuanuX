@@ -53,3 +53,31 @@ tools:
       properties:
         query: {type: string, description: "SQL query to execute"}
       required: [query]
+
+  - name: agent.skills.list
+    description: "List available agent skills. Returns name and description for discovering capabilities."
+    capability: skill_read
+    implementation: server.mcp.server:list_skills
+    input_schema: {type: object}
+
+  - name: agent.skills.read
+    description: "Read the full instructions (SKILL.md) for a specific skill."
+    capability: skill_read
+    implementation: server.mcp.server:read_skill
+    input_schema:
+      type: object
+      properties:
+        skill_name: {type: string, description: "Name of the skill to read (e.g. 'pdf-processing')"}
+      required: [skill_name]
+
+  - name: agent.skills.run_script
+    description: "Execute a script bundled with a skill. (Robust Capability)"
+    capability: skill_exec
+    implementation: server.mcp.server:run_skill_script
+    input_schema:
+      type: object
+      properties:
+        skill_name: {type: string, description: "Name of the parent skill"}
+        script_name: {type: string, description: "Name of the script to run (e.g. 'convert.py')"}
+        args: {type: array, items: {type: string}, description: "Arguments to pass to the script"}
+      required: [skill_name, script_name]
