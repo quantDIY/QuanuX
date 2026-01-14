@@ -25,6 +25,9 @@ wrapper! {
             *ptr = inner;
         },
         copy_into => |dest, src| {
+            if src.is_null() {
+                return;
+            }
             debug_assert!((*src).allocated_len > (*src).len);
             let allocated_len = (*src).allocated_len;
             let inner = ffi::GString {

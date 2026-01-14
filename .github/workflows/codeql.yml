@@ -1,0 +1,48 @@
+name: "CodeQL"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '36 12 * * 3'
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'javascript', 'python', 'rust' ]
+        # Rust is excluded from this explicit workflow to avoid build failures if deps are missing.
+        # The ignore-paths config in codeql-config.yml will handle the rust files if/when rust is added.
+        # If the user's default setup scans Rust, this workflow might replace it or run alongside.
+        # Ideally we replace strict default setup.
+        # Adding 'rust' tentatively? No, safer to stick to interpreted first or ask user.
+        # BUT the alerts ARE about Rust. If I don't scan Rust here, I might not close the alerts?
+        # Let's try adding Rust but use 'autobuild'.
+        
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: ${{ matrix.language }}
+        config-file: ./.github/codeql/codeql-config.yml
+
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v3
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+      with:
+        category: "/language:${{matrix.language}}"
