@@ -94,10 +94,10 @@ def main():
 
         try:
             kb.set(target_key, value)
-            print(f"✅ Imported: {key} -> {target_key}")
+            print(f"✅ Imported secret.")
             count += 1
         except Exception as e:
-            print(f"❌ Failed to import {key}: {e}")
+            print(f"❌ Failed to import secret: {e}")
 
     print(f"\n✨ Imported {count} secrets to Keyring.")
 

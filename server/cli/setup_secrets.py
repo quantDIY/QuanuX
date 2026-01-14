@@ -31,7 +31,7 @@ def prompt_secret(key_name: str, description: str) -> None:
         
         full_key = f"QUANUX_{key_name}"
         kb.set(full_key, value)
-        print(f"✅ Saved to Keyring: {full_key}")
+        print(f"✅ Saved secret to Keyring.")
     except Exception as e:
         print(f"❌ Failed to save: {e}")
 

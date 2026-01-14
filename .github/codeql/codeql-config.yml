@@ -1,0 +1,4 @@
+name: "QuanuX Security Config"
+
+paths-ignore:
+  - 'client/desktop/tauri-app/src-tauri/patches/**'

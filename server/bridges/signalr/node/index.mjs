@@ -128,7 +128,7 @@ app.post('/subscribe', (req, res) => {
 
   // 1. Invoke Server Method (if provided)
   if (method) {
-    console.log(`Invoking ${method} with args:`, args);
+    console.log("Invoking method:", method, "with args:", args);
     hubConnection.invoke(method, ...(args || []))
       .then(() => {
         // res.json({ ok: true, message: `Invoked ${method}` }); // We can return here or wait
