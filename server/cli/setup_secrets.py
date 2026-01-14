@@ -8,8 +8,8 @@ sys.path.append(os.getcwd())
 
 from server.security.secrets import KeyringBackend
 
-def prompt_secret(key_name: str, description: str) -> None:
-    print(f"\n🔑 Setup {key_name} ({description})")
+def configure_setting(setting_name: str, description: str) -> None:
+    print(f"\n🔑 Setup {setting_name} ({description})")
     print("   Leave empty to skip/keep existing.")
     
     value = getpass.getpass(f"   Enter value: ")
@@ -29,20 +29,20 @@ def prompt_secret(key_name: str, description: str) -> None:
         # or we can just store them as "SECTION__KEY".
         # Let's use the env var naming convention for consistency: QUANUX__...
         
-        full_key = f"QUANUX_{key_name}"
+        full_key = f"QUANUX_{setting_name}"
         kb.set(full_key, value)
-        print(f"✅ Saved secret to Keyring.")
+        print(f"✅ Saved setting to Keyring.")
     except Exception as e:
         print(f"❌ Failed to save: {e}")
 
 def main():
     print("🔒 QuanuX Secure Setup")
     print("======================")
-    print("This utility saves secrets to your OS Keyring.")
+    print("This utility saves configuration to your OS Keyring.")
     print("They will be automatically loaded by the server.\n")
 
-    # Define secrets to capture
-    secrets = [
+    # Define configuration items to capture
+    config_items = [
         ("TOPSTEP__USERNAME", "Topstep Username"),
         ("TOPSTEP__PASSWORD", "Topstep Password"),
         ("TOPSTEP__API_KEY", "Topstep API Key"),
@@ -52,8 +52,8 @@ def main():
         ("BROKER_API_KEY", "Broker API Key"),
     ]
 
-    for key, desc in secrets:
-        prompt_secret(key, desc)
+    for key, desc in config_items:
+        configure_setting(key, desc)
 
     print("\n✨ Setup complete.")
 
