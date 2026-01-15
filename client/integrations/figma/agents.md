@@ -1,15 +1,12 @@
-cat > client/integrations/figma/agents.md <<'EOF'
-# Figma MCP Integration (v0.0.1)
+# Figma MCP Integration
+
+> [!IMPORTANT]
+> We have adopted the **Official Figma Desktop MCP Server** for this integration.
+> Please refer to `docs/FIGMA_INTEGRATION.md` for setup and usage instructions.
 
 ## Purpose
-Shared design integration for all targets (web, desktop, mobile, TV).
+Seamlessly translate Figma designs into QuanuX-compliant React code by composing the Official Figma MCP (Design Data) with the QuanuX MCP (Coding Standards).
 
-## Guidelines
-- Provide tokens, components metadata, and assets to front-ends.
-- Do not push compute logic to clients; produce **design outputs** only.
-- Keep API contracts stable; version schemas under `meta/schemas/json`.
+## Legacy Notes
+The files `bridge.mcp.ts` and `sdk.ts` in this directory are retained as stubs/references but are superseded by the official Figma Desktop integration.
 
-## Future
-- Theming pipeline per target
-- Asset pipelines (icons, banners, TV screens)
-EOF
