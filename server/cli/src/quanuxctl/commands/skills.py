@@ -9,7 +9,7 @@ console = Console()
 
 # specific path needs to be handled carefully depending on where quanuxctl is run from
 # Assuming running from root as per usual dev workflow, or we need to find root
-skill_loader = SkillLoader("server/skills")
+skill_loader = SkillLoader(["server/skills", "client/skills"])
 
 @app.command("list")
 def list_skills():

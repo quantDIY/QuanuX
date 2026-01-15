@@ -14,7 +14,7 @@ BASE_DIR = Path(os.getcwd())
 
 # Initialize Skill Loader
 from server.mcp.skills import SkillLoader
-skill_loader = SkillLoader("server/skills")
+skill_loader = SkillLoader(["server/skills", "client/skills"])
 
 @mcp.tool(name="agent.skills.list")
 async def list_skills() -> str:
