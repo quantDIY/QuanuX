@@ -5,6 +5,7 @@ import { Sidebar } from './components/Sidebar';
 import { StrategyBuilder } from './pages/StrategyBuilder';
 import { Integrations } from './pages/Integrations';
 import { Backtests } from './pages/Backtests';
+import { Settings } from './pages/Settings';
 
 export const App = () => {
     const [stage, setStage] = useState<'launch' | 'connect' | 'dashboard'>('launch');
@@ -40,6 +41,8 @@ export const App = () => {
                 return <Integrations />;
             case 'backtests':
                 return <Backtests />;
+            case 'settings':
+                return <Settings />;
             case 'dashboard':
             default:
                 return (

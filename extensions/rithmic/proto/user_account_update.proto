@@ -1,0 +1,24 @@
+
+package rti;
+
+option go_package = "quant/extensions/rithmic/api";
+
+message UserAccountUpdate
+	{       
+	required int32    template_id      = 154467;
+
+	optional string   update_type      = 154288; // add_account, modify_account, assign_account_to_user, remove_account_from_user
+	optional string   access_type      = 154000; // 0 - read_only, 1 - read_write
+
+	optional string   source_user_id   = 154247;
+	optional string   user             = 131003;
+	optional string   fcm_id           = 154013;
+	optional string   ib_id            = 154014;
+
+	optional string   account_id       = 154008;
+	optional string   account_name     = 154002;
+	optional string   account_status   = 154003;
+
+	optional int32    ssboe            = 150100;
+	optional int32    usecs            = 150101;
+	}

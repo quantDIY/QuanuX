@@ -1,0 +1,49 @@
+.TH QUANUX-QXP 7 "January 2026" "QuanuX" "Miscellaneous"
+.SH NAME
+quanux-qxp \- QuanuX Extension Protocol
+.SH DESCRIPTION
+The **QuanuX Extension Protocol (QXP)** is the architectural standard for extending the QuanuX platform. Unlike traditional plugin systems that run code *inside* the main process, QXP uses **Sidecar Processes**.
+
+.SH PHILOSOPHY
+"Bolt-on, don't Build-in."
+
+1. **Isolation**: Extensions run as separate OS processes. A crash in an extension never brings down the core.
+2. **Polyglot**: While **Go** is the standard, extensions can technically be written in any language that supports standard I/O and HTTP/WebSocket.
+3. **Security**: Extensions operate with specific permissions and have no implicit access to the Core's memory or database.
+
+.SH DIRECTORY STRUCTURE
+All extensions reside in \fI/extensions\fR.
+.P
+.nf
+/extensions
+  /rithmic
+    extension.yaml   (Manifest)
+    main.go          (Entrypoint)
+    /proto           (Protocol Buffers)
+    README.md
+.fi
+
+.SH THE MANIFEST
+Every extension is defined by an \fIextension.yaml\fR file.
+.P
+.nf
+name: "rithmic"
+version: "1.0.0"
+runtime: "go"
+command: "go run main.go"
+permissions:
+  - "market.data.read"
+env:
+  - "QUANUX_RITHMIC_USER"
+.fi
+
+.SH DATA FLOW
+.SS 1. Control Plane (HTTP/gRPC/Stdio)
+QuanuX Core manages the extension process (Start/Stop). It injects configuration via Environment Variables.
+
+.SS 2. Data Plane (ZeroMQ/NATS)
+High-volume market data (ticks, depth) is NOT sent back to Core via standard HTTP. Instead, extensions publish to a high-performance bus (ZeroMQ or NATS) which the Core subscribes to.
+
+.SH SEE ALSO
+.BR quanuxctl (1),
+.BR quanuxctl-ext (1)

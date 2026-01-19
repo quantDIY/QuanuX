@@ -1,0 +1,12 @@
+name: "tradovate-gateway"
+display_name: "Tradovate Gateway"
+version: "0.0.1"
+runtime: "go"
+command: "./tradovate-gateway"
+description: "Direct connection to Tradovate API."
+permissions:
+  - "market.data.read"
+  - "order.execute"
+env:
+  - "QUANUX_TRADOVATE_KEY"
+  - "QUANUX_TRADOVATE_ENV"

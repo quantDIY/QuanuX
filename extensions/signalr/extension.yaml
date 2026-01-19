@@ -1,0 +1,11 @@
+name: "signalr-connector"
+display_name: "SignalR Connector"
+version: "0.0.1"
+runtime: "go"
+command: "./signalr-connector"
+description: "Generic SignalR client for Prop Firms and Data Feeds."
+permissions:
+  - "market.data.read"
+env:
+  - "QUANUX_SIGNALR_HOST"
+  - "QUANUX_BRIDGE_KEY"

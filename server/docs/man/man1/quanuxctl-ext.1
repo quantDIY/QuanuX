@@ -1,0 +1,43 @@
+.TH QUANUXCTL-EXT 1 "January 2026" "QuanuX" "User Commands"
+.SH NAME
+quanuxctl-ext \- Manage QuanuX Extensions (QXP)
+.SH SYNOPSIS
+.B quanuxctl ext
+[\fICOMMAND\fR] [\fIOPTIONS\fR]
+.SH DESCRIPTION
+The \fBext\fR command group manages the lifecycle of extensions. Extensions are sidecar processes that provide specialized capabilities (e.g., Broker connections, Indicators) to the QuanuX Core.
+.SH COMMANDS
+.TP
+.B list
+List all registered extensions found in the \fI/extensions\fR directory.
+.RS
+.B Output:
+.br
+- Name (e.g., "rithmic")
+.br
+- Status (Running/Stopped)
+.br
+- PID (if running)
+.RE
+.TP
+.B run \fI<name>\fR
+Run an extension in the \fBforeground\fR. This is the primary mode for development and debugging. Secrets are injected automatically.
+.TP
+.B start \fI<name>\fR
+Start an extension as a \fBbackground daemon\fR. Logs are redirected to files.
+.TP
+.B stop \fI<name>\fR
+Stop a running background extension.
+.SH EXAMPLES
+.B 1. Develop the Rithmic extension
+.nf
+$ quanuxctl ext run rithmic
+.fi
+.P
+.B 2. Start Sierra Chart bridge in background
+.nf
+$ quanuxctl ext start sierra-chart
+.fi
+.SH SEE ALSO
+.BR quanuxctl (1),
+.BR quanux-qxp (7)

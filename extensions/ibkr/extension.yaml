@@ -1,0 +1,13 @@
+name: "ibkr-tws"
+display_name: "Interactive Brokers TWS"
+version: "0.0.1"
+runtime: "go"
+command: "./ibkr-tws"
+description: "Bridge to IB Gateway or TWS via API."
+permissions:
+  - "market.data.read"
+  - "order.execute"
+  - "account.read"
+env:
+  - "QUANUX_IBKR_HOST"
+  - "QUANUX_IBKR_PORT"

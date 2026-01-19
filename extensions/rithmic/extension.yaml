@@ -1,0 +1,14 @@
+name: "rithmic-feed"
+display_name: "Rithmic Data Pump"
+version: "0.0.1"
+runtime: "go"
+command: "main.go"
+description: "High-performance market data connector for Rithmic R/API+ (Go)."
+permissions:
+  - "market.data.read"
+  - "order.execute"
+env:
+  - "QUANUX_RITHMIC_USER"
+  - "QUANUX_RITHMIC_PASS"
+  - "QUANUX_RITHMIC_SYSTEM"
+  - "QUANUX_RITHMIC_HOST"

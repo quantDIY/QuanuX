@@ -81,7 +81,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, onNavigate, current
                 <div className="flex flex-col gap-2 w-full px-2">
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <Button variant="ghost" size="icon" className="w-full aspect-square rounded-lg">
+                            <Button
+                                variant={currentView === 'settings' ? "secondary" : "ghost"}
+                                size="icon"
+                                className="w-full aspect-square rounded-lg"
+                                onClick={() => onNavigate?.('settings')}
+                            >
                                 <Settings className="w-5 h-5" />
                                 <span className="sr-only">Settings</span>
                             </Button>

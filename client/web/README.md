@@ -1,5 +1,5 @@
 # QuanuX Web (React + Vite)
-- `pnpm i` (or `npm i`, `yarn`)
+- `pnpm i`
 - copy `.env.example` → `.env` and set `VITE_BRIDGE_HEALTH`
 - `pnpm dev` then open the local dev URL
 

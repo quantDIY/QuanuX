@@ -1,0 +1,83 @@
+.TH QUANUXCTL 1 "January 2026" "QuanuX" "User Commands"
+.SH NAME
+quanuxctl \- QuanuX Control CLI
+.SH SYNOPSIS
+.B quanuxctl
+[\fICOMMAND\fR] [\fIOPTIONS\fR]
+.SH DESCRIPTION
+The \fBquanuxctl\fR utility is the primary administrative interface for the QuanuX ecosystem. It manages the lifecycle of **Extensions (QXP)**, handles secure credential storage via the OS Keyring, and controls the internal MCP (Model Context Protocol) server.
+.P
+It is designed to be usable by both human developers and autonomous agents.
+.SH OPTIONS
+.TP
+.B \-v, \-\-version
+Show version information and exit.
+.TP
+.B \-\-install-completion
+Install shell completion (Bash/Zsh/Fish).
+.SH COMMANDS
+.SS Extension Management
+.TP
+.B ext list
+List all registered extensions in \fI/extensions\fR. Shows status (Stopped, Running).
+.TP
+.B ext run \fI<name>\fR
+Run a specific extension in the foreground (dev mode). Automatically injects secrets from the keyring into the process environment.
+.TP
+.B ext start \fI<name>\fR
+Start an extension in the background (daemon mode). logs are written to \fIserver.log\fR or specific extension logs.
+.TP
+.B ext stop \fI<name>\fR
+Stop a running extension background process.
+.SS Security & Secrets
+.TP
+.B secrets set \fI<KEY> <VALUE>\fR
+Securely store a secret in the OS Keyring (Keychain on macOS, Secret Service on Linux).
+.TP
+.B secrets get \fI<KEY>\fR
+Retrieve and print a secret value (use with care).
+.TP
+.B secrets list
+List all stored keys (values masked).
+.TP
+.B secrets delete \fI<KEY>\fR
+Remove a secret.
+.SS Agent Capabilities
+.TP
+.B mcp
+Start the QuanuX MCP Server in stdio mode. This is the entry point for AI Agents (Cursor, Windsurf) to connect to the platform.
+.TP
+.B skills list
+List available Agent Skills (specialized instruction sets).
+.SS Legacy / Bridges
+.TP
+.B bridge
+Manage legacy SignalR bridge processes.
+.SH ENVIRONMENT
+.TP
+.B QUANUX_HOME
+Path to the QuanuX root (default: current directory or detected).
+.SH EXAMPLES
+.B 1. Configure Rithmic Credentials
+.nf
+$ quanuxctl secrets set QUANUX_RITHMIC_USER "my_user"
+$ quanuxctl secrets set QUANUX_RITHMIC_PASS "s3cr3t"
+.fi
+.P
+.B 2. Run the Rithmic Extension (Interactive)
+.nf
+$ quanuxctl ext run rithmic
+.fi
+.P
+.B 3. Check Extension Status
+.nf
+$ quanuxctl ext list
+.fi
+.SH FILES
+.I $HOME/Antigravity/QuanuX/.env
+.RS
+Global environment configuration (optional).
+.RE
+.SH SEE ALSO
+.BR man (1),
+.BR make (1)

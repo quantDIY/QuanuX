@@ -1,0 +1,10 @@
+name: "tradingview-udf"
+display_name: "TV Advanced Charts Data Feed"
+version: "0.0.1"
+runtime: "go"
+command: "./tradingview-udf"
+description: "Backend data provider for TradingView charts."
+permissions:
+  - "market.data.read" # From DB
+env:
+  - "QUANUX_DB_URL"

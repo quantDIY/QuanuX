@@ -1,0 +1,13 @@
+name: "sierra-chart-bridge"
+display_name: "Sierra Chart Connector"
+version: "0.0.1"
+runtime: "go"
+command: "./sierra-bridge"
+description: "Connects QuanuX to Sierra Chart via DTC Protocol (JSON)."
+permissions:
+  - "market.data.read"
+  - "order.execute"
+env:
+  - "QUANUX_SIERRA_HOST"
+  - "QUANUX_SIERRA_PORT"
+  - "QUANUX_BRIDGE_KEY"

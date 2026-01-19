@@ -1,0 +1,10 @@
+
+package rti;
+
+option go_package = "quant/extensions/rithmic/api";
+
+message RequestListUnacceptedAgreements
+	{       
+	required int32   template_id   = 154467;
+	repeated string  user_msg      = 132760;
+	}
