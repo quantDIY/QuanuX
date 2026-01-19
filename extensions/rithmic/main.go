@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	pb "quant/extensions/rithmic/api"
+	pb "github.com/QuanuX/extensions/rithmic/api"
 
 	"github.com/gorilla/websocket"
 	zmq "github.com/pebbe/zmq4"

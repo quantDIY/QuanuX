@@ -53,6 +53,7 @@ requirements:
     - pyotp
     - openai
     - pip
+    - go # Runtime dependency for extensions
 test:
   imports:
     - quanuxctl
