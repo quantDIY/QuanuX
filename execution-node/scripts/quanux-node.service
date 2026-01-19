@@ -1,0 +1,15 @@
+[Unit]
+Description=QuanuX Execution Node (High-Performance Engine)
+After=network.target
+
+[Service]
+User=quanux
+Group=quanux
+ExecStart=/usr/local/bin/quanux-node start
+Restart=always
+RestartSec=5
+# High limits for Websockets/NATS connections
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
