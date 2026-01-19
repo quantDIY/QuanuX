@@ -18,6 +18,8 @@ import (
 // Constants from Rithmic Spec
 const (
 	RITHMIC_TEST_SYSTEM = "Rithmic Test"
+	// RITHMIC_PAPER_URL is default, but we will override based on Gateway config
+	RITHMIC_CHICAGO_URL = "wss://ritmms.rithmic.com:443" // SSL preferred for prod
 	RITHMIC_PAPER_URL   = "wss://rituz00100.rithmic.com:443"
 
 	// Message Type IDs
@@ -34,9 +36,11 @@ const (
 )
 
 var (
-	RithmicUser = os.Getenv("QUANUX_RITHMIC_USER")
-	RithmicPass = os.Getenv("QUANUX_RITHMIC_PASS")
-	ZmqPubPort  = os.Getenv("QUANUX_ZMQ_PUB_PORT")
+	RithmicUser    = os.Getenv("QUANUX_RITHMIC_USER")
+	RithmicPass    = os.Getenv("QUANUX_RITHMIC_PASS")
+	RithmicSystem  = os.Getenv("QUANUX_RITHMIC_SYSTEM")
+	RithmicGateway = os.Getenv("QUANUX_RITHMIC_GATEWAY")
+	ZmqPubPort     = os.Getenv("QUANUX_ZMQ_PUB_PORT")
 )
 
 type Tick struct {
@@ -52,7 +56,25 @@ func main() {
 		ZmqPubPort = "5557"
 	}
 
-	log.Println("🚀 Starting Rithmic Bridge (Official Proto)...")
+	// Gateway Logic
+	targetURL := RITHMIC_PAPER_URL
+	if RithmicSystem != "Rithmic Paper Trading" {
+		switch RithmicGateway {
+		case "Europe":
+			targetURL = "wss://ritmms-eu.rithmic.com:443"
+		case "Asia":
+			targetURL = "wss://ritmms-asia.rithmic.com:443"
+		default: // Chicago / Default
+			targetURL = "wss://ritmms.rithmic.com:443"
+		}
+	}
+
+	// Fallback for System Name
+	if RithmicSystem == "" {
+		RithmicSystem = RITHMIC_TEST_SYSTEM
+	}
+
+	log.Printf("🚀 Starting Rithmic Bridge (User: %s, System: %s, Gateway: %s)...", RithmicUser, RithmicSystem, RithmicGateway)
 
 	// 1. ZMQ Setup
 	zctx, _ := zmq.NewContext()
@@ -75,8 +97,8 @@ func main() {
 	log.Printf("📋 Available Systems: %v", systems)
 
 	// 3. Login & Subscribe (Step 2)
-	log.Println("🔐 Step 2: Logging in to 'Rithmic Test'...")
-	runSession(tickChan)
+	log.Println("🔐 Step 2: Logging in...")
+	runSession(targetURL, tickChan)
 }
 
 func getSystemInfo() ([]string, error) {
@@ -114,8 +136,8 @@ func getSystemInfo() ([]string, error) {
 	}
 }
 
-func runSession(ch chan<- Tick) {
-	c, _, err := websocket.DefaultDialer.Dial(RITHMIC_PAPER_URL, nil)
+func runSession(url string, ch chan<- Tick) {
+	c, _, err := websocket.DefaultDialer.Dial(url, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -130,7 +152,7 @@ func runSession(ch chan<- Tick) {
 		Password:        proto.String(RithmicPass),
 		AppName:         proto.String("QuanuX"),
 		AppVersion:      proto.String("1.0.0"),
-		SystemName:      proto.String(RITHMIC_TEST_SYSTEM),
+		SystemName:      proto.String(RithmicSystem),
 		InfraType:       &infraType,
 	}
 	if err := sendProto(c, loginReq); err != nil {
