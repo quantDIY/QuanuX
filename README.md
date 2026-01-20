@@ -1,6 +1,6 @@
-# QuanuX
+# 🚀 QuanuX
 
-**QuanuX** is an early-stage, open-source quantitative research and trading platform.
+**QuanuX** is an early-stage, open-source quantitative research and trading platform built for the future of algorithmic trading. ⚡️
 
 This repository represents a **pre-release development snapshot** as the project approaches its first public technical milestone: `v0.0.1-pre`.
 
@@ -29,30 +29,81 @@ Semantic versioning will be introduced once public APIs stabilize.
 
 ---
 
-## 🔌 Integrations
+## 🔥 Platform Features & Highlights
 
-QuanuX supports a wide range of connections via its unified API bridge and `async-rithmic` integration.
+We are building something truly unique. QuanuX is bringing together the tools to make building and deploying modular quantitative trading strategies easier than ever before. It's a comprehensive ecosystem for quantitative research & development with simple strategy creation, data and execution using the latest in AI and distributed systems.
 
-### Supported Brokers
--   **Ironbeam Futures**
--   **Amp Futures**
--   **Discount Trading**
+### 🎨 Design with AI in Figma
+**No other trading platform does this.**
+Developers can design their own UI/UX directly in **Figma** with the help of their AI assistants. By utilizing our **Model Context Protocol (MCP)** integration, we bridge the gap between design and code. Your AI agent can communicate QuanuX "agent-skills" and design tokens back to Figma via the MCP server, ensuring that every interface you build is beautiful, functional, and 100% **QuanuX compliant**.
+
+### 🔩 Bolt-On Architecture & `quanuxctl`
+Flexibility is king. Our modular **bolt-on architecture** allows you to extend the platform effortlessly. Manage everything with **`quanuxctl`**, our powerful CLI tool designed to streamline your workflow, manage extensions, and control your environment with precision.
+
+#### 🤓 Developer Experience
+We believe in classic engineering. Full documentation is built right into the terminal.
+```bash
+man quanuxctl
+```
+
+### ⚡️ Distributed Execution Nodes (Bare Metal & Remote)
+**Unlimited Scale.**
+QuanuX introduces a game-changing **Execution Layer**. Spin up unlimited execution nodes on **bare metal servers** anywhere in the world.
+- **Colocation Ready**: Deploy nodes right next to exchange servers (e.g., Aurora CME Data Center) for **ultra-low latency**.
+- **"Push" Deployment**: Use `quanuxctl` to push your strategies to remote nodes instantly.
+- **Microservice Power**: Your strategies run as independent, high-performance Go binaries, decoupled from the core QuanuX server, yet able to be managed by a remote QuanuX client, CLI or via QuanuX server. HFT is possible with this architecture.
+
+### 🐍 Anaconda Distribution (Industry First)
+**Bridging the gap between Data Science, Machine Learning, AI and Quantitative Trading.**
+QuanuX is the **first** quantitative trading platform to offer an official **Conda channel**.
+- **One Command Install**: `conda install quanux`
+- **Zero Dependency Hell**: We manage the complex web of Python and Rust dependencies so you don't have to.
+- **Cross-Platform**: Seamlessly consistent environments across Windows, Mac, and Linux.
+
+---
+
+## 🔌 Universal Connectivity & Integrations
+
+The "Bolt-On" architecture means we integrate with **everything**.
+
+### 🛠 Workflow & Analysis
+- **n8n**: Automate your trading operations. Trigger alerts, log trades, or manage risk with visual workflows.
+- **Sierra Chart**: The professional's choice. We support direct integration for advanced charting and data.
+- **Figma (MCP)**: As mentioned, design your UI with AI and sync it directly to code.
+
+---
+
+## 🏦 Supported Brokerages & Prop Firms
+
+Trade where you want. QuanuX brings dozens of brokerages and prop firms under one roof.
 
 ### Proprietary Trading Firms
--   **Topstep** (Native API Integration)
--   **Apex Trader Funding** (via Rithmic)
--   **Elite Trader Funding** (via Rithmic)
--   **Take Profit Trader** (via Rithmic)
+- 🏆 **Topstep** (Native API Integration)
+- 🐂 **Apex Trader Funding**
+- 🦅 **Elite Trader Funding**
+- 💰 **Take Profit Trader**
+- 🚀 **OneUp Trader**
+- 🐂 **Bulenox**
+- 🎓 **Earn2Trade**
+- 🎯 **Uprofit**
+- ⏱️ **TickTickTrader**
+- 🦁 **Leeloo Trading**
+- *...and any other firm compatible with Rithmic.*
 
-*Note: Rithmic connections are powered by the local QuanuX Bridge. Check the "Integrations" tab in the app to configure credentials.*
+### Futures Brokerages
+- 🛡️ **Ironbeam Futures**
+- ⚡ **Amp Futures**
+- 📉 **Discount Trading**
+- 🌊 **Edge Clear**
+- 🏎️ **Optimus Futures**
+- 🦉 **Tradovate**
+- *...and any other brokerage compatible with Rithmic API or ProjectX.*
+
+> **Note**: Rithmic connectivity is provided by the first-class **Rithmic Extension**, managed directly via `quanuxctl`.
 
 ---
 
-## 🌟 Credits
 
-Special thanks to **Mickael Burguet** (`rundef`) and the contributors of the **[async-rithmic](https://github.com/rundef/async_rithmic)** library. Their work on the Python Rithmic Protocol interface has been instrumental in powering QuanuX's connectivity.
-
----
 
 ## 🚀 Getting Started
 
