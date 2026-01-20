@@ -1,6 +1,6 @@
 # 🚀 QuanuX
 
-**QuanuX** is an early-stage, open-source quantitative research and trading platform built for the future of algorithmic trading. ⚡️
+**QuanuX** is an early-stage, free open-source quantitative research, development, and algorithmic strategy development, trade manaagement & execution platform. ⚡️
 
 This repository represents a **pre-release development snapshot** as the project approaches its first public technical milestone: `v0.0.1-pre`.
 
@@ -17,7 +17,7 @@ QuanuX is currently in **active development** and should be considered **experim
 
 This repository is being made public to support early testing, architectural review, experimentation, and visibility as the project approaches its initial release.
 
-It is **not yet a production-ready system**.
+It is **not yet intended as a production-ready system**.
 
 ---
 
@@ -25,13 +25,13 @@ It is **not yet a production-ready system**.
 
 Current development target: `v0.0.1-pre`
 
-Semantic versioning will be introduced once public APIs stabilize.
+Semantic versioning will be introduced once public APIs are extended and stabilized.
 
 ---
 
 ## 🔥 Platform Features & Highlights
 
-We are building something truly unique. QuanuX is bringing together the tools to make building and deploying modular quantitative trading strategies easier than ever before. It's a comprehensive ecosystem for quantitative research & development with simple strategy creation, data and execution using the latest in AI and distributed systems.
+QuanuX developing something truly unique, bringing together the tools to make researching, building and deploying modular quantitative trading strategies easier than ever before. It's a comprehensive ecosystem for quantitative research & development with simple strategy creation, data management, broker integration and strategy execution using the latest in AI and distributed systems.
 
 ### 🎨 Design with AI in Figma
 **No other trading platform does this.**
@@ -69,7 +69,7 @@ The "Bolt-On" architecture means we integrate with **everything**.
 ### 🛠 Workflow & Analysis
 - **n8n**: Automate your trading operations. Trigger alerts, log trades, or manage risk with visual workflows.
 - **Sierra Chart**: The professional's choice. We support direct integration for advanced charting and data.
-- **Figma (MCP)**: As mentioned, design your UI with AI and sync it directly to code.
+- **QuanuX MCP**: MCP everywhere, agent-skills protocol throughout. BYO AI API-Key -- QuanuX guides AI and saves tokens.
 
 ---
 
