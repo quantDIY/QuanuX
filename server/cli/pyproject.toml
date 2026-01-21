@@ -17,7 +17,7 @@ dependencies = [
 ]
 
 [project.scripts]
-quanuxctl = "quanuxctl.main:main"
+quanuxctl = "quanuxctl.main:cli"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/quanuxctl"]

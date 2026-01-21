@@ -1,12 +1,13 @@
 name: "figma-mcp"
 display_name: "Figma MCP Server"
 version: "0.0.1"
-runtime: "go"
-command: "./figma-mcp"
-description: "Exposes Figma design data to AI agents via MCP."
+runtime: "node"
+command: "./index.js"
+description: "Exposes Figma design data by connecting to the official Figma MCP Server (via @modelcontextprotocol/server-figma)."
 permissions:
   - "figma.read"
-  - "figma.write"
 env:
-  - "QUANUX_FIGMA_KEY"
+  - "FIGMA_ACCESS_TOKEN" # Required by official server
   - "QUANUX_BRIDGE_KEY"
+  - "QUANUX_figma"  # Standard QuanuX Auth
+

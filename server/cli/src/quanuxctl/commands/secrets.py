@@ -42,10 +42,13 @@ def setup():
     console.print("[bold green]✨ Setup complete.[/bold green]")
 
 @app.command()
-def set(key: str, value: str):
+def set(key: str, value: str = typer.Argument(None)):
     """
-    Set a specific secret key.
+    Set a specific secret key. Prompts if value is missing.
     """
+    if not value:
+        value = Prompt.ask(f"Enter value for {key}", password=True)
+
     kb = KeyringBackend()
     full_key = key if key.startswith("QUANUX_") else f"QUANUX_{key}"
     try:

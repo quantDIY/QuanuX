@@ -106,3 +106,6 @@ client/desktop/tauri-app/src-tauri/src/*.bak.*
 client/desktop/tauri-app/src-tauri/Cargo.toml.bak.*
 client/desktop/tauri-app/src-tauri/tauri.conf.json.bak.*
 client/desktop/tauri-app/src-tauri/src/*.bak.*
+
+# ---- Project Management ----
+project_status.md

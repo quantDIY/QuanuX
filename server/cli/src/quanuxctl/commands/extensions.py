@@ -129,7 +129,7 @@ def start_extension(name: str):
     if manifest.get("runtime") == "go" and cmd_rel.endswith(".go"):
         final_cmd = ["go", "run", cmd_rel]
     else:
-        final_cmd = [str(cwd / cmd_rel)]
+        final_cmd = [str((cwd / cmd_rel).resolve())]
 
     # Inject Secrets
     env = os.environ.copy()
