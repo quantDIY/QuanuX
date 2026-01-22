@@ -1,0 +1,37 @@
+name: "rithmic-cpp"
+display_name: "Rithmic Data (C++)"
+version: "0.1.0"
+runtime: "cpp"
+command: "build/rithmic_feed" # Assuming build directory
+description: "High-performance C++ connector for Rithmic R | API+."
+permissions:
+  - "market.data.read"
+  - "order.execute"
+env:
+  - "QUANUX_RITHMIC_USER"
+  - "QUANUX_RITHMIC_PASS"
+  - "QUANUX_RITHMIC_SYSTEM"
+  - "QUANUX_RITHMIC_GATEWAY"
+  - "QUANUX_RITHMIC_HOST"
+
+config:
+  - name: "system_name"
+    display: "Broker / System Name"
+    type: "select"
+    default: "Rithmic Paper Trading"
+    options:
+      - "Rithmic Paper Trading"
+      - "Rithmic Test"
+      - "AMP"
+      - "Topstep"
+    env: "QUANUX_RITHMIC_SYSTEM"
+
+  - name: "gateway"
+    display: "Gateway Region"
+    type: "select"
+    default: "Chicago"
+    options:
+      - "Chicago"
+      - "Europe"
+      - "Asia"
+    env: "QUANUX_RITHMIC_GATEWAY"

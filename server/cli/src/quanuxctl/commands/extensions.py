@@ -17,12 +17,25 @@ EXTENSIONS_DIR = Path("extensions")
 def get_broker():
     return SecretsBroker(primary=KeyringBackend(), fallback=[])
 
+def find_extension_path(ext_name: str) -> Optional[Path]:
+    # Check directly first (legacy)
+    direct = EXTENSIONS_DIR / ext_name
+    if (direct / "extension.yaml").exists():
+        return direct
+    
+    # Check language subdirs
+    for lang in ["cpp", "go", "node", "python"]:
+        path = EXTENSIONS_DIR / lang / ext_name
+        if (path / "extension.yaml").exists():
+            return path
+    return None
+
 def load_manifest(ext_name: str) -> Optional[dict]:
-    manifest_path = EXTENSIONS_DIR / ext_name / "extension.yaml"
-    if not manifest_path.exists():
+    path = find_extension_path(ext_name)
+    if not path:
         return None
     try:
-        with open(manifest_path, "r") as f:
+        with open(path / "extension.yaml", "r") as f:
             return yaml.safe_load(f)
     except Exception as e:
         console.print(f"[red]Error loading manifest for {ext_name}: {e}[/red]")
@@ -35,6 +48,27 @@ def list_extensions():
         console.print("[yellow]No extensions directory found.[/yellow]")
         return
 
+    # Define supported language categories
+    languages = ["cpp", "go", "node", "python"]
+    
+    found_extensions = []
+    
+    # 1. Check root level (legacy support)
+    for item in EXTENSIONS_DIR.iterdir():
+        if item.is_dir() and item.name not in languages and (item / "extension.yaml").exists():
+            found_extensions.append(item)
+
+    # 2. Check language subdirectories
+    for lang in languages:
+        lang_dir = EXTENSIONS_DIR / lang
+        if lang_dir.exists():
+            for item in lang_dir.iterdir():
+                if item.is_dir() and (item / "extension.yaml").exists():
+                    found_extensions.append(item)
+
+    # Sort by name for consistent output
+    found_extensions.sort(key=lambda x: x.name)
+
     table = Table(title="QuanuX Extensions")
     table.add_column("ID", style="cyan")
     table.add_column("Name", style="green")
@@ -42,22 +76,30 @@ def list_extensions():
     table.add_column("Runtime", style="magenta")
     table.add_column("Secrets", style="yellow")
 
-    for item in EXTENSIONS_DIR.iterdir():
-        if item.is_dir() and (item / "extension.yaml").exists():
-            manifest = load_manifest(item.name)
-            if manifest:
-                status, style = get_process_status(item.name)
-                secrets_count = len(manifest.get("env", []))
-                
-                status_cell = f"[{style}]{status}[/{style}]"
-                
-                table.add_row(
-                    item.name,
-                    manifest.get("display_name", item.name),
-                    status_cell,
-                    manifest.get("runtime", "unknown"),
-                    str(secrets_count)
-                )
+    for item in found_extensions:
+        # Load manifest directly since we have the path
+        try:
+            with open(item / "extension.yaml", "r") as f:
+                manifest = yaml.safe_load(f)
+        except Exception:
+            continue
+            
+        if manifest:
+            status, style = get_process_status(item.name)
+            secrets_count = len(manifest.get("env", []))
+            
+            status_cell = f"[{style}]{status}[/{style}]"
+            
+            # Determine runtime/category from parent dir if not in manifest
+            runtime = manifest.get("runtime", item.parent.name if item.parent.name in languages else "unknown")
+
+            table.add_row(
+                item.name,
+                manifest.get("display_name", item.name),
+                status_cell,
+                runtime,
+                str(secrets_count)
+            )
 
     console.print(table)
 
@@ -122,8 +164,13 @@ def start_extension(name: str):
     # Rotate logs before starting
     rotate_logs(name)
 
+    ext_path = find_extension_path(name)
+    if not ext_path:
+        console.print(f"[red]Could not determine path for extension '{name}'.[/red]")
+        return
+
     cmd_rel = manifest.get("command")
-    cwd = EXTENSIONS_DIR / name
+    cwd = ext_path.resolve()
     
     # Resolve Command
     if manifest.get("runtime") == "go" and cmd_rel.endswith(".go"):
@@ -258,7 +305,11 @@ def run_extension(name: str):
         raise typer.Exit(1)
 
     cmd_rel = manifest.get("command")
-    cwd = EXTENSIONS_DIR / name
+    ext_path = find_extension_path(name)
+    if not ext_path:
+         console.print(f"[red]Path not found for {name}[/red]")
+         raise typer.Exit(1)
+    cwd = ext_path
     
     env = os.environ.copy()
     broker = get_broker()
@@ -274,7 +325,7 @@ def run_extension(name: str):
     if manifest.get("runtime") == "go" and cmd_rel.endswith(".go"):
         final_cmd = ["go", "run", cmd_rel]
     else:
-        final_cmd = [str(cwd / cmd_rel)]
+        final_cmd = [str((cwd / cmd_rel).resolve())]
 
     console.print(f"[blue]Running: {' '.join(final_cmd)}[/blue]")
     try:
