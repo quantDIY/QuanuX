@@ -23,6 +23,7 @@ void MarketDataEngine::init(const std::string &extension_path) {
   } catch (const std::exception &e) {
     std::cerr << "[MarketDataEngine] Failed to load extension: " << e.what()
               << std::endl;
+    throw; // Re-throw to allow caller (Engine) to handle or retry
   }
 }
 
