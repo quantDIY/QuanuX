@@ -3,43 +3,45 @@ import argparse
 import sys
 
 SERVICE_NAME = "QuanuX"
-KEY_NAME = "DATABENTO_API_KEY"
+DEFAULT_KEY_NAME = "DATABENTO_API_KEY"
 
-def set_key(api_key):
+def set_key(key_name, api_key):
     try:
-        keyring.set_password(SERVICE_NAME, KEY_NAME, api_key)
-        print(f"Successfully stored {KEY_NAME} in keyring for service '{SERVICE_NAME}'.")
+        keyring.set_password(SERVICE_NAME, key_name, api_key)
+        print(f"Successfully stored {key_name} in keyring for service '{SERVICE_NAME}'.")
     except Exception as e:
         print(f"Failed to store key: {e}")
         sys.exit(1)
 
-def get_key():
+def get_key(key_name):
     try:
-        key = keyring.get_password(SERVICE_NAME, KEY_NAME)
+        key = keyring.get_password(SERVICE_NAME, key_name)
         if key:
-            print(f"Found {KEY_NAME}: {key[:4]}... (redacted)")
+            print(f"Found {key_name}: {key[:4]}... (redacted)")
         else:
-            print(f"{KEY_NAME} not found in keyring.")
+            print(f"{key_name} not found in keyring.")
     except Exception as e:
         print(f"Failed to retrieve key: {e}")
         sys.exit(1)
 
-def delete_key():
+def delete_key(key_name):
     try:
-        keyring.delete_password(SERVICE_NAME, KEY_NAME)
-        print(f"Successfully deleted {KEY_NAME} from keyring.")
+        keyring.delete_password(SERVICE_NAME, key_name)
+        print(f"Successfully deleted {key_name} from keyring.")
     except keyring.errors.PasswordDeleteError:
-         print(f"{KEY_NAME} not found in keyring to delete.")
+         print(f"{key_name} not found in keyring to delete.")
     except Exception as e:
         print(f"Failed to delete key: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Manage Databento API Key via OS Keyring")
+    parser = argparse.ArgumentParser(description="Manage API Keys via OS Keyring")
+    parser.add_argument("--name", default=DEFAULT_KEY_NAME, help=f"Key name (default: {DEFAULT_KEY_NAME})")
+    
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     set_parser = subparsers.add_parser("set", help="Set the API key")
-    set_parser.add_argument("key", help="The Databento API Key")
+    set_parser.add_argument("key", help="The API Key value")
 
     get_parser = subparsers.add_parser("get", help="Check if the API key is set")
     
@@ -48,8 +50,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.command == "set":
-        set_key(args.key)
+        set_key(args.name, args.key)
     elif args.command == "get":
-        get_key()
+        get_key(args.name)
     elif args.command == "delete":
-        delete_key()
+        delete_key(args.name)

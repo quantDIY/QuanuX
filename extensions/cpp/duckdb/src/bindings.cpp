@@ -1,6 +1,6 @@
 #include <duckdb.hpp>
-#include <iostream>
 #include <pybind11/pybind11.h>
+#include <string>
 
 namespace py = pybind11;
 using namespace duckdb;

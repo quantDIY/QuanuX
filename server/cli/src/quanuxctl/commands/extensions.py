@@ -343,13 +343,13 @@ def install_extension(name: str):
         console.print(f"[red]Extension '{name}' not found.[/red]")
         raise typer.Exit(1)
         
-    build_script = ext_path / "build.sh"
+    build_script = (ext_path / "build.sh").resolve()
     if build_script.exists():
-        console.print(f"[green]Building {name}...[/green]")
+        console.print(f"[green]Building {name}... from {ext_path}[/green]")
         try:
             # Ensure executable
             os.chmod(build_script, 0o755)
-            subprocess.run([str(build_script)], cwd=ext_path, check=True)
+            subprocess.run([str(build_script)], cwd=ext_path.resolve(), check=True)
             console.print(f"[bold green]✓ Build successful[/bold green]")
         except subprocess.CalledProcessError:
             console.print(f"[red]Build failed for {name}[/red]")

@@ -54,6 +54,9 @@ def create_app() -> FastAPI:
 
     from .routers.rithmic import router as rithmic_router
     app.include_router(rithmic_router)
+
+    from .routers.storage import router as storage_router
+    app.include_router(storage_router)
     
     return app
 

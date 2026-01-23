@@ -52,6 +52,6 @@ target_link_libraries(databento_py PRIVATE databento::databento duckdb_static)
 
 # Install/Copy artifact
 add_custom_command(TARGET databento_py POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:databento_py> ${CMAKE_CURRENT_SOURCE_DIR}/../../python/wrappers/databento/
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:databento_py> ${CMAKE_CURRENT_SOURCE_DIR}/../../python/wrappers/quanux_databento/
     COMMENT "Copying extension to python wrappers"
 )

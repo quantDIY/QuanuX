@@ -1,10 +1,11 @@
 #include <databento/historical.hpp>
 #include <databento/record.hpp>
 #include <duckdb.hpp>
-#include <iostream>
 #include <pybind11/functional.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <string>
+#include <vector>
 
 namespace py = pybind11;
 namespace db = databento;

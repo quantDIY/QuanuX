@@ -270,6 +270,20 @@ export const Integrations = () => {
             icon: <Plug className="w-8 h-8 text-purple-500" />,
             fields: [{ key: 'QUANUX_GEMINI_API_KEY', label: 'API Key', placeholder: 'AIza...' }]
         },
+        {
+            id: 'databento',
+            name: 'Databento',
+            description: 'Historical market data (nanosecond resolution).',
+            icon: <Plug className="w-8 h-8 text-orange-600" />,
+            fields: [{ key: 'DATABENTO_API_KEY', label: 'API Key', placeholder: 'db-...' }]
+        },
+        {
+            id: 'motherduck',
+            name: 'MotherDuck',
+            description: 'Serverless DuckDB in the cloud.',
+            icon: <Plug className="w-8 h-8 text-yellow-400" />,
+            fields: [{ key: 'MOTHERDUCK_TOKEN', label: 'Service Token', placeholder: 'md-...' }]
+        },
     ];
 
     const handleOAuth = (url: string) => {

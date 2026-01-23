@@ -1,0 +1,6 @@
+display_name: DuckDB C++ Host
+description: High-performance DuckDB host with C++ Appender API.
+runtime: cpp
+version: 0.1.0
+tags: [database, extension]
+env: []

@@ -5,7 +5,7 @@ Unified Developer CLI.
 """
 import typer
 from rich.console import Console
-from .commands import secrets, bridge, skills, extensions, node
+from .commands import secrets, bridge, skills, extensions, node, storage
 from . import __version__
 
 app = typer.Typer(
@@ -23,6 +23,7 @@ app.add_typer(bridge.app, name="bridge", help="Manage the SignalR Bridge.")
 app.add_typer(skills.app, name="skills", help="Manage and discover Agent Skills.")
 app.add_typer(extensions.app, name="ext", help="Manage QXP Extensions (List, Run).")
 app.add_typer(node.app, name="node", help="Manage Remote Execution Nodes (Deploy, List).")
+app.add_typer(storage.app, name="storage", help="Manage connected storage and databases.")
 
 
 @app.command()
