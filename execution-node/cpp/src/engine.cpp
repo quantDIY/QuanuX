@@ -2,6 +2,7 @@
 #include <chrono>
 #include <iostream>
 #include <thread>
+#include <vector>
 
 Engine::Engine()
     : // ring_buffer_ default constructor is used (fixed size)
@@ -11,10 +12,35 @@ Engine::Engine()
 void Engine::init(const std::string &config_path) {
   std::cout << "[Engine] Initializing..." << std::endl;
   // In a real app, read config.json
-  // For now, hardcode loading the mock feed
-  // We assume the shared object is in the same dir or build dir
-  std::string feed_path = "./mock_feed.so"; // Path relative to execution
-  market_data_engine_.init(feed_path);
+
+  // Determine platform-specific extension
+  std::string ext = ".so";
+#ifdef __APPLE__
+  ext = ".dylib";
+#endif
+
+  // Try multiple paths for the mock feed
+  std::vector<std::string> paths = {
+      "./mock_feed" + ext, "./execution-node/cpp/build/mock_feed" + ext,
+      "../build/mock_feed" + ext};
+
+  bool loaded = false;
+  for (const auto &path : paths) {
+    try {
+      market_data_engine_.init(path);
+      loaded = true;
+      break;
+    } catch (...) {
+      // Continue trying
+    }
+  }
+
+  if (!loaded) {
+    // Fallback to error message with the last attempted path's extension logic
+    std::cerr << "[Engine] Warning: Could not load mock_feed from standard "
+                 "locations (tried "
+              << paths[0] << ", etc)." << std::endl;
+  }
 }
 
 void Engine::load_strategy(const std::string &strategy_path) {
