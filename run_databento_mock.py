@@ -7,7 +7,7 @@ import threading
 # Ensure extensions/python/wrappers is in path
 sys.path.append('extensions/python/wrappers')
 
-import databento
+import quanux_databento as databento
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -19,8 +19,17 @@ def main():
     logger.info(f"Schema.Trades: {databento.Schema.Trades}")
     logger.info(f"SType.RawSymbol: {databento.SType.RawSymbol}")
     
-    # Test Builder
-    key = os.environ.get("DATABENTO_API_KEY", "db-kf8GXBjGBTQv84YvK5yUHQNsuJcWY")
+    # Try Env Var first, then Keyring
+    key = os.environ.get("DATABENTO_API_KEY")
+    if not key:
+        try:
+            import keyring
+            key = keyring.get_password("QuanuX", "DATABENTO_API_KEY")
+        except ImportError:
+            pass
+            
+    if not key:
+        raise ValueError("DATABENTO_API_KEY not found in environment or keyring (service='QuanuX').")
     logger.info(f"Building client with key: {key[:4]}...")
     
     try:

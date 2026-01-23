@@ -3,7 +3,6 @@ project(databento_py)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-# Avoid downloading dependencies if possible, but allow FetchContent
 set(DATABENTO_ENABLE_TESTING OFF)
 set(DATABENTO_ENABLE_EXAMPLES OFF)
 
@@ -17,7 +16,19 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(pybind11)
 
-# Prefetch nlohmann_json to ensure modern version
+# DuckDB for Connector
+FetchContent_Declare(
+    duckdb
+    GIT_REPOSITORY https://github.com/duckdb/duckdb.git
+    GIT_TAG v1.1.3
+    GIT_SHALLOW TRUE
+)
+set(BUILD_UNITTESTS OFF CACHE BOOL "" FORCE)
+set(BUILD_SHELL OFF CACHE BOOL "" FORCE)
+set(BUILD_EXTENSIONS "parquet;json" CACHE STRING "" FORCE)
+FetchContent_MakeAvailable(duckdb)
+
+# JSON (Dependency of Databento)
 FetchContent_Declare(
   json
   GIT_REPOSITORY https://github.com/nlohmann/json.git
@@ -37,7 +48,7 @@ FetchContent_MakeAvailable(databento)
 pybind11_add_module(databento_py src/bindings.cpp)
 
 # Link
-target_link_libraries(databento_py PRIVATE databento::databento)
+target_link_libraries(databento_py PRIVATE databento::databento duckdb_static)
 
 # Install/Copy artifact
 add_custom_command(TARGET databento_py POST_BUILD

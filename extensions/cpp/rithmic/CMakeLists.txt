@@ -89,4 +89,6 @@ if(APPLE)
         "-framework SystemConfiguration"
         "-framework Security"
     )
+elseif(UNIX AND NOT APPLE)
+    target_link_libraries(rithmic_py PRIVATE pthread dl)
 endif()

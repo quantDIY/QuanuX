@@ -334,3 +334,56 @@ def run_extension(name: str):
         console.print("\n[yellow]Extension stopped.[/yellow]")
     except Exception as e:
         console.print(f"[red]Error running extension: {e}[/red]")
+
+@app.command("install")
+def install_extension(name: str):
+    """Build/Install the extension (runs build.sh)."""
+    ext_path = find_extension_path(name)
+    if not ext_path:
+        console.print(f"[red]Extension '{name}' not found.[/red]")
+        raise typer.Exit(1)
+        
+    build_script = ext_path / "build.sh"
+    if build_script.exists():
+        console.print(f"[green]Building {name}...[/green]")
+        try:
+            # Ensure executable
+            os.chmod(build_script, 0o755)
+            subprocess.run([str(build_script)], cwd=ext_path, check=True)
+            console.print(f"[bold green]✓ Build successful[/bold green]")
+        except subprocess.CalledProcessError:
+            console.print(f"[red]Build failed for {name}[/red]")
+            raise typer.Exit(1)
+    else:
+        console.print(f"[yellow]No build.sh found for {name}. Skipping build step.[/yellow]")
+        
+    # Python Requirements
+    req_file = ext_path / "requirements.txt"
+    if req_file.exists():
+        console.print(f"[green]Installing dependencies for {name}...[/green]")
+        try:
+            subprocess.run([sys.executable, "-m", "pip", "install", "-r", str(req_file)], check=True)
+        except subprocess.CalledProcessError:
+             console.print(f"[red]Failed to install requirements[/red]")
+
+@app.command("uninstall")
+def uninstall_extension(name: str, force: bool = typer.Option(False, "--force", "-f")):
+    """Clean up build artifacts (removes 'build' directory)."""
+    ext_path = find_extension_path(name)
+    if not ext_path:
+        console.print(f"[red]Extension '{name}' not found.[/red]")
+        raise typer.Exit(1)
+        
+    if not force:
+        confirm = typer.confirm(f"Are you sure you want to remove build artifacts for {name}?")
+        if not confirm:
+            return
+
+    build_dir = ext_path / "build"
+    if build_dir.exists() and build_dir.is_dir():
+        import shutil
+        shutil.rmtree(build_dir)
+        console.print(f"[green]Removed build directory for {name}.[/green]")
+    else:
+        console.print(f"[yellow]No build directory found for {name}.[/yellow]")
+
