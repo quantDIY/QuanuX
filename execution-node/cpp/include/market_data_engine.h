@@ -16,6 +16,10 @@ class MarketDataEngine {
       nullptr; // Pointer to the shared ring buffer
   NatsBridge *nats_bridge_ = nullptr;
 
+  // Static instance for C-style callbacks
+  static MarketDataEngine *instance_;
+  static void static_on_update(const MarketUpdate *update);
+
 public:
   MarketDataEngine(RingBuffer<MarketUpdate, 1024> *ring_buffer,
                    NatsBridge *nats_bridge);

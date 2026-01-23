@@ -2,9 +2,19 @@
 #include <iostream>
 #include <thread>
 
+MarketDataEngine *MarketDataEngine::instance_ = nullptr;
+
+void MarketDataEngine::static_on_update(const MarketUpdate *update) {
+  if (instance_) {
+    instance_->on_update(*update);
+  }
+}
+
 MarketDataEngine::MarketDataEngine(RingBuffer<MarketUpdate, 1024> *ring_buffer,
                                    NatsBridge *nats_bridge)
-    : ring_buffer_(ring_buffer), nats_bridge_(nats_bridge) {}
+    : ring_buffer_(ring_buffer), nats_bridge_(nats_bridge) {
+  instance_ = this;
+}
 
 void MarketDataEngine::init(const std::string &extension_path) {
   std::cout << "[MarketDataEngine] Loading extension: " << extension_path
@@ -12,12 +22,24 @@ void MarketDataEngine::init(const std::string &extension_path) {
   try {
     auto loader = std::make_unique<PluginLoader>(extension_path);
 
-    // In a real implementation, we would get the 'subscribe' and 'start'
-    // symbols and register a callback that calls this->on_update
+    // Resolve symbols for start_feed
+    // The signature in mock_feed.cpp is: void start_feed(DataCallback callback)
+    // where DataCallback is void (*)(const MarketUpdate*)
+    typedef void (*StartFeedFn)(void (*)(const MarketUpdate *));
+    auto start_feed = loader->get_symbol<StartFeedFn>("start_feed");
 
-    // Mocking the "start" for now by just keeping the loader alive
+    // Start the feed
+    if (start_feed) {
+      std::cout << "[MarketDataEngine] Found 'start_feed'. Starting feed..."
+                << std::endl;
+      start_feed(static_on_update);
+    } else {
+      std::cout
+          << "[MarketDataEngine] Symbol 'start_feed' not found in extension."
+          << std::endl;
+    }
+
     extensions_.push_back(std::move(loader));
-
     std::cout << "[MarketDataEngine] Successfully loaded " << extension_path
               << std::endl;
   } catch (const std::exception &e) {
@@ -29,7 +51,7 @@ void MarketDataEngine::init(const std::string &extension_path) {
 
 void MarketDataEngine::subscribe(const std::string &symbol) {
   std::cout << "[MarketDataEngine] Subscribing to " << symbol << std::endl;
-  // TODO: Iterate extensions and call subscribe
+  // TODO: Iterate extensions and call subscribe if available
 }
 
 void MarketDataEngine::on_update(const MarketUpdate &update) {
