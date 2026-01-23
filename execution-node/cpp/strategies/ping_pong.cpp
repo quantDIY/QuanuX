@@ -3,11 +3,11 @@
 
 struct StrategyContext {
   int position;
-  const OrderService *order_service;
+  OrderService order_service;
 };
 
 extern "C" StrategyContext *create_context() {
-  return new StrategyContext{0, nullptr};
+  return new StrategyContext(); // order_service default init
 }
 
 extern "C" void destroy_context(StrategyContext *ctx) { delete ctx; }
@@ -15,11 +15,13 @@ extern "C" void destroy_context(StrategyContext *ctx) { delete ctx; }
 void on_init(StrategyContext *ctx, const OrderService *service) {
   std::cout << "[PingPong] Initialized with OrderService" << std::endl;
   ctx->position = 0;
-  ctx->order_service = service;
+  if (service) {
+    ctx->order_service = *service; // Copy by value
+  }
 }
 
 void on_market_data(StrategyContext *ctx, const MarketUpdate *update) {
-  if (!ctx->order_service)
+  if (!ctx->order_service.submit_order)
     return;
 
   // Simple logic: Buy at 100.5, Sell at 101.0
@@ -34,7 +36,7 @@ void on_market_data(StrategyContext *ctx, const MarketUpdate *update) {
         .type = 0  // Limit
     };
     uint64_t oid =
-        ctx->order_service->submit_order(ctx->order_service->engine_ctx, &req);
+        ctx->order_service.submit_order(ctx->order_service.engine_ctx, &req);
     std::cout << "[PingPong] Order Submitted: " << oid << std::endl;
 
     ctx->position = 1;
@@ -50,7 +52,7 @@ void on_market_data(StrategyContext *ctx, const MarketUpdate *update) {
         .type = 0   // Limit
     };
     uint64_t oid =
-        ctx->order_service->submit_order(ctx->order_service->engine_ctx, &req);
+        ctx->order_service.submit_order(ctx->order_service.engine_ctx, &req);
     std::cout << "[PingPong] Order Submitted: " << oid << std::endl;
 
     ctx->position = 0;
