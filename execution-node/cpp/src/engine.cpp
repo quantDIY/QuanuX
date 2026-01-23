@@ -7,7 +7,18 @@
 Engine::Engine()
     : // ring_buffer_ default constructor is used (fixed size)
       nats_bridge_("nats://localhost:4222"), // Default NATS URL
-      market_data_engine_(&ring_buffer_, &nats_bridge_) {}
+      market_data_engine_(&ring_buffer_, &nats_bridge_),
+      order_gateway_(&nats_bridge_) {}
+
+uint64_t Engine::static_submit_order(void *ctx, const OrderRequest *request) {
+  Engine *engine = static_cast<Engine *>(ctx);
+  return engine->order_gateway_.submit_order(request);
+}
+
+void Engine::static_cancel_order(void *ctx, uint64_t order_id) {
+  Engine *engine = static_cast<Engine *>(ctx);
+  engine->order_gateway_.cancel_order(order_id);
+}
 
 void Engine::init(const std::string &config_path) {
   std::cout << "[Engine] Initializing..." << std::endl;
@@ -68,7 +79,10 @@ void Engine::load_strategy(const std::string &strategy_path) {
     }
 
     if (strategy_ptr->on_init) {
-      strategy_ptr->on_init(ctx);
+      OrderService service = {.engine_ctx = this,
+                              .submit_order = static_submit_order,
+                              .cancel_order = static_cancel_order};
+      strategy_ptr->on_init(ctx, &service);
     }
 
     strategies_.push_back({std::move(loader), strategy_ptr, ctx});
@@ -98,6 +112,9 @@ void Engine::run() {
           s.strategy->on_market_data(s.ctx, &update);
         }
       }
+
+      // Process Orders
+      order_gateway_.poll();
     } else {
       // Idle strategy: Busy spin or yield
       // In pure HFT, we busy spin.

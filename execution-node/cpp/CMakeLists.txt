@@ -32,6 +32,7 @@ add_library(node_core STATIC
     src/engine.cpp
     src/nats_bridge.cpp
     src/market_data_engine.cpp
+    src/order_gateway.cpp
 )
 target_link_libraries(node_core PUBLIC nats_static pthread dl)
 
@@ -50,4 +51,4 @@ target_include_directories(mock_feed PRIVATE include)
 set_target_properties(mock_feed PROPERTIES PREFIX "") # mock_feed.so
 
 # Strategy Interface (Header Only for now)
-install(FILES include/strategy_interface.h include/plugin_loader.h include/ring_buffer.h include/market_data_engine.h include/nats_bridge.h include/engine.h DESTINATION include)
+install(FILES include/strategy_interface.h include/plugin_loader.h include/ring_buffer.h include/market_data_engine.h include/nats_bridge.h include/engine.h include/order_gateway.h DESTINATION include)

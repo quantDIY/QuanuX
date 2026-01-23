@@ -33,12 +33,27 @@ struct OrderUpdate {
   double remaining_quantity;
 };
 
+struct OrderRequest {
+  uint64_t instrument_id;
+  double price;
+  double quantity;
+  int side; // 1=Buy, -1=Sell
+  int type; // 0=Limit, 1=Market
+};
+
+// Interface for Strategy to call back into Engine
+struct OrderService {
+  void *engine_ctx;
+  uint64_t (*submit_order)(void *engine_ctx, const OrderRequest *request);
+  void (*cancel_order)(void *engine_ctx, uint64_t order_id);
+};
+
 // V-Table for Strategy instance
 struct StrategyContext;
 
 typedef StrategyContext *(*OnCreateContextFn)();
 typedef void (*OnDestroyContextFn)(StrategyContext *ctx);
-typedef void (*OnInitFn)(StrategyContext *ctx);
+typedef void (*OnInitFn)(StrategyContext *ctx, const OrderService *service);
 typedef void (*OnMarketDataFn)(StrategyContext *ctx,
                                const MarketUpdate *update);
 typedef void (*OnSignalFn)(StrategyContext *ctx, const Signal *signal);
