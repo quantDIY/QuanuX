@@ -1,25 +1,26 @@
-#include "strategy_interface.h"
+#include "engine.h"
 #include <iostream>
 #include <string>
-#include <thread>
-#include <vector>
 
-// Scaffolding for Main Entry Point
 int main(int argc, char **argv) {
   std::cout << "QuanuX HFT Node | Starting..." << std::endl;
-  std::cout << "Build Type: " << (argc > 1 ? argv[1] : "Default") << std::endl;
 
-  // TODO:
-  // 1. Initialize io_uring / Event Loop
-  // 2. Load Configuration (NATS URL, Exchange Credentials)
-  // 3. Pin Thread to Core 0
-  // 4. Initialize Ring Buffers
-  // 5. Load Strategy .so
-  // 6. Start Market Data Feed
+  std::string strategy_path = "./ping_pong.so";
+  if (argc > 1) {
+    strategy_path = argv[1];
+  }
 
-  // Simulate Event Loop
-  std::cout << "Engine Ready. Waiting for signals..." << std::endl;
-  // while(running) { poll() }
+  try {
+    Engine engine;
+    engine.init("config.json");
+    engine.load_strategy(strategy_path);
+
+    // Start the engine (blocks)
+    engine.run();
+  } catch (const std::exception &e) {
+    std::cerr << "Fatal Error: " << e.what() << std::endl;
+    return 1;
+  }
 
   return 0;
 }

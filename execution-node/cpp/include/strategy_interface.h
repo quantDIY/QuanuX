@@ -36,6 +36,8 @@ struct OrderUpdate {
 // V-Table for Strategy instance
 struct StrategyContext;
 
+typedef StrategyContext *(*OnCreateContextFn)();
+typedef void (*OnDestroyContextFn)(StrategyContext *ctx);
 typedef void (*OnInitFn)(StrategyContext *ctx);
 typedef void (*OnMarketDataFn)(StrategyContext *ctx,
                                const MarketUpdate *update);
@@ -46,6 +48,8 @@ typedef void (*OnDestroyFn)(StrategyContext *ctx);
 
 struct Strategy {
   const char *name;
+  OnCreateContextFn create_context;
+  OnDestroyContextFn destroy_context;
   OnInitFn on_init;
   OnMarketDataFn on_market_data;
   OnSignalFn on_signal;
