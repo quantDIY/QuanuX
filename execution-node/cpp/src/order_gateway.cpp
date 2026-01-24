@@ -6,6 +6,12 @@ OrderGateway::OrderGateway(NatsBridge *nats_bridge)
     : nats_bridge_(nats_bridge) {}
 
 uint64_t OrderGateway::submit_order(const OrderRequest *request) {
+  // 1. Risk Check
+  if (!risk_engine_.check(request)) {
+    // Reject
+    return 0; // 0 ID implies rejection/failure in this simple ABI
+  }
+
   uint64_t new_id = order_id_counter_.fetch_add(1, std::memory_order_relaxed);
 
   std::cout << "[OrderGateway] Order Submitted! ID: " << new_id
@@ -27,6 +33,9 @@ uint64_t OrderGateway::submit_order(const OrderRequest *request) {
   // We need a way to callback the strategy.
   // Wait, OrderGateway doesn't know about strategies directly yet.
   // The Engine needs to route the update back.
+
+  // Update Risk Position
+  risk_engine_.on_fill(request->quantity, request->side);
 
   return new_id;
 }

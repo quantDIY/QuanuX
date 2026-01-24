@@ -1,5 +1,6 @@
 #pragma once
 #include "nats_bridge.h"
+#include "risk_engine.h"
 #include "strategy_interface.h"
 #include <atomic>
 #include <mutex>
@@ -10,6 +11,7 @@
 
 class OrderGateway {
   NatsBridge *nats_bridge_;
+  RiskEngine risk_engine_;
   std::atomic<uint64_t> order_id_counter_{1};
 
 public:
