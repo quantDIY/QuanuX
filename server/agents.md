@@ -21,8 +21,8 @@ QuanuX now uses a high-performance C++20 library for indicators.
 
 7.  **Server Runtime (Nucleus)**: The C++ orchestration layer.
     *   **Skill Location**: `server/runtime/SKILL.md`.
-    *   **Role**: Manages the Event Bus (NATS). Agents should NOT modify the runtime unless tasked with infrastructure changes.
-    *   **Interaction**: Use `nats-py` to interact with the system, not direct imports.
+    *   **Role**: Manages the Event Bus (NATS) and **Spawns Strategies**.
+    *   **Action**: Listens on `sys.cmd.spawn`, forks processes, and manages their lifecycle.
 
 8.  **Python Control Plane**: The client library for the runtime.
     *   **Skill Location**: `server/control/SKILL.md`.

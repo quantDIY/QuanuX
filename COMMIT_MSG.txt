@@ -1,12 +1,10 @@
-feat(control): Add Python Control Plane for C++ Runtime
+docs(control): Document Python Control Plane and Bridge Architecture
 
-Implemented a lightweight Python client (`quanux.runtime`) to drive the C++ Supervisor.
+Finalized documentation for the "Best of Both Worlds" architecture.
 
-## Features
-*   **RuntimeClient**: A NATS JetStream wrapper that publishes commands (e.g., `sys.cmd.spawn`) and subscribes to telemetry.
-*   **Decoupling**: Allows the Python Strategy Builder / UI to control the organism without linking against C++ binaries.
-*   **Verification**: Included `verify_control.py` to prove end-to-end connectivity.
+## Updates
+*   **server/control/SKILL.md**: New Agent Skill defining `quanux.runtime` as a remote control client, not a wrapper.
+*   **server/control/README.md**: Developer guide explaining the C++ Speed / Python Agility bridge.
+*   **server/agents.md**: Updated Central Brain to include the Control Plane skill.
 
-## Documentation
-*   Updated `walkthrough.md` with the new Control Plane section.
-*   Updated `task.md` to reflect completion.
+This completes the architectural pivot to a C++ Nucleus with a Python Nervous System interface.
