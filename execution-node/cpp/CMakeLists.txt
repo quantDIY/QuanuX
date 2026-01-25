@@ -24,6 +24,19 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(cnats)
 
+# DuckDB (For Backtester)
+FetchContent_Declare(
+    duckdb
+    GIT_REPOSITORY https://github.com/duckdb/duckdb.git
+    GIT_TAG v1.1.3
+    GIT_SHALLOW TRUE
+)
+set(BUILD_UNITTESTS OFF CACHE BOOL "" FORCE)
+set(BUILD_SHELL OFF CACHE BOOL "" FORCE)
+# Build parquet extension statically for zero-copy arrow support
+set(BUILD_EXTENSIONS "parquet;json" CACHE STRING "" FORCE)
+FetchContent_MakeAvailable(duckdb)
+
 # Include Directories
 include_directories(include)
 
@@ -39,6 +52,15 @@ target_link_libraries(node_core PUBLIC nats_static pthread dl)
 # Main Executable
 add_executable(quanux_node src/main.cpp)
 target_link_libraries(quanux_node PRIVATE node_core)
+
+# Simulator
+add_library(node_simulator STATIC
+    src/simulator/SimulatedExchange.cpp
+)
+target_link_libraries(node_simulator PUBLIC node_core duckdb_static)
+
+add_executable(quanux_backtest src/simulator/main.cpp)
+target_link_libraries(quanux_backtest PRIVATE node_simulator)
 
 # Strategies
 add_library(ping_pong SHARED strategies/ping_pong.cpp)

@@ -108,4 +108,5 @@ client/desktop/tauri-app/src-tauri/tauri.conf.json.bak.*
 client/desktop/tauri-app/src-tauri/src/*.bak.*
 
 # ---- Project Management ----
-project_status.md
+# project_status.md
+# docs/technical_whitepaper.md

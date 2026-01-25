@@ -19,11 +19,22 @@ console = Console()
 
 # Register subcommands
 app.add_typer(secrets.app, name="secrets", help="Manage API keys and secrets via OS Keyring.")
+app.add_typer(secrets.app, name="sec", help="Alias for secrets", hidden=True)
+
 app.add_typer(bridge.app, name="bridge", help="Manage the SignalR Bridge.")
+app.add_typer(bridge.app, name="b", help="Alias for bridge", hidden=True)
+
 app.add_typer(skills.app, name="skills", help="Manage and discover Agent Skills.")
+app.add_typer(skills.app, name="k", help="Alias for skills", hidden=True)
+
 app.add_typer(extensions.app, name="ext", help="Manage QXP Extensions (List, Run).")
+app.add_typer(extensions.app, name="e", help="Alias for ext", hidden=True)
+
 app.add_typer(node.app, name="node", help="Manage Remote Execution Nodes (Deploy, List).")
+app.add_typer(node.app, name="n", help="Alias for node", hidden=True)
+
 app.add_typer(storage.app, name="storage", help="Manage connected storage and databases.")
+app.add_typer(storage.app, name="s", help="Alias for storage", hidden=True)
 
 
 @app.command()

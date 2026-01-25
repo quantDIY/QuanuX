@@ -1,47 +1,111 @@
 # QuanuX Developer Setup
 
-## Python Environment
-QuanuX relies on a Python virtual environment for the server, CLI, and agent tools.
+## Quick Start
 
 ### 1. Prerequisites
-- Python 3.10+
-- Anaconda or Miniconda (recommended) or standard venv
+- **OS**: macOS (Apple Silicon recommended) or Linux (x86_64).
+- **C++**: Compiler supporting C++20 (Clang 15+ or GCC 11+).
+- **Build System**: CMake 3.20+.
+- **Python**: 3.10+ (Anaconda or venv).
+- **Messaging**: `nats-server` (recommended) or NATS access.
 
-### 2. Setup
+### 2. Environment Setup
 ```bash
-# Create and activate venv
+# Create Python environment
 python3 -m venv venv
 source venv/bin/activate
-
-# Install Dependencies
 pip install -r requirements.txt
-```
 
-### 3. installing the CLI (quanuxctl)
-To use the `quanuxctl` tool in development mode with the local codebase:
-
-```bash
-# Install CLI in editable mode
-pip install -e server/cli
-
-# Set PYTHONPATH to include the project root (crucial for imports like 'server.security...')
+# Install CLI (quanuxctl) in editable mode
+# IMPORTANT: Use PYTHONPATH=. to include the project root for imports
 export PYTHONPATH=$PWD
+pip install -e server/cli
 ```
 
-### 4. Verification
+### 3. Verify CLI
 ```bash
-quanuxctl ext list
+# Check if quanuxctl is working
+quanuxctl --version
 ```
 
-## C++ Extensions
-To build C++ extensions (like Rithmic), you need `cmake`.
+---
 
-### macOS
+## Architecture Components
+
+### 1. Execution Node (C++)
+The core HFT engine is located in `execution-node/cpp`. 
+
+**Building the Node:**
 ```bash
-brew install cmake
+cd execution-node/cpp
+mkdir -p build && cd build
+cmake ..
+make -j$(nproc)
+```
+*Note: This will automatically fetch dependencies (NATS C client, etc.) via FetchContent.*
+
+**Running:**
+```bash
+# From execution-node/cpp/build
+./quanux_node
 ```
 
-### Linux
+### 4. Extensions (Data & Storage)
+Extensions for Databento and DuckDB are located in `extensions/cpp/`. They are typically built as part of the main `quanux_node` build or separately for testing.
+
+**Databento Setup:**
+Ensure your API key is available in your shell or `secrets` store:
 ```bash
-sudo apt-get install cmake
+export DATABENTO_API_KEY="db-..."
 ```
+
+### 5. Quanux Indicators (C++ Core)
+The core indicator library (TA-Lib replacement) is in `server/indicators`.
+It creates a C++ shared library and a Python extension.
+
+```bash
+cd server/indicators
+mkdir build && cd build
+cmake ..
+make
+```
+
+### 3. NATS Integration
+NATS (via `nats.c`) handles all telemetry. Ensure a NATS server is running on `localhost:4222`:
+
+```bash
+# Install (macOS)
+brew install nats-server
+
+# Run
+nats-server
+```
+
+---
+
+## Common Workflows
+
+### Running the Backtester (Mock Data)
+See `technical_whitepaper.md` for architectural details on the backtesting loop. To simulate a feed:
+
+```bash
+# Start NATS
+nats-server -p 4222 &
+
+# Run Node with Mock Strategy
+./execution-node/cpp/build/quanux_node <path_to_strategy.so>
+```
+
+### Adding New Dependencies
+- **Python**: Add to `requirements.txt`.
+- **C++**: Add to `execution-node/cpp/CMakeLists.txt` using `FetchContent` or `find_package`.
+
+---
+
+## Troubleshooting
+
+### "Module not found: server" in CLI
+Ensure you are running `quanuxctl` with `PYTHONPATH=.` from the project root, or that the package is installed in editable mode properly.
+
+### CMake "Missing header"
+If headers like `nats.h` are missing, ensure the `FetchContent_MakeAvailable(cnats)` step succeeded in the CMake output. Try clearing the `build/` directory and re-running `cmake ..`.
