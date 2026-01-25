@@ -19,6 +19,11 @@ QuanuX now uses a high-performance C++20 library for indicators.
 6.  **CLI Controls**: The `quanuxctl` interface.
     *   **Skill Location**: `server/cli/SKILL.md` (Read for extending the CLI).
 
+7.  **Server Runtime (Nucleus)**: The C++ orchestration layer.
+    *   **Skill Location**: `server/runtime/SKILL.md`.
+    *   **Role**: Manages the Event Bus (NATS). Agents should NOT modify the runtime unless tasked with infrastructure changes.
+    *   **Interaction**: Use `nats-py` to interact with the system, not direct imports.
+
 ## 3. The Dual-Engine Philosophy (Graduation Workflow)
 QuanuX allows users to "Graduate" strategies from Python research to C++ execution.
 1.  **Draft (Python)**: Use Strategy Builder + `quanux_indicators` (pybind) for fast iteration/ML.

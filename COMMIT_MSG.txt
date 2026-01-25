@@ -1,23 +1,13 @@
-feat(indicators): Implement C++20 Indicators Engine, Python Bindings, and CLI
+refactor(runtime): Pivot Orchestration Nucleus to C++20
 
-This commit introduces the complete `libquanux-indicators` subsystem, replacing legacy TA-Lib dependencies with a modern, high-performance C++20 architecture.
+Replaced the initial Python prototype of the Server Runtime with a high-performance C++20 implementation.
 
-## Core Features
-1.  **Lazy Evaluation Engine**: unique `view.hpp` implementation allowing `prices | sma(10)` syntax with zero-allocation loop fusion.
-2.  **Policy-Based Market Profile**: `MarketProfile<StoragePolicy>` supporting both `DenseStorage` (std::vector for Futures) and `SparseStorage` (std::map for Crypto) for optimal memory/speed tradeoffs.
-3.  **Volume Profile**: Generalized storage policy to support Volume-at-Price aggregation.
-4.  **Eager Wrappers**: Traditional `compute_sma` functions for simple vector-based usage.
+## Changes
+*   **Removed**: `server/runtime/main.py`, `bus.py`, `bootstrap.py`.
+*   **Added**: `server/runtime/src/supervisor.cpp` (C++ NATS Wrapper).
+*   **Added**: `server/runtime/CMakeLists.txt` (Builds `quanux_supervisor` with `nats.c`).
 
-## Integration & Bindings
-*   **Python Bindings**: `pybind11` wrappers exposing `quanux_indicators` module to the Strategy Builder.
-*   **Execution Node Wiring**: Wired `execution-node/cpp` to link against `libquanux-indicators`, enabling "Graduated" C++ strategies to run self-contained at the edge.
-*   **Community Registry**: Added `contrib/` directory structure and CMake capability to auto-build community indicators.
-
-## CLI (quanuxctl)
-*   `quanuxctl indicators`: Manage community extensions (install/list/remove).
-*   `quanuxctl module`: Lifecycle management (install/remove core subsystems).
-
-## Documentation
-*   `server/indicators/SKILL.md`: AI Agent knowledge base for using the new library.
-*   `execution-node/SKILL.md`: Documentation of the "Dual-Engine Graduation" workflow (Python -> C++).
-*   `execution-node/README.md`: Human-facing documentation for the Edge Supervisor.
+## Capabilities
+*   **Native Bootstrapping**: The Supervisor now uses the NATS C client to automatically provision the JetStream taxonomy (MARKET, ORDER, EXEC, SYS) on startup.
+*   **Zero Overhead**: Orchestration now shares the same memory model and performance characteristics as the Execution Nodes.
+*   **Unified Stack**: The entire critical path (Indicators -> Supervisor -> Execution) is now pure C++.
