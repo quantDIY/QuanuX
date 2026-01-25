@@ -1,50 +1,84 @@
-#!/usr/bin/env python3
-from __future__ import annotations
-import argparse, json, sys
-import pandas as pd
-from typing import List
 
-# Import via the repo "server" package; ensure repo root is on PYTHONPATH when running
-from server.indicators.ta.loader import load_backend
-from server.indicators.ta.indicators import sma, rsi, macd, ema
+import typer
+from rich.console import Console
+from rich.table import Table
+import subprocess
+import os
+from pathlib import Path
 
-def _parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(prog="quanuxctl indicators", description="Indicators utilities")
-    sub = p.add_subparsers(dest="cmd", required=True)
+app = typer.Typer(help="Manage Indicator Registry (Community Extensions).")
+console = Console()
 
-    sub.add_parser("probe", help="Show which backend will be used")
+CONTRIB_DIR = Path("server/indicators/include/contrib")
 
-    demo = sub.add_parser("demo-sma", help="Compute SMA on random walk data")
-    demo.add_argument("--length", type=int, default=20)
-    demo.add_argument("--rows", type=int, default=200)
-    return p
+@app.command()
+def list():
+    """
+    List installed community indicators.
+    """
+    if not CONTRIB_DIR.exists():
+        console.print("[yellow]No community indicators installed.[/yellow]")
+        return
+        
+    table = Table(title="Community Indicators")
+    table.add_column("Name", style="cyan")
+    table.add_column("Path", style="dim")
+    
+    for item in CONTRIB_DIR.iterdir():
+        if item.is_dir():
+            table.add_row(item.name, str(item))
+            
+    console.print(table)
 
-def _demo_series(rows: int) -> pd.Series:
-    import numpy as np
-    rng = np.random.default_rng(7)
-    steps = rng.normal(loc=0.0, scale=1.0, size=rows)
-    close = pd.Series(100 + steps.cumsum(), name="close")
-    return close
+@app.command()
+def install(
+    url: str = typer.Argument(..., help="Git URL of the indicator repository"),
+    name: str = typer.Option(None, help="Local name for the indicator package")
+):
+    """
+    Install a community indicator from Git.
+    """
+    if not name:
+        # Infer name from URL
+        name = url.split("/")[-1].replace(".git", "")
+        
+    target_path = CONTRIB_DIR / name
+    
+    if target_path.exists():
+        console.print(f"[red]Error: Indicator '{name}' already exists.[/red]")
+        raise typer.Exit(1)
+        
+    console.print(f"[blue]Cloning {url} into {target_path}...[/blue]")
+    try:
+        # Create contrib dir if not exists
+        CONTRIB_DIR.mkdir(parents=True, exist_ok=True)
+        
+        subprocess.run(["git", "clone", url, str(target_path)], check=True)
+        console.print(f"[green]Successfully installed {name}.[/green]")
+        console.print(f"[dim]Include it via: #include \"contrib/{name}/<header>.hpp\"[/dim]")
+    except subprocess.CalledProcessError as e:
+        console.print(f"[red]Failed to clone repo: {e}[/red]")
+        # Cleanup partial
+        if target_path.exists():
+            shutil.rmtree(target_path)
 
-def cmd_indicators(argv: List[str]) -> int:
-    args = _parser().parse_args(argv)
-
-    if args.cmd == "probe":
-        info, _ = load_backend()
-        print(json.dumps({
-            "backend": info.name, "version": info.version,
-            "ready": info.ready, "note": info.note
-        }, indent=2))
-        return 0
-
-    if args.cmd == "demo-sma":
-        s = _demo_series(args.rows)
-        out = sma(s, length=args.length)
-        print(pd.DataFrame({"close": s, f"SMA_{args.length}": out}).tail(10).to_string())
-        return 0
-
-    print("unknown subcommand")
-    return 2
-
-if __name__ == "__main__":
-    sys.exit(cmd_indicators(sys.argv[1:]))
+@app.command()
+def remove(
+    name: str = typer.Argument(..., help="Name of the indicator package to remove")
+):
+    """
+    Remove a community indicator.
+    """
+    target_path = CONTRIB_DIR / name
+    
+    if not target_path.exists():
+        console.print(f"[red]Error: Indicator '{name}' not found.[/red]")
+        raise typer.Exit(1)
+        
+    confirm = typer.confirm(f"Are you sure you want to remove {name}?")
+    if not confirm:
+        raise typer.Abort()
+        
+    import shutil
+    shutil.rmtree(target_path)
+    console.print(f"[green]Removed {name}.[/green]")

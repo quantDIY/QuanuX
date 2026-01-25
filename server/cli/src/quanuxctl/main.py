@@ -5,7 +5,7 @@ Unified Developer CLI.
 """
 import typer
 from rich.console import Console
-from .commands import secrets, bridge, skills, extensions, node, storage
+from .commands import secrets, bridge, skills, extensions, node, storage, indicators, module
 from . import __version__
 
 app = typer.Typer(
@@ -35,6 +35,12 @@ app.add_typer(node.app, name="n", help="Alias for node", hidden=True)
 
 app.add_typer(storage.app, name="storage", help="Manage connected storage and databases.")
 app.add_typer(storage.app, name="s", help="Alias for storage", hidden=True)
+
+app.add_typer(indicators.app, name="indicators", help="Manage Indicator Registry (Community).")
+app.add_typer(indicators.app, name="i", help="Alias for indicators", hidden=True)
+
+app.add_typer(module.app, name="module", help="Manage Core Modules (Lifecycle).")
+app.add_typer(module.app, name="m", help="Alias for module", hidden=True)
 
 
 @app.command()

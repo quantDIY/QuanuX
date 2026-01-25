@@ -1,21 +1,34 @@
-cmake_minimum_required(VERSION 3.20)
-project(quanux_indicators CXX)
+cmake_minimum_required(VERSION 3.15)
+project(quanux_indicators VERSION 0.1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-include(FetchContent)
-FetchContent_Declare(
-    pybind11
-    GIT_REPOSITORY https://github.com/pybind/pybind11.git
-    GIT_TAG v2.11.1
+# Header-only library for the core
+add_library(quanux_indicators_lib INTERFACE)
+
+target_include_directories(quanux_indicators_lib INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/contrib>
+    $<INSTALL_INTERFACE:include>
 )
-FetchContent_MakeAvailable(pybind11)
 
-include_directories(include)
+# Enable compiler warnings
+if(MSVC)
+    target_compile_options(quanux_indicators_lib INTERFACE /W4 /WX)
+else()
+    target_compile_options(quanux_indicators_lib INTERFACE -Wall -Wextra -Wpedantic -Werror)
+endif()
 
-# Python Extension
-pybind11_add_module(quanux_indicators pybind/bindings.cpp)
+# Tests
+if(BUILD_TESTING)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
 
-# Install target (optional)
-install(TARGETS quanux_indicators LIBRARY DESTINATION lib)
+
+option(BUILD_PYTHON_BINDINGS "Build Python bindings for indicators" ON)
+if(BUILD_PYTHON_BINDINGS)
+    add_subdirectory(pybind)
+endif()

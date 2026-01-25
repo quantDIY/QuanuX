@@ -11,6 +11,20 @@ QuanuX uses a composable strategy architecture. A "Strategy" is a collection of 
 3.  **Risk Module**: Determines *Protection* (Stop Loss, Trailing Stop, Take Profit).
 4.  **Exit Module**: Determines *When* to exit (Indicator cross, Time limit, etc.).
 
+### 5. Indicators Library (New)
+QuanuX now uses a high-performance C++20 library for indicators.
+*   **Skill Location**: `server/indicators/SKILL.md` (READ THIS for API details).
+*   **Usage**: Agents should prefer importing `quanux_indicators` in Python strategies over legacy TA-Lib if performance is critical or Market Profile is needed.
+
+6.  **CLI Controls**: The `quanuxctl` interface.
+    *   **Skill Location**: `server/cli/SKILL.md` (Read for extending the CLI).
+
+## 3. The Dual-Engine Philosophy (Graduation Workflow)
+QuanuX allows users to "Graduate" strategies from Python research to C++ execution.
+1.  **Draft (Python)**: Use Strategy Builder + `quanux_indicators` (pybind) for fast iteration/ML.
+2.  **Graduate (C++)**: Port logic to `execution-node/cpp` + `quanux/indicators` (native) for HFT.
+    *   **Benefit**: The math/logic remains distinct, but the indicator signals are identical because they share the same C++ core.
+
 ### Component Base Classes
 All components inherit from `server.strategies.base.StrategyComponent`.
 Agents **MUST** use these base classes when generating code.

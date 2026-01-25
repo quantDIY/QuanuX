@@ -40,6 +40,11 @@ FetchContent_MakeAvailable(duckdb)
 # Include Directories
 include_directories(include)
 
+# Indicators Library (Self-Contained Strategy Support)
+# We pull this in so strategies can compute locally without phoning home.
+set(BUILD_PYTHON_BINDINGS OFF CACHE BOOL "" FORCE)
+add_subdirectory(../../server/indicators ${CMAKE_BINARY_DIR}/indicators)
+
 # Core Library (The Engine)
 add_library(node_core STATIC
     src/engine.cpp
@@ -71,6 +76,13 @@ set_target_properties(ping_pong PROPERTIES PREFIX "") # ping_pong.so
 add_library(mock_feed SHARED strategies/mock_feed.cpp)
 target_include_directories(mock_feed PRIVATE include)
 set_target_properties(mock_feed PROPERTIES PREFIX "") # mock_feed.so
+
+# Demo Strategy (Indicator Verification)
+add_library(demo_strategy SHARED strategies/demo_strategy.cpp)
+target_include_directories(demo_strategy PRIVATE include)
+# LINK against the indicators library we imported!
+target_link_libraries(demo_strategy PRIVATE quanux_indicators_lib)
+set_target_properties(demo_strategy PROPERTIES PREFIX "") # demo_strategy.so
 
 # Strategy Interface (Header Only for now)
 install(FILES include/strategy_interface.h include/plugin_loader.h include/ring_buffer.h include/market_data_engine.h include/nats_bridge.h include/engine.h include/order_gateway.h include/risk_engine.h DESTINATION include)
