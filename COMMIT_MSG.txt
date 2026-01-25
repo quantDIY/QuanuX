@@ -1,13 +1,10 @@
-refactor(runtime): Pivot Orchestration Nucleus to C++20
+docs(runtime): Immortalize C++ Nucleus and Dual-Engine Philosophy
 
-Replaced the initial Python prototype of the Server Runtime with a high-performance C++20 implementation.
+Aligned all documentation with the new C++20 Operational Core.
 
-## Changes
-*   **Removed**: `server/runtime/main.py`, `bus.py`, `bootstrap.py`.
-*   **Added**: `server/runtime/src/supervisor.cpp` (C++ NATS Wrapper).
-*   **Added**: `server/runtime/CMakeLists.txt` (Builds `quanux_supervisor` with `nats.c`).
+## Documentation Updates
+*   **server/runtime/SKILL.md**: New Agent Skill defining the C++ Supervisor and NATS JetStream taxonomy. Explicitly forbids Python-side Supervisor imports.
+*   **server/agents.md**: Updated Central Brain to recognize the "Server Runtime (Nucleus)" as a C++ layer and formally define the "Dual-Engine Graduation" workflow (Python -> C++).
+*   **server/runtime/README.md**: Fixed stale references to deleted Python prototypes.
 
-## Capabilities
-*   **Native Bootstrapping**: The Supervisor now uses the NATS C client to automatically provision the JetStream taxonomy (MARKET, ORDER, EXEC, SYS) on startup.
-*   **Zero Overhead**: Orchestration now shares the same memory model and performance characteristics as the Execution Nodes.
-*   **Unified Stack**: The entire critical path (Indicators -> Supervisor -> Execution) is now pure C++.
+The system documentation now accurately reflects the high-performance, native architecture.
