@@ -24,6 +24,10 @@ QuanuX now uses a high-performance C++20 library for indicators.
     *   **Role**: Manages the Event Bus (NATS). Agents should NOT modify the runtime unless tasked with infrastructure changes.
     *   **Interaction**: Use `nats-py` to interact with the system, not direct imports.
 
+8.  **Python Control Plane**: The client library for the runtime.
+    *   **Skill Location**: `server/control/SKILL.md`.
+    *   **Role**: Allows Python UIs to "Remote Control" the C++ core.
+
 ## 3. The Dual-Engine Philosophy (The Power of Choice)
 QuanuX empowers users to choose their runtime.
 1.  **Python (via Go Node)**: Best for ecosystem access (ML/AI), rapid changes, and ease of use.

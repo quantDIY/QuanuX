@@ -1,10 +1,12 @@
-docs(runtime): Immortalize C++ Nucleus and Dual-Engine Philosophy
+feat(control): Add Python Control Plane for C++ Runtime
 
-Aligned all documentation with the new C++20 Operational Core.
+Implemented a lightweight Python client (`quanux.runtime`) to drive the C++ Supervisor.
 
-## Documentation Updates
-*   **server/runtime/SKILL.md**: New Agent Skill defining the C++ Supervisor and NATS JetStream taxonomy. Explicitly forbids Python-side Supervisor imports.
-*   **server/agents.md**: Updated Central Brain to recognize the "Server Runtime (Nucleus)" as a C++ layer and formally define the "Dual-Engine Graduation" workflow (Python -> C++).
-*   **server/runtime/README.md**: Fixed stale references to deleted Python prototypes.
+## Features
+*   **RuntimeClient**: A NATS JetStream wrapper that publishes commands (e.g., `sys.cmd.spawn`) and subscribes to telemetry.
+*   **Decoupling**: Allows the Python Strategy Builder / UI to control the organism without linking against C++ binaries.
+*   **Verification**: Included `verify_control.py` to prove end-to-end connectivity.
 
-The system documentation now accurately reflects the high-performance, native architecture.
+## Documentation
+*   Updated `walkthrough.md` with the new Control Plane section.
+*   Updated `task.md` to reflect completion.
