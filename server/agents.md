@@ -24,11 +24,13 @@ QuanuX now uses a high-performance C++20 library for indicators.
     *   **Role**: Manages the Event Bus (NATS). Agents should NOT modify the runtime unless tasked with infrastructure changes.
     *   **Interaction**: Use `nats-py` to interact with the system, not direct imports.
 
-## 3. The Dual-Engine Philosophy (Graduation Workflow)
-QuanuX allows users to "Graduate" strategies from Python research to C++ execution.
-1.  **Draft (Python)**: Use Strategy Builder + `quanux_indicators` (pybind) for fast iteration/ML.
-2.  **Graduate (C++)**: Port logic to `execution-node/cpp` + `quanux/indicators` (native) for HFT.
-    *   **Benefit**: The math/logic remains distinct, but the indicator signals are identical because they share the same C++ core.
+## 3. The Dual-Engine Philosophy (The Power of Choice)
+QuanuX empowers users to choose their runtime.
+1.  **Python (via Go Node)**: Best for ecosystem access (ML/AI), rapid changes, and ease of use.
+2.  **C++ (Native)**: Best for raw performance and HFT.
+    *   **Interop**: Both engines share the same `quanux_indicators` core, ensuring mathematical consistency regardless of the chosen runtime.
+
+### Component Base Classes
 
 ### Component Base Classes
 All components inherit from `server.strategies.base.StrategyComponent`.

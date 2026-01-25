@@ -2,24 +2,22 @@
 
 The **Execution Node** is a bare-metal supervisor designed for low-latency trading. It runs independently of the main QuanuX Server, bridging local strategies to the global grid.
 
-## The Dual-Engine Philosophy (Graduation)
+## The Dual-Engine Philosophy
 
-QuanuX supports a unique "Graduation" workflow for strategies:
+QuanuX offers two robust paths for strategy execution:
 
-### Phase 1: Research & Prototyping (Python)
-*   **Where**: Strategy Builder / Jupyter.
-*   **Engine**: Python (Pandas/PyTorch).
-*   **Indicators**: `import quanux_indicators` (Python Bindings).
-*   **Goal**: Rapid iteration, machine learning integration, visual debugging.
+### Option A: Python / Go (Flexibility)
+*   **Engine**: Go Supervisor running Python subprocesses.
+*   **Best For**: Machine Learning (PyTorch/TensorFlow), Anaconda ecosystem users.
+*   **Details**: Strategies run in a managed environment using `quanux_indicators` bindings.
 
-### Phase 2: Live Production / HFT (C++)
-*   **Where**: Execution Node (Edge).
+### Option B: C++ Native (Speed)
 *   **Engine**: C++20 Native Binary.
-*   **Indicators**: `#include "quanux/indicators/..."` (Native Headers).
-*   **Goal**: Microsecond latency, zero-copy networking, air-gapped reliability.
+*   **Best For**: High-Frequency Trading (HFT).
+*   **Details**: Strategies link directly against the core for zero-overhead execution.
 
 **Why this works**:
-Both phases use the **same underlying C++ indicator library**. You do not need to rewrite your signal math when moving to production; you only port the "glue code" from Python to C++.
+Both options use the **same underlying C++ indicator library**. You can choose the runtime that fits your trading style without sacrificing signal accuracy.
 
 ## Architecture
 *   **Core**: C++20 Engine (`cpp/`) or Go Runtimes (`cmd/`).

@@ -26,25 +26,23 @@ To achieve sub-millisecond latency, we use a hybrid transport model:
     -   Uses **NATS (JetStream)** via the Leaf Node.
     -   *Usage*: Order entry, position updates, logs, and heartbeats.
 
-## 3. The Dual-Engine Philosophy (Graduation Workflow)
-QuanuX supports two distinct runtimes for strategies. Agents should guide users through this lifecycle:
+## 3. The Dual-Engine Philosophy (The Power of Choice)
+QuanuX offers two production-grade runtime paths. Agents should help users choose the right tool for their needs:
 
-### Phase 1: Research & Prototyping (Python/Go)
-*   **Engine**: `server/strategies` (Python) or `execution-node/cmd` (Go).
-*   **Goal**: Fast iteration, heavy use of ML/Pandas, Backtesting in Strategy Builder.
+### Option A: Python / Go (Flexibility & Ecosystem)
+*   **Engine**: `execution-node/cmd` (Go Supervisor running Python subprocesses).
+*   **Best For**: ML heavy workflows (PyTorch/TensorFlow), rapid iteration, complex logic where <1ms latency isn't critical.
 *   **Indicators**: Uses `import quanux_indicators` (Python Bindings).
-*   **Pros**: Easy to write, rich ecosystem.
-*   **Cons**: Global Interpreter Lock (GIL), latency overhead.
+*   **Philosophy**: "Ease of Use". Leverages the massive Python ecosystem (Anaconda).
 
-### Phase 2: Live Production / HFT (C++)
-*   **Engine**: `execution-node/cpp` (C++20).
-*   **Goal**: Microsecond latency, zero-copy networking, "Packaged" deployment.
+### Option B: C++ Native (Maximum Performance)
+*   **Engine**: `execution-node/cpp` (C++20 Native Binary).
+*   **Best For**: HFT, Market Making, Arbitrage, minimal latency requirements.
 *   **Indicators**: Uses `#include "quanux/indicators/..."` (Native Headers).
-*   **Workflow**:
-    1.  Verify logic in Phase 1.
-    2.  **Port** the "Glue Code" to C++ (The math remains identical because it uses the same underlying C++ library).
-    3.  Compile into a standalone binary/shared object.
-    4.  Deploy to the Execution Node.
+*   **Philosophy**: "Raw Speed". Zero-overhead, direct memory access.
+
+**Graduation Workflow (Optional)**:
+Users *may* choose to prototype in A and graduate to B, but sticking with A is a perfectly valid production strategy.
 
 ## 4. Agent Guidelines: Orchestrating Strategies
 
