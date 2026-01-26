@@ -1,5 +1,5 @@
 display_name: Databento C++ Connector
-description: Databento Historical API connector with C++ implementation.
+description: Databento Historical & Live API connector with C++ implementation.
 runtime: cpp
 version: 0.1.0
 tags: [market-data, connector]

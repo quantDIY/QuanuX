@@ -1,10 +1,10 @@
-docs(control): Document Python Control Plane and Bridge Architecture
+docs(runtime): Document Supervisor Command Dispatcher & Activation
 
-Finalized documentation for the "Best of Both Worlds" architecture.
+Documented the Phase 2 Activation of the C++ Supervisor.
 
-## Updates
-*   **server/control/SKILL.md**: New Agent Skill defining `quanux.runtime` as a remote control client, not a wrapper.
-*   **server/control/README.md**: Developer guide explaining the C++ Speed / Python Agility bridge.
-*   **server/agents.md**: Updated Central Brain to include the Control Plane skill.
+## Documentation Updates
+*   **server/runtime/SKILL.md**: Added "Command Processing (The Brain)" section detailing the JSON protocol (`sys.cmd.spawn`) and process spawning capability.
+*   **server/agents.md**: Updated Central Brain to reflect the Supervisor's new ability to *Act* (spawn/kill) rather than just manage the bus.
+*   **walkthrough.md**: Documented the activation of the Action Loop.
 
-This completes the architectural pivot to a C++ Nucleus with a Python Nervous System interface.
+This confirms the system is no longer just "Architecture" but "Active Logic".

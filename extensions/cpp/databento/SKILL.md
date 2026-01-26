@@ -30,4 +30,20 @@ import quanux_duckdb
 con = quanux_duckdb.Connection(...)
 appender = quanux_duckdb.Appender(con, "table_name")
 client.timeseries_to_duckdb(..., appender_capsule=appender.get_capsule())
+client.timeseries_to_duckdb(..., appender_capsule=appender.get_capsule())
+
+# 3. Live Data (Blocking)
+# Supports both Real-time and Intraday Replay
+builder = databento_py.LiveBuilder()
+builder.set_key_from_env()
+builder.set_dataset("GLBX.MDP3")
+
+client = builder.build_blocking()
+client.subscribe(["ESH5"], databento_py.Schema.Mbo, databento_py.SType.RawSymbol)
+client.start()
+
+for record in client:
+    if record.rtype() == databento_py.RType.Mbo:
+        msg = record.get_mbo()
+        print(f"Price: {msg.price} Size: {msg.size}")
 ```

@@ -45,7 +45,12 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(databento)
 
 # Wrapper Module
-pybind11_add_module(databento_py src/bindings.cpp)
+pybind11_add_module(databento_py 
+    src/module.cpp
+    src/common.cpp
+    src/historical.cpp
+    src/live.cpp
+)
 
 # Link
 target_link_libraries(databento_py PRIVATE databento::databento duckdb_static)

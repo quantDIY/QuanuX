@@ -1,0 +1,9 @@
+[100%] Building CXX object CMakeFiles/quanux_runner.dir/src/runner.cpp.o
+/Users/Duncan/Antigravity/QuanuX/QuanuX/execution-node/cpp/src/runner.cpp:103:29: error: use of undeclared identifier 'RithmicFeed'
+  103 |     feed = std::make_unique<RithmicFeed>(r_user, r_pass, symbol, r_exch);
+      |                             ^
+1 error generated.
+make[3]: *** [CMakeFiles/quanux_runner.dir/src/runner.cpp.o] Error 1
+make[2]: *** [CMakeFiles/quanux_runner.dir/all] Error 2
+make[1]: *** [CMakeFiles/quanux_runner.dir/rule] Error 2
+make: *** [quanux_runner] Error 2

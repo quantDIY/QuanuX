@@ -1,0 +1,37 @@
+[100%] Building CXX object CMakeFiles/quanux_runner.dir/src/runner.cpp.o
+In file included from /Users/Duncan/Antigravity/QuanuX/QuanuX/execution-node/cpp/src/runner.cpp:11:
+/Users/Duncan/Antigravity/QuanuX/QuanuX/execution-node/cpp/src/rithmic_feed.hpp:105:15: error: 'Trade' marked 'override' but does not override any member functions
+  105 |   virtual int Trade(RApi::TradeInfo *pInfo, void *pContext,
+      |               ^
+/Users/Duncan/Antigravity/QuanuX/QuanuX/execution-node/cpp/src/rithmic_feed.hpp:21:12: error: no member named 'pLogger' in 'RApi::REngineParams'
+   21 |     params.pLogger = &logger_; // Use internal logger if needed
+      |     ~~~~~~ ^
+/Users/Duncan/Antigravity/QuanuX/QuanuX/execution-node/cpp/src/rithmic_feed.hpp:38:17: error: no member named 'sUser' in 'RApi::LoginParams'
+   38 |     loginParams.sUser = to_tsNCharcb(user_);
+      |     ~~~~~~~~~~~ ^
+/Users/Duncan/Antigravity/QuanuX/QuanuX/execution-node/cpp/src/rithmic_feed.hpp:39:17: error: no member named 'sPassword' in 'RApi::LoginParams'
+   39 |     loginParams.sPassword = to_tsNCharcb(pass_);
+      |     ~~~~~~~~~~~ ^
+/Users/Duncan/Antigravity/QuanuX/QuanuX/execution-node/cpp/src/rithmic_feed.hpp:40:17: error: no member named 'sSystemName' in 'RApi::LoginParams'
+   40 |     loginParams.sSystemName =
+      |     ~~~~~~~~~~~ ^
+/Users/Duncan/Antigravity/QuanuX/QuanuX/execution-node/cpp/src/rithmic_feed.hpp:42:17: error: no member named 'sInfraType' in 'RApi::LoginParams'
+   42 |     loginParams.sInfraType = to_tsNCharcb("ticker plant");
+      |     ~~~~~~~~~~~ ^
+/Users/Duncan/Antigravity/QuanuX/QuanuX/execution-node/cpp/src/rithmic_feed.hpp:43:17: error: no member named 'sServerName' in 'RApi::LoginParams'
+   43 |     loginParams.sServerName = to_tsNCharcb(
+      |     ~~~~~~~~~~~ ^
+/Users/Duncan/Antigravity/QuanuX/QuanuX/execution-node/cpp/src/rithmic_feed.hpp:54:36: error: call to implicitly-deleted copy constructor of 'std::atomic<bool>'
+   54 |     cv_.wait(lock, [this] { return connected_; });
+      |                                    ^~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__atomic/atomic.h:230:17: note: copy constructor of 'atomic<bool>' is implicitly deleted because base class '__atomic_base<bool>' has a deleted copy constructor
+  230 | struct atomic : public __atomic_base<_Tp> {
+      |                 ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__atomic/atomic.h:139:3: note: '__atomic_base' has been explicitly marked deleted here
+  139 |   __atomic_base(const __atomic_base&) = delete;
+      |   ^
+8 errors generated.
+make[3]: *** [CMakeFiles/quanux_runner.dir/src/runner.cpp.o] Error 1
+make[2]: *** [CMakeFiles/quanux_runner.dir/all] Error 2
+make[1]: *** [CMakeFiles/quanux_runner.dir/rule] Error 2
+make: *** [quanux_runner] Error 2

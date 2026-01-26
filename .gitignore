@@ -110,3 +110,7 @@ client/desktop/tauri-app/src-tauri/src/*.bak.*
 # ---- Project Management ----
 # project_status.md
 # docs/technical_whitepaper.md
+
+# Data
+*.dbn
+*.zst

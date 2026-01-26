@@ -86,3 +86,72 @@ set_target_properties(demo_strategy PROPERTIES PREFIX "") # demo_strategy.so
 
 # Strategy Interface (Header Only for now)
 install(FILES include/strategy_interface.h include/plugin_loader.h include/ring_buffer.h include/market_data_engine.h include/nats_bridge.h include/engine.h include/order_gateway.h include/risk_engine.h DESTINATION include)
+
+# --- THE UNIVERSAL RUNNER (Phase 3) ---
+
+# Find Databento (Pre-built in extensions)
+set(DB_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../extensions/cpp/databento/build")
+include_directories("${DB_BUILD_DIR}/_deps/databento-src/include")
+# Also need httplib and nlohmann/json which databento depends on
+include_directories("${DB_BUILD_DIR}/_deps/json-src/include")
+# Databento uses httplib from third_party or system. If they vendor it, we need header.
+# Assuming basic usage for now.
+
+# We need OpenSSL for Databento
+find_package(OpenSSL REQUIRED)
+
+add_executable(quanux_runner src/runner.cpp)
+target_include_directories(quanux_runner PRIVATE src include)
+set(DATABENTO_LIB "${DB_BUILD_DIR}/lib/Release/libdatabento.a")
+# Databento Linking
+target_link_libraries(quanux_runner PRIVATE 
+    ${DATABENTO_LIB} 
+    OpenSSL::SSL 
+    OpenSSL::Crypto
+    zstd
+    dl 
+    pthread
+)
+
+# --- Rithmic Integration ---
+set(RITHMIC_SDK_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../extensions/cpp/rithmic/sdk")
+get_filename_component(RITHMIC_SDK_DIR "${RITHMIC_SDK_DIR}" ABSOLUTE)
+message(STATUS "Rithmic SDK Path: ${RITHMIC_SDK_DIR}")
+
+set(RITHMIC_INC_DIR "${RITHMIC_SDK_DIR}/include")
+if(NOT EXISTS "${RITHMIC_INC_DIR}/RApiPlus.h")
+    message(FATAL_ERROR "RApiPlus.h not found at ${RITHMIC_INC_DIR}")
+endif()
+
+target_include_directories(quanux_runner PRIVATE ${RITHMIC_INC_DIR})
+
+if(APPLE)
+   if(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "arm64")
+       set(RITHMIC_LIB_DIR "${RITHMIC_SDK_DIR}/darwin-20.6-arm64/lib")
+   else()
+       set(RITHMIC_LIB_DIR "${RITHMIC_SDK_DIR}/darwin-10/lib")
+   endif()
+   target_link_libraries(quanux_runner PRIVATE 
+       "-framework CoreFoundation"
+       "-framework SystemConfiguration"
+       "-framework Security"
+   )
+else()
+   set(RITHMIC_LIB_DIR "${RITHMIC_SDK_DIR}/linux-gnu-3.10.0-x86_64/lib")
+endif()
+
+target_link_libraries(quanux_runner PRIVATE
+    ${RITHMIC_LIB_DIR}/libRApiPlus-optimize.a
+    ${RITHMIC_LIB_DIR}/libOmneEngine-optimize.a
+    ${RITHMIC_LIB_DIR}/libOmneStreamEngine-optimize.a
+    ${RITHMIC_LIB_DIR}/libOmneChannel-optimize.a
+    ${RITHMIC_LIB_DIR}/lib_api-optimize.a
+    ${RITHMIC_LIB_DIR}/lib_kit-optimize.a
+    ${RITHMIC_LIB_DIR}/lib_apipoll-stubs-optimize.a
+    # Rithmic bundles its own SSL usually, but we are using system OpenSSL for Databento.
+    # We must be careful of symbol conflicts. We'll try linking runner's OpenSSL first.
+    z
+)
+
+
+# ---------------------------

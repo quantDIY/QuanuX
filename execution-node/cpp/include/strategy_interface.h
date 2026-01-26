@@ -13,6 +13,7 @@ struct MarketUpdate {
   double price;
   double size;
   bool is_trade; // true = trade, false = quote
+  int side;      // 1=Buy/Bid, -1=Sell/Ask
 };
 
 struct Signal {
