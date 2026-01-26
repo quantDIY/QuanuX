@@ -1,9 +1,11 @@
 #pragma once
 
-#include "simulator/OrderBookL3.h"
+#include "quanux/common/OrderBookL3.h"
 #include <vector>
 
-namespace quanux::simulator {
+namespace quanux::engine {
+
+using namespace quanux::common;
 
 struct MatchResult {
   bool filled;
@@ -28,4 +30,4 @@ public:
                                                  uint64_t current_time) = 0;
 };
 
-} // namespace quanux::simulator
+} // namespace quanux::engine

@@ -1,7 +1,9 @@
 #pragma once
-#include "strategy_interface.h"
 #include <functional>
+#include <quanux/common/StrategyInterface.h>
 #include <string>
+
+using namespace quanux::common;
 
 // Abstract Feed Interface
 class Feed {

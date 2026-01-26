@@ -6,6 +6,9 @@
 
 extern "C" {
 
+namespace quanux {
+namespace common {
+
 // Data Types (Simplified for ABI stability)
 struct MarketUpdate {
   uint64_t timestamp;
@@ -73,6 +76,7 @@ struct Strategy {
   OnDestroyFn on_destroy;
 };
 
-// Strategies must export this function
-// Strategy* create_strategy();
-}
+} // namespace common
+} // namespace quanux
+
+} // extern "C"

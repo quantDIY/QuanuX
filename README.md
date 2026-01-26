@@ -45,7 +45,12 @@ We believe in classic engineering. Full documentation is built right into the te
 ```bash
 man quanuxctl
 ```
-
+- **QuanuX-Common/**: Shared C++ core library (contains `StrategyInterface` and `OrderBookL3`).
+- **QuanuX-Backtesting-Engine/**: High-performance C++20 backtester with Python bindings (`quanux_backtest`).
+- **execution-node/**: The live C++ trading engine core.
+- **client/**: Frontends (Web, Desktop, Mobile, Tablet).
+- **server/**: Python Control Plane, Agents, and API.
+- **extensions/**: Language-specific plugins (C++, Python).
 ### ⚡️ Distributed Execution Nodes (Bare Metal & Remote)
 **Unlimited Scale.**
 QuanuX introduces a game-changing **Execution Layer**. Spin up unlimited execution nodes on **bare metal servers** anywhere in the world.

@@ -1,6 +1,7 @@
 #pragma once
 #include <dlfcn.h>
 #include <iostream>
+#include <quanux/common/StrategyInterface.h>
 #include <stdexcept>
 #include <string>
 

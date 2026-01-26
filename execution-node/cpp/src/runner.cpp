@@ -8,8 +8,8 @@
 #include "databento_feed.hpp"
 #include "dbn_file_feed.hpp"
 #include "plugin_loader.h"
+#include "quanux/common/StrategyInterface.h"
 #include "rithmic_feed.hpp" // Added for DBN file replay
-#include "strategy_interface.h"
 
 // Global shutdown flag
 volatile bool keep_running = true;

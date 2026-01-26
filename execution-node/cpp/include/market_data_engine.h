@@ -1,11 +1,13 @@
 #pragma once
 #include "nats_bridge.h"
 #include "plugin_loader.h"
+#include "quanux/common/StrategyInterface.h"
 #include "ring_buffer.h"
-#include "strategy_interface.h"
 #include <memory>
 #include <string>
 #include <vector>
+
+using namespace quanux::common;
 
 // Forward declare to avoid circular dependency if any
 class NatsBridge;

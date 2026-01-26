@@ -1,9 +1,11 @@
 #pragma once
 
-#include "simulator/MatchingModel.h"
+#include "engine/MatchingModel.h"
 #include <vector>
 
-namespace quanux::simulator {
+namespace quanux::engine {
+
+using namespace quanux::common;
 
 class FifoMatcher : public MatchingModel {
 public:
@@ -21,4 +23,4 @@ public:
   }
 };
 
-} // namespace quanux::simulator
+} // namespace quanux::engine

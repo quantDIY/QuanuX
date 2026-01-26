@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include <vector>
 
-namespace quanux::simulator {
+namespace quanux::common {
 
 enum class Side { Bid, Ask };
 
@@ -70,12 +70,18 @@ public:
     // levels) Optimization: Linked list or intrusive list for O(1) removal
     if (order.side == Side::Bid) {
       auto &q = bids_[order.price].queue;
-      std::erase(q, &order);
+      auto it = std::find(q.begin(), q.end(), &order);
+      if (it != q.end()) {
+        q.erase(it);
+      }
       if (q.empty())
         bids_.erase(order.price);
     } else {
       auto &q = asks_[order.price].queue;
-      std::erase(q, &order);
+      auto it = std::find(q.begin(), q.end(), &order);
+      if (it != q.end()) {
+        q.erase(it);
+      }
       if (q.empty())
         asks_.erase(order.price);
     }
@@ -99,4 +105,4 @@ public:
   }
 };
 
-} // namespace quanux::simulator
+} // namespace quanux::common

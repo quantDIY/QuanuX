@@ -1,11 +1,11 @@
 #pragma once
 
 #include "duckdb.hpp"
-#include "simulator/MatchingModel.h"
+#include <functional>
 #include <iostream>
 #include <vector>
 
-namespace quanux::simulator {
+namespace quanux::engine {
 
 class DuckDBFeeder {
 public:
@@ -49,4 +49,4 @@ public:
               << std::endl;
   }
 };
-} // namespace quanux::simulator
+} // namespace quanux::engine

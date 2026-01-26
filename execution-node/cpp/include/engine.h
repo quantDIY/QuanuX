@@ -3,11 +3,13 @@
 #include "nats_bridge.h"
 #include "order_gateway.h"
 #include "plugin_loader.h"
+#include "quanux/common/StrategyInterface.h"
 #include "ring_buffer.h"
-#include "strategy_interface.h"
 #include <memory>
 #include <string>
 #include <vector>
+
+using namespace quanux::common;
 
 struct LoadedStrategy {
   std::unique_ptr<PluginLoader> loader;

@@ -1,4 +1,5 @@
-#include "strategy_interface.h"
+#include "quanux/common/StrategyInterface.h"
+using namespace quanux::common;
 #include <chrono>
 #include <iostream>
 #include <thread>

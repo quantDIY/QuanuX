@@ -28,6 +28,14 @@ QuanuX now uses a high-performance C++20 library for indicators.
     *   **Skill Location**: `server/control/SKILL.md`.
     *   **Role**: Allows Python UIs to "Remote Control" the C++ core.
 
+32.  **Backtesting Engine**: High-performance simulation.
+    *   **Skill Location**: `QuanuX-Backtesting-Engine/SKILL.md`.
+    *   **Role**: Run historical simulations, calculate advanced metrics (Ulcer, Omega), and replay market data via NATS.
+
+33.  **QuanuX Common**: Shared Core Library.
+    *   **Skill Location**: `QuanuX-Common/SKILL.md`.
+    *   **Role**: Defines the shared ABI (`StrategyInterface`) and core data structures (`OrderBookL3`) used by both Execution Node and Backtester.
+
 ## 3. The Dual-Engine Philosophy (The Power of Choice)
 QuanuX empowers users to choose their runtime.
 1.  **Python (via Go Node)**: Best for ecosystem access (ML/AI), rapid changes, and ease of use.

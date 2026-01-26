@@ -1,5 +1,6 @@
+#include "quanux/common/StrategyInterface.h"
 #include "quanux/indicators/market_profile.hpp"
-#include "strategy_interface.h"
+using namespace quanux::common;
 #include <iostream>
 #include <memory>
 

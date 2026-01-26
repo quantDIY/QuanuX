@@ -39,6 +39,7 @@ FetchContent_MakeAvailable(duckdb)
 
 # Include Directories
 include_directories(include)
+include_directories(../../QuanuX-Common/cpp/include)
 
 # Indicators Library (Self-Contained Strategy Support)
 # We pull this in so strategies can compute locally without phoning home.

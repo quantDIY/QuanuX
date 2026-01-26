@@ -1,10 +1,12 @@
 #pragma once
 #include "nats_bridge.h"
+#include "quanux/common/StrategyInterface.h"
 #include "risk_engine.h"
-#include "strategy_interface.h"
 #include <atomic>
 #include <mutex>
 #include <vector>
+
+using namespace quanux::common;
 
 // OrderGateway handles order submission and lifecycle management.
 // It acts as the "Exchange" connector. For Phase 6, it mocks fills.
