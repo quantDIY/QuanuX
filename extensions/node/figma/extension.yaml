@@ -7,7 +7,6 @@ description: "Exposes Figma design data by connecting to the official Figma MCP 
 permissions:
   - "figma.read"
 env:
-  - "FIGMA_ACCESS_TOKEN" # Required by official server
+  - "FIGMA_ACCESS_TOKEN"  # Required by official server
   - "QUANUX_BRIDGE_KEY"
   - "QUANUX_figma"  # Standard QuanuX Auth
-

@@ -2,7 +2,7 @@ name: "rithmic-cpp"
 display_name: "Rithmic Data (C++)"
 version: "0.1.0"
 runtime: "cpp"
-command: "build/rithmic_feed" # Assuming build directory
+command: "build/rithmic_feed"  # Assuming build directory
 description: "High-performance C++ connector for Rithmic R | API+."
 permissions:
   - "market.data.read"

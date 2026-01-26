@@ -5,6 +5,6 @@ runtime: "go"
 command: "./tradingview-udf"
 description: "Backend data provider for TradingView charts."
 permissions:
-  - "market.data.read" # From DB
+  - "market.data.read"  # From DB
 env:
   - "QUANUX_DB_URL"

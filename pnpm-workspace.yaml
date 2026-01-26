@@ -15,4 +15,3 @@ packages:
   - server/bridges/signalr/node
   - client/data
   - extensions/**/*
-
