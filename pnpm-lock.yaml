@@ -624,7 +624,7 @@ importers:
         specifier: 1.25.2
         version: 1.25.2(hono@4.11.4)(zod@4.1.13)
       figma-developer-mcp:
-        specifier: latest
+        specifier: ^0.6.4
         version: 0.6.4(hono@4.11.4)
 
   server/bridges/signalr/node:
