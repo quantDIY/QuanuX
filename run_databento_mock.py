@@ -30,7 +30,7 @@ def main():
             
     if not key:
         raise ValueError("DATABENTO_API_KEY not found in environment or keyring (service='QuanuX').")
-    logger.info(f"Building client with key: {key[:4]}...")
+    logger.info("Building client with key (masked)...")
     
     try:
         client = databento.Historical.Builder()\
