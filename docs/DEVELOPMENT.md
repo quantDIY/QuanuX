@@ -56,7 +56,7 @@ Extensions for Databento and DuckDB are located in `extensions/cpp/`. They are t
 **Databento Setup:**
 Ensure your API key is available in your shell or `secrets` store:
 ```bash
-export DATABENTO_API_KEY="db-..."
+export DATABENTO_API_KEY="YOUR_DATABENTO_KEY"
 ```
 
 **Rithmic Setup:**

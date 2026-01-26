@@ -259,7 +259,7 @@ export const Integrations = () => {
             name: 'OpenAI',
             description: 'Strategy generation with GPT-4.',
             icon: <Plug className="w-8 h-8 text-green-500" />,
-            fields: [{ key: 'OPENAI_API_KEY', label: 'API Key', placeholder: 'sk-...' }],
+            fields: [{ key: 'OPENAI_API_KEY', label: 'API Key', placeholder: 'YOUR_OPENAI_KEY' }],
             // Mock OAuth for OpenAI just to demonstrate the flow requested
             connectUrl: '/api/auth/openai/start'
         },
@@ -268,21 +268,21 @@ export const Integrations = () => {
             name: 'Google Gemini',
             description: 'High-speed strategy generation.',
             icon: <Plug className="w-8 h-8 text-purple-500" />,
-            fields: [{ key: 'QUANUX_GEMINI_API_KEY', label: 'API Key', placeholder: 'AIza...' }]
+            fields: [{ key: 'QUANUX_GEMINI_API_KEY', label: 'API Key', placeholder: 'YOUR_GEMINI_KEY' }]
         },
         {
             id: 'databento',
             name: 'Databento',
             description: 'Historical market data (nanosecond resolution).',
             icon: <Plug className="w-8 h-8 text-orange-600" />,
-            fields: [{ key: 'DATABENTO_API_KEY', label: 'API Key', placeholder: 'db-...' }]
+            fields: [{ key: 'DATABENTO_API_KEY', label: 'API Key', placeholder: 'YOUR_DATABENTO_KEY' }]
         },
         {
             id: 'motherduck',
             name: 'MotherDuck',
             description: 'Serverless DuckDB in the cloud.',
             icon: <Plug className="w-8 h-8 text-yellow-400" />,
-            fields: [{ key: 'MOTHERDUCK_TOKEN', label: 'Service Token', placeholder: 'md-...' }]
+            fields: [{ key: 'MOTHERDUCK_TOKEN', label: 'Service Token', placeholder: 'YOUR_MOTHERDUCK_TOKEN' }]
         },
     ];
 
