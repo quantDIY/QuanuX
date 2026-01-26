@@ -1,12 +1,15 @@
 
 import logging
+import asyncio
 from extensions.python.wrappers import rithmic
 
 logger = logging.getLogger(__name__)
 
 class RithmicBridge(rithmic.RCallbacks):
-    def __init__(self, user, password, server, app_name="QuanuX", app_version="1.0.0"):
+    def __init__(self, user, password, server, app_name="QuanuX", app_version="1.0.0", loop=None):
         super().__init__()
+        self.loop = loop or asyncio.get_event_loop()
+        self.queue = asyncio.Queue()
         
         # Engine setup
         self.engine_params = rithmic.REngineParams()
@@ -29,28 +32,25 @@ class RithmicBridge(rithmic.RCallbacks):
         # Link callbacks
         self.login_params.pCallbacks = self
 
-    def connect(self):
+    async def connect(self):
         logger.info("Connecting to Rithmic...")
-        # Note: login is blocking/synchronous in the wrapper binding for now
-        # Ideally should be async or threaded in production
-        retval = self.engine.login(self.login_params)
+        # Login is blocking, so run in executor to avoid blocking the event loop
+        retval = await self.loop.run_in_executor(None, self.engine.login, self.login_params)
+        
         if retval == 1: # OK
             logger.info("Login successful!")
+            # Start processing events
+            self.loop.create_task(self.process_events())
         else:
             logger.error(f"Login failed: {retval}")
             
-    def disconnect(self):
-        self.engine.logout()
+    async def disconnect(self):
+        await self.loop.run_in_executor(None, self.engine.logout)
 
     def subscribe_market_data(self, exchange, ticker):
         logger.info(f"Subscribing to {exchange}:{ticker}")
-        # Flags: 1=MD_IMAGE_CB, 2=MD_UPDATE_CB (update only usually preferable for latency?)
-        # 4=MD_BEST_BID_OFFER
-        # Need to check RApi header constants. Usually we want BEST (4) and TRAde (?).
-        # For now assume 6 (BEST | TRADE ?)
-        # Let's use 10 (MD_PRINTS | MD_BEST ?)
-        # RApi header: 4=BEST, 8=CLOSE, 16=PRINTS.
-        flags = 4 | 16 # Best + Prints
+        # Flags: 4=MD_BEST_BID_OFFER, 16=MD_PRINTS
+        flags = 4 | 16 
         self.engine.subscribe(exchange, ticker, flags)
 
     def send_limit_order(self, exchange, ticker, qty, price, is_buy):
@@ -61,10 +61,6 @@ class RithmicBridge(rithmic.RCallbacks):
         params.dPrice = price
         params.sBuySellType = "B" if is_buy else "S"
         params.sDuration = "Day"
-        params.sOrderType = "L" # Although not in Struct, might be needed if implicit or bound elsewhere?
-        # Actually in our binding we removed sOrderType from LimitOrderParams because it wasn't there.
-        # RApi probably infers it from the param type or we set it in OrderParams constructor.
-        # But sendOrder takes LimitOrderParams directly.
         
         ret = self.engine.sendOrder(params)
         logger.info(f"Sent order: {ret}")
@@ -80,37 +76,53 @@ class RithmicBridge(rithmic.RCallbacks):
         ret = self.engine.modifyOrder(params)
         logger.info(f"Modified order {order_num}: {ret}")
 
-    # --- Callbacks ---
+    async def process_events(self):
+        """Consume events from the thread-safe queue"""
+        while True:
+            item = await self.queue.get()
+            try:
+                msg_type, data = item
+                if msg_type == "BID":
+                    print(f"BID_ASYNC: {data.sTicker} {data.dPrice} x {data.llSize}")
+                elif msg_type == "ASK":
+                    print(f"ASK_ASYNC: {data.sTicker} {data.dPrice} x {data.llSize}")
+                elif msg_type == "TRADE":
+                    print(f"TRADE_ASYNC: {data.sTicker} {data.dPrice} x {data.llSize} ({data.sAggressorSide})")
+                elif msg_type == "FILL":
+                    print(f"FILL_ASYNC: {data.sTicker} {data.iFillQty} @ {data.dFillPrice}")
+            except Exception as e:
+                logger.error(f"Error processing event: {e}")
+            finally:
+                self.queue.task_done()
+
+    # --- Callbacks (Thread-Safe) ---
     
+    def _enqueue(self, msg_type, info):
+        # This runs in the C++ thread, so we must use call_soon_threadsafe
+        # We might need to copy info if it's a pointer that expires (common in C++ APIs)
+        # Assuming bindings handle copy or these are value structs/Python objects now
+        self.loop.call_soon_threadsafe(self.queue.put_nowait, (msg_type, info))
+
     def Alert(self, info, context, code):
-        """Handle system alerts (disconnects, login status, etc)"""
-        # info has sMessage, iAlertType
         logger.info(f"Alert: {info.iAlertType} - {info.sMessage}")
         return 1
 
     def BestBidQuote(self, info, context, code):
-        print(f"BID: {info.sTicker} {info.dPrice} x {info.llSize}")
+        self._enqueue("BID", info)
         return 1
 
     def BestAskQuote(self, info, context, code):
-        print(f"ASK: {info.sTicker} {info.dPrice} x {info.llSize}")
+        self._enqueue("ASK", info)
         return 1
 
     def TradePrint(self, info, context, code):
-        print(f"TRADE: {info.sTicker} {info.dPrice} x {info.llSize} ({info.sAggressorSide})")
+        self._enqueue("TRADE", info)
         return 1
 
     def LineUpdate(self, info, context, code):
-        """Order updates"""
-        status = getattr(info, 'sStatus', 'Unknown') # sStatus might be in LineInfo
-        # In our binding LineInfo has sOrderNum, sTicker, llQuantityToFill, dPriceToFill
-        # sStatus is NOT in standard LineInfo? 
-        # Check bindings.cpp: LineInfo has sTicker, sExchange, sOrderNum
-        # sStatus is NOT bound in LineInfo in bindings.cpp? 
-        # Let's check bindings.cpp again.
         print(f"ORDER UPDATE: {info.sOrderNum} Qty:{info.llQuantityToFill}")
         return 1
 
     def FillReport(self, report, context, code):
-        print(f"FILL: {report.sTicker} {report.iFillQty} @ {report.dFillPrice}")
+        self._enqueue("FILL", report)
         return 1

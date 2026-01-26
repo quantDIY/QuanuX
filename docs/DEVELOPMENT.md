@@ -59,6 +59,12 @@ Ensure your API key is available in your shell or `secrets` store:
 export DATABENTO_API_KEY="db-..."
 ```
 
+**Rithmic Setup:**
+1. **SSL Certs**: Run `python3 scripts/setup_rithmic_env.py` to link the required SSL certificates to your runtime environment.
+2. **Credentials**: Use `python3 scripts/manage_keyring.py set <user>` to store your credentials securely.
+3. **Usage**: The server router will automatically pick up credentials from the keyring.
+
+
 ### 5. Quanux Indicators (C++ Core)
 The core indicator library (TA-Lib replacement) is in `server/indicators`.
 It creates a C++ shared library and a Python extension.

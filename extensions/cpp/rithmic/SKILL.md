@@ -40,3 +40,15 @@ engine.subscribe("MIME", "ESZ4")
 - `REngine`: Main interface.
 - `RCallbacks`: Override to handle async updates.
 - `LoginParams`, `OrderParams`, `ModifyLimitOrderParams`: Structs for API calls.
+
+## Thread Safety & GIL
+The Rithmic `RApi+` uses its own background threads for network I/O and callbacks.
+- **GIL Release**: Blocking calls like `login()`/`logout()` in C++ **must** release the Python GIL (`py::gil_scoped_release`) to prevent freezing the entire Python interpreter.
+- **Callback Locking**: Callbacks from Rithmic threads **must** acquire the GIL (`py::gil_scoped_acquire`) before invoking any Python code.
+- **Asyncio Bridge**: The Python `RithmicBridge` uses `loop.run_in_executor` for blocking calls and `loop.call_soon_threadsafe` for callbacks to ensuring safe integration with `asyncio`.
+
+## Troubleshooting
+### "os error" / "REngine Init Failed"
+This usually means the Rithmic "Connection Point" files or SSL certificates are missing from the working directory.
+- **Fix**: Ensure `rithmic_ssl_cert_auth_params` is present in `./ssl/` relative to where you run the application. Use `scripts/setup_rithmic_env.py` to link them.
+

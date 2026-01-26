@@ -18,7 +18,7 @@ _BRIDGE: Optional[RithmicBridge] = None
 
 class ConnectRequest(BaseModel):
     user: str
-    password: str
+    password: Optional[str] = None
     server: str = "Rithmic Paper Trading"
     app_name: str = "QuanuX"
     app_version: str = "1.0.0"
@@ -47,29 +47,44 @@ def get_bridge() -> RithmicBridge:
         raise HTTPException(status_code=503, detail="Rithmic Bridge not initialized (Connect first)")
     return _BRIDGE
 
+    return _BRIDGE
+
 @router.post("/connect")
-def connect(req: ConnectRequest):
+async def connect(req: ConnectRequest):
     global _BRIDGE
+    
+    password = req.password
+    if not password:
+        import keyring
+        SERVICE_NAME = "QuanuX_Rithmic"
+        password = keyring.get_password(SERVICE_NAME, req.user)
+        if not password:
+             raise HTTPException(status_code=400, detail="Password not provided and not found in keyring.")
+
     try:
+        import asyncio
+        loop = asyncio.get_event_loop()
+        
         if _BRIDGE is None:
-            _BRIDGE = RithmicBridge(req.user, req.password, req.server, req.app_name, req.app_version)
+            _BRIDGE = RithmicBridge(req.user, password, req.server, req.app_name, req.app_version, loop=loop)
         
         # In current bridge impl, params are set in constructor, connect calls login
         # If re-connecting with new params, we might need a new instance or update params
         if _BRIDGE.login_params.sMdUser != req.user:
-             _BRIDGE = RithmicBridge(req.user, req.password, req.server, req.app_name, req.app_version)
+             _BRIDGE = RithmicBridge(req.user, password, req.server, req.app_name, req.app_version, loop=loop)
 
-        _BRIDGE.connect()
+        await _BRIDGE.connect()
         return {"status": "connected", "user": req.user}
     except Exception as e:
         logger.error(f"Connection failed: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/disconnect")
-def disconnect():
+async def disconnect():
     global _BRIDGE
     if _BRIDGE:
-        _BRIDGE.disconnect()
+        await _BRIDGE.disconnect()
+        # _BRIDGE = None # Optional: keep instance around or reset? Resetting is safer for full re-login
         _BRIDGE = None
     return {"status": "disconnected"}
 

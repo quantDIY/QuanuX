@@ -25,39 +25,46 @@ public:
   using RApi::RCallbacks::RCallbacks;
 
   int Alert(RApi::AlertInfo *pInfo, void *pContext, int *aiCode) override {
+    py::gil_scoped_acquire acquire;
     PYBIND11_OVERRIDE(int, RApi::RCallbacks, Alert, pInfo, pContext, aiCode);
   }
 
   int LineUpdate(RApi::LineInfo *pInfo, void *pContext, int *aiCode) override {
+    py::gil_scoped_acquire acquire;
     PYBIND11_OVERRIDE(int, RApi::RCallbacks, LineUpdate, pInfo, pContext,
                       aiCode);
   }
 
   int FillReport(RApi::OrderFillReport *pReport, void *pContext,
                  int *aiCode) override {
+    py::gil_scoped_acquire acquire;
     PYBIND11_OVERRIDE(int, RApi::RCallbacks, FillReport, pReport, pContext,
                       aiCode);
   }
 
   int FailureReport(RApi::OrderFailureReport *pReport, void *pContext,
                     int *aiCode) override {
+    py::gil_scoped_acquire acquire;
     PYBIND11_OVERRIDE(int, RApi::RCallbacks, FailureReport, pReport, pContext,
                       aiCode);
   }
 
   // Market Data Callbacks
   int BestBidQuote(RApi::BidInfo *pInfo, void *pContext, int *aiCode) override {
+    py::gil_scoped_acquire acquire;
     PYBIND11_OVERRIDE(int, RApi::RCallbacks, BestBidQuote, pInfo, pContext,
                       aiCode);
   }
 
   int BestAskQuote(RApi::AskInfo *pInfo, void *pContext, int *aiCode) override {
+    py::gil_scoped_acquire acquire;
     PYBIND11_OVERRIDE(int, RApi::RCallbacks, BestAskQuote, pInfo, pContext,
                       aiCode);
   }
 
   // Trade Data
   int TradePrint(RApi::TradeInfo *pInfo, void *pContext, int *aiCode) override {
+    py::gil_scoped_acquire acquire;
     PYBIND11_OVERRIDE(int, RApi::RCallbacks, TradePrint, pInfo, pContext,
                       aiCode);
   }
@@ -333,11 +340,13 @@ PYBIND11_MODULE(rithmic_py, m) {
       }))
       .def("login",
            [](RApi::REngine &self, RApi::LoginParams *params) {
+             py::gil_scoped_release release;
              int iCode = 0;
              return self.login(params, &iCode);
            })
       .def("logout",
            [](RApi::REngine &self) {
+             py::gil_scoped_release release;
              int iCode = 0;
              return self.logout(&iCode);
            })
