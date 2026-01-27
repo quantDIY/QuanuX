@@ -7,12 +7,15 @@
 Engine::Engine()
     : // ring_buffer_ default constructor is used (fixed size)
       // Retrieve AI Config from Env or Default
+      // Default Endpoint "" triggers AUTO-DISCOVERY in NativeAIBridge
       ai_bridge_(
           std::getenv("QUANUX_AI_ENDPOINT") ? std::getenv("QUANUX_AI_ENDPOINT")
-                                            : "http://localhost:8080",
+                                            : "",
           std::getenv("QUANUX_AI_KEY") ? std::getenv("QUANUX_AI_KEY") : "",
           std::getenv("QUANUX_AI_MODEL") ? std::getenv("QUANUX_AI_MODEL")
-                                         : "llama3"),
+                                         : "llama3",
+          std::getenv("QUANUX_AI_PROVIDER") ? std::getenv("QUANUX_AI_PROVIDER")
+                                            : "openai"),
       nats_bridge_("nats://localhost:4222"), // Default NATS URL
       market_data_engine_(&ring_buffer_, &nats_bridge_),
       order_gateway_(&nats_bridge_) {}
