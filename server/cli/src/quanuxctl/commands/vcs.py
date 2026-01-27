@@ -82,3 +82,70 @@ def connect(
     """
     run_git_cmd(["remote", "add", name, url])
     console.print(f"[green]Connected remote '{name}' to {url}[/green]")
+
+# --- Advanced Connectors ---
+
+@app.command()
+def setup(
+    provider: str = typer.Argument(..., help="Provider name (github, gitlab)"),
+    token: str = typer.Option(None, prompt=True, hide_input=True, help="Personal Access Token")
+):
+    """
+    Configure credentials for a VCS provider (GitHub, GitLab).
+    """
+    from ...lib.vcs_providers import get_provider
+    
+    prov = get_provider(provider)
+    if not prov:
+        console.print(f"[red]Unsupported provider: {provider}[/red]")
+        return
+
+    if token:
+        prov.set_token(token)
+
+@app.command()
+def publish(
+    provider: str = typer.Argument(..., help="Provider name (github, gitlab)"),
+    name: str = typer.Option(None, help="Repository name (defaults to current folder)"),
+    private: bool = typer.Option(True, help="Create as private repository")
+):
+    """
+    Create a remote repository on the provider and push the current project to it.
+    """
+    from ...lib.vcs_providers import get_provider
+    import os
+    
+    prov = get_provider(provider)
+    if not prov:
+        console.print(f"[red]Unsupported provider: {provider}[/red]")
+        return
+
+    if not name:
+        name = os.path.basename(os.getcwd())
+    
+    # 1. Create Remote
+    console.print(f"[bold blue]Creating {provider} repository '{name}'...[/bold blue]")
+    repo_url = prov.create_repo(name, private)
+    
+    if repo_url:
+        # 2. Local Git Init (idempotent)
+        if not os.path.exists(".git"):
+            run_git_cmd(["init"])
+            # Initial add just in case
+            run_git_cmd(["add", "."])
+            run_git_cmd(["commit", "-m", "Initial commit via QuanuX"])
+
+        # 3. Add Remote
+        # Check if origin exists
+        try:
+             # This will fail if remote exists, handled below
+             run_git_cmd(["remote", "add", "origin", repo_url])
+        except Exception:
+             console.print("[yellow]Remote 'origin' already exists. Setting URL...[/yellow]")
+             run_git_cmd(["remote", "set-url", "origin", repo_url])
+             
+        # 4. Push
+        console.print("[bold blue]Pushing to new remote...[/bold blue]")
+        # Provide upstream set
+        run_git_cmd(["push", "-u", "origin", "main"]) # or master, depending on git config, but main is modern standard
+
