@@ -13,8 +13,6 @@
         "react-native": "0.76.3"
     },
     "dependencies": {
-        "@gluestack-style/react": "^1.0.0",
-        "@gluestack-ui/themed": "^1.0.0",
         "@rn-primitives/avatar": "^1.2.0",
         "@rn-primitives/checkbox": "^1.2.0",
         "@rn-primitives/dialog": "^1.2.0",
@@ -31,11 +29,11 @@
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.1.1",
         "lucide-react-native": "^0.314.0",
-        "nativewind": "^4.2.1",
-        "react-native-reanimated": "^3.6.1",
+        "nativewind": "^4.1.23",
+        "react-native-reanimated": "~3.16.1",
         "react-native-screens": "^3.29.0",
         "tailwind-merge": "^2.3.0",
-        "tailwindcss": "^4.1.17"
+        "tailwindcss": "^3.4.17"
     },
     "devDependencies": {
         "@types/react": "^18.3.3",

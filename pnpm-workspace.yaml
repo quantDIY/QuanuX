@@ -1,17 +1,8 @@
 packages:
-  - client
-  - client/web
-  - client/desktop/tauri-app
-  - client/mobile
-  - client/tv
-  - client/ui
-  - client/tablet
-  - client/car
-  - client/vision
-  - client/wear
-  - client/foldables
-  - client/mega
+  - client/react
+  - client/react/*
+  - client/react/desktop/tauri-app
+  - client/react-native/*
   - reference/QuantX
 
-  - client/data
   - extensions/**/*
