@@ -158,6 +158,15 @@ pip install -r requirements.txt
 pnpm install
 ```
 
+### 3. Development Environment Setup
+QuanuX supports a **Polyglot Development Experience**:
+*   **VSCode**: Native support via `.vscode` configuration (C++, Python, React).
+*   **CLion / Visual Studio**: Standardized `CMakePresets.json` for C++ components.
+*   **Xcode**: Helpers to generate `.xcodeproj` files.
+*   **Spyder**: Helpers to initialize `.spyproject` configuration.
+
+To configure your preferred IDE, check `server/skills/project_maintenance/SKILL.md` or use the helper scripts in `scripts/`.
+
 ### 4. Configuration
 
 QuanuX uses the OS Keyring to securely store API keys.

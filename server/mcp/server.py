@@ -147,5 +147,61 @@ async def duckdb_query(query: str) -> str:
     except Exception as e:
         return f"Query Error: {e}"
 
+@mcp.tool(name="quanux.backtest.run")
+async def run_backtest(data_file: str, enable_nats: bool = False) -> str:
+    """
+    Run a high-performance C++ backtest.
+    
+    Args:
+        data_file: Path to DBN file (e.g. "data/glbx-mdp3-20240101.dbn.zst"). Relative to repo root.
+        enable_nats: If True, replays market data to NATS (useful for live visualization).
+    """
+    try:
+        data_path = (BASE_DIR / data_file).resolve()
+        if not str(data_path).startswith(str(BASE_DIR)):
+             return "Error: Data file must be within the repository."
+        
+        if not data_path.exists():
+            return f"Error: Data file not found: {data_file}"
+
+        # Locate the Engine Binary
+        engine_bin = BASE_DIR / "QuanuX-Backtesting-Engine" / "cpp" / "build" / "quanux_backtest"
+        if not engine_bin.exists():
+             return "Error: Backtesting Engine binary not found. Please build it first."
+
+        # Construct Command
+        # Using shell pipeline: zstdcat <file> | quanux_backtest [--nats]
+        
+        # Note: We use shell=True for the pipe to work easily in subprocess
+        # but we must be careful with args.
+        
+        cmd_parts = [str(engine_bin)]
+        if enable_nats:
+            cmd_parts.append("--nats")
+            
+        engine_cmd = " ".join(cmd_parts)
+        
+        # Determine cat command based on extension
+        if str(data_path).endswith(".zst"):
+            cat_cmd = f"zstdcat '{str(data_path)}'"
+        else:
+            cat_cmd = f"cat '{str(data_path)}'"
+            
+        full_cmd = f"{cat_cmd} | {engine_cmd}"
+        
+        proc = await asyncio.create_subprocess_shell(
+            full_cmd,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+        
+        stdout, stderr = await proc.communicate()
+        status = "Success" if proc.returncode == 0 else "Failed"
+        
+        return f"Backtest {status}:\n{stdout.decode()}\n{stderr.decode()}"
+
+    except Exception as e:
+        return f"Error executing backtest: {e}"
+
 if __name__ == "__main__":
     mcp.run()

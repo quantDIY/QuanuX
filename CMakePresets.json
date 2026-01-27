@@ -1,0 +1,61 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 20,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "default",
+            "displayName": "Default Config",
+            "description": "Default build using Ninja or Unix Makefiles",
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            }
+        },
+        {
+            "name": "execution-node",
+            "displayName": "Execution Node",
+            "description": "Configure the Execution Node",
+            "binaryDir": "${sourceDir}/execution-node/cpp/build",
+            "generator": "Unix Makefiles",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            }
+        },
+        {
+            "name": "backtester",
+            "displayName": "Backtesting Engine",
+            "description": "Configure the Backtesting Engine",
+            "binaryDir": "${sourceDir}/QuanuX-Backtesting-Engine/cpp/build",
+            "generator": "Unix Makefiles",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "build-node",
+            "displayName": "Build Execution Node",
+            "configurePreset": "default",
+            "targets": [
+                "quanux_node"
+            ]
+        },
+        {
+            "name": "build-backtest",
+            "displayName": "Build Backtester",
+            "configurePreset": "default",
+            "targets": [
+                "quanux_backtest"
+            ]
+        }
+    ]
+}

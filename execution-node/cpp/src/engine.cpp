@@ -98,7 +98,39 @@ void Engine::run() {
   // TODO: Pin thread to core 0
 
   // Start Market Data Feed (if needed to trigger it)
-  market_data_engine_.subscribe("ES.c.0");
+  if (std::getenv("QUANUX_NATS_FEED")) {
+    std::cout << "[Engine] Enabling NATS Feed Consumption..." << std::endl;
+    nats_bridge_.subscribe("SIM", [this](const std::string &msg) {
+      // Minimal parsing of: {"symbol": "SIM", "price": 4800.5, "size": 1,
+      // "type": "trade" ...}
+      // TODO: Use real JSON parser.
+      try {
+        // Quick find
+        auto p_pos = msg.find("\"price\": ");
+        auto s_pos = msg.find("\"size\": ");
+        auto t_pos = msg.find("\"type\": \"");
+
+        if (p_pos != std::string::npos && s_pos != std::string::npos) {
+          double price = std::stod(msg.substr(p_pos + 9));
+          double size = std::stod(msg.substr(s_pos + 8));
+          bool is_trade = (msg.find("trade") != std::string::npos);
+
+          MarketUpdate update = {
+              .timestamp = 0,       // todo
+              .instrument_id = 999, // SIM ID
+              .price = price,
+              .size = size,
+              .is_trade = is_trade,
+              .side = 1 // unknown
+          };
+          market_data_engine_.on_update(update);
+        }
+      } catch (...) {
+      }
+    });
+  } else {
+    market_data_engine_.subscribe("ES.c.0");
+  }
 
   // Core Loop
   bool running = true;

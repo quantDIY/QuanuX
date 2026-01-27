@@ -3,8 +3,6 @@
 #include "quanux/common/StrategyInterface.h"
 #include "risk_engine.h"
 #include <atomic>
-#include <mutex>
-#include <vector>
 
 using namespace quanux::common;
 

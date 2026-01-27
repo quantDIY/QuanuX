@@ -1,4 +1,5 @@
 #include "engine/DbnPipeFeeder.h"
+#include "engine/NatsReplayer.h"
 #include <databento/dbn.hpp>
 #include <databento/dbn_decoder.hpp>
 #include <databento/ireadable.hpp> // Ensure this matches include path
@@ -36,8 +37,9 @@ public:
   }
 };
 
-DbnPipeFeeder::DbnPipeFeeder(SimulatedExchange *exchange)
-    : exchange_(exchange) {
+DbnPipeFeeder::DbnPipeFeeder(SimulatedExchange *exchange,
+                             NatsReplayer *replayer)
+    : exchange_(exchange), replayer_(replayer) {
   // Transfer ownership of StdinReadable to DbnDecoder
   decoder_ = std::make_unique<databento::DbnDecoder>(
       std::make_unique<StdinReadable>());
@@ -60,11 +62,17 @@ void DbnPipeFeeder::run() {
           reinterpret_cast<const databento::MboMsg *>(&record->Header());
 
       bool is_bid = (mbo->side == databento::Side::Bid);
-      bool is_add = (mbo->action == databento::Action::Add);
+      // bool is_add = (mbo->action == databento::Action::Add);
 
       if (mbo->action == databento::Action::Add) {
         exchange_->on_market_data(mbo->order_id, mbo->price, mbo->size, is_bid,
                                   true);
+        if (replayer_) {
+          // Re-broadcast add (TODO: Use proper symbol from metadata)
+          replayer_->publish_tick(
+              "SIM", mbo->hd.ts_event.time_since_epoch().count(),
+              (double)mbo->price / 1000000000.0, mbo->size, is_bid);
+        }
       } else if (mbo->action == databento::Action::Cancel) {
         exchange_->on_market_data(mbo->order_id, 0, 0, is_bid, false);
       }
