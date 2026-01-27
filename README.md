@@ -37,6 +37,13 @@ QuanuX developing something truly unique, bringing together the tools to make re
 **No other trading platform does this.**
 Developers can design their own UI/UX directly in **Figma** with the help of their AI assistants. By utilizing our **Model Context Protocol (MCP)** integration, we bridge the gap between design and code. Your AI agent can communicate QuanuX "agent-skills" and design tokens back to Figma via the MCP server, ensuring that every interface you build is beautiful, functional, and 100% **QuanuX compliant**.
 
+### 🧠 Native Embedded AI (Privacy-First)
+**Run `ollama serve` and `quanux_node` simultaneously — they connect automatically.**
+QuanuX features a **Native C++ AI Connector** built directly into the Execution Engine.
+- **Auto-Discovery**: QuanuX automatically detects running local models (Ollama, Llama.cpp, LM Studio) on startup.
+- **No API Keys**: Run entirely offline or on an air-gapped trading server.
+- **Zero Latency**: Query high-performance models (Llama 3, Mistral) over localhost in microseconds.
+
 ### 🔩 Bolt-On Architecture & `quanuxctl`
 Flexibility is king. Our modular **bolt-on architecture** allows you to extend the platform effortlessly. Manage everything with **`quanuxctl`**, our powerful CLI tool designed to streamline your workflow, manage extensions, and control your environment with precision.
 
