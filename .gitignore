@@ -114,3 +114,5 @@ client/desktop/tauri-app/src-tauri/src/*.bak.*
 # Data
 *.dbn
 *.zst
+*.duckdb
+*.duckdb.wal

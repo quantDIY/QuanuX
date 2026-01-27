@@ -47,6 +47,27 @@ If you are building a "Core Module" (like Indicators, Backtester, etc.), you **M
 Use this pattern to allow users to "uninstall" portions of the system they don't use.
 
 ## 3. Best Practices
-*   **Rich Output**: Always use `console.print()` with color tags (`[green]`, `[red]`) instead of `print()`.
-*   **Destructive Actions**: Always use `typer.confirm()` before deleting files.
-*   **Aliasing**: Always provide a short alias for power users (e.g. `indicators` -> `i`).
+## 4. Developing TUI Applications (Textual)
+When building interactive terminal apps (like `dashboard`), follow these patterns:
+
+1.  **Async & Threads**:
+    -   Use `@work(exclusive=True)` for long-running or async tasks (like NATS subscriptions).
+    -   **NEVER** block the main thread.
+    -   **ALWAYS** use `self.call_from_thread(callback, ...)` when updating the UI from a background task (like a NATS callback).
+
+2.  **Screen Architecture**:
+    -   Define logic inside `Screen` classes (e.g., `GridScreen`) rather than the main `App` to avoid widget query race conditions.
+    -   Connect services (NATS, DB) in `on_mount()`.
+
+3.  **Example Pattern**:
+    ```python
+    class MyScreen(Screen):
+        def on_mount(self):
+            self.start_background_task()
+    
+        @work(exclusive=True)
+        async def start_background_task(self):
+            # Async work here
+            self.call_from_thread(self.update_ui, data)
+    ```
+
