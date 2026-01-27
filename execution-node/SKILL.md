@@ -41,6 +41,26 @@ QuanuX offers two production-grade runtime paths. Agents should help users choos
 *   **Indicators**: Uses `#include "quanux/indicators/..."` (Native Headers).
 *   **Philosophy**: "Raw Speed". Zero-overhead, direct memory access.
 
+#### HFT Developer Guide (The ABI Pattern)
+To maintain binary compatibility across strategy reloads, we use an **Opaque Pointer** pattern:
+1.  **Interface**: Inherit nothing. Use the C-style function pointers defined in `StrategyInterface.h`.
+2.  **Context**: Define your own local `struct MyContext` in your `.cpp` file.
+3.  **Casting**: Use `reinterpret_cast<StrategyContext*>` in `create_context()` and callback functions.
+
+**Example**:
+```cpp
+struct PingPongContext { int pos; };
+extern "C" StrategyContext* create_context() {
+    return reinterpret_cast<StrategyContext*>(new PingPongContext());
+}
+```
+
+#### Backtesting & Simulation
+The C++ node includes a built-in **Backtesting Engine** (`node_simulator`):
+*   **Feeder**: Loads historic data from DuckDB (Parquet/CSV).
+*   **Matching**: Simulates order fills with 1-tick latency assumption.
+*   **Usage**: Run `quanux_backtest` to verify strategy logic against history before deployment.
+
 **Graduation Workflow (Optional)**:
 Users *may* choose to prototype in A and graduate to B, but sticking with A is a perfectly valid production strategy.
 

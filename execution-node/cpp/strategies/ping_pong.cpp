@@ -2,31 +2,35 @@
 using namespace quanux::common;
 #include <iostream>
 
-struct StrategyContext {
+struct PingPongContext {
   int position;
   OrderService order_service;
 };
 
 extern "C" StrategyContext *create_context() {
-  return new StrategyContext(); // order_service default init
+  return reinterpret_cast<StrategyContext *>(new PingPongContext());
 }
 
-extern "C" void destroy_context(StrategyContext *ctx) { delete ctx; }
+extern "C" void destroy_context(StrategyContext *ctx) {
+  delete reinterpret_cast<PingPongContext *>(ctx);
+}
 
 void on_init(StrategyContext *ctx, const OrderService *service) {
+  auto *pctx = reinterpret_cast<PingPongContext *>(ctx);
   std::cout << "[PingPong] Initialized with OrderService" << std::endl;
-  ctx->position = 0;
+  pctx->position = 0;
   if (service) {
-    ctx->order_service = *service; // Copy by value
+    pctx->order_service = *service; // Copy by value
   }
 }
 
 void on_market_data(StrategyContext *ctx, const MarketUpdate *update) {
-  if (!ctx->order_service.submit_order)
+  auto *pctx = reinterpret_cast<PingPongContext *>(ctx);
+  if (!pctx->order_service.submit_order)
     return;
 
   // Simple logic: Buy at 100.5, Sell at 101.0
-  if (update->price <= 100.5 && ctx->position == 0) {
+  if (update->price <= 100.5 && pctx->position == 0) {
     std::cout << "[PingPong] SIGNAL: BUY @ " << update->price << std::endl;
 
     OrderRequest req = {
@@ -37,12 +41,12 @@ void on_market_data(StrategyContext *ctx, const MarketUpdate *update) {
         .type = 0  // Limit
     };
     uint64_t oid =
-        ctx->order_service.submit_order(ctx->order_service.engine_ctx, &req);
+        pctx->order_service.submit_order(pctx->order_service.engine_ctx, &req);
     std::cout << "[PingPong] Order Submitted: " << oid << std::endl;
 
-    ctx->position = 1;
+    pctx->position = 1;
 
-  } else if (update->price >= 101.0 && ctx->position == 1) {
+  } else if (update->price >= 101.0 && pctx->position == 1) {
     std::cout << "[PingPong] SIGNAL: SELL @ " << update->price << std::endl;
 
     OrderRequest req = {
@@ -53,10 +57,10 @@ void on_market_data(StrategyContext *ctx, const MarketUpdate *update) {
         .type = 0   // Limit
     };
     uint64_t oid =
-        ctx->order_service.submit_order(ctx->order_service.engine_ctx, &req);
+        pctx->order_service.submit_order(pctx->order_service.engine_ctx, &req);
     std::cout << "[PingPong] Order Submitted: " << oid << std::endl;
 
-    ctx->position = 0;
+    pctx->position = 0;
   }
 }
 

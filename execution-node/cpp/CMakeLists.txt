@@ -71,7 +71,12 @@ add_library(node_core STATIC
     src/order_gateway.cpp
     src/native_ai_bridge.cpp
 )
-target_link_libraries(node_core PUBLIC nats_static pthread dl cpp-httplib nlohmann_json::nlohmann_json)
+target_link_libraries(node_core PUBLIC nats_static pthread dl httplib::httplib nlohmann_json::nlohmann_json)
+target_include_directories(node_core PUBLIC 
+    ${CMAKE_BINARY_DIR}/_deps/cnats-src/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../QuanuX-Common/cpp/include
+    include
+)
 
 # Main Executable
 add_executable(quanux_node src/main.cpp)
