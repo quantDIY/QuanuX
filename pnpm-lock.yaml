@@ -627,7 +627,7 @@ importers:
         specifier: ^0.6.4
         version: 0.6.4(hono@4.11.4)
 
-  server/bridges/signalr/node:
+  extensions/python/signalr_bridge/src/node:
     dependencies:
       '@microsoft/signalr':
         specifier: ^8.0.0

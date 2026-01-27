@@ -12,6 +12,6 @@ packages:
   - client/foldables
   - client/mega
   - reference/QuantX
-  - server/bridges/signalr/node
+
   - client/data
   - extensions/**/*
