@@ -1,16 +1,19 @@
 import pytest
 import pytest_asyncio
 import asyncio
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")))
 from datetime import datetime, timedelta, timezone
-from server.app.domain.topstep.orders import (
+from orders import (
     search_orders,
     search_open_orders,
     place_order,
     cancel_order,
     modify_order
 )
-from server.app.domain.topstep.accounts import search_accounts
-from server.app.domain.topstep.contracts import search_contracts
+from accounts import search_accounts
+from contracts import search_contracts
 
 @pytest_asyncio.fixture
 async def account_id(token: str):

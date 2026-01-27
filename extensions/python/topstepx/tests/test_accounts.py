@@ -1,5 +1,8 @@
 import pytest
-from server.app.domain.topstep.accounts import search_accounts
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")))
+from accounts import search_accounts
 
 @pytest.mark.asyncio
 async def test_search_accounts(token: str):

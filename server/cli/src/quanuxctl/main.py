@@ -5,7 +5,7 @@ Unified Developer CLI.
 """
 import typer
 from rich.console import Console
-from .commands import secrets, bridge, skills, extensions, node, storage, indicators, module, vcs, dashboard
+from .commands import secrets, bridge, skills, extensions, node, storage, indicators, module, vcs, dashboard, topstepx
 from . import __version__
 
 app = typer.Typer(
@@ -48,6 +48,9 @@ app.add_typer(vcs.app, name="v", help="Alias for vcs", hidden=True)
 
 app.add_typer(dashboard.app, name="dashboard", help="Launch System Dashboard (TUI).")
 app.add_typer(dashboard.app, name="d", help="Alias for dashboard", hidden=True)
+
+app.add_typer(topstepx.app, name="topstepx", help="Manage TopstepX Extension.")
+app.add_typer(topstepx.app, name="ts", help="Alias for topstepx", hidden=True)
 
 
 @app.command()

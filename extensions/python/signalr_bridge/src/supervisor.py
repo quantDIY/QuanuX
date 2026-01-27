@@ -3,11 +3,11 @@ from __future__ import annotations
 import os, subprocess, sys, shlex, argparse
 from pathlib import Path
 from typing import Optional
-from server.control.supervisor.process import main
+# from server.control.supervisor.process import main
 
-ROOT = Path(__file__).resolve().parents[2]  # repo/server/...
-FLASK_APP = ROOT / "bridges" / "signalr" / "flask" / "app.py"
-NODE_APP  = ROOT / "bridges" / "signalr" / "node" / "index.mjs"
+ROOT = Path(__file__).resolve().parent  # extensions/python/signalr_bridge/src
+FLASK_APP = ROOT / "flask" / "app.py"
+NODE_APP  = ROOT / "node" / "index.mjs"
 
 def run_cmd(cmd: str, env: Optional[dict] = None) -> int:
     proc = subprocess.Popen(shlex.split(cmd), env=env or os.environ.copy())

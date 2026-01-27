@@ -3,7 +3,7 @@ import os
 from typing import List, Any, Optional
 
 # TODO: Move to config
-BASE_API_URL = os.getenv("TOPSTEP_API_URL", "https://api.topstepx.com")
+BASE_API_URL = os.getenv("QUANUX_TOPSTEP__BASE_API_URL", "https://api.topstepx.com")
 
 async def search_contracts(token: str, search_text: str = "NQ", live: bool = False) -> List[Any]:
     url = f"{BASE_API_URL}/api/Contract/search"

@@ -1,5 +1,8 @@
 import pytest
-from server.app.domain.topstep.contracts import search_contracts
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")))
+from contracts import search_contracts
 
 @pytest.mark.asyncio
 async def test_search_contracts(token: str):

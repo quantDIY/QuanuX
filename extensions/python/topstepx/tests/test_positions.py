@@ -1,12 +1,15 @@
 import pytest
 import pytest_asyncio
-from server.app.domain.topstep.positions import (
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")))
+from positions import (
     search_open_positions,
     close_position,
     partial_close_position
 )
-from server.app.domain.topstep.accounts import search_accounts
-from server.app.domain.topstep.contracts import search_contracts
+from accounts import search_accounts
+from contracts import search_contracts
 
 @pytest_asyncio.fixture
 async def account_id(token: str):

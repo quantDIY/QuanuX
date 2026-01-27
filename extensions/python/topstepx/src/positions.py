@@ -3,7 +3,7 @@ import os
 from typing import Any, Dict
 
 # TODO: Move to config
-BASE_API_URL = os.getenv("TOPSTEP_API_URL", "https://api.topstepx.com")
+BASE_API_URL = os.getenv("QUANUX_TOPSTEP__BASE_API_URL", "https://api.topstepx.com")
 
 async def search_open_positions(token: str, account_id: int) -> Dict[str, Any]:
     url = f"{BASE_API_URL}/api/Position/searchOpen"

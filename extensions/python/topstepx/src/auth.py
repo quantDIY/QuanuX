@@ -1,9 +1,9 @@
 import httpx
 import os
-from .models import LoginRequest, LoginResponse
+from models import LoginRequest, LoginResponse
 
 # TODO: Move to config
-DEFAULT_API_URL = "https://api.topstepx.com"
+DEFAULT_API_URL = os.getenv("QUANUX_TOPSTEP__BASE_API_URL", "https://api.topstepx.com")
 
 async def authenticate(creds: LoginRequest, base_url: str = DEFAULT_API_URL) -> str:
     url = f"{base_url}/api/Auth/loginKey"

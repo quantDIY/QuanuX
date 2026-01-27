@@ -1,6 +1,9 @@
 import pytest
-from server.app.domain.topstep.history import retrieve_bars
-from server.app.domain.topstep.contracts import search_contracts
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")))
+from history import retrieve_bars
+from contracts import search_contracts
 
 @pytest.mark.asyncio
 async def test_retrieve_bars(token: str):

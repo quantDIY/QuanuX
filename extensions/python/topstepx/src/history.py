@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, Optional
 
 # TODO: Move to config
-BASE_API_URL = os.getenv("TOPSTEP_API_URL", "https://api.topstepx.com")
+BASE_API_URL = os.getenv("QUANUX_TOPSTEP__BASE_API_URL", "https://api.topstepx.com")
 
 async def retrieve_bars(
     token: str, 

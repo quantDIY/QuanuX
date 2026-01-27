@@ -2,6 +2,7 @@ name: quanux-bridge-signalr
 version: v0.0.1
 owner: platform
 description: "Real-time SignalR bridge for QuanuX (scaffold). Choose Flask or Node runtime."
+command: "python src/supervisor.py"
 
 default_runtime: flask
 alternatives:
@@ -12,6 +13,8 @@ config:
     QUANUX_BRIDGE_PORT: 8077
     QUANUX_LOG_LEVEL: INFO
     QUANUX_BRIDGE_CORS: "*"
+    QUANUX_SIGNALR_USER_HUB: "https://rtc.topstepx.com/hubs/user"
+    QUANUX_SIGNALR_MARKET_HUB: "https://rtc.topstepx.com/hubs/market"
 
 endpoints:
   flask:
@@ -20,15 +23,17 @@ endpoints:
 
 runtimes:
   flask:
-    entry: "python3 server/bridges/signalr/flask/app.py"
+    entry: "python src/flask/app.py"
   node:
-    entry: "node server/bridges/signalr/node/index.mjs"
+    entry: "node src/node/index.mjs"
 
 process_model:
   node_worker:
-    entry: "server/bridges/signalr/node/index.mjs"
+    entry: "src/node/index.mjs"
     env:
       SIGNALR_HUB_URL: "${SIGNALR_HUB_URL}"
+      SIGNALR_USER_HUB: "${QUANUX_SIGNALR_USER_HUB}"
+      SIGNALR_MARKET_HUB: "${QUANUX_SIGNALR_MARKET_HUB}"
       SIGNALR_ACCESS_TOKEN: "${SIGNALR_ACCESS_TOKEN}"
       SIGNALR_PROTOCOL: "json"
 
@@ -41,6 +46,10 @@ contracts:
 security:
   secrets:
     - key: "SIGNALR_ACCESS_TOKEN"
+      provider: "quanux.secrets"
+    - key: "QUANUX_SIGNALR_USER_HUB"
+      provider: "quanux.secrets"
+    - key: "QUANUX_SIGNALR_MARKET_HUB"
       provider: "quanux.secrets"
 
 health:

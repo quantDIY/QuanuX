@@ -1,73 +1,38 @@
 ---
 name: quanux-cli
-description: "CLI Development (Typer, Rich) and Module Lifecycle Management"
+description: Reference for using the QuanuX Control CLI (quanuxctl).
 ---
 
-# QuanuX CLI (`quanuxctl`)
+# QuanuX Control CLI (`quanuxctl`)
 
-## Overview
-The CLI is built using **Typer** (for command parsing) and **Rich** (for beautiful output).
-Source: `server/cli/src/quanuxctl/`
+The `quanuxctl` tool is the central management interface for the QuanuX platform.
 
-## 1. Adding a New Command Group
-To add a new namespace (e.g., `quanuxctl mycommand ...`):
+## Key Capabilities
 
-1.  **Create Module**:
-    Create `server/cli/src/quanuxctl/commands/mycommand.py`:
-    ```python
-    import typer
-    from rich.console import Console
+### 1. Extension Management
+- `quanuxctl ext list`: View all installed extensions and their status.
+- `quanuxctl ext start/stop <name>`: Lifecycle management.
+- `quanuxctl topstepx`: Dedicated namespace for TopstepX management.
 
-    app = typer.Typer(help="Description of my command group.")
-    console = Console()
+### 2. Secret Management
+- `quanuxctl secrets set <key> <value>`: Store secrets in system Keyring.
+- `quanuxctl secrets get <key>`: Retrieve secrets (for debugging).
+- `quanuxctl secrets setup`: Interactive wizard.
 
-    @app.command()
-    def hello(name: str):
-        """Say hello."""
-        console.print(f"[green]Hello {name}[/green]")
-    ```
+### 3. TopstepX Specifics
+- `quanuxctl topstepx install`: Setup dependencies.
+- `quanuxctl topstepx env`: Check configuration.
+- `quanuxctl topstepx user/password/apikey`: Credential rotation.
+- `quanuxctl topstepx user-hub/market-hub`: SignalR endpoint configuration.
 
-2.  **Register**:
-    Edit `server/cli/src/quanuxctl/main.py`:
-    ```python
-    from .commands import mycommand
-    app.add_typer(mycommand.app, name="mycommand", help="Description")
-    app.add_typer(mycommand.app, name="m", help="Alias", hidden=True)
-    ```
+## Development
+The CLI is built with **Typer**.
+- **Source**: `server/cli/src/quanuxctl`
+- **Commands**: `server/cli/src/quanuxctl/commands/`
+- **Adding Commands**: Create a new module in `commands/` and register it in `main.py`.
 
-## 2. Module Lifecycle Pattern (Core Protocol)
-If you are building a "Core Module" (like Indicators, Backtester, etc.), you **MUST** provide lifecycle management commands in the CLI.
-
-**Standard Commands**:
-*   `install`: Scaffolds the directory structure or pulls from source.
-*   `remove`: Deletes the module directory (destructive).
-*   `check`: Verifies integrity (headers, config).
-
-**Example (`server/cli/src/quanuxctl/commands/module.py`)**:
-Use this pattern to allow users to "uninstall" portions of the system they don't use.
-
-## 3. Best Practices
-## 4. Developing TUI Applications (Textual)
-When building interactive terminal apps (like `dashboard`), follow these patterns:
-
-1.  **Async & Threads**:
-    -   Use `@work(exclusive=True)` for long-running or async tasks (like NATS subscriptions).
-    -   **NEVER** block the main thread.
-    -   **ALWAYS** use `self.call_from_thread(callback, ...)` when updating the UI from a background task (like a NATS callback).
-
-2.  **Screen Architecture**:
-    -   Define logic inside `Screen` classes (e.g., `GridScreen`) rather than the main `App` to avoid widget query race conditions.
-    -   Connect services (NATS, DB) in `on_mount()`.
-
-3.  **Example Pattern**:
-    ```python
-    class MyScreen(Screen):
-        def on_mount(self):
-            self.start_background_task()
-    
-        @work(exclusive=True)
-        async def start_background_task(self):
-            # Async work here
-            self.call_from_thread(self.update_ui, data)
-    ```
-
+## Running Locally
+To run the CLI from source without installing:
+```bash
+python -m server.cli.src.quanuxctl.main <command>
+```

@@ -4,8 +4,15 @@ import { WebSocketServer } from 'ws';
 import { HubConnectionBuilder, LogLevel, HttpTransportType } from "@microsoft/signalr";
 
 // Config
+// Config
 const PORT = process.env.QUANUX_BRIDGE_PORT || 8077;
 const LOG_LEVEL = process.env.QUANUX_LOG_LEVEL || "Information";
+
+// Defaults from Env
+const DEFAULT_HUB_URL = process.env.SIGNALR_HUB_URL;
+const USER_HUB_URL = process.env.SIGNALR_USER_HUB;
+const MARKET_HUB_URL = process.env.SIGNALR_MARKET_HUB;
+const DEFAULT_ACCESS_TOKEN = process.env.SIGNALR_ACCESS_TOKEN;
 
 // State
 let hubConnection = null;
@@ -38,15 +45,27 @@ app.get('/health', (req, res) => {
     service: "quanux-bridge-node",
     status: "ok",
     connected: hubConnection ? hubConnection.state : "Disconnected",
-    hubUrl: currentHubUrl
+    hubUrl: currentHubUrl,
+    config: {
+      default: DEFAULT_HUB_URL ? "Set" : "Unset",
+      user: USER_HUB_URL ? "Set" : "Unset",
+      market: MARKET_HUB_URL ? "Set" : "Unset"
+    }
   });
 });
 
 app.post('/connect', async (req, res) => {
-  const { hub_url, access_token, skip_negotiation } = req.body;
+  let { hub_url, access_token, skip_negotiation } = req.body;
+
+  // Resolve Aliases / Defaults
+  if (!hub_url) hub_url = DEFAULT_HUB_URL;
+  if (hub_url === "user" && USER_HUB_URL) hub_url = USER_HUB_URL;
+  if (hub_url === "market" && MARKET_HUB_URL) hub_url = MARKET_HUB_URL;
+
+  if (!access_token) access_token = DEFAULT_ACCESS_TOKEN;
 
   if (!hub_url) {
-    return res.status(400).json({ error: "hub_url required" });
+    return res.status(400).json({ error: "hub_url required (and no default set)" });
   }
 
   try {
