@@ -6,6 +6,13 @@
 
 Engine::Engine()
     : // ring_buffer_ default constructor is used (fixed size)
+      // Retrieve AI Config from Env or Default
+      ai_bridge_(
+          std::getenv("QUANUX_AI_ENDPOINT") ? std::getenv("QUANUX_AI_ENDPOINT")
+                                            : "http://localhost:8080",
+          std::getenv("QUANUX_AI_KEY") ? std::getenv("QUANUX_AI_KEY") : "",
+          std::getenv("QUANUX_AI_MODEL") ? std::getenv("QUANUX_AI_MODEL")
+                                         : "llama3"),
       nats_bridge_("nats://localhost:4222"), // Default NATS URL
       market_data_engine_(&ring_buffer_, &nats_bridge_),
       order_gateway_(&nats_bridge_) {}
@@ -20,8 +27,23 @@ void Engine::static_cancel_order(void *ctx, uint64_t order_id) {
   engine->order_gateway_.cancel_order(order_id);
 }
 
+bool Engine::static_query_ai(void *ctx, const char *prompt, char *buffer,
+                             uint32_t buffer_size) {
+  Engine *engine = static_cast<Engine *>(ctx);
+  // Blocking query
+  std::string response = engine->ai_bridge_.query(prompt);
+  if (response.size() >= buffer_size) {
+    return false; // Buffer too small
+  }
+  std::strcpy(buffer, response.c_str());
+  return true;
+}
+
 void Engine::init(const std::string &config_path) {
   std::cout << "[Engine] Initializing..." << std::endl;
+  std::cout << "[Engine] AI Bridge Connected: "
+            << (ai_bridge_.is_connected() ? "YES" : "NO") << std::endl;
+
   // In a real app, read config.json
 
   // Determine platform-specific extension
@@ -81,7 +103,8 @@ void Engine::load_strategy(const std::string &strategy_path) {
     if (strategy_ptr->on_init) {
       OrderService service = {.engine_ctx = this,
                               .submit_order = static_submit_order,
-                              .cancel_order = static_cancel_order};
+                              .cancel_order = static_cancel_order,
+                              .query_ai = static_query_ai};
       strategy_ptr->on_init(ctx, &service);
     }
 
@@ -113,7 +136,9 @@ void Engine::run() {
         if (p_pos != std::string::npos && s_pos != std::string::npos) {
           double price = std::stod(msg.substr(p_pos + 9));
           double size = std::stod(msg.substr(s_pos + 8));
-          bool is_trade = (msg.find("trade") != std::string::npos);
+          bool is_trade =
+              (msg.find("trade") !=
+               std::string::npos); // Correct logic? msg has "type": "trade"
 
           MarketUpdate update = {
               .timestamp = 0,       // todo

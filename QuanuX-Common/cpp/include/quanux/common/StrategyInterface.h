@@ -50,6 +50,9 @@ struct OrderService {
   void *engine_ctx;
   uint64_t (*submit_order)(void *engine_ctx, const OrderRequest *request);
   void (*cancel_order)(void *engine_ctx, uint64_t order_id);
+  // Returns true if successful, false if buffer too small or error
+  bool (*query_ai)(void *engine_ctx, const char *prompt, char *buffer,
+                   uint32_t buffer_size);
 };
 
 // V-Table for Strategy instance

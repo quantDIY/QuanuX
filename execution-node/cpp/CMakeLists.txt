@@ -40,11 +40,28 @@ FetchContent_MakeAvailable(duckdb)
 # Include Directories
 include_directories(include)
 include_directories(../../QuanuX-Common/cpp/include)
+include_directories(${CMAKE_BINARY_DIR}/_deps/cpp-httplib-src)
 
 # Indicators Library (Self-Contained Strategy Support)
 # We pull this in so strategies can compute locally without phoning home.
 set(BUILD_PYTHON_BINDINGS OFF CACHE BOOL "" FORCE)
 add_subdirectory(../../server/indicators ${CMAKE_BINARY_DIR}/indicators)
+
+# --- AI Connector Deps ---
+FetchContent_Declare(
+    nlohmann_json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_TAG v3.11.3
+)
+FetchContent_MakeAvailable(nlohmann_json)
+
+FetchContent_Declare(
+    cpp-httplib
+    GIT_REPOSITORY https://github.com/yhirose/cpp-httplib.git
+    GIT_TAG v0.14.3
+)
+FetchContent_MakeAvailable(cpp-httplib)
+
 
 # Core Library (The Engine)
 add_library(node_core STATIC
@@ -52,8 +69,9 @@ add_library(node_core STATIC
     src/nats_bridge.cpp
     src/market_data_engine.cpp
     src/order_gateway.cpp
+    src/native_ai_bridge.cpp
 )
-target_link_libraries(node_core PUBLIC nats_static pthread dl)
+target_link_libraries(node_core PUBLIC nats_static pthread dl cpp-httplib nlohmann_json::nlohmann_json)
 
 # Main Executable
 add_executable(quanux_node src/main.cpp)
