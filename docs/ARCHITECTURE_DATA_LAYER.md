@@ -39,11 +39,29 @@ While the architecture is abstract, the current mapping is:
 | Capability | Abstract Pattern | Implementation |
 | :--- | :--- | :--- |
 | **User/Auth** | Request/Response | **FastAPI** (HTTP) |
-| **Market Data** | Event Stream | **NATS** (Core) -> **SignalR** (Client) |
+| **Market Data** | Event Stream | **NATS** (Core) -> **GraphQL Sub** (Mobile) / **SignalR** (Web) |
 | **System State** | Request/Response | **FastAPI** (HTTP) |
 | **MCP Tools** | RPC | **Stdio** / **SSE** |
 
-## 5. Guide for Agents & Extensions
+## 5. The Real-Time Pipeline (NATS -> GraphQL)
+
+This is the primary artery for the Mobile Ecosystem (`client/react-native/*`).
+
+### The Flow
+1.  **Source**: The **Runtime Engine** (C++/Python) publishes "live" events (e.g., `market.NQ.tick`) to a local or remote **NATS** cluster.
+2.  **Gateway**: The **FastAPI Server** (`server/app`) connects to NATS via `server/app/services/nats.py`.
+3.  **Bridge**: A **GraphQL Subscription** (`server/app/graphql/schema.py`) listens to specific NATS subjects.
+4.  **Client**: The Mobile App connects via WebSocket (`ws://api/graphql`) and subscribes:
+    ```graphql
+    subscription { marketData(symbol: "NQ") { price, ts } }
+    ```
+
+### Why this Architecture?
+*   **Decoupling**: The Engine doesn't know about GraphQL. The Mobile App doesn't know about NATS.
+*   **Efficiency**: NATS handles the high-throughput fanout. GraphQL provides specific, typed shapes to low-bandwidth mobile devices.
+*   **Remote Capable**: Execution Nodes can be anywhere (AWS, etc.), pushing to the NATS cluster. The API server just listens.
+
+## 6. Guide for Agents & Extensions
 
 When generating code or architecture:
 

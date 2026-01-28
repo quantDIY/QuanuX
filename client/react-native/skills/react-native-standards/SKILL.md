@@ -67,3 +67,17 @@ Use `Platform.select({})` and `react-native-safe-area-context` to respect device
 -   **Lists**: ALWAYS use `FlashList` (from `@shopify/flash-list`) instead of `FlatList`.
 -   **Graphics**: Use `react-native-skia` for high-performance graphics.
 -   **Animations**: `react-native-reanimated` ONLY. No JS-driven animations.
+
+### [RULE 4] Data Consumption (The NATS Pipeline)
+-   **Method**: All real-time data (market data, order updates) **MUST** be consumed via **GraphQL Subscriptions**.
+-   **Source**: The backend bridges NATS topics (published by the Engine) to GraphQL.
+-   **Pattern**:
+    ```graphql
+    subscription {
+      marketData(symbol: "ES") {
+        price
+        ts
+      }
+    }
+    ```
+-   **Prohibited**: Do not attempt to connect to NATS directly from the mobile client. Do not poll REST endpoints for live data.

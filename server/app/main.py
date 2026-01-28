@@ -12,9 +12,18 @@ from .ws.endpoints import router as ws_router
 async def lifespan(app: FastAPI):
     # startup
     logging.getLogger(__name__).info("Starting QuanuX Server (scaffold)…")
+    
+    # Initialize NATS
+    from .services.nats import NatsService
+    nats = NatsService()
+    await nats.connect()
+    app.state.nats = nats
+
     yield
+    
     # shutdown
     logging.getLogger(__name__).info("Stopping QuanuX Server (scaffold)…")
+    await nats.close()
 
 def create_app() -> FastAPI:
     setup_logging()

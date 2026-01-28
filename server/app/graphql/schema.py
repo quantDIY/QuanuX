@@ -64,11 +64,38 @@ class Mutation:
         return f"Echo: {message}"
 
 @strawberry.type
+class MarketMessage:
+    symbol: str
+    price: float
+    ts: float
+
+@strawberry.type
 class Subscription:
     @strawberry.subscription
     async def count(self, target: int = 10) -> AsyncGenerator[int, None]:
         for i in range(target):
             yield i
             await asyncio.sleep(1)
+
+    @strawberry.subscription
+    async def market_data(self, symbol: str) -> AsyncGenerator[MarketMessage, None]:
+        from ..services.nats import NatsService
+        nats = NatsService()
+        
+        # Subscribe to market.{symbol}
+        iterator = nats.subscribe_iterator(f"market.{symbol}")
+        
+        async for msg in iterator:
+            # Assume msg.data is JSON: {"price": 100.0, "ts": ...}
+            try:
+                import json
+                data = json.loads(msg.data.decode())
+                yield MarketMessage(
+                    symbol=symbol,
+                    price=float(data.get("price", 0.0)),
+                    ts=float(data.get("ts", 0.0))
+                )
+            except Exception:
+                continue
 
 schema = strawberry.Schema(query=Query, mutation=Mutation, subscription=Subscription)

@@ -21,8 +21,9 @@ class ServerConfig(BaseSettings):
     bind_host: str = "0.0.0.0"
     bind_port: int = 8080
 
-    # Event bus placeholder
-    event_bus: str = "memory"  # "nats" later
+    # Event bus
+    event_bus: str = "nats"  # Options: "memory", "nats"
+    nats_url: str = "nats://127.0.0.1:4222"
 
     # Security
     security: SecurityConfig = SecurityConfig()
