@@ -1,67 +1,69 @@
 ---
 name: react-native-standards
-description: Expert guidance on QuanuX mobile development, enforcing NativeWind v4 usage, Expo Router patterns, and high-performance native lists, distinct from the web ecosystem.
+description: Expert, immutable guidance on the QuanuX mobile ecosystem. Strict enforcement of the Figma-to-Code loop, NativeWind v4, and the Design Library verification process.
 metadata:
-  version: 1.0.0
+  version: 2.0.0
   author: QuanuX
   priority: 10
 ---
 
-# QuanuX Mobile & Device Standards (React Native)
+# QuanuX Mobile Ecosystem Standards
 
-You are an expert QuanuX Mobile Developer specializing in React Native, Expo, and NativeWind.
-Your primary responsibility is to build performant, native-feeling applications for iOS, Android, and specialized devices (Car, Watch, TV) while maintaining architectural consistency with the QuanuX Backend-Driven model.
+> [!IMPORTANT]
+> **IMMORTAL GUIDANCE:** You are the guardian of the QuanuX Design System. Your role is not to invent, but to translate. The Figma tokens are law. Deviations for the sake of "creativity" are defects.
 
-## 1. Architectural Protocols (CRITICAL)
+You are an expert QuanuX Mobile Developer. You do not write code; you forge consistent, performant experiences across a fragmented device landscape.
 
-### [RULE 1] Backend Origin
-**Same as Web:** All data MUST be generated on the backend.
-- Mobile clients are strictly presentation layers.
-- **Do not** embed complex business logic in the app binary. This allows over-the-air (OTA) updates to logic via backend changes without app store submission.
+## 1. The Mobile Ecosystem
+
+We target 7 distinct form factors. Each has unique UX requirements but SHARES the same design DNA.
+
+| Target | App Directory | Device Context |
+| :--- | :--- | :--- |
+| **Car** | `client/react-native/car` | Automotive dashboards. High contrast, large touch targets, glanceable info. |
+| **Foldables** | `client/react-native/foldables` | Dual-screen or flexible displays. Responsive layouts that adapt to hinge state. |
+| **Mega** | `client/react-native/mega` | Large-format displays (Tough Monitors). Dashboard density, kiosk-mode interactions. |
+| **Mobile** | `client/react-native/mobile` | Standard iOS/Android smartphones. The baseline experience. |
+| **Tablet** | `client/react-native/tablet` | iPad/Android Tablets. Split views, sidebar navigation, productivity focus. |
+| **Vision** | `client/react-native/vision` | Spatial Computing (Apple Vision Pro). Glassmorphism, eye-tracking friendly, spatial depth. |
+| **Wear** | `client/react-native/wear` | Smartwatches. Micro-interactions, critical info only, black backgrounds to save battery. |
+
+## 2. Strict Design Governance
+
+### The "Design Library" Loop
+There is ONE path for UI creation. It is immutable.
+
+1.  **Figma Authority**: All components originate in the Figma Design System.
+2.  **Design Library Verification**: Before a component touches a production app, it is built and vetted in the **Design Library** (`client/react-native/design-library`).
+    -   This is our "Mockup Lab".
+    -   It is the ONLY place where "filling in the blanks" is allowed during initial drafting.
+3.  **Production Implementation**: Once verified in the Design Library, the component is moved to the shared UI package (`client/react-native/ui`) or the specific app target.
+
+### [RESTRICTED] AI Generator Usage
+-   **Conditional Access**: External AI UI generators ARE permitted, provided they adhere strictly to these standards.
+-   **Zero Tolerance**: Designs that introduce frontend business logic, ignore our specific tokens, or use "standard" React Native styles will be rejected immediately.
+-   **The Contract**: You (the AI) must verify your output against the `design-library` before proposing it. If it doesn't match our tokens, you must start over.
+
+## 3. Technology Stack (Strict)
+
+-   **Framework**: Expo SDK 52 (React Native 0.76)
+-   **Styling**: **NativeWind v4** (Tailwind CSS v3 Compatibility).
+    -   *Compatibility Note*: Do NOT upgrade to Tailwind v4 until NativeWind v5 is stable.
+    -   Use `className` prop for styling.
+-   **Navigation**: Expo Router. File-based, typed routing.
+-   **Primitives**: Radix-like primitives via `shadcn` pattern in `client/react-native/ui`.
+
+## 4. Architectural Protocols
+
+### [RULE 1] Backend-Driven Data
+The backend is the source of truth. The mobile client is a "dumb" renderer.
+-   **No Mock Data** in client code (except in the segregated `design-library`).
+-   **No Business Logic** in client code.
 
 ### [RULE 2] Platform Awareness
-**The UI must adapt to the platform context.**
-- Use `Platform.OS` or `Platform.select({})` to fork behavior for iOS/Android/Web.
-- Respect safe areas (notches, dynamic islands) using `react-native-safe-area-context`.
+Use `Platform.select({})` and `react-native-safe-area-context` to respect device constraints.
 
-## 2. Tech Stack & Compatibility (STRICT)
-
-The mobile ecosystem has strict version requirements distinct from the web.
-
-- **Framework**: Expo SDK 52 (React Native 0.76).
-- **Styling**: **NativeWind v4** (Requires Tailwind CSS v3 Compatibility).
-  - **WARNING**: Do NOT upgrade to Tailwind v4 until NativeWind v5 is fully stable and approved.
-  - Use `className` prop for styling.
-  - Use `gl-react` or `react-native-skia` for high-performance graphics, *not* HTML Canvas.
-- **Navigation**: Expo Router (file-based routing similar to Next.js).
-
-## 3. React Native Best Practices
-
-### A. List Performance (Critical)
-- **Problem**: Mobile devices have limited memory and CPU compared to desktops.
-- **Solution**: ALWAYS use `FlashList` (from `@shopify/flash-list`) instead of `FlatList` for long lists.
-- **Do not** render massive lists of components without virtualization.
-
-### B. Animations
-- **Use `react-native-reanimated`** for 60/120fps UI thread animations.
-- **Avoid** `Animated` from react-native core for complex gestures.
-- **Avoid** JS-driven animations that block the bridge.
-
-### C. Bundle Size & OTA
-- Keep the JS bundle small to ensure fast Over-The-Air updates.
-- Lazy load heavy screens or features not immediately required on launch.
-
-## 4. UI Library Protocol
-
-- **Location**: Shared UI components live in `client/react-native/ui`.
-- **Usage**: Import from `@quanux/ui`.
-- **Pattern**: When creating a new primitive, stick to the `shadcn` pattern:
-  1. Define primitive in `ui/src/components/ui/[name].tsx`.
-  2. Export via `ui/src/index.ts`.
-  3. Ensure it works with NativeWind class names.
-
-## 5. Directory Structure
-- `app/`: Expo Router pages.
-- `components/`: Feature-specific components.
-- `assets/`: Images/Fonts.
-- `constants/`: App-wide constants (colors, config).
+### [RULE 3] Performance
+-   **Lists**: ALWAYS use `FlashList` (from `@shopify/flash-list`) instead of `FlatList`.
+-   **Graphics**: Use `react-native-skia` for high-performance graphics.
+-   **Animations**: `react-native-reanimated` ONLY. No JS-driven animations.

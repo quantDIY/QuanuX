@@ -1,0 +1,45 @@
+---
+description: Design System Rules for converting QuanuX Figma designs to React Native code.
+globs: client/react-native/**/*
+---
+
+# QuanuX Design System Rules (React Native)
+
+## 1. Token Definitions
+- **Colors/Spacing**: Handled via **NativeWind v4** (Tailwind CSS v3 compatibility).
+- **Theme**: Defined in `client/react-native/mobile/tailwind.config.js` (and siblings).
+- **Dark Mode**: Supported via `dark:` variant.
+
+## 2. Component Library
+- **Location**: `client/react-native/ui/src/components/ui`.
+- **Import**: `import { Button, Text, ... } from '@quanux/ui';`
+- **Pattern**: Shadcn-like primitives wrapped for Native.
+- **Iconography**: `lucide-react-native`.
+
+## 3. Frameworks
+- **Core**: React Native 0.76 + Expo SDK 52.
+- **Styling**: `nativewind/babel` preset. Use `className` prop on `View`, `Text`, `Image`.
+- **Navigation**: `expo-router` (File-based routing in `app/`).
+
+## 4. Styling Approach
+- **Methodology**: Utility-first (Tailwind).
+- **Responsive**:
+    - Mobile: Default.
+    - Tablet/Desktop: `md:`, `lg:` prefixes.
+    - Platform-specific: `ios:`, `android:`, `web:`.
+- **Layout**: Flexbox (default in RN). `flex-1`, `flex-row`, `justify-center`, `items-center`.
+
+## 5. Specific Constraints
+- **Do not use HTML tags** (`div`, `span`, `h1`). Use `View`, `Text`.
+- **Do not use `100vh` / `100vw`**. Use `flex-1` or `Dimensions`.
+- **Text**: Must be wrapped in `<Text>`.
+- **Lists**: Use `<FlashList>` (from `@shopify/flash-list`) for scrolling lists.
+
+## 6. Project Structure
+```text
+client/react-native/[target]/
+├── app/                 # Expo Router screens
+├── components/          # Local components
+├── assets/              # Static assets
+└── tailwind.config.js   # Theme config
+```

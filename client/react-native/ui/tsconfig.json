@@ -1,7 +1,19 @@
 {
-    "extends": "../../client/tsconfig.json",
     "compilerOptions": {
+        "target": "esnext",
+        "module": "esnext",
+        "lib": [
+            "esnext"
+        ],
+        "allowJs": true,
         "jsx": "react-jsx",
+        "noEmit": true,
+        "strict": true,
+        "moduleResolution": "bundler",
+        "allowImportingTsExtensions": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "skipLibCheck": true,
         "baseUrl": ".",
         "paths": {
             "@/*": [

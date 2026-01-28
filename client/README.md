@@ -14,7 +14,7 @@ The QuanuX client repository is architecturally separated into two distinct ecos
   - Optimized for mouse/keyboard and extensive data visualization.
 
 ### 2. `client/react-native` (Mobile & Devices)
-**Target:** iOS, Android, Car, Watch, TV, Vision Pro.
+**Target:** iOS, Android, Car, Watch, TV, Vision Pro, Mega Displays, Tablets.
 - **Core Technology:** React Native, Expo SDK 52.
 - **Styling:** **NativeWind v4** (compatibility mode requiring Tailwind CSS v3).
 - **Shared Code:** `client/react-native/ui` (Universal UI components adapted for Native).
