@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 from typing import Dict, Any
 import openai
-import google.generativeai as genai
+# import google.generativeai as genai (Deprecated)
 from server.security.secrets import KeyringBackend
 
 class StrategyBuilder:
@@ -53,10 +53,11 @@ IMPORTANT: 'sizing.py' MUST define a class inheriting from 'PositionSizingModule
 """
         return prompt
 
-    def generate_strategy(self, answers: Dict[str, Any], api_key: str = None, provider: str = "openai") -> Dict[str, str]:
+    def generate_strategy(self, answers: Dict[str, Any], api_key: str = None, provider: str = "openai", model_name: str = None) -> Dict[str, str]:
         """
         Orchestrates the generation flow.
         Providers: "openai" (default), "gemini"
+        Model Name: Optional override (e.g. "gemini-1.5-pro", "gpt-3.5-turbo").
         """
         # 1. Construct Prompt
         prompt = self.construct_prompt(answers)
@@ -86,15 +87,21 @@ IMPORTANT: 'sizing.py' MUST define a class inheriting from 'PositionSizingModule
             if not real_key:
                 raise ValueError("Gemini API Key not found. Please add QUANUX_GEMINI_API_KEY to secrets.")
 
-            genai.configure(api_key=real_key)
-            model = genai.GenerativeModel('gemini-3-flash-preview')
-            
             try:
+                from google import genai
+                from google.genai import types
+
+                client = genai.Client(api_key=real_key)
+                
                 # Force JSON structure in prompt
                 json_prompt = prompt + "\n\nIMPORTANT: Output ONLY valid JSON."
-                response = model.generate_content(
-                    json_prompt,
-                    generation_config=genai.types.GenerationConfig(
+                
+                target_model = model_name or 'gemini-2.0-flash'
+                
+                response = client.models.generate_content(
+                    model=target_model, 
+                    contents=json_prompt,
+                    config=types.GenerateContentConfig(
                         response_mime_type="application/json"
                     )
                 )
@@ -124,9 +131,11 @@ IMPORTANT: 'sizing.py' MUST define a class inheriting from 'PositionSizingModule
             
             print(f"DEBUG: Calling OpenAI with Prompt length {len(prompt)}")
             
+            target_model = model_name or "gpt-4o"
+            
             try:
                 completion = client.chat.completions.create(
-                    model="gpt-4o",
+                    model=target_model,
                     messages=[
                         {"role": "system", "content": "You are an expert Python algorithmic trading developer. Output only valid JSON."},
                         {"role": "user", "content": prompt}

@@ -25,7 +25,8 @@ async def generate_strategy(request: StrategyRequest):
     result = builder.generate_strategy(
         answers=request.requirements, 
         api_key=request.api_key,
-        provider=request.provider
+        provider=request.provider,
+        model_name=request.model
     )
     
     # Format the response

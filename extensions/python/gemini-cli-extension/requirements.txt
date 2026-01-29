@@ -1,5 +1,5 @@
 mcp
-google-generativeai
+google-genai
 openai
 passlib
 bcrypt
