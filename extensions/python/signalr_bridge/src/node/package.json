@@ -7,9 +7,9 @@
     "start": "node ./index.mjs"
   },
   "dependencies": {
-    "@microsoft/signalr": "^8.0.0",
-    "cors": "^2.8.5",
+    "@microsoft/signalr": "^8.0.17",
+    "cors": "^2.8.6",
     "express": "^5.2.1",
-    "ws": "^8.18.3"
+    "ws": "^8.19.0"
   }
 }

@@ -26,23 +26,23 @@
         "@rn-primitives/tabs": "^1.2.0",
         "@rn-primitives/toggle": "^1.2.0",
         "@rn-primitives/tooltip": "^1.2.0",
-        "class-variance-authority": "^0.7.0",
+        "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "lucide-react-native": "^0.314.0",
-        "nativewind": "^4.1.23",
-        "react-native-reanimated": "~3.16.1",
-        "react-native-screens": "^3.29.0",
-        "tailwind-merge": "^2.3.0",
-        "tailwindcss": "^3.4.17"
+        "nativewind": "^4.2.1",
+        "react-native-reanimated": "~3.16.7",
+        "react-native-screens": "^3.37.0",
+        "tailwind-merge": "^2.6.0",
+        "tailwindcss": "^3.4.19"
     },
     "devDependencies": {
-        "@types/react": "^18.3.3",
+        "@types/react": "^18.3.27",
         "@types/react-native": "^0.73.0",
-        "@typescript-eslint/eslint-plugin": "^7.0.0",
-        "@typescript-eslint/parser": "^7.0.0",
-        "eslint": "^8.57.0",
-        "eslint-plugin-react": "^7.33.2",
-        "eslint-plugin-react-hooks": "^4.6.0",
-        "typescript": "^5.5.3"
+        "@typescript-eslint/eslint-plugin": "^7.18.0",
+        "@typescript-eslint/parser": "^7.18.0",
+        "eslint": "^8.57.1",
+        "eslint-plugin-react": "^7.37.5",
+        "eslint-plugin-react-hooks": "^4.6.2",
+        "typescript": "^5.9.3"
     }
 }

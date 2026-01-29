@@ -8,13 +8,13 @@
         "lint": "eslint ."
     },
     "dependencies": {
-        "graphql": "^16.8.1",
-        "graphql-ws": "^5.16.0",
-        "urql": "^4.0.0",
-        "wonka": "^6.3.4"
+        "graphql": "^16.12.0",
+        "graphql-ws": "^5.16.2",
+        "urql": "^4.2.2",
+        "wonka": "^6.3.5"
     },
     "devDependencies": {
-        "typescript": "^5.5.3",
-        "@types/node": "^22.0.0"
+        "@types/node": "^22.19.7",
+        "typescript": "^5.9.3"
     }
 }
