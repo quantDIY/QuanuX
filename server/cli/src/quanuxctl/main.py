@@ -5,7 +5,7 @@ Unified Developer CLI.
 """
 import typer
 from rich.console import Console
-from .commands import secrets, bridge, skills, extensions, node, storage, indicators, module, vcs, dashboard, topstepx
+from .commands import secrets, bridge, skills, extensions, node, storage, indicators, module, vcs, dashboard, topstepx, geminicli
 from . import __version__
 
 app = typer.Typer(
@@ -51,6 +51,9 @@ app.add_typer(dashboard.app, name="d", help="Alias for dashboard", hidden=True)
 
 app.add_typer(topstepx.app, name="topstepx", help="Manage TopstepX Extension.")
 app.add_typer(topstepx.app, name="ts", help="Alias for topstepx", hidden=True)
+
+app.add_typer(geminicli.app, name="geminicli", help="Manage Gemini CLI Integration.")
+app.add_typer(geminicli.app, name="gemini", help="Alias for geminicli", hidden=True)
 
 
 @app.command()
