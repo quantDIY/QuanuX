@@ -544,7 +544,7 @@ impl<T: TransparentPtrType> PtrSlice<T> {
 
             ptr::write(
                 ptr.add(len),
-                Ptr::from(ptr::null_mut::<<T as GlibPtrDefault>::GlibType>()),
+                ptr::null_mut(),
             );
 
             PtrSlice {
@@ -781,7 +781,7 @@ impl<T: TransparentPtrType> PtrSlice<T> {
 
             ptr::write(
                 self.ptr.as_ptr().add(self.len),
-                Ptr::from(ptr::null_mut::<<T as GlibPtrDefault>::GlibType>()),
+                ptr::null_mut(),
             );
         }
     }
@@ -811,7 +811,7 @@ impl<T: TransparentPtrType> PtrSlice<T> {
 
             ptr::write(
                 self.ptr.as_ptr().add(self.len),
-                Ptr::from(ptr::null_mut::<<T as GlibPtrDefault>::GlibType>()),
+                ptr::null_mut(),
             );
         }
     }
@@ -831,7 +831,7 @@ impl<T: TransparentPtrType> PtrSlice<T> {
 
             ptr::write(
                 self.ptr.as_ptr().add(self.len),
-                Ptr::from(ptr::null_mut::<<T as GlibPtrDefault>::GlibType>()),
+                ptr::null_mut(),
             );
         }
     }
@@ -852,7 +852,7 @@ impl<T: TransparentPtrType> PtrSlice<T> {
 
             ptr::write(
                 self.ptr.as_ptr().add(self.len),
-                Ptr::from(ptr::null_mut::<<T as GlibPtrDefault>::GlibType>()),
+                ptr::null_mut(),
             );
 
             item
@@ -874,7 +874,7 @@ impl<T: TransparentPtrType> PtrSlice<T> {
 
             ptr::write(
                 self.ptr.as_ptr().add(self.len),
-                Ptr::from(ptr::null_mut::<<T as GlibPtrDefault>::GlibType>()),
+                ptr::null_mut(),
             );
 
             Some(item)
@@ -898,7 +898,7 @@ impl<T: TransparentPtrType> PtrSlice<T> {
                 ptr::drop_in_place::<T>(p as *mut T);
                 ptr::write(
                     p,
-                    Ptr::from(ptr::null_mut::<<T as GlibPtrDefault>::GlibType>()),
+                    ptr::null_mut(),
                 );
             }
         }

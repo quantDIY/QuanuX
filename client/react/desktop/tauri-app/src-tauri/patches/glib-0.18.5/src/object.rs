@@ -463,11 +463,9 @@ impl<'a> ToGlibPtr<'a, *mut gobject_ffi::GObject> for ObjectRef {
 }
 
 #[doc(hidden)]
-impl FromGlibPtrNone<*mut gobject_ffi::GObject> for ObjectRef {
     #[inline]
     unsafe fn from_glib_none(ptr: *mut gobject_ffi::GObject) -> Self {
         debug_assert!(!ptr.is_null());
-        debug_assert_ne!((*ptr).ref_count, 0);
 
         // Attention: This takes ownership of floating references!
         Self {
@@ -490,7 +488,6 @@ impl FromGlibPtrFull<*mut gobject_ffi::GObject> for ObjectRef {
     #[inline]
     unsafe fn from_glib_full(ptr: *mut gobject_ffi::GObject) -> Self {
         debug_assert!(!ptr.is_null());
-        debug_assert_ne!((*ptr).ref_count, 0);
 
         Self {
             inner: ptr::NonNull::new_unchecked(ptr),
@@ -503,7 +500,6 @@ impl FromGlibPtrBorrow<*mut gobject_ffi::GObject> for ObjectRef {
     #[inline]
     unsafe fn from_glib_borrow(ptr: *mut gobject_ffi::GObject) -> Borrowed<Self> {
         debug_assert!(!ptr.is_null());
-        debug_assert_ne!((*ptr).ref_count, 0);
 
         Borrowed::new(Self {
             inner: ptr::NonNull::new_unchecked(ptr),

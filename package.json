@@ -1,9 +1,9 @@
 {
   "dependencies": {
-    "corepack": "^0.34.2"
+    "corepack": "^0.34.6"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.17",
+    "@tailwindcss/postcss": "^4.1.18",
     "json-schema-to-typescript": "^15.0.4"
   },
   "pnpm": {
@@ -15,7 +15,8 @@
       "path-to-regexp@6": "6.3.0",
       "send": ">=0.19.0",
       "hono": "4.11.7",
-      "tar": ">=7.5.4",
+      "tar": ">=7.5.7",
+      "eslint": ">=9.26.0",
       "lodash": ">=4.17.23"
     },
     "peerDependencyRules": {

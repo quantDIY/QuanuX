@@ -33,6 +33,9 @@ pub trait BoxedType: StaticType + Clone + Sized + 'static {
 /// [`Boxed!`]: ../../derive.Boxed.html
 pub fn register_boxed_type<T: BoxedType>() -> crate::Type {
     unsafe extern "C" fn boxed_copy<T: BoxedType>(v: ffi::gpointer) -> ffi::gpointer {
+        if v.is_null() {
+            return v;
+        }
         let v = &*(v as *mut T);
         let copy = Box::new(v.clone());
 
