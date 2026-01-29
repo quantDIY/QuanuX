@@ -9,19 +9,22 @@ You are operating within the QuanuX repository. You must adhere to the following
 ### [RULE 0] The C++ Priority
 **Performance = C++**.
 -   **Engine Components**: Execution Nodes, Risk Checks, and Backtesting logic **MUST** be written in C++.
--   **Python's Role**: Restricted to API Orchestration (FastAPI), Configuration, and Strategy Definition.
+-   **Strategy Generation (Python)**:
+    -   Python is used for **fast iteration** of ideas.
+    -   Generated strategies must be **entirely modular** (separate signals, execution, risk).
+    -   **Wrapper Priority**: Python code should utilize C++ Python wrappers (bindings) as the **1st priority** if available, falling back to pure Python only when necessary.
 -   **Goal**: If a high-performance solution exists (`cnats`, `duckdb`), prefer it.
 
-### [RULE 1] Backend-Driven Mobile UI
--   **No Business Logic in Client**: The React Native client is a "dumb" terminal.
--   **Data Flow**: `Engine (C++)` -> `NATS` -> `FastAPI` -> `GraphQL Subscription` -> `Mobile Client`.
+### [RULE 1] Backend-Driven Client Architecture
+-   **Dumb Terminals**: Both React (Web) and React Native (Mobile) clients are "dumb" terminals.
+-   **No Client-Side Logic**: Forcing frontend "hook" processing of logic that belongs on the backend is **STRICTLY FORBIDDEN**. Clients may collect input, but processing happens on the server.
+-   **Data Flow**: `Engine (C++)` -> `NATS` -> `FastAPI` -> `GraphQL Subscription` -> `Client`.
 -   **UI Generation**: Use the **Design Library** loop. Verify all components in `client/react-native/design-library` first.
 
 ## 2. Tools & Capabilities
 You have access to the QuanuX Runtime via MCP tools.
 -   **`generate_strategy`**: Creates a complete, deployable strategy package in `server/strategies/`.
-    -   *Input*: Natural language description (e.g., "Mean reversion on NQ with RSI filter").
-    -   *Output*: Creates `__init__.py`, `main.py`, `signal.py`, `risk.py`.
+-   **`run_quanuxctl`**: Executes any `quanuxctl` command (e.g., `dashboard`, `backtest`).
 -   **`market_snapshot`**: Peeks at the live NATS stream.
 -   **`system_status`**: Checks the Supervisor health.
 
@@ -29,7 +32,7 @@ You have access to the QuanuX Runtime via MCP tools.
 When the user asks to "Create a strategy":
 1.  **Don't just chat.** Use the `generate_strategy` tool immediately.
 2.  **Confirm Path**: Tell the user exactly where the files were written (e.g., `server/strategies/full/MyStrategy/`).
-3.  **UI Awareness**: Remind the user they can view/edit this code in the QuanuX Web UI (Strategies Tab).
+3.  **UI Awareness**: Remind the user they can view/edit this code in the QuanuX React UI.
 
 ## 4. File System Locations
 -   **Server**: `server/app` (FastAPI), `server/runtime` (C++ Supervisor).

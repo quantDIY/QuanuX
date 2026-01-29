@@ -55,6 +55,40 @@ async def generate_strategy(description: str, name: str = "NewStrategy", broker:
         return f"Error generating strategy: {str(e)}"
 
 @mcp.tool()
+async def run_quanuxctl(command: str) -> str:
+    """
+    Run a CLI command using the quanuxctl utility.
+    
+    Args:
+        command: The command arguments (e.g. "dashboard", "backtest --fast", "extensions list").
+    """
+    try:
+        # Construct path to quanuxctl/main.py
+        cli_path = PROJECT_ROOT / "quanuxctl" / "main.py"
+        
+        cmd = ["python3", str(cli_path)] + command.split()
+        
+        proc = await asyncio.create_subprocess_exec(
+            *cmd,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+            cwd=str(PROJECT_ROOT) # Run from root
+        )
+        
+        stdout, stderr = await proc.communicate()
+        
+        output = stdout.decode()
+        error = stderr.decode()
+        
+        if proc.returncode != 0:
+            return f"Command Failed (Exit {proc.returncode}):\n{error}\n{output}"
+            
+        return f"Output:\n{output}\n{error}"
+
+    except Exception as e:
+        return f"Error executing quanuxctl: {e}"
+
+@mcp.tool()
 async def system_status() -> str:
     """Check the status of the QuanuX Runtime (NATS & Supervisor)."""
     # This is a lightweight check using NatsService
