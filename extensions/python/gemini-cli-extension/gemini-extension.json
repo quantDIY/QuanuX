@@ -1,0 +1,13 @@
+{
+    "name": "quanux-mcp",
+    "version": "1.0.0",
+    "mcpServers": {
+        "quanux": {
+            "command": "python3",
+            "args": [
+                "${extensionPath}/main.py"
+            ],
+            "cwd": "${extensionPath}"
+        }
+    }
+}

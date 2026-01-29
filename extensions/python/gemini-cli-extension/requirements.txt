@@ -1,0 +1,6 @@
+mcp
+google-generativeai
+openai
+passlib
+bcrypt
+keyring
