@@ -42,6 +42,9 @@ pub fn register_boxed_type<T: BoxedType>() -> crate::Type {
         Box::into_raw(copy) as ffi::gpointer
     }
     unsafe extern "C" fn boxed_free<T: BoxedType>(v: ffi::gpointer) {
+        if v.is_null() {
+            return;
+        }
         let v = v as *mut T;
         let _ = Box::from_raw(v);
     }

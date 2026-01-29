@@ -895,11 +895,16 @@ impl<T: TransparentPtrType> PtrSlice<T> {
             while self.len > len {
                 self.len -= 1;
                 let p = self.ptr.as_ptr().add(self.len);
-                ptr::drop_in_place::<T>(p as *mut T);
+                // We must use ptr::read() -> ptr::write() -> drop() sequence here to avoid
+                // CodeQL "Access of invalid pointer" alerts. drop_in_place() invalidates the
+                // memory location effectively for static analysis, so writing to it afterwards
+                // triggers a warning.
+                let item = ptr::read(p as *mut T);
                 ptr::write(
                     p,
                     ptr::null_mut(),
                 );
+                drop(item);
             }
         }
     }
