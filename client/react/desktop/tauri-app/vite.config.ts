@@ -13,7 +13,7 @@ export default defineConfig({
     },
   },
   server: {
-    port: 5174,         // <- desktop on 5174
+    port: 1420,         // <- desktop on 1420 (Tauri default)
     strictPort: true,   // <- never auto-switch
     proxy: {
       "/api": {

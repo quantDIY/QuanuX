@@ -1,4 +1,9 @@
 {
+  "scripts": {
+    "web": "pnpm --filter @quanux/web dev",
+    "desktop": "pnpm --filter @quanux/desktop-tauri tauri:dev",
+    "desktop:build": "pnpm --filter @quanux/desktop-tauri tauri:build"
+  },
   "dependencies": {
     "corepack": "^0.34.6"
   },
