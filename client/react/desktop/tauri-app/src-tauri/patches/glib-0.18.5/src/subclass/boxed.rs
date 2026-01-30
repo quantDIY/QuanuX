@@ -36,7 +36,7 @@ pub fn register_boxed_type<T: BoxedType>() -> crate::Type {
         if v.is_null() {
             return v;
         }
-        let v = &*(v as *mut T);
+        let v = &*(v as *const T);
         let copy = Box::new(v.clone());
 
         Box::into_raw(copy) as ffi::gpointer

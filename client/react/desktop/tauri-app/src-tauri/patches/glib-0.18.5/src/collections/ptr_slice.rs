@@ -240,7 +240,7 @@ impl<T: TransparentPtrType> IntoIter<T> {
             if self.len == 0 {
                 &[]
             } else {
-                std::slice::from_raw_parts(self.idx.as_ptr() as *mut T, self.len)
+                std::slice::from_raw_parts(self.idx.as_ptr() as *const T, self.len)
             }
         }
     }
@@ -289,7 +289,7 @@ impl<T: TransparentPtrType> Iterator for IntoIter<T> {
             let p = self.idx.as_ptr();
             self.len -= 1;
             self.idx = ptr::NonNull::new_unchecked(p.add(1));
-            Some(ptr::read(p as *mut T))
+            Some(ptr::read(p as *const T))
         }
     }
 
@@ -309,7 +309,7 @@ impl<T: TransparentPtrType> Iterator for IntoIter<T> {
             None
         } else {
             self.len -= 1;
-            Some(unsafe { ptr::read(self.idx.as_ptr().add(self.len) as *mut T) })
+            Some(unsafe { ptr::read(self.idx.as_ptr().add(self.len) as *const T) })
         }
     }
 }
@@ -321,7 +321,7 @@ impl<T: TransparentPtrType> DoubleEndedIterator for IntoIter<T> {
             None
         } else {
             self.len -= 1;
-            Some(unsafe { ptr::read(self.idx.as_ptr().add(self.len) as *mut T) })
+            Some(unsafe { ptr::read(self.idx.as_ptr().add(self.len) as *const T) })
         }
     }
 }

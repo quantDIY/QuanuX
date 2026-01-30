@@ -88,7 +88,7 @@ unsafe extern "C" fn property<T: ObjectImpl>(
     value: *mut gobject_ffi::GValue,
     pspec: *mut gobject_ffi::GParamSpec,
 ) {
-    let instance = &*(obj as *mut T::Instance);
+    let instance = &*(obj as *const T::Instance);
     let imp = instance.imp();
 
     let v = imp.property(id as usize, &from_glib_borrow(pspec));
@@ -112,7 +112,7 @@ unsafe extern "C" fn set_property<T: ObjectImpl>(
     value: *mut gobject_ffi::GValue,
     pspec: *mut gobject_ffi::GParamSpec,
 ) {
-    let instance = &*(obj as *mut T::Instance);
+    let instance = &*(obj as *const T::Instance);
     let imp = instance.imp();
     imp.set_property(
         id as usize,
@@ -122,7 +122,7 @@ unsafe extern "C" fn set_property<T: ObjectImpl>(
 }
 
 unsafe extern "C" fn constructed<T: ObjectImpl>(obj: *mut gobject_ffi::GObject) {
-    let instance = &*(obj as *mut T::Instance);
+    let instance = &*(obj as *const T::Instance);
     let imp = instance.imp();
 
     imp.constructed();
@@ -132,7 +132,7 @@ unsafe extern "C" fn notify<T: ObjectImpl>(
     obj: *mut gobject_ffi::GObject,
     pspec: *mut gobject_ffi::GParamSpec,
 ) {
-    let instance = &*(obj as *mut T::Instance);
+    let instance = &*(obj as *const T::Instance);
     let imp = instance.imp();
     imp.notify(&from_glib_borrow(pspec));
 }
@@ -142,13 +142,13 @@ unsafe extern "C" fn dispatch_properties_changed<T: ObjectImpl>(
     n_pspecs: u32,
     pspecs: *mut *mut gobject_ffi::GParamSpec,
 ) {
-    let instance = &*(obj as *mut T::Instance);
+    let instance = &*(obj as *const T::Instance);
     let imp = instance.imp();
     imp.dispatch_properties_changed(Slice::from_glib_borrow_num(pspecs, n_pspecs as _));
 }
 
 unsafe extern "C" fn dispose<T: ObjectImpl>(obj: *mut gobject_ffi::GObject) {
-    let instance = &*(obj as *mut T::Instance);
+    let instance = &*(obj as *const T::Instance);
     let imp = instance.imp();
 
     imp.dispose();
