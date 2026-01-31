@@ -336,8 +336,8 @@ def run_extension(name: str):
         console.print(f"[red]Error running extension: {e}[/red]")
 
 @app.command("install")
-def install_extension(name: str):
-    """Build/Install the extension (runs build.sh)."""
+def install_extension(name: str, version: str = typer.Option(None, "--version", "-v")):
+    """Build/Install the extension (runs build.sh). Use -v to specify version."""
     ext_path = find_extension_path(name)
     if not ext_path:
         console.print(f"[red]Extension '{name}' not found.[/red]")
@@ -346,10 +346,17 @@ def install_extension(name: str):
     build_script = (ext_path / "build.sh").resolve()
     if build_script.exists():
         console.print(f"[green]Building {name}... from {ext_path}[/green]")
+        
+        # Pass version override if specified
+        env = os.environ.copy()
+        if version:
+            console.print(f"[bold]Target Version: {version}[/bold]")
+            env["QUANUX_EXT_VERSION"] = version
+
         try:
             # Ensure executable
             os.chmod(build_script, 0o755)
-            subprocess.run([str(build_script)], cwd=ext_path.resolve(), check=True)
+            subprocess.run([str(build_script)], cwd=ext_path.resolve(), env=env, check=True)
             console.print(f"[bold green]✓ Build successful[/bold green]")
         except subprocess.CalledProcessError:
             console.print(f"[red]Build failed for {name}[/red]")
@@ -365,6 +372,80 @@ def install_extension(name: str):
             subprocess.run([sys.executable, "-m", "pip", "install", "-r", str(req_file)], check=True)
         except subprocess.CalledProcessError:
              console.print(f"[red]Failed to install requirements[/red]")
+
+@app.command("upgradeable")
+def upgradeable(name: str):
+    """Check for available updates (compares installed version vs upstream tags)."""
+    manifest = load_manifest(name)
+    if not manifest:
+        console.print(f"[red]Extension '{name}' not found.[/red]")
+        return
+
+    upstream = manifest.get("upstream_repo")
+    current_version = manifest.get("version", "unknown")
+    
+    if not upstream:
+        console.print(f"[yellow]No upstream_repo defined for {name}. Cannot check for updates.[/yellow]")
+        return
+        
+    console.print(f"Current Version: [cyan]{current_version}[/cyan]")
+    console.print(f"Fetching tags from {upstream}...")
+    
+    try:
+        # Fetch tags via git ls-remote, sort by version
+        result = subprocess.run(
+            ["git", "ls-remote", "--tags", "--refs", "--sort=-v:refname", upstream],
+            capture_output=True, text=True, check=True
+        )
+        # Parse tags (refs/tags/dest/v1.2.3 -> v1.2.3)
+        tags = [line.split("/")[-1] for line in result.stdout.splitlines() if line.strip()]
+        
+        # Simple heuristic: filter tags that look like versions (vX.Y.Z or X.Y.Z)
+        # and take the top 5
+        versions = [t for t in tags if "v" in t or "." in t][:5]
+        
+        console.print("\n[bold]Available Versions (Top 5):[/bold]")
+        for v in versions:
+            if v == current_version or v == f"v{current_version}":
+                 console.print(f"  [green]{v} (Installed)[/green]")
+            else:
+                 console.print(f"  {v}")
+                 
+    except subprocess.CalledProcessError as e:
+        console.print(f"[red]Failed to fetch tags: {e}[/red]")
+
+@app.command("upgrade")
+def upgrade(name: str):
+    """Auto-upgrade to the latest version found upstream."""
+    manifest = load_manifest(name)
+    if not manifest: 
+        console.print(f"[red]Extension '{name}' not found.[/red]")
+        raise typer.Exit(1)
+
+    upstream = manifest.get("upstream_repo")
+    if not upstream:
+        console.print(f"[yellow]No upstream_repo defined. Cannot upgrade.[/yellow]")
+        raise typer.Exit(1)
+        
+    try:
+        # Fetch status to get latest
+        result = subprocess.run(
+            ["git", "ls-remote", "--tags", "--refs", "--sort=-v:refname", upstream],
+            capture_output=True, text=True, check=True
+        )
+        lines = result.stdout.splitlines()
+        if not lines:
+             console.print("[red]No tags found upstream.[/red]")
+             return
+             
+        # Latest is the first one due to sort=-v:refname
+        latest_tag = lines[0].split("/")[-1]
+        
+        console.print(f"[bold green]Upgrading {name} -> {latest_tag}[/bold green]")
+        install_extension(name, version=latest_tag)
+        
+    except subprocess.CalledProcessError as e:
+         console.print(f"[red]Upgrade failed: {e}[/red]")
 
 @app.command("uninstall")
 def uninstall_extension(name: str, force: bool = typer.Option(False, "--force", "-f")):
@@ -386,4 +467,9 @@ def uninstall_extension(name: str, force: bool = typer.Option(False, "--force", 
         console.print(f"[green]Removed build directory for {name}.[/green]")
     else:
         console.print(f"[yellow]No build directory found for {name}.[/yellow]")
+
+@app.command("remove")
+def remove_extension(name: str, force: bool = typer.Option(False, "--force", "-f")):
+    """Alias for uninstall."""
+    uninstall_extension(name, force)
 

@@ -53,7 +53,29 @@ app.add_typer(topstepx.app, name="topstepx", help="Manage TopstepX Extension.")
 app.add_typer(topstepx.app, name="ts", help="Alias for topstepx", hidden=True)
 
 app.add_typer(geminicli.app, name="geminicli", help="Manage Gemini CLI Integration.")
+app.add_typer(geminicli.app, name="geminicli", help="Manage Gemini CLI Integration.")
 app.add_typer(geminicli.app, name="gemini", help="Alias for geminicli", hidden=True)
+
+# Top-level aliases for common extension operations
+@app.command("install")
+def install(name: str, version: str = typer.Option(None, "--version", "-v")):
+    """Install a QuanuX extension (Alias for 'ext install')."""
+    extensions.install_extension(name, version)
+
+@app.command("remove")
+def remove(name: str, force: bool = typer.Option(False, "--force", "-f")):
+    """Remove a QuanuX extension (Alias for 'ext remove')."""
+    extensions.remove_extension(name, force)
+
+@app.command("upgrade")
+def upgrade(name: str):
+    """Auto-upgrade extension (Alias for 'ext upgrade')."""
+    extensions.upgrade(name)
+
+@app.command("upgradeable")
+def upgradeable(name: str):
+    """Check for updates (Alias for 'ext upgradeable')."""
+    extensions.upgradeable(name)
 
 
 @app.command()

@@ -43,14 +43,24 @@ display_name: "Sierra Chart Connector"
 version: "0.0.1"
 runtime: "go" # or "node", "python" (Go preferred)
 command: "./dist/sierra-bridge" # Relative to extension dir
-permissions:
   - "market.data.read"
   - "strategy.execute"
 env:
   - "QUANUX_BRIDGE_KEY" # Injected by quanuxctl
+upstream_repo: "https://github.com/my/repo.git" # (Optional) Enable Package Management
 ```
 
-## 4. Communication Protocol
+## 4. Package Management (Lifecycle)
+
+Extensions can opt-in to managed upgrades by defining `upstream_repo` in `extension.yaml`.
+
+-   **Versioning**: `quanuxctl` will query `git ls-remote --tags` on the upstream repo.
+-   **Build Script**: `quanuxctl` passes `QUANUX_EXT_VERSION` environment variable to `build.sh`.
+    -   Your `build.sh` MUST prioritize this variable over hardcoded versions.
+    -   Example: `VERSION=${QUANUX_EXT_VERSION:-"v1.0.0"}`.
+-   **Commands**: This enables `quanuxctl upgrade`, `upgradeable`, and `install -v`.
+
+## 5. Communication Protocol
 
 ### Inbound (Core -> Extension)
 -   Extensions SHOULD expose an HTTP or gRPC server.
