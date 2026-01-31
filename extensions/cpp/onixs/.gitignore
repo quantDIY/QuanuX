@@ -1,0 +1,12 @@
+# CRITICAL: Proprietary IP Protection
+# The 'vendor' directory is where the commercial SDK is injected at runtime.
+# It MUST NEVER be committed to version control.
+vendor/
+
+# Build artifacts
+build/
+dist/
+*.o
+*.so
+*.dylib
+*.a

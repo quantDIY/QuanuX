@@ -1,0 +1,14 @@
+name: onixs-fix-engine
+display_name: "OnixS C++ FIX Engine"
+version: "4.13.0"
+runtime: cpp
+description: "Proprietary, High-Performance C++ FIX Engine. Requires local injection of SDK via 'quanuxctl integrate'."
+type: proprietary-injection
+injection_requirement: "onixs-sdk-cpp-ubuntu2204"
+links:
+  website: "https://www.onixs.biz"
+env:
+  - ONIXS_LICENSE_DIR
+dependencies:
+  - cmake
+  - g++

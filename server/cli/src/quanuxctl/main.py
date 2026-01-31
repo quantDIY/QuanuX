@@ -5,7 +5,7 @@ Unified Developer CLI.
 """
 import typer
 from rich.console import Console
-from .commands import secrets, bridge, skills, extensions, node, storage, indicators, module, vcs, dashboard, topstepx, geminicli
+from .commands import secrets, bridge, skills, extensions, integrate, node, storage, indicators, module, vcs, dashboard, topstepx, geminicli
 from . import __version__
 
 app = typer.Typer(
@@ -57,6 +57,7 @@ app.add_typer(geminicli.app, name="geminicli", help="Manage Gemini CLI Integrati
 app.add_typer(geminicli.app, name="gemini", help="Alias for geminicli", hidden=True)
 
 # Top-level aliases for common extension operations
+cli.add_command(integrate.integrate)
 @app.command("install")
 def install(name: str, version: str = typer.Option(None, "--version", "-v")):
     """Install a QuanuX extension (Alias for 'ext install')."""
