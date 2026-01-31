@@ -33,11 +33,25 @@
 - [ ] [Feature: System Dashboard (quanuxctl)](https://github.com/quantDIY/QuanuX/issues/20) `label:feature,cli`
 - [ ] [Feature: VCS Connectors (quanuxctl)](https://github.com/quantDIY/QuanuX/issues/21) `label:feature,cli`
 - [ ] [Feature: UI/UX General Enhancements](https://github.com/quantDIY/QuanuX/issues/22) `label:enhancement,ui`
-- [ ] [Feature: Generate React Native Client Target UIs](https://github.com/quantDIY/QuanuX/issues/23) `label:feature,ui,mobile`
-- [x] [Documentation: Deep Man Page Updates](https://github.com/quantDIY/QuanuX/issues/16) `label:documentation`
+- [x] [Feature: Generate React Native Client Target UIs] (11 Targets Scaffolding Complete) `label:feature,ui,mobile`
+- [x] [Documentation: Deep Man Page Updates] `label:documentation`
 
 ### Verified / Done
 - [x] [Testing: Confirm functionality of Figma MCP server with QuanuX MCP](https://github.com/quantDIY/QuanuX/issues/2) `label:testing`
+- [x] [Architecture: Polyglot Extensions] Established `extensions/{cpp,go,node,python}` structure.
+- [x] [Architecture: Agent Skills Protocol] Implemented `server/skills` and MCP loader.
+- [x] [Feature: QuickFIX Engine] Verified C++ Engine + Python Bindings + Go Integration.
+- [x] [Feature: DuckDB Ecosystem] C++ & Python Connectors (Databento -> DuckDB), MotherDuck Integration.
+- [x] [Feature: Rithmic Integration] Full Protocol Impl (Go/C++) & Python Wrappers.
+- [x] [Feature: Topstep Extension] Native API conversion to standalone Extension (`extensions/python/topstep`).
+- [x] [Feature: Execution Engine] Hybrid Go/C++ Node, Portable/Deployable (Push Deployment).
+- [x] [Infrastructure: CNATS] Full C++ NATS Client Integration.
+- [x] [API: GraphQL] Strawberry implementation.
+- [x] [DevEx: IDE Integrations] Visual Studio Code, JetBrains support.
+- [x] [DevEx: Man Pages] `man quanuxctl` documentation system.
+- [x] [CLI: Package Management] `quanuxctl` expansion (install/upgrade extensions).
+- [x] [Feature: Gemini CLI] Decoupled to `quanux-gemini-cli-mcp`.
+- [x] [Security: Hardening] Patched `undici`, `node-tar`, and Rust `unsafe` pointers.
 
 ## 💡 Brain Dump Area
 *Raw notes. Paste anything here.*
