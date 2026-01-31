@@ -4,7 +4,7 @@ version: 1.15.1
 runtime: cpp
 description: "High-performance C++ FIX engine with Python bindings. Compliant with Rule 0 (Performance = C++)."
 upstream_repo: "https://github.com/quickfix/quickfix.git"
-command: "scripts/test_import.py" # Placeholder for testing
+command: "scripts/test_import.py"  # Placeholder for testing
 env:
   - FIX_CONFIG_PATH
 dependencies:
