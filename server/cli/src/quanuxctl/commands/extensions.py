@@ -468,6 +468,79 @@ def uninstall_extension(name: str, force: bool = typer.Option(False, "--force", 
     else:
         console.print(f"[yellow]No build directory found for {name}.[/yellow]")
 
+@app.command("enhance")
+def enhance_extension(
+    name: str,
+    allocator: str = typer.Option("system", help="Memory allocator: system, jemalloc, mimalloc"),
+    logger: str = typer.Option("file", help="Logging strategy: file, async, null")
+):
+    """Trigger a 'Turbo' build with specialized performance options."""
+    ext_path = find_extension_path(name)
+    if not ext_path:
+        console.print(f"[red]Extension '{name}' not found.[/red]")
+        raise typer.Exit(1)
+
+    build_script = (ext_path / "build.sh").resolve()
+    if not build_script.exists():
+        console.print(f"[yellow]No build.sh found for {name}. Cannot enhance.[/yellow]")
+        return
+
+    console.print(f"[bold magenta]Enhancing {name} (Turbo Mode)[/bold magenta]")
+    console.print(f"  Allocator: [cyan]{allocator}[/cyan]")
+    console.print(f"  Logger:    [cyan]{logger}[/cyan]")
+
+    env = os.environ.copy()
+    env["QUANUX_TURBO"] = "ON"
+    env["QUANUX_ALLOCATOR"] = allocator
+    env["QUANUX_LOGGER"] = logger
+
+    try:
+        os.chmod(build_script, 0o755)
+        subprocess.run([str(build_script)], cwd=ext_path.resolve(), env=env, check=True)
+        console.print(f"[bold green]✓ Enhancement complete![/bold green]")
+    except subprocess.CalledProcessError:
+        console.print(f"[red]Enhancement build failed.[/red]")
+        raise typer.Exit(1)
+
+@app.command("integrate")
+def integrate_extension(
+    name: str,
+    path: Path = typer.Option(..., "--path", "-p", help="Path to local SDK folder", exists=True, file_okay=False, dir_okay=True)
+):
+    """Inject a local proprietary SDK into the centralized extensions/sdks repository."""
+    import shutil
+    
+    # 1. Determine target SDK name based on extension
+    # Mapping could be in manifest, but for now strict convention
+    sdk_map = {
+        "tws_api": "twsapi",
+        "onixs_fix": "onixs"
+    }
+    
+    target_sdk_name = sdk_map.get(name)
+    if not target_sdk_name:
+        # Default to extension name if not mapped
+        target_sdk_name = name
+
+    # 2. Centralized SDK Path
+    sdk_root = EXTENSIONS_DIR / "sdks" / target_sdk_name
+    
+    if sdk_root.exists():
+        confirm = typer.confirm(f"SDK '{target_sdk_name}' already exists at {sdk_root}. Overwrite?")
+        if not confirm:
+            return
+        shutil.rmtree(sdk_root)
+
+    # 3. Copy
+    console.print(f"[blue]Copying SDK from {path} to {sdk_root}...[/blue]")
+    try:
+        shutil.copytree(path, sdk_root)
+        console.print(f"[green]✓ SDK integrated successfully.[/green]")
+        console.print(f"Extensions can now link against: {sdk_root}")
+    except Exception as e:
+        console.print(f"[red]Integration failed: {e}[/red]")
+        raise typer.Exit(1)
+
 @app.command("remove")
 def remove_extension(name: str, force: bool = typer.Option(False, "--force", "-f")):
     """Alias for uninstall."""

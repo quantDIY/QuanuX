@@ -57,7 +57,8 @@ app.add_typer(geminicli.app, name="geminicli", help="Manage Gemini CLI Integrati
 app.add_typer(geminicli.app, name="gemini", help="Alias for geminicli", hidden=True)
 
 # Top-level aliases for common extension operations
-cli.add_command(integrate.integrate)
+# Top-level aliases for common extension operations
+# cli.add_command(integrate.integrate) # REMOVED: Broken and redundant. Use 'quanuxctl ext integrate'
 @app.command("install")
 def install(name: str, version: str = typer.Option(None, "--version", "-v")):
     """Install a QuanuX extension (Alias for 'ext install')."""

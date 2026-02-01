@@ -1,0 +1,13 @@
+name: ibkr-fix-adapter
+display_name: "IBKR FIX Adapter"
+version: "0.1.0"
+runtime: cpp
+description: "Specialized adapter for Interactive Brokers connectivity via QuickFIX. Supports FIX 4.2 with IBKR custom tags."
+type: adapter
+dependencies:
+  - quickfix-engine
+links:
+  spec: "https://www.interactivebrokers.com/campus/ibkr-api-page/fix-api/"
+env:
+  - IBKR_GATEWAY_HOST
+  - IBKR_GATEWAY_PORT

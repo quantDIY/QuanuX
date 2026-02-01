@@ -52,6 +52,8 @@
 - [x] [CLI: Package Management] `quanuxctl` expansion (install/upgrade extensions).
 - [x] [Feature: Gemini CLI] Decoupled to `quanux-gemini-cli-mcp`.
 - [x] [Security: Hardening] Patched `undici`, `node-tar`, and Rust `unsafe` pointers.
+- [x] [Feature: IBKR Ecosystem] Tri-Pillar Architecture (`ibkr_fix`, `tws_api`, `ibkr_web`) + Turbo Mode (`quanuxctl enhance`).
+- [x] [Feature: Centralized SDKs] Implemented `extensions/sdks/` repository and `quanuxctl integrate`.
 
 ## 💡 Brain Dump Area
 *Raw notes. Paste anything here.*

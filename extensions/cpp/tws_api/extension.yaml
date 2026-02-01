@@ -1,0 +1,17 @@
+name: tws-api-adapter
+display_name: "TWS API Adapter"
+version: "0.2.0"
+runtime: polyglot # Supports both C++ and Python
+runtimes:
+  - cpp
+  - python
+description: "Native C++ adapter for TWS API with Python bindings."
+type: proprietary-injection
+injection_requirement: "twsapi_macunix"
+links:
+  website: "https://interactivebrokers.github.io/tws-api/"
+env:
+  - TWS_API_DIR
+dependencies:
+  - cmake
+  - g++

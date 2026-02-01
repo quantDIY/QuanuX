@@ -1,0 +1,12 @@
+name: ibkr-web-api
+display_name: "IBKR Web API (Client Portal)"
+version: "1.0.0"
+runtime: python
+description: "REST API Client for IBKR Client Portal Gateway. Useful for account data and non-HFT operations."
+type: adapter
+dependencies:
+  - python3
+env:
+  - IBKR_CP_HOST
+  - IBKR_CP_PORT
+command: "src/ClientPortalClient.py"
