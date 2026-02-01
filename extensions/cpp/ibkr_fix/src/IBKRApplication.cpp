@@ -1,5 +1,4 @@
 #include "IBKRApplication.h"
-#include "quickfix/Session.h"
 #include <iostream>
 
 namespace QuanuX {

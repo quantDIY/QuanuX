@@ -1,11 +1,8 @@
 #pragma once
 
-#include <iostream>
 #include <string>
 // Assuming QuickFIX headers are in checking path or we ignore linter for now
 #include "quickfix/Application.h"
-#include "quickfix/FileLog.h"
-#include "quickfix/FileStore.h"
 #include "quickfix/MessageCracker.h"
 
 namespace QuanuX {
