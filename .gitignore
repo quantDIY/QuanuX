@@ -60,6 +60,7 @@ logs/
 *.pid
 *.sock
 # *.lock
+extensions/cpp/deps/
 
 # ---- Redis / NATS / External binaries ----
 server/nats-server/

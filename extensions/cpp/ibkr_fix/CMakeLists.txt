@@ -8,9 +8,15 @@ option(QUANUX_TURBO "Enable High-Performance Optimizations" OFF)
 set(QUANUX_ALLOCATOR "system" CACHE STRING "Memory Allocator (system|jemalloc|mimalloc)")
 set(QUANUX_LOGGER "file" CACHE STRING "Logging Strategy (file|async|null)")
 
-# --- DEPENDENCIES ---
 # QuickFIX Engine (Standard or Turbo enhanced)
-find_package(QuickFIX REQUIRED)
+# Manual configuration since local build doesn't export CMake config
+set(QUICKFIX_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../deps/quickfix")
+set(QUICKFIX_INCLUDE_DIRS "${QUICKFIX_ROOT}/include")
+set(QUICKFIX_LIBRARIES "${QUICKFIX_ROOT}/lib/libquickfix.dylib")
+
+if(NOT EXISTS "${QUICKFIX_INCLUDE_DIRS}")
+    message(FATAL_ERROR "QuickFIX headers not found at ${QUICKFIX_INCLUDE_DIRS}. Please run the QuickFIX build workflow.")
+endif()
 
 # --- USER LIBS HOOK ---
 # Allows users to inject their own math/algo libraries via `user_libs.cmake`
