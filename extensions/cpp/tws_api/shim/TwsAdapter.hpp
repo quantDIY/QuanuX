@@ -1,8 +1,6 @@
 #pragma once
 
-#include "../../common/include/QuanuX/Common.hpp" // Relative path for internal include
-#include <QuanuX/StrategyInterface.hpp>
-#include <iostream>
+#include "../../common/include/QuanuX/Common.hpp"
 #include <string>
 
 // MOCK TWS SDK Types for Linter/Compilation without SDK
@@ -87,7 +85,9 @@ public:
       : osSignal_(2000), client_(this, &osSignal_), host_(host), port_(port),
         clientId_(clientId) {}
 
-  bool connect() { return client_.eConnect(host_.c_str(), port_, clientId_); }
+  bool connect() override {
+    return client_.eConnect(host_.c_str(), port_, clientId_);
+  }
 
   virtual void sendOrder(const QuanuX::Order &order) override {
     // Map QuanuX order to TWS Order/Contract
@@ -120,4 +120,5 @@ private:
   int port_;
   int clientId_;
 };
-} // namespace QuanuX::TwsApi
+} // namespace TwsApi
+} // namespace QuanuX
