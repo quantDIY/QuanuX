@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../common/include/QuanuX/Common.hpp" // Relative path for internal include
+#include "../../common/include/QuanuX/Common.hpp" // Relative path for internal include
 #include <QuanuX/StrategyInterface.hpp>
 #include <iostream>
 #include <string>
