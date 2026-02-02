@@ -39,6 +39,7 @@
 ### Verified / Done
 - [x] [Testing: Confirm functionality of Figma MCP server with QuanuX MCP](https://github.com/quantDIY/QuanuX/issues/2) `label:testing`
 - [x] [Architecture: Polyglot Extensions] Established `extensions/{cpp,go,node,python}` structure.
+- [x] [Architecture: Cython Migration] Converted `indicators`, `tws_api`, `databento`, `duckdb` from Pybind11 to Cython (7x perf boost).
 - [x] [Architecture: Agent Skills Protocol] Implemented `server/skills` and MCP loader.
 - [x] [Feature: QuickFIX Engine] Verified C++ Engine + Python Bindings + Go Integration.
 - [x] [Feature: DuckDB Ecosystem] C++ & Python Connectors (Databento -> DuckDB), MotherDuck Integration.
