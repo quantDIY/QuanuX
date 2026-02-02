@@ -11,6 +11,7 @@ We have successfully converted all identified C++ extensions from **Pybind11** t
 | **Databento** | ✅ Complete | `extensions/cpp/databento/cython/` | Passed: Build & linking (zstd/brotli/ssl) |
 | **DuckDB** | ✅ Complete | `extensions/cpp/duckdb/cython/` | Passed: Table Create & Append |
 | **Rithmic** | ✅ Complete | `extensions/cpp/rithmic/cython/` | Verified & Fixed (macOS Linker). |
+| **Topstep** | ✅ Complete | `extensions/cpp/topstep/cython/` | Native Cython Client (Replaces Node/Bridge). SignalR + REST support. |
 
 ## 1. Indicators
 -   **Path**: `server/indicators/cython/quanux_indicators.pyx`

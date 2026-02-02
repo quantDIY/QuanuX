@@ -16,7 +16,7 @@
 *Synced from GitHub.*
 
 - [x] [Feature: Implement shorthand aliases for all quanuxctl commands](https://github.com/quantDIY/QuanuX/issues/6) `label:feature`
-- [ ] [Refactor: Migrate native TopstepX SignalR integration to a standalone Extension](https://github.com/quantDIY/QuanuX/issues/7) `label:refactor`
+- [x] [Refactor: Migrate native TopstepX SignalR integration to a standalone Extension](https://github.com/quantDIY/QuanuX/issues/7) `label:refactor`
 - [x] [Chore: Prune unused dependencies and package managers (Architecture Cleanup)](https://github.com/quantDIY/QuanuX/issues/8) `label:chore`
 - [ ] [Feature: Fork & Extend TA-Lib for QuanuX (Linux-first, C/CPP, Conda-distributable, Python Wrapper)](https://github.com/quantDIY/QuanuX/issues/9) `label:feature`
 
@@ -44,7 +44,7 @@
 - [x] [Feature: QuickFIX Engine] Verified C++ Engine + Python Bindings + Go Integration.
 - [x] [Feature: DuckDB Ecosystem] C++ & Python Connectors (Databento -> DuckDB), MotherDuck Integration.
 - [x] [Feature: Rithmic Integration] Full Protocol Impl (Go/C++) & Python Wrappers.
-- [x] [Feature: Topstep Extension] Native API conversion to standalone Extension (`extensions/python/topstep`).
+- [x] [Feature: Topstep Extension] Native API (Cython+SignalRCore) standalone Extension (replaces Node bridge).
 - [x] [Feature: Execution Engine] Hybrid Go/C++ Node, Portable/Deployable (Push Deployment).
 - [x] [Infrastructure: CNATS] Full C++ NATS Client Integration.
 - [x] [API: GraphQL] Strawberry implementation.
