@@ -3,28 +3,30 @@ name: DuckDB C++ Extension
 description: Custom C++ bindings for DuckDB focusing on fast data ingestion.
 ---
 
-# DuckDB C++ Extension (`quanux_duckdb`)
+# DuckDB C++ Extension (`duckdb_ext`)
 
-A lightweight wrapper around `duckdb`, exposing the `Appender` API for high-performance row insertion. Designed to interop with other C++ extensions via `PyCapsule`.
+A high-performance Cython wrapper around `duckdb`, exposing the `Appender` API for bulk ingestion. Built using DuckDB amalgamation for maximum portability.
 
 ## Installation
-Run `extensions/cpp/duckdb/build.sh`. Fetches `libduckdb` from source.
+Run `python3 setup.py build_ext --inplace` in `extensions/cpp/duckdb/cython`.
 
 ## Usage
 ```python
-import quanux_duckdb as duckdb
+import duckdb_ext
 
-db = duckdb.DuckDB(":memory:") # or path
-con = duckdb.Connection(db)
+db = duckdb_ext.PyDuckDB(":memory:") # or path
+con = duckdb_ext.PyConnection(db)
 con.query("CREATE TABLE foo (i INT)")
 
-appender = duckdb.Appender(con, "foo")
+appender = duckdb_ext.PyAppender(con, "foo")
 appender.begin_row()
 appender.append_int32(42)
 appender.end_row()
 appender.flush()
 ```
 
-## Interop
-- `appender.get_capsule()` returns a `duckdb_appender` PyCapsule containing the `duckdb::Appender*`. 
-- Pass this to other C++ extensions to allow them to write directly to the DB.
+## Architecture
+- **Language**: Cython (C++17)
+- **Source**: Amalgamation (`duckdb.cpp` + `duckdb.hpp`)
+- **Performance**: Direct C++ calls, no Pybind overhead.
+
