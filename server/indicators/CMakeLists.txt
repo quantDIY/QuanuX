@@ -28,7 +28,5 @@ if(BUILD_TESTING)
 endif()
 
 
-option(BUILD_PYTHON_BINDINGS "Build Python bindings for indicators" ON)
-if(BUILD_PYTHON_BINDINGS)
-    add_subdirectory(pybind)
-endif()
+# Python bindings are now handled via Cython in ./cython/setup.py
+# Run: cd cython && python3 setup.py build_ext --inplace
