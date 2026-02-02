@@ -222,11 +222,11 @@ cdef class TopstepClient:
             response = await client.post(url, json=payload, headers=headers)
         return self._handle_response(response)
 
-    async def search_contracts(self, str search_text="NQ"):
+    async def search_contracts(self, str search_text="NQ", bool live=False):
         """Async REST search contracts"""
         url = f"{self.base_url}/api/Contract/search"
         headers = self._get_headers()
-        payload = {"searchText": search_text} 
+        payload = {"searchText": search_text, "live": live} 
         async with httpx.AsyncClient() as client:
             response = await client.post(url, json=payload, headers=headers)
         return self._handle_response(response)
