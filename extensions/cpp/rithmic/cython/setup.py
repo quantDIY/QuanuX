@@ -11,6 +11,10 @@ sdk_root = os.path.abspath(os.path.join(current_dir, "../sdk"))
 include_dir = os.path.join(sdk_root, "include")
 
 system = sys.platform
+# Fix for Anaconda/Clang linker issue: match platform tag
+if system == "darwin":
+    os.environ["MACOSX_DEPLOYMENT_TARGET"] = "10.15"
+
 req_files = []
 lib_dir = ""
 extra_link_args = []
@@ -36,20 +40,8 @@ if system == "darwin":
     extra_link_args = [
         "-framework", "CoreFoundation",
         "-framework", "SystemConfiguration",
-        "-framework", "Security",
-        # Rithmic Static libs might need this
-        "-Wl,-force_load" 
-        # Actually usually just linking is enough, but sometimes we need specific order.
-        # We will depend on setuptools order.
+        "-framework", "Security"
     ]
-    # On Mac, some Rithmic libs have underscore prefix in filename like lib_api-optimize.a
-    # But -lapi-optimize maps to libapi-optimize.a.
-    # CMakeLists says: lib_api-optimize.a
-    # linker expects -l_api-optimize? No, typically library names exclude 'lib'.
-    # If filename is 'lib_api-optimize.a', then flag is '-l_api-optimize'.
-    
-    # We need to adjust library names based on physical files.
-    # Let's fix library names below.
 
 elif system.startswith("linux"):
     lib_dir = os.path.join(sdk_root, "linux-gnu-3.10.0-x86_64/lib")
@@ -57,11 +49,9 @@ elif system.startswith("linux"):
     libraries.append("dl")
 
 # Correct library names based on CMakeLists
-# libRApiPlus-optimize.a -> RApiPlus-optimize
-# lib_api-optimize.a -> _api-optimize
-# lib_kit-optimize.a -> _kit-optimize
-
 final_libraries = []
+libraries.append("_apipoll-stubs-optimize") # Add missing lib
+
 for lib in libraries:
     if lib == "api-optimize":
         final_libraries.append("_api-optimize")
