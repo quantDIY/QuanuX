@@ -9,8 +9,8 @@ We have successfully converted all identified C++ extensions from **Pybind11** t
 | **Indicators** | ✅ Complete | `server/indicators/cython/` | Passed: Logic & Performance |
 | **TWS API** | ✅ Complete | `extensions/cpp/tws_api/cython/` | Passed: Connect & Order Send |
 | **Databento** | ✅ Complete | `extensions/cpp/databento/cython/` | Passed: Build & linking (zstd/brotli/ssl) |
-| **DuckDB** | ⏳ Compiling | `extensions/cpp/duckdb/cython/` | Cythonized successfully. Linking with Amalgamation. |
-| **Rithmic** | ✅ Code Complete | `extensions/cpp/rithmic/cython/` | Cythonized. Build requires `libc++` env fix on macOS. |
+| **DuckDB** | ✅ Complete | `extensions/cpp/duckdb/cython/` | Passed: Table Create & Append |
+| **Rithmic** | ✅ Complete | `extensions/cpp/rithmic/cython/` | Verified & Fixed (macOS Linker). |
 
 ## 1. Indicators
 -   **Path**: `server/indicators/cython/quanux_indicators.pyx`
@@ -22,7 +22,7 @@ We have successfully converted all identified C++ extensions from **Pybind11** t
 -   **Path**: `extensions/cpp/rithmic/cython/rithmic.pyx`
 -   **Features**: `PyREngine` wrapping core Rithmic API.
 -   **Callbacks**: `RCallbacksBase` with `CallbackShim` (C++ virtual -> Python).
--   **Status**: Code complete. Linker env needs adjustment on macOS (`-lc++`).
+-   **Status**: Verified. macOS linker fixed by removing `-Wl,-force_load`.
 
 ## 3. TWS API
 -   **Path**: `extensions/cpp/tws_api/cython/tws_api.pyx`
