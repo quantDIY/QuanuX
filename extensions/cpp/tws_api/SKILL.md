@@ -17,20 +17,22 @@ This extension follows the **"Bring Your Own SDK"** model.
     ```
     This copies the SDK to `extensions/sdks/twsapi`, making it available for builds.
 
-## 🐍 Python Wrapper
-This extension builds a **Pybind11** module (`TwsApi.so`) that exposes the C++ performance to Python strategies.
+## 🐍 Python Wrapper (Cython)
+This extension uses **Cython** (`tws_api.pyx`) for a faster, more robust bridge to the C++ Adapter.
 
 ### Usage in Python
 ```python
-import TwsApi
+import tws_api
 
 # Connect to TWS (Port 7496) or Gateway (4001)
-adapter = TwsApi.TwsAdapter("127.0.0.1", 7496, 0)
+# Note: Cython wrapper uses mapped types
+adapter = tws_api.TwsAdapter("127.0.0.1", 7496, 0)
 adapter.connect()
 
 # Send High-Performance Order
 # ID, Symbol, Side, Qty, Price
-adapter.send_order(101, "AAPL", "BUY", 100, 150.00)
+# Side: 0=Buy, 1=Sell, 2=Short, 3=Cover
+adapter.send_order(101, "AAPL", 0, 100, 150.00)
 ```
 
 ## C++ Usage
