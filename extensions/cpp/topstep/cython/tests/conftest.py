@@ -21,8 +21,18 @@ async def token(client):
     password = os.environ.get("QUANUX_TOPSTEP__PASSWORD")
     api_key = os.environ.get("QUANUX_TOPSTEP__API_KEY")
     
+    # Fallback to Keyring
+    if not username:
+        try:
+            import keyring
+            username = keyring.get_password("QuanuX", "QUANUX_TOPSTEP__USERNAME")
+            password = keyring.get_password("QuanuX", "QUANUX_TOPSTEP__PASSWORD")
+            api_key = keyring.get_password("QuanuX", "QUANUX_TOPSTEP__API_KEY")
+        except ImportError:
+            pass
+
     if not username or not api_key:
-        pytest.skip("Missing Topstep credentials (QUANUX_TOPSTEP__USERNAME/API_KEY)")
+        pytest.skip("Missing Topstep credentials (Env: QUANUX_TOPSTEP__* or Keyring: QuanuX)")
         
     token = await client.login(username, password or "", api_key)
     return token
