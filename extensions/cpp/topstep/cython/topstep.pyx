@@ -138,6 +138,7 @@ cdef class TopstepClient:
             order_data["accountId"] = account_id
 
         async with httpx.AsyncClient() as client:
+            print(f"DEBUG: Placing Order Payload: {json.dumps(order_data)}")
             response = await client.post(url, json=order_data, headers=headers)
             
         if response.is_success:
@@ -210,7 +211,7 @@ cdef class TopstepClient:
         """Async REST search accounts"""
         url = f"{self.base_url}/api/Account/search"
         headers = self._get_headers()
-        payload = {"active": only_active} # Check API spec, usually paging too but simplifying
+        payload = {"onlyActiveAccounts": only_active} # Check API spec, usually paging too but simplifying
         # Legacy accounts.py used: {"page": 1, "pageSize": 100} maybe?
         # Let's check legacy implementation below or assume standard search
         # Re-checking legacy accounts.py logic would be safer but let's assume basic search for now
@@ -242,5 +243,13 @@ cdef class TopstepClient:
 
     def _handle_response(self, response):
         if response.is_success:
-            return {"success": True, **response.json()}
+            data = response.json()
+            # DEBUG LOGGING for Soft Failures
+            if not data.get("success", True): # If API explicitly says false
+                 print(f"DEBUG: Soft Failure (HTTP 200). Response: {data}")
+            # print(f"DEBUG: HTTP {response.status_code} from {response.url}. Body: {data}") 
+            return {"success": True, **data}
+        # DEBUG LOGGING
+        print(f"DEBUG: API Error. Status: {response.status_code}, URL: {response.url}")
+        print(f"DEBUG: Response Text: {response.text}")
         return {"success": False, "error": response.text}
