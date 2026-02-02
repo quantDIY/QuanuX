@@ -3,48 +3,65 @@ name: Rithmic C++ Extension
 description: High-performance C++ bindings for Rithmic R | API+.
 ---
 
-# Rithmic C++ Extension
+# Rithmic C++ Extension (`rithmic_ext`)
 
-This extension provides Python bindings for the Rithmic C++ SDK (`R | API+`). It allows for market data subscription, order management, and connection handling directly from Python with C++ performance.
+This extension provides high-performance Cython bindings for the Rithmic C++ SDK (`R | API+`). It replaces the previous Pybind11 implementation.
 
 ## Files
-- `extensions/cpp/rithmic/`: Source code.
-- `extensions/python/wrappers/rithmic/`: Python wrapper package.
-- `server/app/routers/rithmic.py`: FastAPI integration.
+- `extensions/cpp/rithmic/cython/`: Cython source (`rithmic.pyx`) and `setup.py`.
+- `extensions/cpp/rithmic/sdk/`: Rithmic C++ SDK (Headers/Libs).
 
 ## Installation
 ### Prerequisites
-- **Linux**: `openssl`, `cmake`, `build-essential`. Rithmic SSL certs (`/path/to/certs`).
-- **Mac**: `cmake`.
+- **Linux**: `openssl`, `build-essential`. Rithmic SSL certs (`/path/to/certs`).
+- **Mac**: `cmake` (for SDK management, if using tools), `setup.py` builds directly.
 
 ### Build
-Run `extensions/cpp/rithmic/build.sh`. This will unpack the SDK (checked into repo under `extensions/cpp/rithmic/sdk`) and compile `librithmic_py`.
+Run `python3 setup.py build_ext --inplace` inside `extensions/cpp/rithmic/cython/`. 
+This compiles `rithmic_ext` linking against the static libraries in `../sdk`.
 
 ## Usage (Python)
 ```python
-import rithmic
+import rithmic_ext
 
-class MyCallbacks(rithmic.RCallbacks):
+class MyCallbacks(rithmic_ext.RCallbacksBase):
     def alert(self, info):
-        print(f"Alert: {info.message}")
+        print(f"Alert: {info['message']}")
     
     def best_bid_quote(self, info):
-        print(f"Bid: {info.price} x {info.size}")
+        print(f"Bid: {info['price']} x {info['size']}")
 
-engine = rithmic.REngine(MyCallbacks())
-engine.login(rithmic.LoginParams("user", "pass", "server", "app", "ver", "lic", "log_path"))
-engine.subscribe("MIME", "ESZ4")
+# Create Parameters
+params = rithmic_ext.PyREngineParams()
+params.app_name = "QuanuX"
+params.app_version = "1.0.0"
+params.log_file_path = "rithmic.log"
+
+# Initialize Engine
+engine = rithmic_ext.PyREngine(params)
+
+# Login
+lparams = rithmic_ext.PyLoginParams()
+lparams.set_md_user("user")
+lparams.set_md_password("pass")
+lparams.set_md_cnnct_pt("server")
+lparams.set_ts_user("user")
+lparams.set_ts_password("pass")
+lparams.set_ts_cnnct_pt("server")
+
+engine.login(lparams, MyCallbacks())
+engine.subscribe("MIME", "ESZ4", 0)
 ```
 
 ## Key Classes
-- `REngine`: Main interface.
-- `RCallbacks`: Override to handle async updates.
-- `LoginParams`, `OrderParams`, `ModifyLimitOrderParams`: Structs for API calls.
+- `PyREngine`: Main interface.
+- `RCallbacksBase`: Base class for callbacks. Override `_on_*` methods are handled internally, just override `alert`, `line_update`, etc.
+- `PyREngineParams`, `PyLoginParams`: Configuration objects.
 
 ## Thread Safety & GIL
-The Rithmic `RApi+` uses its own background threads for network I/O and callbacks.
-- **GIL Release**: Blocking calls like `login()`/`logout()` in C++ **must** release the Python GIL (`py::gil_scoped_release`) to prevent freezing the entire Python interpreter.
-- **Callback Locking**: Callbacks from Rithmic threads **must** acquire the GIL (`py::gil_scoped_acquire`) before invoking any Python code.
+Cython automatically manages the GIL.
+- **Blocking Calls**: `login`, `subscribe` etc. release GIL where appropriate (handled by `REngine` C++ internally or wrapper). *Note: Ensure pure C++ blocking calls release GIL if long running.*
+- **Callbacks**: The `CallbackShim` acquires GIL before calling Python methods.
 - **Asyncio Bridge**: The Python `RithmicBridge` uses `loop.run_in_executor` for blocking calls and `loop.call_soon_threadsafe` for callbacks to ensuring safe integration with `asyncio`.
 
 ## Troubleshooting

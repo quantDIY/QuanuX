@@ -10,6 +10,7 @@ We have successfully converted all identified C++ extensions from **Pybind11** t
 | **TWS API** | ✅ Complete | `extensions/cpp/tws_api/cython/` | Passed: Connect & Order Send |
 | **Databento** | ✅ Complete | `extensions/cpp/databento/cython/` | Passed: Build & linking (zstd/brotli/ssl) |
 | **DuckDB** | ⏳ Compiling | `extensions/cpp/duckdb/cython/` | Cythonized successfully. Linking with Amalgamation. |
+| **Rithmic** | ✅ Code Complete | `extensions/cpp/rithmic/cython/` | Cythonized. Build requires `libc++` env fix on macOS. |
 
 ## 1. Indicators
 -   **Path**: `server/indicators/cython/quanux_indicators.pyx`
@@ -17,7 +18,13 @@ We have successfully converted all identified C++ extensions from **Pybind11** t
 -   **Build**: Standalone `setup.py`.
 -   **Performance**: ~7x faster than Pybind11.
 
-## 2. TWS API
+## 2. Rithmic
+-   **Path**: `extensions/cpp/rithmic/cython/rithmic.pyx`
+-   **Features**: `PyREngine` wrapping core Rithmic API.
+-   **Callbacks**: `RCallbacksBase` with `CallbackShim` (C++ virtual -> Python).
+-   **Status**: Code complete. Linker env needs adjustment on macOS (`-lc++`).
+
+## 3. TWS API
 -   **Path**: `extensions/cpp/tws_api/cython/tws_api.pyx`
 -   **Features**: `TwsAdapter` wrapper, `Order` struct mapping, `send_order`.
 -   **Dependencies**: Shimmed TWS headers + QuanuX Common headers.
