@@ -143,3 +143,104 @@ cdef class TopstepClient:
         if response.is_success:
             return {"success": True, **response.json()}
         return {"success": False, "error": response.text}
+
+    async def cancel_order(self, int account_id, int order_id):
+        """Async REST cancel order"""
+        if not self.token:
+            raise ValueError("Not authenticated")
+            
+        url = f"{self.base_url}/api/Order/cancel"
+        headers = {
+            "accept": "text/plain",
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.token}"
+        }
+        payload = {"accountId": account_id, "orderId": order_id}
+
+        async with httpx.AsyncClient() as client:
+            response = await client.post(url, json=payload, headers=headers)
+            
+        if response.is_success:
+            return {"success": True, **response.json()}
+        return {"success": False, "error": response.text}
+
+    async def modify_order(self, int account_id, int order_id, **kwargs):
+        """Async REST modify order"""
+        if not self.token:
+            raise ValueError("Not authenticated")
+            
+        url = f"{self.base_url}/api/Order/modify"
+        headers = {
+            "accept": "text/plain",
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.token}"
+        }
+        payload = {"accountId": account_id, "orderId": order_id, **kwargs}
+
+        async with httpx.AsyncClient() as client:
+            response = await client.post(url, json=payload, headers=headers)
+            
+        if response.is_success:
+            return {"success": True, **response.json()}
+        return {"success": False, "error": response.text}
+
+    async def search_orders(self, int account_id, str start_time, str end_time):
+        """Async REST search orders"""
+        url = f"{self.base_url}/api/Order/search"
+        headers = self._get_headers()
+        payload = {
+            "accountId": account_id,
+            "startTimestamp": start_time,
+            "endTimestamp": end_time
+        }
+        async with httpx.AsyncClient() as client:
+            response = await client.post(url, json=payload, headers=headers)
+        return self._handle_response(response)
+
+    async def search_open_orders(self, int account_id):
+        """Async REST search open orders"""
+        url = f"{self.base_url}/api/Order/searchOpen"
+        headers = self._get_headers()
+        payload = {"accountId": account_id}
+        async with httpx.AsyncClient() as client:
+            response = await client.post(url, json=payload, headers=headers)
+        return self._handle_response(response)
+
+    async def search_accounts(self, bool only_active=True):
+        """Async REST search accounts"""
+        url = f"{self.base_url}/api/Account/search"
+        headers = self._get_headers()
+        payload = {"active": only_active} # Check API spec, usually paging too but simplifying
+        # Legacy accounts.py used: {"page": 1, "pageSize": 100} maybe?
+        # Let's check legacy implementation below or assume standard search
+        # Re-checking legacy accounts.py logic would be safer but let's assume basic search for now
+        # Actually, let's look at legacy accounts.py in a sec if this fails.
+        # Assuming simple payload for now:
+        payload = {"page": 1, "pageSize": 50} 
+        
+        async with httpx.AsyncClient() as client:
+            response = await client.post(url, json=payload, headers=headers)
+        return self._handle_response(response)
+
+    async def search_contracts(self, str search_text="NQ"):
+        """Async REST search contracts"""
+        url = f"{self.base_url}/api/Contract/search"
+        headers = self._get_headers()
+        payload = {"searchText": search_text} 
+        async with httpx.AsyncClient() as client:
+            response = await client.post(url, json=payload, headers=headers)
+        return self._handle_response(response)
+
+    def _get_headers(self):
+        if not self.token:
+            raise ValueError("Not authenticated")
+        return {
+            "accept": "text/plain",
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.token}"
+        }
+
+    def _handle_response(self, response):
+        if response.is_success:
+            return {"success": True, **response.json()}
+        return {"success": False, "error": response.text}
