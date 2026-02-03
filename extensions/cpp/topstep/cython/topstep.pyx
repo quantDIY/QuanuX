@@ -117,7 +117,7 @@ cdef class TopstepClient:
         if self.hub_connection:
             self.hub_connection.stop()
 
-    async def place_order(self, int account_id, dict order_data):
+    async def place_order(self, long long account_id, dict order_data):
         """Async REST place order"""
         if not self.token:
             raise ValueError("Not authenticated")
@@ -145,7 +145,7 @@ cdef class TopstepClient:
             return {"success": True, **response.json()}
         return {"success": False, "error": response.text}
 
-    async def cancel_order(self, int account_id, int order_id):
+    async def cancel_order(self, long long account_id, long long order_id):
         """Async REST cancel order"""
         if not self.token:
             raise ValueError("Not authenticated")
@@ -165,7 +165,7 @@ cdef class TopstepClient:
             return {"success": True, **response.json()}
         return {"success": False, "error": response.text}
 
-    async def modify_order(self, int account_id, int order_id, **kwargs):
+    async def modify_order(self, long long account_id, long long order_id, **kwargs):
         """Async REST modify order"""
         if not self.token:
             raise ValueError("Not authenticated")
@@ -185,7 +185,7 @@ cdef class TopstepClient:
             return {"success": True, **response.json()}
         return {"success": False, "error": response.text}
 
-    async def search_orders(self, int account_id, str start_time, str end_time):
+    async def search_orders(self, long long account_id, str start_time, str end_time):
         """Async REST search orders"""
         url = f"{self.base_url}/api/Order/search"
         headers = self._get_headers()
@@ -198,7 +198,7 @@ cdef class TopstepClient:
             response = await client.post(url, json=payload, headers=headers)
         return self._handle_response(response)
 
-    async def search_open_orders(self, int account_id):
+    async def search_open_orders(self, long long account_id):
         """Async REST search open orders"""
         url = f"{self.base_url}/api/Order/searchOpen"
         headers = self._get_headers()
@@ -211,15 +211,10 @@ cdef class TopstepClient:
         """Async REST search accounts"""
         url = f"{self.base_url}/api/Account/search"
         headers = self._get_headers()
-        payload = {"onlyActiveAccounts": only_active} # Check API spec, usually paging too but simplifying
-        # Legacy accounts.py used: {"page": 1, "pageSize": 100} maybe?
-        # Let's check legacy implementation below or assume standard search
-        # Re-checking legacy accounts.py logic would be safer but let's assume basic search for now
-        # Actually, let's look at legacy accounts.py in a sec if this fails.
-        # Assuming simple payload for now:
-        payload = {"page": 1, "pageSize": 50} 
+        payload = {"onlyActiveAccounts": only_active} 
         
         async with httpx.AsyncClient() as client:
+            print(f"DEBUG: Search Accounts Payload: {json.dumps(payload)}")
             response = await client.post(url, json=payload, headers=headers)
         return self._handle_response(response)
 
@@ -228,6 +223,80 @@ cdef class TopstepClient:
         url = f"{self.base_url}/api/Contract/search"
         headers = self._get_headers()
         payload = {"searchText": search_text, "live": live} 
+        async with httpx.AsyncClient() as client:
+            response = await client.post(url, json=payload, headers=headers)
+        return self._handle_response(response)
+
+    async def search_open_positions(self, long long account_id):
+        """Async REST search open positions"""
+        url = f"{self.base_url}/api/Position/searchOpen"
+        headers = self._get_headers()
+        payload = {"accountId": account_id}
+        async with httpx.AsyncClient() as client:
+            response = await client.post(url, json=payload, headers=headers)
+        return self._handle_response(response)
+
+    async def close_position(self, long long account_id, str contract_id):
+        """Async REST close position"""
+        url = f"{self.base_url}/api/Position/close"
+        headers = self._get_headers()
+        payload = {"accountId": account_id, "contractId": contract_id}
+        async with httpx.AsyncClient() as client:
+            response = await client.post(url, json=payload, headers=headers)
+        return self._handle_response(response)
+
+    async def partial_close_position(self, long long account_id, str contract_id, int size):
+        """Async REST partial close position"""
+        url = f"{self.base_url}/api/Position/closePartial"
+        headers = self._get_headers()
+        payload = {"accountId": account_id, "contractId": contract_id, "size": size}
+        async with httpx.AsyncClient() as client:
+            response = await client.post(url, json=payload, headers=headers)
+        return self._handle_response(response)
+
+    async def search_trades(self, long long account_id, str start_time, str end_time):
+        """Async REST search trades"""
+        url = f"{self.base_url}/api/Trade/search"
+        headers = self._get_headers()
+        # Ensure times are ISO formatted strings
+        payload = {
+            "accountId": account_id,
+            "startTimestamp": start_time,
+            "endTimestamp": end_time
+        }
+        async with httpx.AsyncClient() as client:
+            response = await client.post(url, json=payload, headers=headers)
+        return self._handle_response(response)
+
+    async def retrieve_bars(self, str contract_id, int minutes=100):
+        """Async REST retrieve bars"""
+        url = f"{self.base_url}/api/History/retrieveBars" 
+        headers = self._get_headers()
+        
+        # Calculate timestamps (simple approach, can be enhanced)
+        # We need datetime for this. Import inside method or at top? Top is better but...
+        # Let's use simple string manipulation or assumes caller handles?
+        # Legacy did logic inside.
+        # Cython doesn't easy import datetime. 
+        # Actually it can.
+        from datetime import datetime, timedelta, timezone
+        end_time = datetime.now(timezone.utc)
+        start_time = end_time - timedelta(minutes=minutes)
+
+        # Fix timestamp format: ISO 8601 with Z, no offset suffix if possible or just Z
+        start_str = start_time.strftime('%Y-%m-%dT%H:%M:%SZ')
+        end_str = end_time.strftime('%Y-%m-%dT%H:%M:%SZ')
+
+        payload = {
+            "contractId": contract_id,
+            "live": False, # TODO: Expose as arg
+            "startTime": start_str,
+            "endTime": end_str,
+            "unit": 2,  # Minute
+            "unitNumber": 1,
+            "limit": minutes,
+            "includePartialBar": False
+        }
         async with httpx.AsyncClient() as client:
             response = await client.post(url, json=payload, headers=headers)
         return self._handle_response(response)

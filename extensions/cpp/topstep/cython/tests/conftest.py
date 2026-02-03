@@ -39,17 +39,22 @@ async def token(client):
 
 @pytest_asyncio.fixture
 async def account_id(client, token):
-    # Ensure token is set on client (login does it, but to be sure for other tests)
     client.token = token
     accounts = await client.search_accounts(only_active=True)
-    if not accounts["success"] or not accounts.get("items"):
+    if not accounts["success"] or not accounts.get("accounts"):
         pytest.skip("No active accounts found.")
-    return accounts["items"][0]["id"]
+    print(f"DEBUG: Found accounts: {[a['id'] for a in accounts['accounts']]}")
+    print(f"DEBUG: First account details: {accounts['accounts'][0]}")
+    return accounts["accounts"][0]["id"]
 
 @pytest_asyncio.fixture
 async def contract_id(client, token):
     client.token = token
+    # Try generic search for NQ
     contracts = await client.search_contracts(search_text="NQ")
-    if not contracts["success"] or not contracts.get("items"):
-        pytest.skip("No contracts found for 'NQ'.")
-    return contracts["items"][0]["id"]
+    if not contracts["success"] or not contracts.get("contracts"):
+         # Backup: Try "ES" if NQ not found
+         contracts = await client.search_contracts(search_text="ES")
+         if not contracts["success"] or not contracts.get("contracts"):
+            pytest.skip("No contracts found for 'NQ' or 'ES'.")
+    return contracts["contracts"][0]["id"]

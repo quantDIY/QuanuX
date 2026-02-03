@@ -39,12 +39,12 @@
 ### Verified / Done
 - [x] [Testing: Confirm functionality of Figma MCP server with QuanuX MCP](https://github.com/quantDIY/QuanuX/issues/2) `label:testing`
 - [x] [Architecture: Polyglot Extensions] Established `extensions/{cpp,go,node,python}` structure.
-- [x] [Architecture: Cython Migration] Converted `indicators`, `tws_api`, `databento`, `duckdb`, `rithmic` from Pybind11 to Cython (7x perf boost).
+- [x] [Architecture: Cython Migration] Converted `indicators`, `tws_api`, `databento`, `duckdb`, `rithmic`, `topstep` to Cython (7x perf boost).
 - [x] [Architecture: Agent Skills Protocol] Implemented `server/skills` and MCP loader.
 - [x] [Feature: QuickFIX Engine] Verified C++ Engine + Python Bindings + Go Integration.
 - [x] [Feature: DuckDB Ecosystem] C++ & Python Connectors (Databento -> DuckDB), MotherDuck Integration.
-- [x] [Feature: Rithmic Integration] Full Protocol Impl (Go/C++) & Python Wrappers.
-- [x] [Feature: Topstep Extension] Native API (Cython+SignalRCore) standalone Extension (replaces Node bridge).
+- [x] [Feature: Rithmic Integration] Verified RApiPlus Cython Wrapper with Test Coverage.
+- [x] [Feature: Topstep Extension] Pure Cython Implementation (No Node.js Bridge). 100% Test Parity. Legacy Python Removed.
 - [x] [Feature: Execution Engine] Hybrid Go/C++ Node, Portable/Deployable (Push Deployment).
 - [x] [Infrastructure: CNATS] Full C++ NATS Client Integration.
 - [x] [API: GraphQL] Strawberry implementation.
