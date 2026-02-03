@@ -45,6 +45,7 @@
 - [x] [Feature: DuckDB Ecosystem] C++ & Python Connectors (Databento -> DuckDB), MotherDuck Integration.
 - [x] [Feature: Rithmic Integration] Verified RApiPlus Cython Wrapper with Test Coverage.
 - [x] [Feature: Topstep Extension] Pure Cython Implementation (No Node.js Bridge). 100% Test Parity. Legacy Python Removed.
+- [x] [Feature: Cython Execution Node] High-Performance "Edge" Node Scaffold. Runs `.so` strategies. Supports Direct/Relay Adapters.
 - [x] [Feature: Execution Engine] Hybrid Go/C++ Node, Portable/Deployable (Push Deployment).
 - [x] [Infrastructure: CNATS] Full C++ NATS Client Integration.
 - [x] [API: GraphQL] Strawberry implementation.
