@@ -1,7 +1,7 @@
 name: tws-api-adapter
 display_name: "TWS API Adapter"
 version: "0.2.0"
-runtime: polyglot # Supports both C++ and Python
+runtime: polyglot  # Supports both C++ and Python
 runtimes:
   - cpp
   - python
