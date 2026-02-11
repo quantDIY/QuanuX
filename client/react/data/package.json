@@ -9,12 +9,12 @@
     },
     "dependencies": {
         "graphql": "^16.12.0",
-        "graphql-ws": "^5.16.2",
-        "urql": "^4.2.2",
+        "graphql-ws": "^6.0.7",
+        "urql": "^5.0.1",
         "wonka": "^6.3.5"
     },
     "devDependencies": {
-        "@types/node": "^22.19.7",
+        "@types/node": "^25.2.3",
         "typescript": "^5.9.3"
     }
 }
