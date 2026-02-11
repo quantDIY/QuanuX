@@ -10,7 +10,7 @@
     "dependencies": {
         "graphql": "^16.12.0",
         "graphql-ws": "^5.16.2",
-        "urql": "^4.2.2",
+        "urql": "^5.0.1",
         "wonka": "^6.3.5"
     },
     "devDependencies": {
