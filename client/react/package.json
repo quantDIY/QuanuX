@@ -52,7 +52,7 @@
     "hono": "4.11.9",
     "lucide-react": "^0.552.0",
     "react-hook-form": "^7.71.1",
-    "tailwind-merge": "^2.6.0",
+    "tailwind-merge": "^2.6.1",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^4.3.6"
   }
