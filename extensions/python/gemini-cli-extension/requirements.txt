@@ -4,3 +4,4 @@ openai
 passlib
 bcrypt
 keyring
+cryptography>=46.0.5

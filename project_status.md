@@ -10,7 +10,7 @@
 ## 📥 Staged Issues (Ready for GitHub)
 *Items parsed from chat/docs, waiting for user approval to push.*
 
-*(No staged issues yet. Waiting for Brain Dump...)*
+- [ ] [Feature: Visual DevOps Globe (3D Infrastructure Visualization)](https://github.com/quantDIY/QuanuX/issues/NEW) `label:feature,ui,3d`
 
 ## 🚧 Active Issues (In Progress)
 *Synced from GitHub.*
@@ -44,6 +44,7 @@
 - [x] [Feature: QuickFIX Engine] Verified C++ Engine + Python Bindings + Go Integration.
 - [x] [Feature: DuckDB Ecosystem] C++ & Python Connectors (Databento -> DuckDB), MotherDuck Integration.
 - [x] [Feature: Rithmic Integration] Verified RApiPlus Cython Wrapper with Test Coverage.
+- [x] [Security: Remediation] Fixed `protobuf` (recursion), `cryptography` (ECC), and Rust `time` (DoS) alerts.
 - [x] [Feature: Topstep Extension] Pure Cython Implementation (No Node.js Bridge). 100% Test Parity. Legacy Python Removed.
 - [x] [Feature: Cython Execution Node] High-Performance "Edge" Node Scaffold. Runs `.so` strategies. Supports Direct/Relay Adapters.
 - [x] [Feature: Execution Engine] Hybrid Go/C++ Node, Portable/Deployable (Push Deployment).
