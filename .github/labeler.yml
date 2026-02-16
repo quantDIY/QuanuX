@@ -1,4 +1,3 @@
-
 # Pull Request Labeler Configuration
 
 backend:
@@ -11,14 +10,14 @@ frontend:
 
 documentation:
   - changed-files:
-      - any-glob-to-any-file: 
+      - any-glob-to-any-file:
           - 'docs/**/*'
           - 'meta/docs/**/*'
           - '**/*.md'
 
 ci:
   - changed-files:
-      - any-glob-to-any-file: 
+      - any-glob-to-any-file:
           - '.github/**/*'
           - 'devops/**/*'
 
