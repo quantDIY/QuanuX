@@ -46,6 +46,13 @@ def generate_python_models():
     # Output: server/app/domain/contracts
     # We want to treat the directory recursively.
     
+    # Preserve __init__.py if it exists (manual exports)
+    init_file = SERVER_OUT_DIR / "__init__.py"
+    init_content = None
+    if init_file.exists():
+        print(f"ℹ️  Preserving manual {init_file.name}...")
+        init_content = init_file.read_text()
+
     cmd = [
         sys.executable, "-m", "datamodel_code_generator",
         "--input", str(SCHEMAS_DIR),
@@ -62,6 +69,12 @@ def generate_python_models():
     # Let's try directory mode first.
     
     result = subprocess.run(cmd, capture_output=True, text=True)
+    
+    # Restore __init__.py
+    if init_content:
+        init_file.write_text(init_content)
+        print(f"✅ Restored manual {init_file.name}")
+
     if result.returncode == 0:
         print(f"✅ Python models generated at: {SERVER_OUT_DIR / 'models.py'}")
     else:
