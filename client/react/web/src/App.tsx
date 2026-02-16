@@ -7,6 +7,8 @@ import { Integrations } from './pages/Integrations';
 import { Backtests } from './pages/Backtests';
 import { Settings } from './pages/Settings';
 
+import { DevOpsGlobe } from './components/globe/DevOpsGlobe';
+
 export const App = () => {
     const [stage, setStage] = useState<'launch' | 'auth' | 'dashboard'>('launch');
     const [currentView, setCurrentView] = useState(() => {
@@ -14,7 +16,7 @@ export const App = () => {
         if (path.includes('strategy')) return 'strategy';
         if (path.includes('integrations')) return 'integrations';
         if (path.includes('backtests')) return 'backtests';
-        return 'dashboard';
+        return 'globe'; // Default to Globe for demo
     });
 
     const handleAnimationComplete = () => {
@@ -24,6 +26,11 @@ export const App = () => {
     const handleLogin = () => {
         setStage('dashboard');
     };
+
+    // Special bypass for Globe view to allow public access/demo
+    if (currentView === 'globe') {
+        return <DevOpsGlobe />;
+    }
 
     if (stage === 'launch') {
         return <LaunchAnimation onComplete={handleAnimationComplete} />;
@@ -35,6 +42,8 @@ export const App = () => {
 
     const renderContent = () => {
         switch (currentView) {
+            case 'globe': // Fallback if stage is dashboard
+                return <DevOpsGlobe />;
             case 'strategy':
                 return <StrategyBuilder />;
             case 'integrations':

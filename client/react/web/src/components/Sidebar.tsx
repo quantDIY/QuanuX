@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    Globe,
     LayoutDashboard,
     Workflow,
     Network,
@@ -33,6 +34,7 @@ interface SidebarItem {
 }
 
 const mainItems: SidebarItem[] = [
+    { id: 'globe', label: 'Global Operations', icon: Globe },
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'strategy', label: 'Strategy Builder', icon: Workflow },
     { id: 'backtests', label: 'Backtests', icon: LineChart },
