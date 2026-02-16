@@ -77,7 +77,7 @@ function ExchangeMarkers({ radius }: { radius: number }) {
             {EXCHANGES.map((ex, i) => {
                 const pos = latLngToVector3(ex.lat, ex.lng, radius).multiplyScalar(1.0);
                 return (
-                    <group key={i} position={pos} lookAt={new Vector3(0, 0, 0)}>
+                    <group key={i} position={pos} lookAt={[0, 0, 0] as any}>
                         {/* Vertical Pillar */}
                         <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 0, 0.6]}>
                             <cylinderGeometry args={[0.03, 0.03, 1.2, 6]} />
