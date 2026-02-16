@@ -1,0 +1,31 @@
+
+# Pull Request Labeler Configuration
+
+backend:
+  - changed-files:
+      - any-glob-to-any-file: 'server/**/*'
+
+frontend:
+  - changed-files:
+      - any-glob-to-any-file: 'client/**/*'
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file: 
+          - 'docs/**/*'
+          - 'meta/docs/**/*'
+          - '**/*.md'
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file: 
+          - '.github/**/*'
+          - 'devops/**/*'
+
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'package.json'
+          - 'pnpm-lock.yaml'
+          - 'requirements*.txt'
+          - 'environment.yml'
