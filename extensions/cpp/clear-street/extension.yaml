@@ -1,0 +1,25 @@
+name: clear-street
+display_name: "Clear Street Adapter"
+version: "1.0.0"
+runtime: cpp
+command: "build/bin/quanux_custom_adapter"
+description: "High-Performance, Dual-Engine (OnixS/QuickFIX) Adapter for Clear Street API. Features L3 Recording, Hot-Swap, and Pre-Trade Risk."
+type: adapter
+injection_requirement: "onixs" # Optional: if present, uses OnixS
+dependencies:
+  - onixs (optional)
+  - quickfix
+  - duckdb
+  - nats
+env:
+  - QUANUX_CLEARSTREET_USER
+  - QUANUX_CLEARSTREET_PASSWORD
+  - QUANUX_CLEARSTREET_ACCOUNT
+  - QUANUX_CLEARSTREET_SENDER_COMP_ID
+  - QUANUX_CLEARSTREET_TARGET_COMP_ID
+commands:
+  build: "cmake -S . -B build && cmake --build build"
+  test: "./build/test_clear_street"
+links:
+  whitepaper: "docs/whitepaper.md"
+  man: "man/quanux-clearstreet.7"

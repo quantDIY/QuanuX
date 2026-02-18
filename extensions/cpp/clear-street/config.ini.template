@@ -1,0 +1,22 @@
+[DEFAULT]
+ConnectionType=initiator
+ReconnectInterval=60
+FileStorePath=store
+FileLogPath=log
+StartTime=00:00:00
+EndTime=00:00:00
+UseDataDictionary=Y
+DataDictionary=spec/FIX44.xml
+ValidateUserDefinedFields=N
+ValidateIncomingMessage=N
+RefreshOnLogon=Y
+
+# --- Session Settings ---
+# Replace with actual values
+[SESSION]
+BeginString=FIX.4.4
+SenderCompID=YOUR_SENDER_ID
+TargetCompID=CS_UAT
+SocketConnectHost=fix.clearstreet.io
+SocketConnectPort=443
+HeartBtInt=30

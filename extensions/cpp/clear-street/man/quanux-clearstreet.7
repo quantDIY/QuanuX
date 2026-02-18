@@ -1,0 +1,76 @@
+.TH QUANUX-CLEARSTREET 7 "February 2026" "QuanuX 1.0" "QuanuX Extensions"
+.SH NAME
+quanux-clearstreet \- High-performance C++ Adapter for Clear Street API
+
+.SH SYNOPSIS
+.B quanuxctl run clear-street
+.br
+.B quanuxctl install clear-street
+.br
+.B quanuxctl integrate onixs --path <SDK_PATH>
+
+.SH DESCRIPTION
+The \fBquanux-clearstreet\fR extension provides a dual-engine trading gateway to the Clear Street Execution API. 
+It supports both the proprietary \fBOnixS\fR high-performance FIX engine (if injected) and the open-source \fBQuickFIX\fR engine as a fallback.
+
+.SH FEATURES
+.TP
+.B Dual-Engine Architecture
+Automatically detects the presence of the OnixS SDK. If found, it compiles with optimized thread-pinning and spin-lock support.
+.TP
+.B L3 Market Recorder
+Captures high-fidelity Market-By-Order (L3) data directly to DuckDB Parquet files for analytical replay.
+.TP
+.B Pre-Trade Risk Layer
+Enforces hard C++ limits on Order Quantity, Position Size, and Daily Loss before orders leave the process memory.
+.TP
+.B Dynamic Hot-Swap
+Allows strategy logic (`.so` shared libraries) to be reloaded at runtime without disconnecting the FIX session.
+
+.SH CONFIGURATION
+Configuration is loaded from \fBlocal_config.json\fR in the extension directory.
+
+.SS Risk Management
+.TP
+.B max_order_qty
+Maximum quantity allowed per single order.
+.TP
+.B max_daily_loss
+Cumulative PnL loss limit that triggers a trading halt.
+
+.SS Recorder
+.TP
+.B mode
+Recording depth: "L1" (Top), "L2" (Price), or "L3" (Order).
+.TP
+.B enabled
+Set to \fBtrue\fR to archive data to DuckDB.
+
+.SH ENVIRONMENT VARIABLES
+.TP
+.B CLEARSTREET_USER
+FIX Protocol Username (Tag 553).
+.TP
+.B CLEARSTREET_PASSWORD
+FIX Protocol Password (Tag 96).
+.TP
+.B CLEARSTREET_SENDER_COMP_ID
+SenderCompID (Tag 49).
+.TP
+.B CLEARSTREET_TARGET_COMP_ID
+TargetCompID (Tag 56).
+
+.SH EXAMPLES
+.B Inject OnixS SDK:
+.br
+$ quanuxctl integrate onixs --path ~/Downloads/onixs-sdk-cpp
+
+.B Rebuild Extension:
+.br
+$ quanuxctl install clear-street
+
+.SH SEE ALSO
+\fBquanuxctl\fR(1), \fBduckdb\fR(1)
+
+.SH AUTHOR
+QuanuX Team (Enterprise Division)
