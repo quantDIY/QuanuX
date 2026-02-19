@@ -59,6 +59,7 @@ include_directories(../../QuanuX-Common/cpp/include)
 # Core Library
 add_library(stats_core STATIC
     src/stats_engine.cpp
+    src/core/StatsEngineCore.cpp
     src/time_series_store.cpp
 )
 target_link_libraries(stats_core PUBLIC 

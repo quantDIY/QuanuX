@@ -1,7 +1,8 @@
 #pragma once
 #include "models/WelfordRolling.hpp"
-#include <Eigen/Dense>
+// #include <Eigen/Dense> // Not used in this header anymore
 #include <atomic>
+#include <cstdint>
 #include <map>
 #include <memory>
 #include <mutex>
