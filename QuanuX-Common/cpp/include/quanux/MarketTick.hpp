@@ -18,10 +18,14 @@ struct alignas(64) MarketTick {
   uint32_t flags;         // 4 bytes: Trade flags
   uint32_t instrument_id; // 4 bytes: Internal instrument mapping
 
+  // Internal Latency Tracking
+  uint64_t internal_arrival_ts; // 8 bytes: Time tick entered process
+  uint64_t processing_start_ts; // 8 bytes: Time stats engine picked it up
+
   // Padding to reach 64 bytes
-  // Used: 8+8+8+4+4+4 = 36 bytes
-  // Remaining: 28 bytes
-  uint8_t _pad[28];
+  // Offset is 56 bytes (including 4 bytes implicit padding after instrument_id)
+  // Remaining: 8 bytes
+  uint8_t _pad[8];
 };
 
 static_assert(sizeof(MarketTick) == 64, "MarketTick must be exactly 64 bytes");
