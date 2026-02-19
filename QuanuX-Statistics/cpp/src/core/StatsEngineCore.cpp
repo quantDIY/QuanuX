@@ -25,21 +25,35 @@ struct WelfordVarianceOperation {
   template <class INPUT_TYPE, class STATE, class OP>
   static void Operation(STATE *state, INPUT_TYPE *input, ValidityMask &mask,
                         idx_t idx) {
+    // Hint to compiler: this is the hot path.
+    // Welford's algorithm is inherently serial for a single state,
+    // so standard auto-vectorization of the *recurrence* is hard.
+    // However, we ensure minimal branching.
     state->count++;
-    double delta = *input - state->mean;
+    double val = *input;
+    double delta = val - state->mean;
     state->mean += delta / state->count;
-    double delta2 = *input - state->mean;
+    double delta2 = val - state->mean;
     state->m2 += delta * delta2;
   }
 
   template <class INPUT_TYPE, class STATE, class OP>
   static void ConstantOperation(STATE *state, INPUT_TYPE *input,
                                 OPTIONAL_PTR<ValidityMask> mask, idx_t count) {
+    // Batch processing hook
+    // If we wanted to leverage AVX explicitly, we could calculate
+    // a "sum" and "sum_sq" vector here and merge, but that deviates from
+    // Welford stability. We stick to the serial Welford update for numerical
+    // stability, but unrolling the loop can help instruction pipelining.
     for (idx_t i = 0; i < count; i++) {
-      Operation<INPUT_TYPE, STATE, OP>(state, input, *mask, i);
+      // Inline logic for performance
+      state->count++;
+      double val = input[i];
+      double delta = val - state->mean;
+      state->mean += delta / state->count;
+      state->m2 += delta * (val - state->mean);
     }
   }
-
   template <class STATE, class OP>
   static void Combine(const STATE &source, STATE *target) {
     if (source.count == 0)
