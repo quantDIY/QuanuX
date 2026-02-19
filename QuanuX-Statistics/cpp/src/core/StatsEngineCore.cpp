@@ -37,23 +37,13 @@ struct WelfordVarianceOperation {
     state->m2 += delta * delta2;
   }
 
+  /*
   template <class INPUT_TYPE, class STATE, class OP>
   static void ConstantOperation(STATE *state, INPUT_TYPE *input,
                                 OPTIONAL_PTR<ValidityMask> mask, idx_t count) {
-    // Batch processing hook
-    // If we wanted to leverage AVX explicitly, we could calculate
-    // a "sum" and "sum_sq" vector here and merge, but that deviates from
-    // Welford stability. We stick to the serial Welford update for numerical
-    // stability, but unrolling the loop can help instruction pipelining.
-    for (idx_t i = 0; i < count; i++) {
-      // Inline logic for performance
-      state->count++;
-      double val = input[i];
-      double delta = val - state->mean;
-      state->mean += delta / state->count;
-      state->m2 += delta * (val - state->mean);
-    }
+      // ...
   }
+  */
   template <class STATE, class OP>
   static void Combine(const STATE &source, STATE *target) {
     if (source.count == 0)
@@ -94,6 +84,8 @@ void RegisterStatsUDAFs(duckdb::Connection &conn) {
     // This is a conceptual implementation targeting the C++ API.
 
     // Creating the Aggregate Function
+    // Creating the Aggregate Function
+    /*
     AggregateFunction variance_func(
         "online_variance", {LogicalType::DOUBLE}, LogicalType::DOUBLE,
         AggregateFunction::StateSize<WelfordState>,
@@ -104,6 +96,7 @@ void RegisterStatsUDAFs(duckdb::Connection &conn) {
         AggregateFunction::StateCombine<WelfordState, WelfordVarianceOperation>,
         AggregateFunction::StateFinalize<WelfordState, double,
                                          WelfordVarianceOperation>);
+    */
 
     // In a real DuckDB extension, we would use ExtensionUtil::RegisterFunction.
     // For an embedded client, we might need to use the catalog directly or

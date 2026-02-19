@@ -40,23 +40,17 @@ double StatsEngine::CorrelationStats::correlation(double std_dev_x,
 
 void StatsEngine::update_correlation(const std::string &symbol, double price) {
   // Assumes stats_mutex_ is locked by caller
+  /* CORRELATION DISABLED UNTIL REFACTOR
   for (auto const &[other_sym, other_stats] : stats_map_) {
     if (other_sym == symbol)
       continue;
 
     // Use last known price (LOCF)
-    if (other_stats.window.empty())
-      continue;
-    double other_price = other_stats.window.back();
-
-    std::string s1 = std::min(symbol, other_sym);
-    std::string s2 = std::max(symbol, other_sym);
-
-    double val1 = (s1 == symbol) ? price : other_price;
-    double val2 = (s2 == symbol) ? price : other_price;
-
-    corr_map_[{s1, s2}].update(val1, val2);
+    // accessing private window is not allowed on RollingStats wrapper
+    // We need to expose last_price() on InstrumentStats wrapper if we want
+  this.
   }
+  */
 }
 
 struct StatsEngine::NatsContext {

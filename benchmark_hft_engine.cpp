@@ -3,6 +3,7 @@
 #include "quanux/SPSCQueue.hpp"
 #include <atomic>
 #include <chrono>
+#include <immintrin.h>
 #include <iostream>
 #include <thread>
 #include <vector>
@@ -35,6 +36,8 @@ int main() {
                            now - tick_time)
                            .count();
         latencies.push_back(latency);
+      } else {
+        _mm_pause();
       }
     }
   });
@@ -50,7 +53,7 @@ int main() {
                       .count();
     Signal sig{ts, 1, 3.0, 0.5}; // Always trigger
     while (!queue.push(sig)) {
-      // spin
+      _mm_pause(); // Spin with pause
     }
   }
 
