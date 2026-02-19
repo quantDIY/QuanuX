@@ -1,6 +1,7 @@
 #pragma once
 #include "models/WelfordRolling.hpp"
 // #include <Eigen/Dense> // Not used in this header anymore
+#include "quanux/SPSCQueue.hpp"
 #include <atomic>
 #include <cstdint>
 #include <map>
@@ -76,6 +77,20 @@ private:
   std::mutex
       stats_mutex_; // Protect maps from NATS callbacks if multithreaded (NATS C
                     // is usually single threaded callback context, but safer)
+
+  // Signal Structure for SPSC Queue
+  struct Signal {
+    uint64_t tick_ts;
+    uint32_t instrument_id;
+    double z_score;
+    double volatility;
+  };
+
+  // Lock-Free Signal Queue (Capacity 1024)
+  // We use a unique_ptr to defer construction or keep header clean-ish
+  // but template needs to be visible.
+  // Actually, we can just declare the member if we include the header.
+  quanux::SPSCQueue<Signal> signal_queue_{4096};
 
   void update_correlation(const std::string &symbol, double price);
 };
