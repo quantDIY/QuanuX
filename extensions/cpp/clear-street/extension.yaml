@@ -5,7 +5,7 @@ runtime: cpp
 command: "build/bin/quanux_custom_adapter"
 description: "High-Performance, Dual-Engine (OnixS/QuickFIX) Adapter for Clear Street API. Features L3 Recording, Hot-Swap, and Pre-Trade Risk."
 type: adapter
-injection_requirement: "onixs" # Optional: if present, uses OnixS
+injection_requirement: "onixs"  # Optional: if present, uses OnixS
 dependencies:
   - onixs (optional)
   - quickfix
