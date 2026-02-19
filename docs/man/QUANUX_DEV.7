@@ -1,0 +1,59 @@
+.\" Manpage for quanux_dev
+.TH QUANUX_DEV 7 "February 2026" "1.0" "QuanuX HFT Suite"
+.SH NAME
+quanux_dev \- QuanuX Development Guidelines and Standards
+.SH DESCRIPTION
+This manual page outlines the development standards, coding conventions, and architectural guidelines for the QuanuX High-Frequency Trading platform.
+
+.SH C++ STANDARDS
+.B Version:
+C++20 is the required standard for all core components (`execution-node`, `server/indicators`).
+.PP
+.B Compiler Flags:
+- `-O3`: Maximum optimization for HFT hot paths.
+- `-march=native`: Target the specific CPU architecture (AVX2/AVX-512).
+- `-fno-rtti`, `-fno-exceptions`: Disabled in hot paths to minimize runtime overhead.
+
+.SH PYTHON EXTENSIONS
+QuanuX relies heavily on Python extensions (Cython/PyBind11) for strategy logic and data analysis.
+.PP
+.B robust-packaging:
+To ensure compatibility with CI/CD environments (like GitHub Dependency Submission), all `setup.py` files must:
+.RS
+1. Wrap build-time imports (`Cython`, `numpy`) in `try-except ImportError` blocks.
+2. Only define `Extension` objects if dependencies are present.
+3. Exit successfully (code 0) even if dependencies are missing (building nothing).
+.RE
+.PP
+Example:
+.RS
+.nf
+try:
+    from Cython.Build import cythonize
+except ImportError:
+    cythonize = None
+
+ext_modules = []
+if cythonize:
+    ext_modules = cythonize([...])
+
+setup(..., ext_modules=ext_modules)
+.fi
+.RE
+
+.SH DIRECTORY STRUCTURE
+.TP
+.B execution-node/
+Core C++ trading engine and adapter interfaces.
+.TP
+.B server/strategies/
+Python-based trading strategies.
+.TP
+.B extensions/
+Vendor-specific integrations (Rithmic, Databento, etc.).
+
+.SH SEE ALSO
+quanux_stats(8), quanuxctl(1)
+
+.SH AUTHOR
+QuanuX Development Team
