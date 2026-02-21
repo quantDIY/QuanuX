@@ -69,7 +69,12 @@ void ClearStreetAdapter::run() {
   }
 
   // Attempt Strategy Load
-  if (!strategy_->load()) {
+  if (strategy_->load()) {
+    if (auto strat = strategy_->getStrategy()) {
+      std::cout << "Strategy Loaded Successfully." << std::endl;
+      strat->setEngine(engine_.get());
+    }
+  } else {
     std::cerr << "Warning: No Strategy loaded." << std::endl;
   }
 

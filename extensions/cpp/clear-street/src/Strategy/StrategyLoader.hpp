@@ -13,6 +13,7 @@ public:
   virtual void onMarketData(const std::string &symbol, double bid,
                             double ask) = 0;
   virtual void onExecution(const ExecutionReport &report) = 0;
+  virtual void setEngine(IEngine *engine) {}
 };
 
 class StrategyLoader {

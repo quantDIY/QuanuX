@@ -28,6 +28,12 @@ struct ExecutionReport {
   std::string ordStatus;
 };
 
+struct CancelRequest {
+  std::string origClOrdID;
+  std::string symbol;
+  std::string side; // "1"=Buy, "2"=Sell
+};
+
 // Callback Interface
 class IEngineCallback {
 public:
@@ -51,7 +57,7 @@ public:
 
   // Trading
   virtual void sendOrder(const OrderRequest &order) = 0;
-  virtual void cancelOrder(const std::string &orderID) = 0;
+  virtual void cancelOrder(const CancelRequest &request) = 0;
 
   // Performance Tuning (OnixS specific hints, ignored by QuickFIX)
   virtual void setAffinity(int sendCpu, int recvCpu) {}

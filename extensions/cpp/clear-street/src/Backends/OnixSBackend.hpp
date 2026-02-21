@@ -54,7 +54,7 @@ public:
     session_->send(&msg);
   }
 
-  void cancelOrder(const std::string &orderID) override {
+  void cancelOrder(const CancelRequest &req) override {
     // ...
   }
 
