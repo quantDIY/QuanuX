@@ -67,6 +67,9 @@ def create_app() -> FastAPI:
     from .routers.storage import router as storage_router
     app.include_router(storage_router)
     
+    from .routers.foundry import router as foundry_router
+    app.include_router(foundry_router)
+    
     return app
 
 app = create_app()

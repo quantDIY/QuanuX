@@ -70,6 +70,14 @@ class MarketMessage:
     ts: float
 
 @strawberry.type
+class FoundryStreamMessage:
+    job_id: str
+    status: str
+    message: str
+    token: Optional[str] = None
+    progress: float
+
+@strawberry.type
 class Subscription:
     @strawberry.subscription
     async def count(self, target: int = 10) -> AsyncGenerator[int, None]:
@@ -94,6 +102,28 @@ class Subscription:
                     symbol=symbol,
                     price=float(data.get("price", 0.0)),
                     ts=float(data.get("ts", 0.0))
+                )
+            except Exception:
+                continue
+
+    @strawberry.subscription
+    async def foundry_stream(self, job_id: str) -> AsyncGenerator[FoundryStreamMessage, None]:
+        from ..services.nats import NatsService
+        nats = NatsService()
+        
+        # Subscribe to sys.foundry.stream.<job_id>
+        iterator = nats.subscribe_iterator(f"sys.foundry.stream.{job_id}")
+        
+        async for msg in iterator:
+            try:
+                import json
+                data = json.loads(msg.data.decode())
+                yield FoundryStreamMessage(
+                    job_id=job_id,
+                    status=data.get("status", "processing"),
+                    message=data.get("message", ""),
+                    token=data.get("token"),
+                    progress=float(data.get("progress", 0.0))
                 )
             except Exception:
                 continue
