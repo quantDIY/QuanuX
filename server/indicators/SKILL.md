@@ -73,7 +73,7 @@ To add new indicators, do NOT modify the core.
 
 The Indicator Engine is designed as a **Core Subsystem** but is physically decoupled.
 
-*   **Strategy Builder**: Consumes indicators via Python Bindings (generated from these C++ headers).
+*   **Execution Nodes**: Consume indicators natively in C++ via the factory pattern.
 *   **Backtester**: Links directly against `libquanux-indicators` for zero-latency execution.
 *   **Execution Nodes**: Compile strategies that inline these indicator views.
 
@@ -90,9 +90,12 @@ This module strictly adheres to the QuanuX Modular Protocol. It can be removed o
     *   Runs the `test_registry` and unit tests.
     *   Runs the `test_registry` and unit tests.
 
-## 7. Python Bindings (Strategy Builder)
+## 7. Python Bindings
 
-When generating Python strategy code (e.g. for `server/strategies/`), you can use the optimized C++ bindings.
+Python bindings (`pybind11` / `cython`) allow the indicators to be accessed from Python environments.
+
+*   `setup.py`: Standard setuptools configuration.
+*   `src/python_bindings.cpp`: `pybind11` wrapper linking indicator pointers to Python signatures.
 
 ```python
 import quanux_indicators as qi
