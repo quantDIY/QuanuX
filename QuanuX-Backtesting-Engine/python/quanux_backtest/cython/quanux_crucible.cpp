@@ -1630,8 +1630,8 @@ struct __pyx_obj_15quanux_backtest_6cython_15quanux_crucible_PyDuckDBFeeder {
 };
 
 
-/* "quanux_backtest/cython/quanux_crucible.pyx":159
- *         return self._feeder.get_metrics_json(strategy_id.encode('utf-8')).decode('utf-8')
+/* "quanux_backtest/cython/quanux_crucible.pyx":162
+ *         return self._feeder.get_metrics_json_advanced(strategy_id.encode('utf-8'), mc_iterations).decode('utf-8')
  * 
  * cdef class PyBacktestRunner:             # <<<<<<<<<<<<<<
  *     cdef quanux_crucible.BacktestRunner* _runner
@@ -2533,8 +2533,9 @@ static void __pyx_pf_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeede
 static PyObject *__pyx_pf_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_4init_appenders(struct __pyx_obj_15quanux_backtest_6cython_15quanux_crucible_PyDuckDBFeeder *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_6append_trades(struct __pyx_obj_15quanux_backtest_6cython_15quanux_crucible_PyDuckDBFeeder *__pyx_v_self, PyObject *__pyx_v_strategy_id, PyObject *__pyx_v_trades); /* proto */
 static PyObject *__pyx_pf_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_8get_metrics_json(struct __pyx_obj_15quanux_backtest_6cython_15quanux_crucible_PyDuckDBFeeder *__pyx_v_self, PyObject *__pyx_v_strategy_id); /* proto */
-static PyObject *__pyx_pf_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_10__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_15quanux_backtest_6cython_15quanux_crucible_PyDuckDBFeeder *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_12__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_15quanux_backtest_6cython_15quanux_crucible_PyDuckDBFeeder *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_pf_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_10get_metrics_json_advanced(struct __pyx_obj_15quanux_backtest_6cython_15quanux_crucible_PyDuckDBFeeder *__pyx_v_self, PyObject *__pyx_v_strategy_id, int __pyx_v_mc_iterations); /* proto */
+static PyObject *__pyx_pf_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_12__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_15quanux_backtest_6cython_15quanux_crucible_PyDuckDBFeeder *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_14__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_15quanux_backtest_6cython_15quanux_crucible_PyDuckDBFeeder *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
 static int __pyx_pf_15quanux_backtest_6cython_15quanux_crucible_16PyBacktestRunner___cinit__(struct __pyx_obj_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner *__pyx_v_self); /* proto */
 static void __pyx_pf_15quanux_backtest_6cython_15quanux_crucible_16PyBacktestRunner_2__dealloc__(struct __pyx_obj_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_15quanux_backtest_6cython_15quanux_crucible_16PyBacktestRunner_4run(struct __pyx_obj_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner *__pyx_v_self, int __pyx_v_enable_nats, PyObject *__pyx_v_nats_url); /* proto */
@@ -2575,10 +2576,10 @@ typedef struct {
   __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_items;
   __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_pop;
   __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_values;
-  PyObject *__pyx_tuple[2];
-  PyObject *__pyx_codeobj_tab[15];
-  PyObject *__pyx_string_tab[101];
-  PyObject *__pyx_number_tab[1];
+  PyObject *__pyx_tuple[3];
+  PyObject *__pyx_codeobj_tab[16];
+  PyObject *__pyx_string_tab[105];
+  PyObject *__pyx_number_tab[2];
 /* #### Code section: module_state_contents ### */
 /* CommonTypesMetaclass.module_state_decls */
 PyTypeObject *__pyx_CommonTypesMetaclassType;
@@ -2643,84 +2644,89 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #define __pyx_n_u_PyDuckDBFeeder___setstate_cython __pyx_string_tab[21]
 #define __pyx_n_u_PyDuckDBFeeder_append_trades __pyx_string_tab[22]
 #define __pyx_n_u_PyDuckDBFeeder_get_metrics_json __pyx_string_tab[23]
-#define __pyx_n_u_PyDuckDBFeeder_init_appenders __pyx_string_tab[24]
-#define __pyx_n_u_PyPerformanceAnalyzer __pyx_string_tab[25]
-#define __pyx_n_u_PyPerformanceAnalyzer___reduce_c __pyx_string_tab[26]
-#define __pyx_n_u_PyPerformanceAnalyzer___setstate __pyx_string_tab[27]
-#define __pyx_n_u_PyPerformanceAnalyzer_addTrade __pyx_string_tab[28]
-#define __pyx_n_u_PyPerformanceAnalyzer_calculateM __pyx_string_tab[29]
-#define __pyx_n_u_PyPerformanceAnalyzer_updateEqui __pyx_string_tab[30]
-#define __pyx_n_u_Pyx_PyDict_NextRef __pyx_string_tab[31]
-#define __pyx_n_u_addTrade __pyx_string_tab[32]
-#define __pyx_n_u_annualizedVol __pyx_string_tab[33]
-#define __pyx_n_u_append_trades __pyx_string_tab[34]
-#define __pyx_n_u_asyncio_coroutines __pyx_string_tab[35]
-#define __pyx_n_u_avgDrawdownPct __pyx_string_tab[36]
-#define __pyx_n_u_c_trades __pyx_string_tab[37]
-#define __pyx_n_u_cagr __pyx_string_tab[38]
-#define __pyx_n_u_calculateMetrics __pyx_string_tab[39]
-#define __pyx_n_u_calmarRatio __pyx_string_tab[40]
-#define __pyx_n_u_cfg __pyx_string_tab[41]
-#define __pyx_n_u_cline_in_traceback __pyx_string_tab[42]
-#define __pyx_n_u_currentEquity __pyx_string_tab[43]
-#define __pyx_n_u_db_path __pyx_string_tab[44]
-#define __pyx_n_u_enable_nats __pyx_string_tab[45]
-#define __pyx_n_u_expectancy __pyx_string_tab[46]
-#define __pyx_n_u_func __pyx_string_tab[47]
-#define __pyx_n_u_get_metrics_json __pyx_string_tab[48]
-#define __pyx_n_u_getstate __pyx_string_tab[49]
-#define __pyx_n_u_grossLoss __pyx_string_tab[50]
-#define __pyx_n_u_grossProfit __pyx_string_tab[51]
-#define __pyx_n_u_informationRatio __pyx_string_tab[52]
-#define __pyx_n_u_init_appenders __pyx_string_tab[53]
-#define __pyx_n_u_is_coroutine __pyx_string_tab[54]
-#define __pyx_n_u_items __pyx_string_tab[55]
-#define __pyx_n_u_m __pyx_string_tab[56]
-#define __pyx_n_u_main __pyx_string_tab[57]
-#define __pyx_n_u_maxDrawdownPct __pyx_string_tab[58]
-#define __pyx_n_u_module __pyx_string_tab[59]
-#define __pyx_n_u_name __pyx_string_tab[60]
-#define __pyx_n_u_nats_url __pyx_string_tab[61]
-#define __pyx_n_u_netProfit __pyx_string_tab[62]
-#define __pyx_n_u_omegaRatio __pyx_string_tab[63]
-#define __pyx_n_u_periodsPerYear __pyx_string_tab[64]
-#define __pyx_n_u_pop __pyx_string_tab[65]
-#define __pyx_n_u_profitFactor __pyx_string_tab[66]
-#define __pyx_n_u_pyx_state __pyx_string_tab[67]
-#define __pyx_n_u_qualname __pyx_string_tab[68]
-#define __pyx_n_u_quanux_backtest_cython_quanux_cr __pyx_string_tab[69]
-#define __pyx_n_u_reduce __pyx_string_tab[70]
-#define __pyx_n_u_reduce_cython __pyx_string_tab[71]
-#define __pyx_n_u_reduce_ex __pyx_string_tab[72]
-#define __pyx_n_u_riskFreeRate __pyx_string_tab[73]
-#define __pyx_n_u_run __pyx_string_tab[74]
-#define __pyx_n_u_self __pyx_string_tab[75]
-#define __pyx_n_u_set_name __pyx_string_tab[76]
-#define __pyx_n_u_setdefault __pyx_string_tab[77]
-#define __pyx_n_u_setstate __pyx_string_tab[78]
-#define __pyx_n_u_setstate_cython __pyx_string_tab[79]
-#define __pyx_n_u_sharpeRatio __pyx_string_tab[80]
-#define __pyx_n_u_sortinoRatio __pyx_string_tab[81]
-#define __pyx_n_u_sqn __pyx_string_tab[82]
-#define __pyx_n_u_startingEquity __pyx_string_tab[83]
-#define __pyx_n_u_strategy_id __pyx_string_tab[84]
-#define __pyx_n_u_t __pyx_string_tab[85]
-#define __pyx_n_u_test __pyx_string_tab[86]
-#define __pyx_n_u_trade __pyx_string_tab[87]
-#define __pyx_n_u_trades __pyx_string_tab[88]
-#define __pyx_n_u_ulcerIndex __pyx_string_tab[89]
-#define __pyx_n_u_updateEquity __pyx_string_tab[90]
-#define __pyx_n_u_values __pyx_string_tab[91]
-#define __pyx_n_u_winRate __pyx_string_tab[92]
-#define __pyx_kp_b_iso88591_2_j8I_1_2Q_1_Ba_Ba_r_A_b_b_A_Rq __pyx_string_tab[93]
-#define __pyx_kp_b_iso88591_7q_xwaq_HD __pyx_string_tab[94]
-#define __pyx_kp_b_iso88591_A_E_Jaq_HN_gQj __pyx_string_tab[95]
-#define __pyx_kp_b_iso88591_A_HO1 __pyx_string_tab[96]
-#define __pyx_kp_b_iso88591_A_Jiq_Q __pyx_string_tab[97]
-#define __pyx_kp_b_iso88591_A_Jm1A __pyx_string_tab[98]
-#define __pyx_kp_b_iso88591_A_t8_A_q_PQQR __pyx_string_tab[99]
-#define __pyx_kp_b_iso88591_Q __pyx_string_tab[100]
+#define __pyx_n_u_PyDuckDBFeeder_get_metrics_json_2 __pyx_string_tab[24]
+#define __pyx_n_u_PyDuckDBFeeder_init_appenders __pyx_string_tab[25]
+#define __pyx_n_u_PyPerformanceAnalyzer __pyx_string_tab[26]
+#define __pyx_n_u_PyPerformanceAnalyzer___reduce_c __pyx_string_tab[27]
+#define __pyx_n_u_PyPerformanceAnalyzer___setstate __pyx_string_tab[28]
+#define __pyx_n_u_PyPerformanceAnalyzer_addTrade __pyx_string_tab[29]
+#define __pyx_n_u_PyPerformanceAnalyzer_calculateM __pyx_string_tab[30]
+#define __pyx_n_u_PyPerformanceAnalyzer_updateEqui __pyx_string_tab[31]
+#define __pyx_n_u_Pyx_PyDict_NextRef __pyx_string_tab[32]
+#define __pyx_n_u_addTrade __pyx_string_tab[33]
+#define __pyx_n_u_annualizedVol __pyx_string_tab[34]
+#define __pyx_n_u_append_trades __pyx_string_tab[35]
+#define __pyx_n_u_asyncio_coroutines __pyx_string_tab[36]
+#define __pyx_n_u_avgDrawdownPct __pyx_string_tab[37]
+#define __pyx_n_u_c_trades __pyx_string_tab[38]
+#define __pyx_n_u_cagr __pyx_string_tab[39]
+#define __pyx_n_u_calculateMetrics __pyx_string_tab[40]
+#define __pyx_n_u_calmarRatio __pyx_string_tab[41]
+#define __pyx_n_u_cfg __pyx_string_tab[42]
+#define __pyx_n_u_cline_in_traceback __pyx_string_tab[43]
+#define __pyx_n_u_currentEquity __pyx_string_tab[44]
+#define __pyx_n_u_db_path __pyx_string_tab[45]
+#define __pyx_n_u_enable_nats __pyx_string_tab[46]
+#define __pyx_n_u_expectancy __pyx_string_tab[47]
+#define __pyx_n_u_func __pyx_string_tab[48]
+#define __pyx_n_u_get_metrics_json __pyx_string_tab[49]
+#define __pyx_n_u_get_metrics_json_advanced __pyx_string_tab[50]
+#define __pyx_n_u_getstate __pyx_string_tab[51]
+#define __pyx_n_u_grossLoss __pyx_string_tab[52]
+#define __pyx_n_u_grossProfit __pyx_string_tab[53]
+#define __pyx_n_u_informationRatio __pyx_string_tab[54]
+#define __pyx_n_u_init_appenders __pyx_string_tab[55]
+#define __pyx_n_u_is_coroutine __pyx_string_tab[56]
+#define __pyx_n_u_items __pyx_string_tab[57]
+#define __pyx_n_u_m __pyx_string_tab[58]
+#define __pyx_n_u_main __pyx_string_tab[59]
+#define __pyx_n_u_maxDrawdownPct __pyx_string_tab[60]
+#define __pyx_n_u_mc_iterations __pyx_string_tab[61]
+#define __pyx_n_u_module __pyx_string_tab[62]
+#define __pyx_n_u_name __pyx_string_tab[63]
+#define __pyx_n_u_nats_url __pyx_string_tab[64]
+#define __pyx_n_u_netProfit __pyx_string_tab[65]
+#define __pyx_n_u_omegaRatio __pyx_string_tab[66]
+#define __pyx_n_u_periodsPerYear __pyx_string_tab[67]
+#define __pyx_n_u_pop __pyx_string_tab[68]
+#define __pyx_n_u_profitFactor __pyx_string_tab[69]
+#define __pyx_n_u_pyx_state __pyx_string_tab[70]
+#define __pyx_n_u_qualname __pyx_string_tab[71]
+#define __pyx_n_u_quanux_backtest_cython_quanux_cr __pyx_string_tab[72]
+#define __pyx_n_u_reduce __pyx_string_tab[73]
+#define __pyx_n_u_reduce_cython __pyx_string_tab[74]
+#define __pyx_n_u_reduce_ex __pyx_string_tab[75]
+#define __pyx_n_u_riskFreeRate __pyx_string_tab[76]
+#define __pyx_n_u_run __pyx_string_tab[77]
+#define __pyx_n_u_self __pyx_string_tab[78]
+#define __pyx_n_u_set_name __pyx_string_tab[79]
+#define __pyx_n_u_setdefault __pyx_string_tab[80]
+#define __pyx_n_u_setstate __pyx_string_tab[81]
+#define __pyx_n_u_setstate_cython __pyx_string_tab[82]
+#define __pyx_n_u_sharpeRatio __pyx_string_tab[83]
+#define __pyx_n_u_sortinoRatio __pyx_string_tab[84]
+#define __pyx_n_u_sqn __pyx_string_tab[85]
+#define __pyx_n_u_startingEquity __pyx_string_tab[86]
+#define __pyx_n_u_strategy_id __pyx_string_tab[87]
+#define __pyx_n_u_t __pyx_string_tab[88]
+#define __pyx_n_u_test __pyx_string_tab[89]
+#define __pyx_n_u_trade __pyx_string_tab[90]
+#define __pyx_n_u_trades __pyx_string_tab[91]
+#define __pyx_n_u_ulcerIndex __pyx_string_tab[92]
+#define __pyx_n_u_updateEquity __pyx_string_tab[93]
+#define __pyx_n_u_values __pyx_string_tab[94]
+#define __pyx_n_u_winRate __pyx_string_tab[95]
+#define __pyx_kp_b_iso88591_2_j8I_1_2Q_1_Ba_Ba_r_A_b_b_A_Rq __pyx_string_tab[96]
+#define __pyx_kp_b_iso88591_7q_xwaq_HD __pyx_string_tab[97]
+#define __pyx_kp_b_iso88591_A_E_Jaq_HN_gQj __pyx_string_tab[98]
+#define __pyx_kp_b_iso88591_A_HO1 __pyx_string_tab[99]
+#define __pyx_kp_b_iso88591_A_Jiq_Q __pyx_string_tab[100]
+#define __pyx_kp_b_iso88591_A_Jm1A __pyx_string_tab[101]
+#define __pyx_kp_b_iso88591_A_t8_A_q_PQQR __pyx_string_tab[102]
+#define __pyx_kp_b_iso88591_MQ_t8_5Qk_Saahhiij __pyx_string_tab[103]
+#define __pyx_kp_b_iso88591_Q __pyx_string_tab[104]
 #define __pyx_int_252 __pyx_number_tab[0]
+#define __pyx_int_1000 __pyx_number_tab[1]
 /* #### Code section: module_state_clear ### */
 #if CYTHON_USE_MODULE_STATE
 static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
@@ -2743,10 +2749,10 @@ static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_type_15quanux_backtest_6cython_15quanux_crucible_PyDuckDBFeeder);
   Py_CLEAR(clear_module_state->__pyx_ptype_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner);
   Py_CLEAR(clear_module_state->__pyx_type_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner);
-  for (int i=0; i<2; ++i) { Py_CLEAR(clear_module_state->__pyx_tuple[i]); }
-  for (int i=0; i<15; ++i) { Py_CLEAR(clear_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<101; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
-  for (int i=0; i<1; ++i) { Py_CLEAR(clear_module_state->__pyx_number_tab[i]); }
+  for (int i=0; i<3; ++i) { Py_CLEAR(clear_module_state->__pyx_tuple[i]); }
+  for (int i=0; i<16; ++i) { Py_CLEAR(clear_module_state->__pyx_codeobj_tab[i]); }
+  for (int i=0; i<105; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<2; ++i) { Py_CLEAR(clear_module_state->__pyx_number_tab[i]); }
 /* #### Code section: module_state_clear_contents ### */
 /* CommonTypesMetaclass.module_state_clear */
 Py_CLEAR(clear_module_state->__pyx_CommonTypesMetaclassType);
@@ -2777,10 +2783,10 @@ static CYTHON_SMALL_CODE int __pyx_m_traverse(PyObject *m, visitproc visit, void
   Py_VISIT(traverse_module_state->__pyx_type_15quanux_backtest_6cython_15quanux_crucible_PyDuckDBFeeder);
   Py_VISIT(traverse_module_state->__pyx_ptype_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner);
   Py_VISIT(traverse_module_state->__pyx_type_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner);
-  for (int i=0; i<2; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_tuple[i]); }
-  for (int i=0; i<15; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<101; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
-  for (int i=0; i<1; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_number_tab[i]); }
+  for (int i=0; i<3; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_tuple[i]); }
+  for (int i=0; i<16; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_codeobj_tab[i]); }
+  for (int i=0; i<105; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<2; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_number_tab[i]); }
 /* #### Code section: module_state_traverse_contents ### */
 /* CommonTypesMetaclass.module_state_traverse */
 Py_VISIT(traverse_module_state->__pyx_CommonTypesMetaclassType);
@@ -6952,7 +6958,7 @@ static PyObject *__pyx_pf_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDB
  *     def get_metrics_json(self, str strategy_id):
  *         return self._feeder.get_metrics_json(strategy_id.encode('utf-8')).decode('utf-8')             # <<<<<<<<<<<<<<
  * 
- * cdef class PyBacktestRunner:
+ *     def get_metrics_json_advanced(self, str strategy_id, int mc_iterations = 1000):
 */
   __Pyx_XDECREF(__pyx_r);
   if (unlikely(__pyx_v_strategy_id == Py_None)) {
@@ -6988,6 +6994,177 @@ static PyObject *__pyx_pf_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDB
   return __pyx_r;
 }
 
+/* "quanux_backtest/cython/quanux_crucible.pyx":159
+ *         return self._feeder.get_metrics_json(strategy_id.encode('utf-8')).decode('utf-8')
+ * 
+ *     def get_metrics_json_advanced(self, str strategy_id, int mc_iterations = 1000):             # <<<<<<<<<<<<<<
+ *         return self._feeder.get_metrics_json_advanced(strategy_id.encode('utf-8'), mc_iterations).decode('utf-8')
+ * 
+*/
+
+/* Python wrapper */
+static PyObject *__pyx_pw_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_11get_metrics_json_advanced(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+static PyMethodDef __pyx_mdef_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_11get_metrics_json_advanced = {"get_metrics_json_advanced", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_11get_metrics_json_advanced, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_11get_metrics_json_advanced(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  PyObject *__pyx_v_strategy_id = 0;
+  int __pyx_v_mc_iterations;
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject* values[2] = {0,0};
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("get_metrics_json_advanced (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  {
+    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_strategy_id,&__pyx_mstate_global->__pyx_n_u_mc_iterations,0};
+    const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 159, __pyx_L3_error)
+    if (__pyx_kwds_len > 0) {
+      switch (__pyx_nargs) {
+        case  2:
+        values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 159, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  1:
+        values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 159, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      const Py_ssize_t kwd_pos_args = __pyx_nargs;
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "get_metrics_json_advanced", 0) < (0)) __PYX_ERR(0, 159, __pyx_L3_error)
+      for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("get_metrics_json_advanced", 0, 1, 2, i); __PYX_ERR(0, 159, __pyx_L3_error) }
+      }
+    } else {
+      switch (__pyx_nargs) {
+        case  2:
+        values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 159, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  1:
+        values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 159, __pyx_L3_error)
+        break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+    }
+    __pyx_v_strategy_id = ((PyObject*)values[0]);
+    if (values[1]) {
+      __pyx_v_mc_iterations = __Pyx_PyLong_As_int(values[1]); if (unlikely((__pyx_v_mc_iterations == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 159, __pyx_L3_error)
+    } else {
+      __pyx_v_mc_iterations = ((int)0x3E8);
+    }
+  }
+  goto __pyx_L6_skip;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("get_metrics_json_advanced", 0, 1, 2, __pyx_nargs); __PYX_ERR(0, 159, __pyx_L3_error)
+  __pyx_L6_skip:;
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __Pyx_AddTraceback("quanux_backtest.cython.quanux_crucible.PyDuckDBFeeder.get_metrics_json_advanced", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_strategy_id), (&PyUnicode_Type), 1, "strategy_id", 1))) __PYX_ERR(0, 159, __pyx_L1_error)
+  __pyx_r = __pyx_pf_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_10get_metrics_json_advanced(((struct __pyx_obj_15quanux_backtest_6cython_15quanux_crucible_PyDuckDBFeeder *)__pyx_v_self), __pyx_v_strategy_id, __pyx_v_mc_iterations);
+
+  /* function exit code */
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __pyx_r = NULL;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  goto __pyx_L7_cleaned_up;
+  __pyx_L0:;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __pyx_L7_cleaned_up:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_10get_metrics_json_advanced(struct __pyx_obj_15quanux_backtest_6cython_15quanux_crucible_PyDuckDBFeeder *__pyx_v_self, PyObject *__pyx_v_strategy_id, int __pyx_v_mc_iterations) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  std::string __pyx_t_2;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("get_metrics_json_advanced", 0);
+
+  /* "quanux_backtest/cython/quanux_crucible.pyx":160
+ * 
+ *     def get_metrics_json_advanced(self, str strategy_id, int mc_iterations = 1000):
+ *         return self._feeder.get_metrics_json_advanced(strategy_id.encode('utf-8'), mc_iterations).decode('utf-8')             # <<<<<<<<<<<<<<
+ * 
+ * cdef class PyBacktestRunner:
+*/
+  __Pyx_XDECREF(__pyx_r);
+  if (unlikely(__pyx_v_strategy_id == Py_None)) {
+    PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "encode");
+    __PYX_ERR(0, 160, __pyx_L1_error)
+  }
+  __pyx_t_1 = PyUnicode_AsUTF8String(__pyx_v_strategy_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 160, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 160, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_decode_cpp_string(__pyx_v_self->_feeder->get_metrics_json_advanced(__pyx_t_2, __pyx_v_mc_iterations), 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 160, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "quanux_backtest/cython/quanux_crucible.pyx":159
+ *         return self._feeder.get_metrics_json(strategy_id.encode('utf-8')).decode('utf-8')
+ * 
+ *     def get_metrics_json_advanced(self, str strategy_id, int mc_iterations = 1000):             # <<<<<<<<<<<<<<
+ *         return self._feeder.get_metrics_json_advanced(strategy_id.encode('utf-8'), mc_iterations).decode('utf-8')
+ * 
+*/
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("quanux_backtest.cython.quanux_crucible.PyDuckDBFeeder.get_metrics_json_advanced", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
 /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
  *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
@@ -6995,15 +7172,15 @@ static PyObject *__pyx_pf_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDB
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_11__reduce_cython__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_13__reduce_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_11__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_11__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_11__reduce_cython__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_13__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_13__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_13__reduce_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -7029,14 +7206,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
   if (unlikely(__pyx_kwds_len < 0)) return NULL;
   if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("__reduce_cython__", __pyx_kwds); return NULL;}
-  __pyx_r = __pyx_pf_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_10__reduce_cython__(((struct __pyx_obj_15quanux_backtest_6cython_15quanux_crucible_PyDuckDBFeeder *)__pyx_v_self));
+  __pyx_r = __pyx_pf_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_12__reduce_cython__(((struct __pyx_obj_15quanux_backtest_6cython_15quanux_crucible_PyDuckDBFeeder *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_10__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_15quanux_backtest_6cython_15quanux_crucible_PyDuckDBFeeder *__pyx_v_self) {
+static PyObject *__pyx_pf_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_12__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_15quanux_backtest_6cython_15quanux_crucible_PyDuckDBFeeder *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_lineno = 0;
@@ -7076,15 +7253,15 @@ static PyObject *__pyx_pf_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDB
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_13__setstate_cython__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_15__setstate_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_13__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_13__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_13__setstate_cython__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_15__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_15__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_15__setstate_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -7150,7 +7327,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_12__setstate_cython__(((struct __pyx_obj_15quanux_backtest_6cython_15quanux_crucible_PyDuckDBFeeder *)__pyx_v_self), __pyx_v___pyx_state);
+  __pyx_r = __pyx_pf_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_14__setstate_cython__(((struct __pyx_obj_15quanux_backtest_6cython_15quanux_crucible_PyDuckDBFeeder *)__pyx_v_self), __pyx_v___pyx_state);
 
   /* function exit code */
   for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
@@ -7160,7 +7337,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_12__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_15quanux_backtest_6cython_15quanux_crucible_PyDuckDBFeeder *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_14__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_15quanux_backtest_6cython_15quanux_crucible_PyDuckDBFeeder *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_lineno = 0;
@@ -7192,7 +7369,7 @@ static PyObject *__pyx_pf_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDB
   return __pyx_r;
 }
 
-/* "quanux_backtest/cython/quanux_crucible.pyx":162
+/* "quanux_backtest/cython/quanux_crucible.pyx":165
  *     cdef quanux_crucible.BacktestRunner* _runner
  * 
  *     def __cinit__(self):             # <<<<<<<<<<<<<<
@@ -7232,7 +7409,7 @@ static int __pyx_pf_15quanux_backtest_6cython_15quanux_crucible_16PyBacktestRunn
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
 
-  /* "quanux_backtest/cython/quanux_crucible.pyx":163
+  /* "quanux_backtest/cython/quanux_crucible.pyx":166
  * 
  *     def __cinit__(self):
  *         self._runner = new quanux_crucible.BacktestRunner()             # <<<<<<<<<<<<<<
@@ -7243,11 +7420,11 @@ static int __pyx_pf_15quanux_backtest_6cython_15quanux_crucible_16PyBacktestRunn
     __pyx_t_1 = new quanux::engine::BacktestRunner();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(0, 163, __pyx_L1_error)
+    __PYX_ERR(0, 166, __pyx_L1_error)
   }
   __pyx_v_self->_runner = __pyx_t_1;
 
-  /* "quanux_backtest/cython/quanux_crucible.pyx":162
+  /* "quanux_backtest/cython/quanux_crucible.pyx":165
  *     cdef quanux_crucible.BacktestRunner* _runner
  * 
  *     def __cinit__(self):             # <<<<<<<<<<<<<<
@@ -7265,7 +7442,7 @@ static int __pyx_pf_15quanux_backtest_6cython_15quanux_crucible_16PyBacktestRunn
   return __pyx_r;
 }
 
-/* "quanux_backtest/cython/quanux_crucible.pyx":165
+/* "quanux_backtest/cython/quanux_crucible.pyx":168
  *         self._runner = new quanux_crucible.BacktestRunner()
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -7289,7 +7466,7 @@ static void __pyx_pw_15quanux_backtest_6cython_15quanux_crucible_16PyBacktestRun
 static void __pyx_pf_15quanux_backtest_6cython_15quanux_crucible_16PyBacktestRunner_2__dealloc__(struct __pyx_obj_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner *__pyx_v_self) {
   int __pyx_t_1;
 
-  /* "quanux_backtest/cython/quanux_crucible.pyx":166
+  /* "quanux_backtest/cython/quanux_crucible.pyx":169
  * 
  *     def __dealloc__(self):
  *         if self._runner != NULL:             # <<<<<<<<<<<<<<
@@ -7299,7 +7476,7 @@ static void __pyx_pf_15quanux_backtest_6cython_15quanux_crucible_16PyBacktestRun
   __pyx_t_1 = (__pyx_v_self->_runner != NULL);
   if (__pyx_t_1) {
 
-    /* "quanux_backtest/cython/quanux_crucible.pyx":167
+    /* "quanux_backtest/cython/quanux_crucible.pyx":170
  *     def __dealloc__(self):
  *         if self._runner != NULL:
  *             del self._runner             # <<<<<<<<<<<<<<
@@ -7308,7 +7485,7 @@ static void __pyx_pf_15quanux_backtest_6cython_15quanux_crucible_16PyBacktestRun
 */
     delete __pyx_v_self->_runner;
 
-    /* "quanux_backtest/cython/quanux_crucible.pyx":166
+    /* "quanux_backtest/cython/quanux_crucible.pyx":169
  * 
  *     def __dealloc__(self):
  *         if self._runner != NULL:             # <<<<<<<<<<<<<<
@@ -7317,7 +7494,7 @@ static void __pyx_pf_15quanux_backtest_6cython_15quanux_crucible_16PyBacktestRun
 */
   }
 
-  /* "quanux_backtest/cython/quanux_crucible.pyx":165
+  /* "quanux_backtest/cython/quanux_crucible.pyx":168
  *         self._runner = new quanux_crucible.BacktestRunner()
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -7328,7 +7505,7 @@ static void __pyx_pf_15quanux_backtest_6cython_15quanux_crucible_16PyBacktestRun
   /* function exit code */
 }
 
-/* "quanux_backtest/cython/quanux_crucible.pyx":169
+/* "quanux_backtest/cython/quanux_crucible.pyx":172
  *             del self._runner
  * 
  *     def run(self, bint enable_nats=False, str nats_url="nats://localhost:4222"):             # <<<<<<<<<<<<<<
@@ -7376,32 +7553,32 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_enable_nats,&__pyx_mstate_global->__pyx_n_u_nats_url,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 169, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 172, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 169, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 172, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 169, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 172, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "run", 0) < (0)) __PYX_ERR(0, 169, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "run", 0) < (0)) __PYX_ERR(0, 172, __pyx_L3_error)
       if (!values[1]) values[1] = __Pyx_NewRef(((PyObject*)__pyx_mstate_global->__pyx_kp_u_nats_localhost_4222));
     } else {
       switch (__pyx_nargs) {
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 169, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 172, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 169, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 172, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
@@ -7409,7 +7586,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       if (!values[1]) values[1] = __Pyx_NewRef(((PyObject*)__pyx_mstate_global->__pyx_kp_u_nats_localhost_4222));
     }
     if (values[0]) {
-      __pyx_v_enable_nats = __Pyx_PyObject_IsTrue(values[0]); if (unlikely((__pyx_v_enable_nats == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 169, __pyx_L3_error)
+      __pyx_v_enable_nats = __Pyx_PyObject_IsTrue(values[0]); if (unlikely((__pyx_v_enable_nats == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 172, __pyx_L3_error)
     } else {
       __pyx_v_enable_nats = ((int)0);
     }
@@ -7417,7 +7594,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("run", 0, 0, 2, __pyx_nargs); __PYX_ERR(0, 169, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("run", 0, 0, 2, __pyx_nargs); __PYX_ERR(0, 172, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -7428,7 +7605,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_nats_url), (&PyUnicode_Type), 1, "nats_url", 1))) __PYX_ERR(0, 169, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_nats_url), (&PyUnicode_Type), 1, "nats_url", 1))) __PYX_ERR(0, 172, __pyx_L1_error)
   __pyx_r = __pyx_pf_15quanux_backtest_6cython_15quanux_crucible_16PyBacktestRunner_4run(((struct __pyx_obj_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner *)__pyx_v_self), __pyx_v_enable_nats, __pyx_v_nats_url);
 
   /* function exit code */
@@ -7459,7 +7636,7 @@ static PyObject *__pyx_pf_15quanux_backtest_6cython_15quanux_crucible_16PyBackte
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("run", 0);
 
-  /* "quanux_backtest/cython/quanux_crucible.pyx":171
+  /* "quanux_backtest/cython/quanux_crucible.pyx":174
  *     def run(self, bint enable_nats=False, str nats_url="nats://localhost:4222"):
  *         cdef quanux_crucible.BacktestConfig cfg
  *         cfg.enable_nats = enable_nats             # <<<<<<<<<<<<<<
@@ -7468,7 +7645,7 @@ static PyObject *__pyx_pf_15quanux_backtest_6cython_15quanux_crucible_16PyBackte
 */
   __pyx_v_cfg.enable_nats = __pyx_v_enable_nats;
 
-  /* "quanux_backtest/cython/quanux_crucible.pyx":172
+  /* "quanux_backtest/cython/quanux_crucible.pyx":175
  *         cdef quanux_crucible.BacktestConfig cfg
  *         cfg.enable_nats = enable_nats
  *         cfg.nats_url = nats_url.encode('utf-8')             # <<<<<<<<<<<<<<
@@ -7476,22 +7653,22 @@ static PyObject *__pyx_pf_15quanux_backtest_6cython_15quanux_crucible_16PyBackte
 */
   if (unlikely(__pyx_v_nats_url == Py_None)) {
     PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "encode");
-    __PYX_ERR(0, 172, __pyx_L1_error)
+    __PYX_ERR(0, 175, __pyx_L1_error)
   }
-  __pyx_t_1 = PyUnicode_AsUTF8String(__pyx_v_nats_url); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 172, __pyx_L1_error)
+  __pyx_t_1 = PyUnicode_AsUTF8String(__pyx_v_nats_url); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 175, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 172, __pyx_L1_error)
+  __pyx_t_2 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 175, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_cfg.nats_url = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_2);
 
-  /* "quanux_backtest/cython/quanux_crucible.pyx":173
+  /* "quanux_backtest/cython/quanux_crucible.pyx":176
  *         cfg.enable_nats = enable_nats
  *         cfg.nats_url = nats_url.encode('utf-8')
  *         self._runner.run(cfg)             # <<<<<<<<<<<<<<
 */
   __pyx_v_self->_runner->run(__pyx_v_cfg);
 
-  /* "quanux_backtest/cython/quanux_crucible.pyx":169
+  /* "quanux_backtest/cython/quanux_crucible.pyx":172
  *             del self._runner
  * 
  *     def run(self, bint enable_nats=False, str nats_url="nats://localhost:4222"):             # <<<<<<<<<<<<<<
@@ -8247,8 +8424,9 @@ static PyMethodDef __pyx_methods_15quanux_backtest_6cython_15quanux_crucible_PyD
   {"init_appenders", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_5init_appenders, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
   {"append_trades", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_7append_trades, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
   {"get_metrics_json", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_9get_metrics_json, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
-  {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_11__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
-  {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_13__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"get_metrics_json_advanced", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_11get_metrics_json_advanced, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_13__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_15__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
   {0, 0, 0, 0}
 };
 #if CYTHON_USE_TYPE_SPECS
@@ -8593,15 +8771,15 @@ static int __Pyx_modinit_type_init_code(__pyx_mstatetype *__pyx_mstate) {
   if (PyObject_SetAttr(__pyx_m, __pyx_mstate_global->__pyx_n_u_PyDuckDBFeeder, (PyObject *) __pyx_mstate->__pyx_ptype_15quanux_backtest_6cython_15quanux_crucible_PyDuckDBFeeder) < (0)) __PYX_ERR(0, 136, __pyx_L1_error)
   if (__Pyx_setup_reduce((PyObject *) __pyx_mstate->__pyx_ptype_15quanux_backtest_6cython_15quanux_crucible_PyDuckDBFeeder) < (0)) __PYX_ERR(0, 136, __pyx_L1_error)
   #if CYTHON_USE_TYPE_SPECS
-  __pyx_mstate->__pyx_ptype_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner_spec, NULL); if (unlikely(!__pyx_mstate->__pyx_ptype_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner)) __PYX_ERR(0, 159, __pyx_L1_error)
-  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner_spec, __pyx_mstate->__pyx_ptype_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner) < (0)) __PYX_ERR(0, 159, __pyx_L1_error)
+  __pyx_mstate->__pyx_ptype_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner_spec, NULL); if (unlikely(!__pyx_mstate->__pyx_ptype_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner)) __PYX_ERR(0, 162, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner_spec, __pyx_mstate->__pyx_ptype_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner) < (0)) __PYX_ERR(0, 162, __pyx_L1_error)
   #else
   __pyx_mstate->__pyx_ptype_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner = &__pyx_type_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
   #endif
   #if !CYTHON_USE_TYPE_SPECS
-  if (__Pyx_PyType_Ready(__pyx_mstate->__pyx_ptype_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner) < (0)) __PYX_ERR(0, 159, __pyx_L1_error)
+  if (__Pyx_PyType_Ready(__pyx_mstate->__pyx_ptype_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner) < (0)) __PYX_ERR(0, 162, __pyx_L1_error)
   #endif
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount((PyObject*)__pyx_mstate->__pyx_ptype_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner);
@@ -8611,8 +8789,8 @@ static int __Pyx_modinit_type_init_code(__pyx_mstatetype *__pyx_mstate) {
     __pyx_mstate->__pyx_ptype_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner->tp_getattro = PyObject_GenericGetAttr;
   }
   #endif
-  if (PyObject_SetAttr(__pyx_m, __pyx_mstate_global->__pyx_n_u_PyBacktestRunner, (PyObject *) __pyx_mstate->__pyx_ptype_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner) < (0)) __PYX_ERR(0, 159, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject *) __pyx_mstate->__pyx_ptype_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner) < (0)) __PYX_ERR(0, 159, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_mstate_global->__pyx_n_u_PyBacktestRunner, (PyObject *) __pyx_mstate->__pyx_ptype_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner) < (0)) __PYX_ERR(0, 162, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject *) __pyx_mstate->__pyx_ptype_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner) < (0)) __PYX_ERR(0, 162, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -9058,12 +9236,28 @@ __Pyx_RefNannySetupContext("PyInit_quanux_crucible", 0);
   if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_15quanux_backtest_6cython_15quanux_crucible_PyDuckDBFeeder, __pyx_mstate_global->__pyx_n_u_get_metrics_json, __pyx_t_2) < (0)) __PYX_ERR(0, 156, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
+  /* "quanux_backtest/cython/quanux_crucible.pyx":159
+ *         return self._feeder.get_metrics_json(strategy_id.encode('utf-8')).decode('utf-8')
+ * 
+ *     def get_metrics_json_advanced(self, str strategy_id, int mc_iterations = 1000):             # <<<<<<<<<<<<<<
+ *         return self._feeder.get_metrics_json_advanced(strategy_id.encode('utf-8'), mc_iterations).decode('utf-8')
+ * 
+*/
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_11get_metrics_json_advanced, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_PyDuckDBFeeder_get_metrics_json_2, NULL, __pyx_mstate_global->__pyx_n_u_quanux_backtest_cython_quanux_cr, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[10])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 159, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
+  PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
+  #endif
+  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_2, __pyx_mstate_global->__pyx_tuple[1]);
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_15quanux_backtest_6cython_15quanux_crucible_PyDuckDBFeeder, __pyx_mstate_global->__pyx_n_u_get_metrics_json_advanced, __pyx_t_2) < (0)) __PYX_ERR(0, 159, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
  *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
  * def __setstate_cython__(self, __pyx_state):
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_11__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_PyDuckDBFeeder___reduce_cython, NULL, __pyx_mstate_global->__pyx_n_u_quanux_backtest_cython_quanux_cr, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[10])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_13__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_PyDuckDBFeeder___reduce_cython, NULL, __pyx_mstate_global->__pyx_n_u_quanux_backtest_cython_quanux_cr, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[11])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
@@ -9077,7 +9271,7 @@ __Pyx_RefNannySetupContext("PyInit_quanux_crucible", 0);
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
  *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_13__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_PyDuckDBFeeder___setstate_cython, NULL, __pyx_mstate_global->__pyx_n_u_quanux_backtest_cython_quanux_cr, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[11])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 3, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_15quanux_backtest_6cython_15quanux_crucible_14PyDuckDBFeeder_15__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_PyDuckDBFeeder___setstate_cython, NULL, __pyx_mstate_global->__pyx_n_u_quanux_backtest_cython_quanux_cr, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[12])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 3, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
@@ -9085,20 +9279,20 @@ __Pyx_RefNannySetupContext("PyInit_quanux_crucible", 0);
   if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_setstate_cython, __pyx_t_2) < (0)) __PYX_ERR(1, 3, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "quanux_backtest/cython/quanux_crucible.pyx":169
+  /* "quanux_backtest/cython/quanux_crucible.pyx":172
  *             del self._runner
  * 
  *     def run(self, bint enable_nats=False, str nats_url="nats://localhost:4222"):             # <<<<<<<<<<<<<<
  *         cdef quanux_crucible.BacktestConfig cfg
  *         cfg.enable_nats = enable_nats
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_15quanux_backtest_6cython_15quanux_crucible_16PyBacktestRunner_5run, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_PyBacktestRunner_run, NULL, __pyx_mstate_global->__pyx_n_u_quanux_backtest_cython_quanux_cr, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[12])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_15quanux_backtest_6cython_15quanux_crucible_16PyBacktestRunner_5run, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_PyBacktestRunner_run, NULL, __pyx_mstate_global->__pyx_n_u_quanux_backtest_cython_quanux_cr, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[13])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 172, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
   #endif
-  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_2, __pyx_mstate_global->__pyx_tuple[1]);
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner, __pyx_mstate_global->__pyx_n_u_run, __pyx_t_2) < (0)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_2, __pyx_mstate_global->__pyx_tuple[2]);
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_15quanux_backtest_6cython_15quanux_crucible_PyBacktestRunner, __pyx_mstate_global->__pyx_n_u_run, __pyx_t_2) < (0)) __PYX_ERR(0, 172, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "(tree fragment)":1
@@ -9106,7 +9300,7 @@ __Pyx_RefNannySetupContext("PyInit_quanux_crucible", 0);
  *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
  * def __setstate_cython__(self, __pyx_state):
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_15quanux_backtest_6cython_15quanux_crucible_16PyBacktestRunner_7__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_PyBacktestRunner___reduce_cython, NULL, __pyx_mstate_global->__pyx_n_u_quanux_backtest_cython_quanux_cr, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[13])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_15quanux_backtest_6cython_15quanux_crucible_16PyBacktestRunner_7__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_PyBacktestRunner___reduce_cython, NULL, __pyx_mstate_global->__pyx_n_u_quanux_backtest_cython_quanux_cr, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[14])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
@@ -9120,7 +9314,7 @@ __Pyx_RefNannySetupContext("PyInit_quanux_crucible", 0);
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
  *     raise TypeError, "no default __reduce__ due to non-trivial __cinit__"
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_15quanux_backtest_6cython_15quanux_crucible_16PyBacktestRunner_9__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_PyBacktestRunner___setstate_cyth, NULL, __pyx_mstate_global->__pyx_n_u_quanux_backtest_cython_quanux_cr, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[14])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 3, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_15quanux_backtest_6cython_15quanux_crucible_16PyBacktestRunner_9__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_PyBacktestRunner___setstate_cyth, NULL, __pyx_mstate_global->__pyx_n_u_quanux_backtest_cython_quanux_cr, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[15])); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 3, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
@@ -9202,20 +9396,31 @@ static int __Pyx_InitCachedConstants(__pyx_mstatetype *__pyx_mstate) {
   __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[0]);
   __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[0]);
 
-  /* "quanux_backtest/cython/quanux_crucible.pyx":169
+  /* "quanux_backtest/cython/quanux_crucible.pyx":159
+ *         return self._feeder.get_metrics_json(strategy_id.encode('utf-8')).decode('utf-8')
+ * 
+ *     def get_metrics_json_advanced(self, str strategy_id, int mc_iterations = 1000):             # <<<<<<<<<<<<<<
+ *         return self._feeder.get_metrics_json_advanced(strategy_id.encode('utf-8'), mc_iterations).decode('utf-8')
+ * 
+*/
+  __pyx_mstate_global->__pyx_tuple[1] = PyTuple_Pack(1, __pyx_mstate_global->__pyx_int_1000); if (unlikely(!__pyx_mstate_global->__pyx_tuple[1])) __PYX_ERR(0, 159, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[1]);
+  __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[1]);
+
+  /* "quanux_backtest/cython/quanux_crucible.pyx":172
  *             del self._runner
  * 
  *     def run(self, bint enable_nats=False, str nats_url="nats://localhost:4222"):             # <<<<<<<<<<<<<<
  *         cdef quanux_crucible.BacktestConfig cfg
  *         cfg.enable_nats = enable_nats
 */
-  __pyx_mstate_global->__pyx_tuple[1] = PyTuple_Pack(2, Py_False, __pyx_mstate_global->__pyx_kp_u_nats_localhost_4222); if (unlikely(!__pyx_mstate_global->__pyx_tuple[1])) __PYX_ERR(0, 169, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[1]);
-  __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[1]);
+  __pyx_mstate_global->__pyx_tuple[2] = PyTuple_Pack(2, Py_False, __pyx_mstate_global->__pyx_kp_u_nats_localhost_4222); if (unlikely(!__pyx_mstate_global->__pyx_tuple[2])) __PYX_ERR(0, 172, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[2]);
+  __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[2]);
   #if CYTHON_IMMORTAL_CONSTANTS
   {
     PyObject **table = __pyx_mstate->__pyx_tuple;
-    for (Py_ssize_t i=0; i<2; ++i) {
+    for (Py_ssize_t i=0; i<3; ++i) {
       #if CYTHON_COMPILING_IN_CPYTHON_FREETHREADING
       #if PY_VERSION_HEX < 0x030E0000
       if (_Py_IsOwnedByCurrentThread(table[i]) && Py_REFCNT(table[i]) == 1)
@@ -9242,31 +9447,31 @@ static int __Pyx_InitCachedConstants(__pyx_mstatetype *__pyx_mstate) {
 static int __Pyx_InitConstants(__pyx_mstatetype *__pyx_mstate) {
   CYTHON_UNUSED_VAR(__pyx_mstate);
   {
-    const struct { const unsigned int length: 8; } index[] = {{1},{179},{8},{7},{6},{2},{9},{8},{21},{50},{42},{14},{16},{34},{36},{20},{15},{33},{35},{14},{32},{34},{28},{31},{29},{21},{39},{41},{30},{38},{34},{20},{8},{13},{13},{18},{14},{8},{4},{16},{11},{3},{18},{13},{7},{11},{10},{8},{16},{12},{9},{11},{16},{14},{13},{5},{2},{8},{14},{10},{8},{8},{9},{10},{14},{3},{12},{11},{12},{38},{10},{17},{13},{12},{3},{4},{12},{10},{12},{19},{11},{12},{3},{14},{11},{1},{8},{5},{6},{10},{12},{6},{7},{141},{39},{41},{11},{15},{13},{30},{9}};
-    #if (CYTHON_COMPRESS_STRINGS) == 2 /* compression: bz2 (1112 bytes) */
-const char* const cstring = "BZh91AY&SY\330\034\301\241\000\000]\377\377\367\376\274\277|\237\264\335\277w\365(\277\377\377\360@@@@@@@@@@@@@\000@\000P\003\336\234=\3304\035\016f\032\201$\365\036\223\312=2L'\250\321\240\0324\365=#OP\006\2154\r\001\204\320bm4\230\312\034\000\r\006\206\203@\006\231\006\206@\323@\000\006@\006@d\000\022\202\004\320\"\237\222h2OD\311\003@\365\001\221\240\000\003\324\000\000\320z\217HAL\246\232\2317\245\030\230L\214F\023&\000\002\032a\031\030\020\032b0\001\031\004\244Sh\232\236\247\246\247\224\364 \032h\001\240\r\000h\000\000\000\000\0324z\2323h+|\373\325\t$\027^F\212\352Dy\330`P\320\200\244\"U\215y\026\223\302R\220T\240\n\317\\r\345\264;j#\324%'}$\213\364\214(\017\253\024\346\021\"(\263K\306\204\346#\022a\273FT;\377\013.\304b\200R\202\224Gd\300\351\030TGR\027\013\214\372ba\310\305L\252})\310O5V\270\360\353\327\237\340\314$6y!\222/H\226\005\360\0316\377b5\335\226\022[n\321\026\301\354\351\022\260G\333\300\345s\260\355\374\360>\2337\373%4\210\270\337S\246\346\232\301I;:\220\200\326\331\277\316\371\357%+U\375\337\233\0046N\t\265)\267\024&\251\304\242\022\264\014\234\034u\316\036\010C\374j=Ti\267\226\025\356<`\023`\211n\266$\2108\\\320\007\"\021\021\221\244\302 \013IC\202\014e\035\244\t\022\024\027`\037HT\226\000\202\356=i\014r%\277\313\320+8%\234\334\311\256\203\364\343%\272\333\277\255\221\262q(`\021\025G\024:\322\322\004\214\254\311qr\257\"\335\206&\223X\233\203T\3144a\236;\235\242%@\2639:\027Gc\211$M\203\306\252`\207&\205f\232\332x\326\323\242\301\007\221\220\252\307\001\311P5f\263\022D\020W~\263,\\\010>\312q\352\274\327\226\344I\004\n\350\212EV&\305WWu\024UU\\a>\250O\207\376\254\374,%b\201^\320\222\345\270\275\347)\341(It\220\255\3418\322\22730\252\2436\014\357\263\215D\244\t\324w&\260D^\304a\306$\007\326\250\021\216B\016Kb|\r\2653d,N,\200P\274\233\222`\371\342\300tJ\246\234\024\034\204\002\372\255\350\\\035\013]S\344\276\024\202kY\331\216\230:\301D\313u\215\030\345\222d\306!do\355\312\247sU\242jTN\306\206.G6\003*\026:\301\222\356v\221\314\322Q.$&\n\316\225\364\235$""c\030\275\0315\225gTAUV\t\340\023\332\272\266\251J\211\342\251@\333o\002\357\202\325Q(\023=G\224\253/\ra@\340e(\325c\265\\\321\372\347\342QN\030\262\003+\033\243\306\211\304J\331\025?\333+\314\273\324\221\310c\253Q\016\215!\262\301\014\200tMMB\222a\350\200\330\355p\332\355\002\001\024\261e\300@PC\354\211\314K\314\004\325\r\310\336\260J\210\262j\\\211\275\345\027\016bF\203>\356\244]q\207\221\245\356\341a\233j\2754IX\345\234\"\220\347\335\n\031\346\211\275d\036=\0069\256J(\267\212\250[aECu\335JH\241\203^\226^\374\260\r\004%\224\034\222E\3200gk\001\025H\301\275\0011k\201pA-\337)\250\212%\223H5\002\325\271\201Of\023H\"H\234\330\357\341\246\222\017\020\200\372\024\004]\226Sa\000\343 %\322\316\005\335O\231\r\202\310\002tO)C\354/\330\322\246\317\005\255(G\005\020B\342e\312\337\266ZQ`\"\357\034S\242B\370\223\271>\365)\331\255\\X\252Ae\313K\374\342)F\016Z\230\305\2677Y\322\270*\335%\321\\\217\222\360T\217*\260\276'\315\323\241\302\350\3337e\350)`\234\377\242\270qO\203\034\216' \206\037\006l\177:\235/\333\351\266\224\371!CF\000\342=\253t\345\006\340\215\031\351% \277\370\273\222)\302\204\206\300\346\r\010";
-    PyObject *data = __Pyx_DecompressString(cstring, 1112, 2);
+    const struct { const unsigned int length: 8; } index[] = {{1},{179},{8},{7},{6},{2},{9},{8},{21},{50},{42},{14},{16},{34},{36},{20},{15},{33},{35},{14},{32},{34},{28},{31},{40},{29},{21},{39},{41},{30},{38},{34},{20},{8},{13},{13},{18},{14},{8},{4},{16},{11},{3},{18},{13},{7},{11},{10},{8},{16},{25},{12},{9},{11},{16},{14},{13},{5},{2},{8},{14},{13},{10},{8},{8},{9},{10},{14},{3},{12},{11},{12},{38},{10},{17},{13},{12},{3},{4},{12},{10},{12},{19},{11},{12},{3},{14},{11},{1},{8},{5},{6},{10},{12},{6},{7},{141},{39},{41},{11},{15},{13},{30},{37},{9}};
+    #if (CYTHON_COMPRESS_STRINGS) == 2 /* compression: bz2 (1164 bytes) */
+const char* const cstring = "BZh91AY&SYu9\246\344\000\000b\377\377\367\376\274\277|\237\266\335\277w\375(\277\377\377\360@@@@@@@@@@@@@\000@\000P\004\036\215n\355\244\313:d\336A\241\005O\002d\325?M#\311\240\241\351\030\000\000\200=F\200\014\004\3010\324\3016\203E2j?JOi'\247\252h\320\r\006\200\000\000\000\000\r\000\000\001\240\006AOE4z$4\2154\323\365C\365\020\001\240\320\000\0004\000\0004\006M4\003RI\223\001\240LL\000F#\032\023\001\030\000\020`L\000\032\032\006\201(\202hh\247\220\004'\251\351\031\001\345\032z\215\000\000h\000\000\000\017P\332\236(\375\320\336\313\233\365\374\014\371\321\232t8\322\240Q=\232\324p\200\250ZR\232s\261/\004\253B\007P \003v\3776\1777\365z\274-\277\241;\237\3460\370\327\332\261\325R\005 k_\212\231%\300\244)g\301\317\247F\r\036\010\244\227\304`\031\20315d%1\006\312\375\313\220H,^\027\024R\354\275z\257\261\3347D\221Sf.\372\365\270Q\001.\306P\022\221\376\310\235\002\025\204*z\310\222\324(D\3330Md\016RS\"j\311Vu\352\rz\013\n\\p\216V\320\265\t #\232\346\212qA(\326a\212\241K0\306\004\201\351\356\205M\213\210N\300\371\364+\0262\r\265\013\n2v\324d\0342\244\301\006\320\005\266\203F\255\307e\235\333\322]m\nFfm\205\030\332\367\004\254\024Q\34530\202C\001Ez!\016 \004Dzk\261 M08\2334\357P\251d\315\340u:3\204\020@\331\322|\250\260\314\323\362\"\002\244\240J\017\237\215=\000\217\0360\215b}\260V>\360\321\340Z2\220Rg9\251Z\\'q&\r\257\3336\226\232\253,\227\304\340\205\330\026\342\312\2677\035\354\260\016\020\005j3a\310\243\334\304\3017\006\252\264\026\223\217IUd\2611\306^l\302\r\221-\212+\rcfp.\333X\"H9\005kt\026\253h\016l\206\tp\334\244\275k\200\211 8\215oG\252\274\325Uj\265\252(\252\252\265\272\031\235\014\377\345r\253\374\214Mp@\257H\231h\342\024iD\254\207\204\312\017]\200J\251\316\212\252\021\020\252\321Y\264.\205\006u\006\2543\t#\222\231u=\300(\177\325\240#:\021\240u\030\224>\0378\244YN\004\351\207@\330)Q\n\204X\234je\363\226`^\031\002t\271\2208\204@\262\016\252\\\364\266l(\262\2569m\233\"\324k2'\321H!\205\357'\261B0\021\221]Y\316`h\351\347P\234\344%\262e\260\260\260\335\200\250El""\216\246\315\372\300\302\260\200\342\020%J\312\334\221\351\271\010\026\036\366\314\304\276E\215Q\005TUre\023\267L\361RY\300\343)(a\216\262\352\202\316\251J\204\301)\326l!\030CL_0Yb\2232,.\277)+\277\n\303\206(b\002\010\020\314[e\222*\003\037hxw:\365\323\256\343E\301\024\325\207nX\013\323\016\270\rv\314\261T\330o@2\035\375\306p\360\"\005\013F\276\204\024F\234s\035\275z\304\341\031/\335\230I\300Y\031-\010\227v\312\006\225\017\224cv3\"\336{\261Xm\031\352\025wH\323\307t\225\200\276o\005\367\322y\214\231\t\333`v\253\226\005\271\0231\002\004\240D#\016\0014#y\213\366\202\004\305\213C\202\215{\201\215\3431\330A\0251\002\305e\230\021T{\225\234\341*e\000\272\210$o\220\270<\t\210#\231(Eh`\212n\272\010\344I\010A\207`\324\261\211\010\226\000\245\014(\214\257$\201Q\007\324K\213\236\tf\275J\257 \210\t\237\022@f!h\272\325\235j\340\"\025\251c\270@\205\210\251HgB\270\210\002 v\214\244\240\213\024\2029\266t\370\370\377\360\214_\304\030\307\306U\2437B\212\007M\263\324j\215\021{\255b\336\302l\030\211\300\206\202\311\270\265Cx1\344\231\022\346\010H+\032}#\240p\270_.f\037\323\317\347\254`\177l\032\223}rw\273ru\370\340\275\343\276:\341}\271s\360y\241\266$J\000qc\n3\252\266\255-\261\304S\2150\263\360\027rE8P\220u9\246\344";
+    PyObject *data = __Pyx_DecompressString(cstring, 1164, 2);
     if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
     const char* const bytes = __Pyx_PyBytes_AsString(data);
     #if !CYTHON_ASSUME_SAFE_MACROS
     if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
     #endif
-    #elif (CYTHON_COMPRESS_STRINGS) != 0 /* compression: zlib (964 bytes) */
-const char* const cstring = "x\332\205TKo#E\020&(@\302\032\241\000\322\n\026P\207EZ\tXG\261\"\021\205\025+g\223\210\254 \330\021BB\034Z\355\236\362\244\223\231\356q?\022\317\236r\364q\216s\234c\2169\356q\2179\372\350#?\201\237@\365\314`\274f\004\226lWu\177U\365\325\253\237\236(\013\304\2361K\236\245\366LI\"\014\t \022\003\320\314B\224\022c\265\340\026\264\007I\322;\354=\336\331\335!L\006D\3039pk\210q\003\0361c\300\0205$\003'\"+$\261i\002\246M\216\207$U\216H\200\200XE\022\304-\032\3303\220\304\200\365\002y\304\244T\226Y\241$Es!\303G$\020\032\203\210K\360\326G,2\320fA@\021\007\2010l\020\001H\377\033ra*)\330\213!V:\335\223\314\232\275\255\255Hq\026\235)c\367v:\235\216T\230\336\220\271\310\022J5\004\216\003\245$p\245\177\251\344cL\367R\260\010o\271\220\302R:rL\2721\0350~a\301\330-^\326i\253>\346\332q\201Q\333I:~\342k%C\243\234\346\360}/\335\257MN\235\224\240\227\365\366<~\345\221\322\006\004\226\306`E\376\003\243\235\354\245\317j\026\277h\026\300\222\332\024g\031\320\020\346\300\361\213\203\375#\354\233\247\276\25059\\\272\377\037\177m\226$ \003j}x\263t\027\202\2451\370\2513\364\334(\271t]6\245\262\007\215\266=\320C\245c&9t%\213\322\027\236n\303a\023\353fX\003\371& \216a]\356\246[\2349\356\"\364\362S\225J3\312%\001B\016GN\330\324\307\031\373B\341\272\321\023\030\333S\234\323:\006.\206c\221x\001\301\257*z\255x\314\244\222\013\325\346J+\207{\207'\227\341\201fW\201\272\222=ny\215\343,\324\313\234P\217\231>\365\013\307\207!\217\320\232\n\351\r8\370q\347Nk\220\266\242\027\014h\302\374\272\372\035\243~\267`\234\340jb>H}\350$\247t\271u\345IUK\032je\314\217\370-\205\236VC\201t\313\212\370\205/Y\274\336[*\014\235\247%,\304\206\306\224\306\014)\342\357x!I\324U\340\220\026~$\213\201\226\374\250\323\221\004[\205R1\204\254\014\222\200\026*0\330\216\337\200\351D%I\t8b\334*M)\3561\255)\343\212G\225\273\2457\240]MF{\351\r\370\347A\371\327\254\315\017`\214\2420\027G\032\000\351\000\256\257\201hXN]\315\035\245\372\211Z\230E\3320\227\346\014\371C\231\224Q\032\253\244*y$\021\347\365\260j\035>Kh\026\246T\004\350\322'@""\253\251\250F\303E\034\3641\226|\2748\216\227,r`\256\204\357\014LW;\267\233\263\265\257n\276\2749\237\356\036\337m\334\241\266>k}\234\177\220o\317Z\017\362N\336\237k\237\346\3739\233\265>\312\3663\374\273\237\351|c\326\372$\377\"\357\316Z\237\347\203be\376W\037~\226\237\346\243\271\227\332\274\326j\010)\336,6g\255\017\263N\326\237\256>\234>\374\366v\364\307\332\275\311\323\034\211\334\233<\311\306\371U\301\212\321l\2555\371!;\310W\362\215\353\356\237o\277\261\376\336\3440\333\360d\236\347,\037a\320\022pRl\026\337\335\204\267\375\333\363W+\327\335\352\360\347b\273\022\237g\002\241o\025\375\277\325\270\330.\272^y\177b\263\335\351\203on\2727\277\277|\347\345\350\325\372\335\375i\257?\355\237^\257\314V\337\235|\235\365\377\002Y\311\344\253";
-    PyObject *data = __Pyx_DecompressString(cstring, 964, 1);
+    #elif (CYTHON_COMPRESS_STRINGS) != 0 /* compression: zlib (1008 bytes) */
+const char* const cstring = "x\332\205T\315o\033E\024'(@B\215P\000)\242\0054\241H\225\200:\212\025D\024**\247ID+\032\354\200\220\020\207\321x\366y=\311\356\314z>\022oO9\372\350\343\036}\3141\307\036s\314q\217>\362'\360'\360fw1\251Y\250%\333\357\315\373\275\357\217\307G\312\002\261\003f\311\223\324\016\224$\302\220\000\"\321\003\315,D)1V\013nA{\220$\235\203\316\303\355\235m\302d@4\234\000\267\206\030\327\343\0213\006\014Q}\322s\"\262B\022\233&`\232\344i\237\244\312\021\t\020\020\253H\202\270\333\nv\000\222\030\260\236 \017\230\224\3122+\224\244\250.d\370\200\004B\243\023q\006^\373\220E\006\232,\010(\342 \020\206\365\"\000\351\177C.LI\005\2731\304J\247\273\222Y\263\273\271\031)\316\242\2012vw\273\325jI\205\351\365\231\213,\241TC\3408PJ\002W\330\227J>\304t\317\004\213P\312\205\024\226\322\241c\322\215h\217\361S\013\306n\362\242N\233\3253\327\216\013\364\332L\322\321#_+\031\032\3454\207\357;\351^\245r\354\244\004\275\3107\347\376K\213\224\326 \2604\006+\362?\030\355d'}RE\361\213f\001,\260u~\026\0015n\366\035?\335\337;\304\276\371\320osu\006\027\344\257\261\327dI\0022\240\326\2737\013\262\020,\215\301O\235\241'F\311\327\210)\013\316\230\344\020,\340\212\346\225~@\243\217\016\350\276\322\261\207\266%\213\322\027>\255\232\307\272\354\352a5I\326\001q\\\253\266\324Iq6\271\213\320\312\3632\247z\224K\002\204\034\014\235\260\251\3673\362\005\305\265\244G0\262\3078\317\225\017\\ \307\"\361\002\202_U\364J\221\231I%\027\252\311\225V\016\367\023_\316\302}\315\316\003u.;\334\362\n\307Y\250\027cB>f\372\330/&\357\207<Bm*\244W\340\340\327\202;\255A\3322\274\240G\023\346\327\332\357\"\365;\010\243\004W\030\363\301\320\373NrJ\027{\370\237=-\240e\221i\250\2251?\342\267 :Z\365\005\346Q\224\312_\214\"\274W\233N\205\241\363|\205\205\330\320\230\322\230a\354\370;\272\225}\314)\312ua\310\240P\005\016\203\307\217d1\320\"\013\352t$\301\226~U\014!+<&\240\205\n\0146\3557`:QIR\000\016\031\267JS\212W\201V\361\343\301\210Js\013\027\245Y\316Os\341\242\374s\236\3765\221\363\007\030!)\314\351\241\006\300p\000\217\201\201\250_\314f""\025;R\325\301\2735\261\264fz\315\000\343\207\")\2434\226L\225\364P\"\316\363a\331`<r\250\026\246T\004h\322'@\313\331)\007\310E\034\364S\254\377\350\366\320\236\261\310\2019\027\276M\220/\267\2566f+_^~qy\222\357<\275Y\273Anu\326\3708\373 \333\2325\356e\255\254;\347>\311\36626k|4\331\233\340\337\372Dgk\263\306\335\354\363\254=k|\226\365\246K\363\277\352\361\323\3548\033\316\255T\352\025WA\310\364\315\351\306\254\361\341\2445\351\346\313\367\363\373\337^\r\377X\2713~\234a w\306\217&\243\354|\312\246\303\331Jc\374\303d?[\312\326.\332\177\276\375\306\352{\343\203\311\232\017\346Y\306\262!:-\000G\323\215\351w\227\341U\367\352\344z\351\242]>\3764\335*\311g\023\201\320\267\246\335\277\331x\2725m{\346\375\261\235\354\344\367\276\276l_\376\376\362\235\227\303\353\325\233\365\274\323\315\273\307\371\362\363\233\356\034\360\rZ>\275^\277Y\272\271\233\377\314r6\310\007\"\027'\027K\263\345w\307_M\272\177\001\202\036\025\016";
+    PyObject *data = __Pyx_DecompressString(cstring, 1008, 1);
     if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
     const char* const bytes = __Pyx_PyBytes_AsString(data);
     #if !CYTHON_ASSUME_SAFE_MACROS
     if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
     #endif
-    #else /* compression: none (1874 bytes) */
-const char* const bytes = "?Note that Cython is deliberately stricter than PEP-484 and rejects subclasses of builtin types. If you need to pass subclasses then set the 'annotation_typing' directive to False.add_notedisableenablegcisenabled:memory:nats://localhost:4222no default __reduce__ due to non-trivial __cinit__quanux_backtest/cython/quanux_crucible.pyx<stringsource>PyBacktestRunnerPyBacktestRunner.__reduce_cython__PyBacktestRunner.__setstate_cython__PyBacktestRunner.runPyCrucibleTradePyCrucibleTrade.__reduce_cython__PyCrucibleTrade.__setstate_cython__PyDuckDBFeederPyDuckDBFeeder.__reduce_cython__PyDuckDBFeeder.__setstate_cython__PyDuckDBFeeder.append_tradesPyDuckDBFeeder.get_metrics_jsonPyDuckDBFeeder.init_appendersPyPerformanceAnalyzerPyPerformanceAnalyzer.__reduce_cython__PyPerformanceAnalyzer.__setstate_cython__PyPerformanceAnalyzer.addTradePyPerformanceAnalyzer.calculateMetricsPyPerformanceAnalyzer.updateEquity__Pyx_PyDict_NextRefaddTradeannualizedVolappend_tradesasyncio.coroutinesavgDrawdownPctc_tradescagrcalculateMetricscalmarRatiocfgcline_in_tracebackcurrentEquitydb_pathenable_natsexpectancy__func__get_metrics_json__getstate__grossLossgrossProfitinformationRatioinit_appenders_is_coroutineitems_m__main__maxDrawdownPct__module____name__nats_urlnetProfitomegaRatioperiodsPerYearpopprofitFactor__pyx_state__qualname__quanux_backtest.cython.quanux_crucible__reduce____reduce_cython____reduce_ex__riskFreeRaterunself__set_name__setdefault__setstate____setstate_cython__sharpeRatiosortinoRatiosqnstartingEquitystrategy_idt__test__tradetradesulcerIndexupdateEquityvalueswinRate\320\0042\260!\330\010*\250$\250j\3208I\310\021\310!\330\010\t\330\014\031\230\022\2301\330\014\033\2302\230Q\330\014\031\230\022\2301\330\014\034\230B\230a\330\014\024\220B\220a\330\014\027\220r\230\021\330\014\032\230\"\230A\330\014\036\230b\240\001\330\014\036\230b\240\001\330\014\032\230\"\230A\330\014\035\230R\230q\330\014\033\2302\230Q\330\014\034\230B\230a\330\014\033\2302\230Q\330\014\032\230\"\230A\330\014 \240""\002\240!\330\014\023\2202\220Q\320\004#\320#7\260q\340\010\013\210?\230!\330\010\013\210<\220x\230w\240a\240q\330\010\014\210H\220D\230\001\230\021\200A\360\006\000\t\r\210E\220\021\330\014\024\220J\230a\230q\240\001\330\010\014\210H\220N\240!\240;\250g\260Q\260j\300\001\200A\330\010\014\210H\220O\2401\200A\330\010\014\210J\220i\230q\240\005\240Q\200A\330\010\014\210J\220m\2401\240A\200A\330\010\017\210t\2208\320\033,\250A\250[\270\007\270q\300\t\310\027\320PQ\320QR\200\001\330\004\n\210+\220Q";
+    #else /* compression: none (1989 bytes) */
+const char* const bytes = "?Note that Cython is deliberately stricter than PEP-484 and rejects subclasses of builtin types. If you need to pass subclasses then set the 'annotation_typing' directive to False.add_notedisableenablegcisenabled:memory:nats://localhost:4222no default __reduce__ due to non-trivial __cinit__quanux_backtest/cython/quanux_crucible.pyx<stringsource>PyBacktestRunnerPyBacktestRunner.__reduce_cython__PyBacktestRunner.__setstate_cython__PyBacktestRunner.runPyCrucibleTradePyCrucibleTrade.__reduce_cython__PyCrucibleTrade.__setstate_cython__PyDuckDBFeederPyDuckDBFeeder.__reduce_cython__PyDuckDBFeeder.__setstate_cython__PyDuckDBFeeder.append_tradesPyDuckDBFeeder.get_metrics_jsonPyDuckDBFeeder.get_metrics_json_advancedPyDuckDBFeeder.init_appendersPyPerformanceAnalyzerPyPerformanceAnalyzer.__reduce_cython__PyPerformanceAnalyzer.__setstate_cython__PyPerformanceAnalyzer.addTradePyPerformanceAnalyzer.calculateMetricsPyPerformanceAnalyzer.updateEquity__Pyx_PyDict_NextRefaddTradeannualizedVolappend_tradesasyncio.coroutinesavgDrawdownPctc_tradescagrcalculateMetricscalmarRatiocfgcline_in_tracebackcurrentEquitydb_pathenable_natsexpectancy__func__get_metrics_jsonget_metrics_json_advanced__getstate__grossLossgrossProfitinformationRatioinit_appenders_is_coroutineitems_m__main__maxDrawdownPctmc_iterations__module____name__nats_urlnetProfitomegaRatioperiodsPerYearpopprofitFactor__pyx_state__qualname__quanux_backtest.cython.quanux_crucible__reduce____reduce_cython____reduce_ex__riskFreeRaterunself__set_name__setdefault__setstate____setstate_cython__sharpeRatiosortinoRatiosqnstartingEquitystrategy_idt__test__tradetradesulcerIndexupdateEquityvalueswinRate\320\0042\260!\330\010*\250$\250j\3208I\310\021\310!\330\010\t\330\014\031\230\022\2301\330\014\033\2302\230Q\330\014\031\230\022\2301\330\014\034\230B\230a\330\014\024\220B\220a\330\014\027\220r\230\021\330\014\032\230\"\230A\330\014\036\230b\240\001\330\014\036\230b\240\001\330\014\032\230\"\230A\330\014\035\230R\230q\330\014\033\2302\230Q""\330\014\034\230B\230a\330\014\033\2302\230Q\330\014\032\230\"\230A\330\014 \240\002\240!\330\014\023\2202\220Q\320\004#\320#7\260q\340\010\013\210?\230!\330\010\013\210<\220x\230w\240a\240q\330\010\014\210H\220D\230\001\230\021\200A\360\006\000\t\r\210E\220\021\330\014\024\220J\230a\230q\240\001\330\010\014\210H\220N\240!\240;\250g\260Q\260j\300\001\200A\330\010\014\210H\220O\2401\200A\330\010\014\210J\220i\230q\240\005\240Q\200A\330\010\014\210J\220m\2401\240A\200A\330\010\017\210t\2208\320\033,\250A\250[\270\007\270q\300\t\310\027\320PQ\320QR\320\004M\310Q\330\010\017\210t\2208\320\0335\260Q\260k\300\027\310\001\310\032\320Sa\320ah\320hi\320ij\200\001\330\004\n\210+\220Q";
     PyObject *data = NULL;
     CYTHON_UNUSED_VAR(__Pyx_DecompressString);
     #endif
     PyObject **stringtab = __pyx_mstate->__pyx_string_tab;
     Py_ssize_t pos = 0;
-    for (int i = 0; i < 93; i++) {
+    for (int i = 0; i < 96; i++) {
       Py_ssize_t bytes_length = index[i].length;
       PyObject *string = PyUnicode_DecodeUTF8(bytes + pos, bytes_length, NULL);
       if (likely(string) && i >= 12) PyUnicode_InternInPlace(&string);
@@ -9277,7 +9482,7 @@ const char* const bytes = "?Note that Cython is deliberately stricter than PEP-4
       stringtab[i] = string;
       pos += bytes_length;
     }
-    for (int i = 93; i < 101; i++) {
+    for (int i = 96; i < 105; i++) {
       Py_ssize_t bytes_length = index[i].length;
       PyObject *string = PyBytes_FromStringAndSize(bytes + pos, bytes_length);
       stringtab[i] = string;
@@ -9288,15 +9493,15 @@ const char* const bytes = "?Note that Cython is deliberately stricter than PEP-4
       }
     }
     Py_XDECREF(data);
-    for (Py_ssize_t i = 0; i < 101; i++) {
+    for (Py_ssize_t i = 0; i < 105; i++) {
       if (unlikely(PyObject_Hash(stringtab[i]) == -1)) {
         __PYX_ERR(0, 1, __pyx_L1_error)
       }
     }
     #if CYTHON_IMMORTAL_CONSTANTS
     {
-      PyObject **table = stringtab + 93;
-      for (Py_ssize_t i=0; i<8; ++i) {
+      PyObject **table = stringtab + 96;
+      for (Py_ssize_t i=0; i<9; ++i) {
         #if CYTHON_COMPILING_IN_CPYTHON_FREETHREADING
         #if PY_VERSION_HEX < 0x030E0000
         if (_Py_IsOwnedByCurrentThread(table[i]) && Py_REFCNT(table[i]) == 1)
@@ -9315,8 +9520,8 @@ const char* const bytes = "?Note that Cython is deliberately stricter than PEP-4
   }
   {
     PyObject **numbertab = __pyx_mstate->__pyx_number_tab + 0;
-    int16_t const cint_constants_2[] = {252};
-    for (int i = 0; i < 1; i++) {
+    int16_t const cint_constants_2[] = {252,1000};
+    for (int i = 0; i < 2; i++) {
       numbertab[i] = PyLong_FromLong(cint_constants_2[i - 0]);
       if (unlikely(!numbertab[i])) __PYX_ERR(0, 1, __pyx_L1_error)
     }
@@ -9324,7 +9529,7 @@ const char* const bytes = "?Note that Cython is deliberately stricter than PEP-4
   #if CYTHON_IMMORTAL_CONSTANTS
   {
     PyObject **table = __pyx_mstate->__pyx_number_tab;
-    for (Py_ssize_t i=0; i<1; ++i) {
+    for (Py_ssize_t i=0; i<2; ++i) {
       #if CYTHON_COMPILING_IN_CPYTHON_FREETHREADING
       #if PY_VERSION_HEX < 0x030E0000
       if (_Py_IsOwnedByCurrentThread(table[i]) && Py_REFCNT(table[i]) == 1)
@@ -9418,29 +9623,34 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
     __pyx_mstate_global->__pyx_codeobj_tab[9] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_quanux_backtest_cython_quanux_cr_2, __pyx_mstate->__pyx_n_u_get_metrics_json, __pyx_mstate->__pyx_kp_b_iso88591_A_t8_A_q_PQQR, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[9])) goto bad;
   }
   {
+    const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 159};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_strategy_id, __pyx_mstate->__pyx_n_u_mc_iterations};
+    __pyx_mstate_global->__pyx_codeobj_tab[10] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_quanux_backtest_cython_quanux_cr_2, __pyx_mstate->__pyx_n_u_get_metrics_json_advanced, __pyx_mstate->__pyx_kp_b_iso88591_MQ_t8_5Qk_Saahhiij, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[10])) goto bad;
+  }
+  {
     const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 1};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
-    __pyx_mstate_global->__pyx_codeobj_tab[10] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_reduce_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[10])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[11] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_reduce_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[11])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 3};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_pyx_state};
-    __pyx_mstate_global->__pyx_codeobj_tab[11] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_setstate_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[11])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[12] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_setstate_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[12])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 4, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 169};
+    const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 4, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 172};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_enable_nats, __pyx_mstate->__pyx_n_u_nats_url, __pyx_mstate->__pyx_n_u_cfg};
-    __pyx_mstate_global->__pyx_codeobj_tab[12] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_quanux_backtest_cython_quanux_cr_2, __pyx_mstate->__pyx_n_u_run, __pyx_mstate->__pyx_kp_b_iso88591_7q_xwaq_HD, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[12])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[13] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_quanux_backtest_cython_quanux_cr_2, __pyx_mstate->__pyx_n_u_run, __pyx_mstate->__pyx_kp_b_iso88591_7q_xwaq_HD, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[13])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 1};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
-    __pyx_mstate_global->__pyx_codeobj_tab[13] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_reduce_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[13])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[14] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_reduce_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[14])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 3};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_pyx_state};
-    __pyx_mstate_global->__pyx_codeobj_tab[14] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_setstate_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[14])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[15] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_setstate_cython, __pyx_mstate->__pyx_kp_b_iso88591_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[15])) goto bad;
   }
   Py_DECREF(tuple_dedup_map);
   return 0;

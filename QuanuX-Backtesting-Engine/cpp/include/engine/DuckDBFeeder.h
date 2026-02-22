@@ -1,6 +1,7 @@
 #pragma once
 
 #include "duckdb.hpp"
+#include "engine/metrics/AdvancedStatsAnalyzer.h"
 #include "engine/metrics/PerformanceAnalyzer.h"
 #include <functional>
 #include <iostream>
@@ -98,6 +99,75 @@ public:
            ", "
            "\"avg_mfe\": " +
            std::to_string(mfe) + "}";
+  }
+
+  std::string get_metrics_json_advanced(const std::string &strategy_id,
+                                        int mc_iterations = 1000) {
+    if (trade_appender_) {
+      trade_appender_->Flush();
+    }
+
+    std::string query =
+        "SELECT trade_id, strategy_id, entry_time, exit_time, direction, size, "
+        "entry_price, exit_price, slippage_bps, mae, mfe, queue_position, "
+        "profit FROM crucible_trades WHERE strategy_id = '" +
+        strategy_id + "' ORDER BY entry_time ASC";
+
+    auto result = conn_.Query(query);
+    if (result->HasError()) {
+      return "{\"error\": \"" + result->GetError() + "\"}";
+    }
+
+    std::vector<metrics::CrucibleTrade> trades;
+    trades.reserve(result->RowCount());
+
+    for (idx_t r = 0; r < result->RowCount(); r++) {
+      metrics::CrucibleTrade t{};
+      t.entry_time_ns = result->GetValue(2, r).IsNull()
+                            ? 0
+                            : result->GetValue(2, r).GetValue<int64_t>() * 1000;
+      t.exit_time_ns = result->GetValue(3, r).IsNull()
+                           ? 0
+                           : result->GetValue(3, r).GetValue<int64_t>() * 1000;
+      t.profit = result->GetValue(12, r).IsNull()
+                     ? 0.0
+                     : result->GetValue(12, r).GetValue<double>();
+      trades.push_back(t);
+    }
+
+    metrics::AdvancedStatsResult adv =
+        metrics::AdvancedStatsAnalyzer::compute(trades, mc_iterations);
+
+    return "{"
+           "\"strategy_id\": \"" +
+           strategy_id +
+           "\", "
+           "\"win_rate\": " +
+           std::to_string(adv.win_rate) +
+           ", "
+           "\"avg_win\": " +
+           std::to_string(adv.avg_win) +
+           ", "
+           "\"avg_loss\": " +
+           std::to_string(adv.avg_loss) +
+           ", "
+           "\"kelly_fraction\": " +
+           std::to_string(adv.kelly_fraction) +
+           ", "
+           "\"monte_carlo_expected_pnl\": " +
+           std::to_string(adv.mc_expected_pnl) +
+           ", "
+           "\"monte_carlo_95_percent_low\": " +
+           std::to_string(adv.mc_95_percentile_low_pnl) +
+           ", "
+           "\"max_drawdown_dollars\": " +
+           std::to_string(adv.max_drawdown_dollars) +
+           ", "
+           "\"max_drawdown_percent\": " +
+           std::to_string(adv.max_drawdown_percent) +
+           ", "
+           "\"uncertainty_adjusted_kelly\": " +
+           std::to_string(adv.uncertainty_adjusted_kelly) + "}";
   }
 
   void append_trades(const std::string &strategy_id,

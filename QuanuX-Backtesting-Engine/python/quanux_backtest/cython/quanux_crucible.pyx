@@ -156,6 +156,9 @@ cdef class PyDuckDBFeeder:
     def get_metrics_json(self, str strategy_id):
         return self._feeder.get_metrics_json(strategy_id.encode('utf-8')).decode('utf-8')
 
+    def get_metrics_json_advanced(self, str strategy_id, int mc_iterations = 1000):
+        return self._feeder.get_metrics_json_advanced(strategy_id.encode('utf-8'), mc_iterations).decode('utf-8')
+
 cdef class PyBacktestRunner:
     cdef quanux_crucible.BacktestRunner* _runner
 

@@ -53,6 +53,7 @@ cdef extern from "engine/DuckDBFeeder.h" namespace "quanux::engine":
         void init_appenders()
         void append_trades(const string& strategy_id, const vector[CrucibleTrade]& trades)
         string get_metrics_json(const string& strategy_id)
+        string get_metrics_json_advanced(const string& strategy_id, int mc_iterations)
 
 cdef extern from "engine/BacktestRunner.h" namespace "quanux::engine":
     cdef struct BacktestConfig:

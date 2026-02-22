@@ -136,3 +136,43 @@ def report(
     except Exception as e:
         console.print(f"[bold red]DuckDB Engine Error: {e}[/bold red]")
         raise typer.Exit(code=1)
+
+@app.command("report-advanced")
+def report_advanced(
+    strategy: str = typer.Argument(..., help="The name of the strategy to pull advanced stat metrics for."),
+    version: str = typer.Option("1.0.0", help="The version of the strategy."),
+    mc_iterations: int = typer.Option(1000, help="Number of Monte Carlo resampling iterations.")
+):
+    """
+    Retrieve Phase 5 Deep Statistical Analysis directly from the C++ Engine via Cython.
+    Calculates Kelly Fractional Ratios, Monte Carlo Distributions, and Max Drawdowns.
+    """
+    db_path = Path(f"server/backtests/{strategy}_v{version}/crucible.duckdb")
+    
+    if not db_path.exists():
+        console.print(f"[yellow]No backtest data found for {strategy} v{version}.[/yellow]")
+        console.print(f"Run 'quanuxctl crucible start {strategy} --version {version}' to generate metrics.")
+        raise typer.Exit(code=0)
+
+    try:
+        import sys
+        repo_root = Path(__file__).resolve().parent.parent.parent.parent.parent
+        engine_path = repo_root / "QuanuX-Backtesting-Engine" / "python"
+        if str(engine_path) not in sys.path:
+            sys.path.insert(0, str(engine_path))
+        import quanux_backtest.cython.quanux_crucible as qc
+    except ImportError as e:
+        console.print(f"[bold red]Failed to load Cython Engine Bindings: {e}[/bold red]")
+        raise typer.Exit(code=1)
+        
+    try:
+        feeder = qc.PyDuckDBFeeder(str(db_path))
+        metrics_json = feeder.get_metrics_json_advanced(strategy, mc_iterations)
+        
+        console.print(f"[bold magenta]Crucible Advanced Second-Round Diagnostics for {strategy} v{version}:[/bold magenta]")
+        console.print(f"[dim]Monte Carlo Iterations: {mc_iterations}[/dim]")
+        console.print(metrics_json)
+        
+    except Exception as e:
+        console.print(f"[bold red]DuckDB Advanced Engine Error: {e}[/bold red]")
+        raise typer.Exit(code=1)
