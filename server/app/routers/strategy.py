@@ -14,32 +14,11 @@ class StrategyResponse(BaseModel):
     code: str
     explanation: str
 
-from server.strategies.builder import StrategyBuilder
-
 @router.post("/generate", response_model=StrategyResponse)
 async def generate_strategy(request: StrategyRequest):
-    builder = StrategyBuilder()
-    
-    # Generate the strategy using the builder
-    # result contains {"status": "success", "path": "...", "files": {...}}
-    result = builder.generate_strategy(
-        answers=request.requirements, 
-        api_key=request.api_key,
-        provider=request.provider,
-        model_name=request.model
-    )
-    
-    # Format the response
-    # We'll combine the file contents for the code preview
-    code_preview = ""
-    for fname, content in result.get("files", {}).items():
-        code_preview += f"#File: {fname}\n{content}\n\n"
-        
-    strategy_name = request.requirements.get('naming', 'MyStrategy')
-    
-    return StrategyResponse(
-        code=code_preview,
-        explanation=f"Strategy '{strategy_name}' generated successfully in {result.get('path')}."
+    raise HTTPException(
+        status_code=501, 
+        detail="Legacy StrategyBuilder is deprecated. Use the new QuanuX Foundry NATS payload endpoints at /api/foundry/forge"
     )
 @router.post("/backtest/run", response_model=Dict[str, Any])
 async def run_backtest(request: StrategyResponse):
