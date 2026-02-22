@@ -64,16 +64,3 @@ target_link_libraries(quanux_backtest PRIVATE backtest_engine duckdb_static nats
 # Metrics Test
 add_executable(test_metrics tests/test_metrics.cpp)
 target_link_libraries(test_metrics PRIVATE backtest_engine)
-
-# Pybind11 (Python Bindings)
-FetchContent_Declare(
-  pybind11
-  GIT_REPOSITORY https://github.com/pybind/pybind11
-  GIT_TAG        v2.12.0
-)
-FetchContent_MakeAvailable(pybind11)
-
-pybind11_add_module(quanux_metrics src/bindings/bindings.cpp)
-# PerformanceAnalyzer is header-only, so no need to link backtest_engine lib if not using other parts.
-# But we include the directories implicitly via target linkage or include_directories above.
-target_link_libraries(quanux_metrics PRIVATE pybind11::module)

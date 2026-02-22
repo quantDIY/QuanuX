@@ -39,4 +39,13 @@ void NatsReplayer::publish_tick(const std::string &symbol, uint64_t ts,
   natsConnection_PublishString(conn, subject.c_str(), buffer);
 }
 
+void NatsReplayer::publish_metrics(const std::string &strategy_id,
+                                   const std::string &json_payload) {
+  if (!enabled_)
+    return;
+
+  std::string subject = "sys.crucible.report." + strategy_id;
+  natsConnection_PublishString(conn, subject.c_str(), json_payload.c_str());
+}
+
 } // namespace quanux::engine

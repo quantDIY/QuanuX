@@ -1,8 +1,11 @@
 #pragma once
 
 #include "duckdb.hpp"
+#include "engine/metrics/PerformanceAnalyzer.h"
 #include <functional>
 #include <iostream>
+#include <memory>
+#include <string>
 #include <vector>
 
 namespace quanux::engine {
@@ -11,6 +14,8 @@ class DuckDBFeeder {
 public:
   duckdb::DuckDB db_;
   duckdb::Connection conn_;
+  std::unique_ptr<duckdb::Appender> trade_appender_;
+  std::unique_ptr<duckdb::Appender> perf_appender_;
 
   DuckDBFeeder(const std::string &db_path = ":memory:")
       : db_(db_path.empty() ? nullptr : db_path.c_str()), conn_(db_) {
@@ -18,6 +23,65 @@ public:
       std::cout << "DuckDB: Initialized in-memory database." << std::endl;
     } else {
       std::cout << "DuckDB: Connected to " << db_path << std::endl;
+    }
+  }
+
+  void init_appenders() {
+    try {
+      trade_appender_ =
+          std::make_unique<duckdb::Appender>(conn_, "crucible_trades");
+      // perf_appender_ = std::make_unique<duckdb::Appender>(conn_,
+      // "crucible_performance");
+    } catch (std::exception &e) {
+      std::cerr << "DuckDB Appender Init Error: " << e.what() << std::endl;
+    }
+  }
+
+  void append_trades(const std::string &strategy_id,
+                     const std::vector<metrics::CrucibleTrade> &trades) {
+    if (!trade_appender_)
+      return;
+
+    // Write aligned memory blocks row by row
+    // Bypass all SQL query planners and parsers
+    try {
+      uint64_t trade_id = 0;
+      for (const auto &t : trades) {
+        trade_appender_->BeginRow();
+        trade_appender_->Append(trade_id++);
+        trade_appender_->Append(strategy_id.c_str(),
+                                static_cast<uint32_t>(strategy_id.size()));
+
+        // entry_time and exit_time (TIMESTAMP expects int64_t micros in DuckDB)
+        trade_appender_->Append(static_cast<int64_t>(t.entry_time_ns / 1000));
+        trade_appender_->Append(static_cast<int64_t>(t.exit_time_ns / 1000));
+
+        // direction
+        std::string dir = t.isLong ? "LONG" : "SHORT";
+        trade_appender_->Append(dir.c_str(), static_cast<uint32_t>(dir.size()));
+
+        // size
+        trade_appender_->Append(static_cast<int32_t>(t.size));
+
+        // prices
+        trade_appender_->Append(t.entryPrice);
+        trade_appender_->Append(t.exitPrice);
+        trade_appender_->Append(t.latency_slippage_bps);
+        trade_appender_->Append(t.mae);
+        trade_appender_->Append(t.mfe);
+        trade_appender_->Append(
+            static_cast<int32_t>(t.queue_position_at_entry));
+        trade_appender_->Append(t.profit);
+
+        trade_appender_->EndRow();
+      }
+
+      // Flush to disk/RAM
+      trade_appender_->Flush();
+      std::cout << "[DuckDBAppender] Flushed " << trades.size()
+                << " aligned CrucibleTrades to DB." << std::endl;
+    } catch (std::exception &e) {
+      std::cerr << "DuckDB Appender Write Error: " << e.what() << std::endl;
     }
   }
 
@@ -44,7 +108,6 @@ public:
       std::cerr << "Query Error: " << result->GetError() << std::endl;
       return;
     }
-    // Iterate not implemented in mock
     std::cout << "DuckDB: Would stream " << result->RowCount() << " rows..."
               << std::endl;
   }

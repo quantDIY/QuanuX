@@ -16,6 +16,10 @@ public:
 
   void publish_tick(const std::string &symbol, uint64_t ts, double price,
                     uint32_t size, bool is_bid);
+
+  // Broadcast exhaustive metrics to the React Dashboard
+  void publish_metrics(const std::string &strategy_id,
+                       const std::string &json_payload);
 };
 
 } // namespace quanux::engine

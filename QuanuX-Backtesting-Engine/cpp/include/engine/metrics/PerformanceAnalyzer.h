@@ -31,23 +31,27 @@ private:
   double m2 = 0.0;
 };
 
-struct Trade {
-  double entryPrice;
-  double exitPrice;
-  double profit;    // Net profit amount
-  double profitPct; // Percentage gain/loss
-  double risk;      // Initial risk amount (for R-multiples)
-  int durationBars; // How long trade was held
-  bool isLong;
+struct alignas(128) CrucibleTrade {
+  double entryPrice; // 8 bytes
+  double exitPrice;  // 8 bytes
+  double profit;     // 8 bytes
+  double profitPct;  // 8 bytes
+  double risk;       // 8 bytes
+
+  int32_t durationBars; // 4 bytes
+  uint8_t isLong;       // 1 byte
+  uint8_t _pad1[3];     // 3 bytes padding
 
   // Crucible L3 Execution Metrics
-  double mae = 0.0;                     // Maximum Adverse Excursion
-  double mfe = 0.0;                     // Maximum Favorable Excursion
-  uint32_t queue_position_at_entry = 0; // Predicted L3 queue rank
-  double latency_slippage_bps = 0.0;    // Assumed slippage due to network
-  uint64_t entry_time_ns = 0;
-  uint64_t exit_time_ns = 0;
-  uint32_t size = 0;
+  double mae;                       // 8 bytes
+  double mfe;                       // 8 bytes
+  uint32_t queue_position_at_entry; // 4 bytes
+  uint32_t size;                    // 4 bytes
+  double latency_slippage_bps;      // 8 bytes
+  uint64_t entry_time_ns;           // 8 bytes
+  uint64_t exit_time_ns;            // 8 bytes
+
+  uint8_t _pad2[32]; // 32 bytes explicit padding to hit exactly 128 bytes
 };
 
 struct Metrics {
@@ -79,10 +83,10 @@ struct Metrics {
 
 class PerformanceAnalyzer {
 private:
-  std::vector<double> equityCurve; // Account balance over time
-  std::vector<double> returns;     // Period-over-period % returns
-  std::vector<Trade> trades;       // List of closed trades
-  double riskFreeRate;             // Annualized (e.g., 0.02 for 2%)
+  std::vector<double> equityCurve;   // Account balance over time
+  std::vector<double> returns;       // Period-over-period % returns
+  std::vector<CrucibleTrade> trades; // List of closed trades
+  double riskFreeRate;               // Annualized (e.g., 0.02 for 2%)
   double startingEquity;
 
 public:
@@ -91,7 +95,7 @@ public:
     equityCurve.push_back(startingEquity);
   }
 
-  void addTrade(const Trade &t) {
+  void addTrade(const CrucibleTrade &t) {
     trades.push_back(t);
     // Note: In a real simulation, addTrade would be coupled with equity
     // updates. Here we assume setEquityCurve is called separately for
