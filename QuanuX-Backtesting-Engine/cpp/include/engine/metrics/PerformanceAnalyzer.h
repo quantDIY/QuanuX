@@ -39,6 +39,15 @@ struct Trade {
   double risk;      // Initial risk amount (for R-multiples)
   int durationBars; // How long trade was held
   bool isLong;
+
+  // Crucible L3 Execution Metrics
+  double mae = 0.0;                     // Maximum Adverse Excursion
+  double mfe = 0.0;                     // Maximum Favorable Excursion
+  uint32_t queue_position_at_entry = 0; // Predicted L3 queue rank
+  double latency_slippage_bps = 0.0;    // Assumed slippage due to network
+  uint64_t entry_time_ns = 0;
+  uint64_t exit_time_ns = 0;
+  uint32_t size = 0;
 };
 
 struct Metrics {

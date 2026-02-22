@@ -24,6 +24,10 @@ public:
   // Called when a new order arrives from the strategy
   virtual void on_new_order(OrderBookL3 &book, L3Order &order) = 0;
 
+  // Called when a real trade occurs in the market
+  virtual void on_market_trade(int64_t trade_price, uint32_t trade_size,
+                               Side aggressive_side) = 0;
+
   // Called when market data updates the book (did we get filled?)
   // Returns a vector of fills (could be partial)
   virtual std::vector<MatchResult> check_matches(OrderBookL3 &book,

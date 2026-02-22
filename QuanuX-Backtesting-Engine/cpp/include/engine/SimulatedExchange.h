@@ -56,9 +56,12 @@ public:
       // In real MBO, we would just "Place" it in the book at the end of the
       // queue. For our simulated strategy, we track it separately or just
       // pretend it's a market order if aggressive. Simplified: Add to book as a
-      // limit order.
       Side side = po.is_bid ? Side::Bid : Side::Ask;
       book_.add(po.id, po.price, po.size, side, po.effective_time);
+
+      // Notify the matcher that a new simulated order arrived
+      L3Order new_order = {po.id, po.price, po.size, po.effective_time, side};
+      matcher_->on_new_order(book_, new_order);
 
       // Try match immediately upon arrival
       auto matches = matcher_->check_matches(book_, po.effective_time);
@@ -87,6 +90,18 @@ public:
       // Our order might have been matched by this trade!
       fills_.push_back("Fill (Passive): " + std::to_string(m.fill_qty) + " @ " +
                        std::to_string(m.fill_price));
+    }
+  }
+
+  void on_market_trade(int64_t price, uint32_t size, bool is_aggressive_bid) {
+    matcher_->on_market_trade(price, size,
+                              is_aggressive_bid ? Side::Bid : Side::Ask);
+
+    // After the trade affects queue position, check matches
+    auto matches = matcher_->check_matches(book_, current_time_ns_);
+    for (auto &m : matches) {
+      fills_.push_back("Fill (Queue Depleted): " + std::to_string(m.fill_qty) +
+                       " @ " + std::to_string(m.fill_price));
     }
   }
 
