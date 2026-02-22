@@ -28,13 +28,76 @@ public:
 
   void init_appenders() {
     try {
+      auto res = conn_.Query("CREATE TABLE IF NOT EXISTS crucible_trades ("
+                             "trade_id BIGINT, strategy_id VARCHAR, "
+                             "entry_time BIGINT, exit_time BIGINT, "
+                             "direction VARCHAR, size INTEGER, "
+                             "entry_price DOUBLE, exit_price DOUBLE, "
+                             "slippage_bps DOUBLE, mae DOUBLE, mfe DOUBLE, "
+                             "queue_position INTEGER, profit DOUBLE)");
+      if (res->HasError())
+        std::cerr << "Table Create Error: " << res->GetError() << std::endl;
+
       trade_appender_ =
           std::make_unique<duckdb::Appender>(conn_, "crucible_trades");
-      // perf_appender_ = std::make_unique<duckdb::Appender>(conn_,
-      // "crucible_performance");
     } catch (std::exception &e) {
       std::cerr << "DuckDB Appender Init Error: " << e.what() << std::endl;
     }
+  }
+
+  std::string get_metrics_json(const std::string &strategy_id) {
+    if (trade_appender_) {
+      trade_appender_->Flush();
+    }
+    std::string query =
+        "SELECT sum(profit) as total_profit, count(*) as total_trades, "
+        "avg(slippage_bps) as avg_slippage, "
+        "avg(mae) as avg_mae, avg(mfe) as avg_mfe "
+        "FROM crucible_trades WHERE strategy_id = '" +
+        strategy_id + "'";
+    auto result = conn_.Query(query);
+    if (result->HasError()) {
+      return "{\"error\": \"" + result->GetError() + "\"}";
+    }
+
+    if (result->RowCount() == 0) {
+      return "{\"total_profit\": 0, \"total_trades\": 0}";
+    }
+
+    double profit = result->GetValue(0, 0).IsNull()
+                        ? 0.0
+                        : result->GetValue(0, 0).GetValue<double>();
+    int64_t trades = result->GetValue(1, 0).IsNull()
+                         ? 0
+                         : result->GetValue(1, 0).GetValue<int64_t>();
+    double slippage = result->GetValue(2, 0).IsNull()
+                          ? 0.0
+                          : result->GetValue(2, 0).GetValue<double>();
+    double mae = result->GetValue(3, 0).IsNull()
+                     ? 0.0
+                     : result->GetValue(3, 0).GetValue<double>();
+    double mfe = result->GetValue(4, 0).IsNull()
+                     ? 0.0
+                     : result->GetValue(4, 0).GetValue<double>();
+
+    return "{"
+           "\"strategy_id\": \"" +
+           strategy_id +
+           "\", "
+           "\"total_profit\": " +
+           std::to_string(profit) +
+           ", "
+           "\"total_trades\": " +
+           std::to_string(trades) +
+           ", "
+           "\"avg_slippage_bps\": " +
+           std::to_string(slippage) +
+           ", "
+           "\"avg_mae\": " +
+           std::to_string(mae) +
+           ", "
+           "\"avg_mfe\": " +
+           std::to_string(mfe) + "}";
   }
 
   void append_trades(const std::string &strategy_id,
