@@ -1939,9 +1939,13 @@ pub unsafe fn c_ptr_array_len<P: Ptr>(mut ptr: *const P) -> usize {
         return 0;
     }
     let mut len = 0;
-    while !(*ptr).is_null() {
+    loop {
+        let item = std::ptr::read(ptr);
+        if item.is_null() {
+            break;
+        }
         len += 1;
-        ptr = ptr.offset(1);
+        ptr = ptr.add(1);
     }
     len
 }
