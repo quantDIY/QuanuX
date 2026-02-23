@@ -1935,13 +1935,13 @@ pub trait FromGlibPtrContainer<P: Ptr, PP: Ptr>: FromGlibContainer<P, PP> + Size
 }
 
 pub unsafe fn c_ptr_array_len<P: Ptr>(mut ptr: *const P) -> usize {
+    if ptr.is_null() {
+        return 0;
+    }
     let mut len = 0;
-
-    if !ptr.is_null() {
-        while !(*ptr).is_null() {
-            len += 1;
-            ptr = ptr.offset(1);
-        }
+    while !(*ptr).is_null() {
+        len += 1;
+        ptr = ptr.offset(1);
     }
     len
 }
@@ -2256,6 +2256,7 @@ where
         + FromGlibPtrFull<<T as GlibPtrDefault>::GlibType>,
 {
     unsafe fn from_glib_none_as_vec(mut ptr: *mut ffi::GSList) -> Vec<T> {
+        if ptr.is_null() { return Vec::new(); }
         let mut res = Vec::new();
         while !ptr.is_null() {
             let item_ptr: <T as GlibPtrDefault>::GlibType = Ptr::from((*ptr).data);
@@ -2268,12 +2269,14 @@ where
     }
 
     unsafe fn from_glib_container_as_vec(ptr: *mut ffi::GSList) -> Vec<T> {
+        if ptr.is_null() { return Vec::new(); }
         let res = FromGlibPtrArrayContainerAsVec::from_glib_none_as_vec(ptr);
         ffi::g_slist_free(ptr);
         res
     }
 
     unsafe fn from_glib_full_as_vec(mut ptr: *mut ffi::GSList) -> Vec<T> {
+        if ptr.is_null() { return Vec::new(); }
         let orig_ptr = ptr;
         let mut res = Vec::new();
         while !ptr.is_null() {
@@ -2348,6 +2351,7 @@ where
         + FromGlibPtrFull<<T as GlibPtrDefault>::GlibType>,
 {
     unsafe fn from_glib_none_as_vec(mut ptr: *mut ffi::GList) -> Vec<T> {
+        if ptr.is_null() { return Vec::new(); }
         let mut res = Vec::new();
         while !ptr.is_null() {
             let item_ptr: <T as GlibPtrDefault>::GlibType = Ptr::from((*ptr).data);
@@ -2360,12 +2364,14 @@ where
     }
 
     unsafe fn from_glib_container_as_vec(ptr: *mut ffi::GList) -> Vec<T> {
+        if ptr.is_null() { return Vec::new(); }
         let res = FromGlibPtrArrayContainerAsVec::from_glib_none_as_vec(ptr);
         ffi::g_list_free(ptr);
         res
     }
 
     unsafe fn from_glib_full_as_vec(mut ptr: *mut ffi::GList) -> Vec<T> {
+        if ptr.is_null() { return Vec::new(); }
         let orig_ptr = ptr;
         let mut res = Vec::new();
         while !ptr.is_null() {
@@ -2572,16 +2578,19 @@ where
         + FromGlibPtrFull<<T as GlibPtrDefault>::GlibType>,
 {
     unsafe fn from_glib_none_as_vec(ptr: *mut ffi::GPtrArray) -> Vec<T> {
+        if ptr.is_null() { return Vec::new(); }
         let num = (*ptr).len as usize;
         FromGlibContainer::from_glib_none_num(ptr, num)
     }
 
     unsafe fn from_glib_container_as_vec(ptr: *mut ffi::GPtrArray) -> Vec<T> {
+        if ptr.is_null() { return Vec::new(); }
         let num = (*ptr).len as usize;
         FromGlibContainer::from_glib_container_num(ptr, num)
     }
 
     unsafe fn from_glib_full_as_vec(ptr: *mut ffi::GPtrArray) -> Vec<T> {
+        if ptr.is_null() { return Vec::new(); }
         let num = (*ptr).len as usize;
         FromGlibContainer::from_glib_full_num(ptr, num)
     }
