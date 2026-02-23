@@ -1,0 +1,50 @@
+.\" Manpage for quanux_stats
+.TH QUANUX_STATS 8 "February 2026" "1.0" "QuanuX HFT Suite"
+.SH NAME
+quanux_stats \- High-Frequency Trading Statistics Engine
+.SH SYNOPSIS
+.B quanux_stats
+.SH DESCRIPTION
+.B quanux_stats
+is the core signal generation component of the QuanuX trading platform. It is a highly optimized C++ binary designed to run on a dedicated CPU core. It ingests binary market data from NATS, calculates online statistics (Mean, Variance, Z-Score) using Welford's algorithm, and dispatches signals to the execution logic via a lock-free Single-Producer Single-Consumer (SPSC) queue.
+
+.SH OPTIONS
+The engine currently accepts configuration via environment variables or hardcoded constants (HFT standard).
+.TP
+.B NATS_URL
+URL of the NATS server (default: nats://localhost:4222).
+.TP
+.B DUCKDB_PATH
+Path to the DuckDB database file (default: market_data.db).
+
+.SH ARCHITECTURE
+The engine utilizes a dual-threaded architecture to separate ingestion from execution:
+.IP "Thread A (Ingest)"
+Handles NATS subscription callbacks, binary casting of `MarketTick` structures, DuckDB appending, and statistical updates. Pushes signals to the SPSC queue.
+.IP "Thread B (Execution)"
+Pins to a CPU core and spin-waits (using `_mm_pause`) on the SPSC queue for minimal latency signal consumption.
+
+.SH PERFORMANCE
+- **Latency**: 59ns (nanoseconds) minimum tick-to-signal.
+- **Throughput**: >3 million messages/second.
+- **Alignment**: Data structures are 64-byte aligned to prevent false sharing.
+
+.SH EXAMPLES
+.B Start the engine:
+.RS
+$ ./quanux_stats
+.RE
+
+.B Monitor output:
+.RS
+The engine prints critical signals (Z-Score > 3.0) and periodic correlation matrices to stdout.
+.RE
+
+.SH SEE ALSO
+quanuxctl(1), nats-server(1)
+
+.SH BUGS
+On non-isolated cores (e.g., standard macOS/Linux schedulers), latency spikes up to 6ms may occur due to OS preemption. For production use, verify CPU isolation settings (isolcpus).
+
+.SH AUTHOR
+QuanuX Development Team

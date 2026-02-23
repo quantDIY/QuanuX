@@ -115,3 +115,35 @@ Ensure you are running `quanuxctl` with `PYTHONPATH=.` from the project root, or
 
 ### CMake "Missing header"
 If headers like `nats.h` are missing, ensure the `FetchContent_MakeAvailable(cnats)` step succeeded in the CMake output. Try clearing the `build/` directory and re-running `cmake ..`.
+
+---
+
+## Python Extension Guidelines
+
+### Robust Packaging (CI/CD)
+When writing `setup.py` files for extensions (Cython/PyBind11), you **must** handle missing build dependencies gracefully. CI environments often run dependency checks without installing build tools like Cython or Numpy.
+
+**Requirements:**
+1. Wrap `Cython` and `numpy` imports in `try-except ImportError` blocks.
+2. Only define `Extension` objects if dependencies are present.
+3. Ensure `python setup.py --name` succeeds in a bare environment.
+
+**Example Pattern:**
+```python
+try:
+    from Cython.Build import cythonize
+    import numpy
+except ImportError:
+    cythonize = None
+
+ext_modules = []
+if cythonize:
+    # Define extensions
+    ext_modules = cythonize([...])
+
+setup(
+    name="my_extension",
+    ext_modules=ext_modules
+)
+```
+For more details, see the agent skill `python_packaging`.

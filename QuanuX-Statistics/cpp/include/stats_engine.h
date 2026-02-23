@@ -1,6 +1,9 @@
 #pragma once
-#include <Eigen/Dense>
+#include "models/WelfordRolling.hpp"
+// #include <Eigen/Dense> // Not used in this header anymore
+#include "quanux/SPSCQueue.hpp"
 #include <atomic>
+#include <cstdint>
 #include <map>
 #include <memory>
 #include <mutex>
@@ -34,20 +37,23 @@ private:
   struct NatsContext;
   std::unique_ptr<NatsContext> nats_;
 
-  // Online Stats State (Example: Keeping a rolling window for correlation)
-  // Vector of recent prices for correlation calculation
+  // Online Stats State using Rolling Window (Welford)
+  // We use a pointer to allow the forward declaration or include the header.
+  // Since WelfordRolling.hpp is a template/inline header, we can include it.
   struct InstrumentStats {
-    uint64_t count = 0;
-    double mean = 0.0;
-    double M2 = 0.0; // Welford's algorithm accumulator
+    std::unique_ptr<quanux::models::RollingStats> rolling;
 
-    // Z-Score window
-    std::vector<double> window;
-    size_t window_size = 100;
+    InstrumentStats() {
+      // Default window size 100 for now, could be config driven
+      rolling = std::make_unique<quanux::models::RollingStats>(100);
+    }
 
-    void update(double price);
-    double variance() const;
-    double std_dev() const;
+    void update(double price) { rolling->update(price); }
+
+    double mean() const { return rolling->mean(); }
+    double std_dev() const { return rolling->std_dev(); }
+    double z_score(double price) const { return rolling->z_score(price); }
+    double variance() const { return rolling->std_dev() * rolling->std_dev(); }
   };
 
   // Online Correlation State (Pairwise)
@@ -71,6 +77,20 @@ private:
   std::mutex
       stats_mutex_; // Protect maps from NATS callbacks if multithreaded (NATS C
                     // is usually single threaded callback context, but safer)
+
+  // Signal Structure for SPSC Queue
+  struct Signal {
+    uint64_t tick_ts;
+    uint32_t instrument_id;
+    double z_score;
+    double volatility;
+  };
+
+  // Lock-Free Signal Queue (Capacity 1024)
+  // We use a unique_ptr to defer construction or keep header clean-ish
+  // but template needs to be visible.
+  // Actually, we can just declare the member if we include the header.
+  quanux::SPSCQueue<Signal> signal_queue_{4096};
 
   void update_correlation(const std::string &symbol, double price);
 };
