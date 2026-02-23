@@ -49,9 +49,9 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "hono": "4.11.10",
-    "lucide-react": "^0.564.0",
-    "react-hook-form": "^7.71.1",
+    "hono": "4.12.1",
+    "lucide-react": "^0.575.0",
+    "react-hook-form": "^7.71.2",
     "tailwind-merge": "^2.6.1",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^4.3.6"
