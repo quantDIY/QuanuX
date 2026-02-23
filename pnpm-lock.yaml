@@ -106,8 +106,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       hono:
-        specifier: 4.12.1
-        version: 4.12.1
+        specifier: 4.11.7
+        version: 4.11.7
       lucide-react:
         specifier: ^0.575.0
         version: 0.575.0(react@18.3.1)
@@ -510,7 +510,7 @@ importers:
         specifier: ^7.18.0
         version: 7.18.0(eslint@9.39.3(jiti@1.21.7))(typescript@5.9.3)
       eslint:
-        specifier: 9.39.3
+        specifier: '>=9.26.0'
         version: 9.39.3(jiti@1.21.7)
       eslint-plugin-react:
         specifier: ^7.37.5
@@ -5695,10 +5695,6 @@ packages:
 
   hono@4.11.7:
     resolution: {integrity: sha512-l7qMiNee7t82bH3SeyUCt9UF15EVmaBvsppY2zQtrbIhl/yzBTny+YUxsVjSjQ6gaqaeVtZmGocom8TzBlA4Yw==}
-    engines: {node: '>=16.9.0'}
-
-  hono@4.12.1:
-    resolution: {integrity: sha512-hi9afu8g0lfJVLolxElAZGANCTTl6bewIdsRNhaywfP9K8BPf++F2z6OLrYGIinUwpRKzbZHMhPwvc0ZEpAwGw==}
     engines: {node: '>=16.9.0'}
 
   hosted-git-info@3.0.8:
@@ -14827,8 +14823,6 @@ snapshots:
   hls.js@1.6.15: {}
 
   hono@4.11.7: {}
-
-  hono@4.12.1: {}
 
   hosted-git-info@3.0.8:
     dependencies:
