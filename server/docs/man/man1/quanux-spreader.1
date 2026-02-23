@@ -1,0 +1,35 @@
+.TH QUANUX-SPREADER 1 "February 2026" "QuanuX 1.0.0" "QuanuX System"
+.SH NAME
+quanux-spreader \- Hardware-affined Execution Engine for High-Frequency Strategies
+.SH SYNOPSIS
+.B quanux-spreader
+[No arguments]
+.SH DESCRIPTION
+.B quanux-spreader
+is the compiled artifact of the Cython Forge pipeline, containing a hard-fused 59ns strategy mathematically interwoven with the dual-thread, single-core execution engine. 
+This binary executes a strict lock-free event loop on `MARKET.BIN` via NATS, processing pricing matrices and firing FIX/OnixS events.
+.SH ZERO-OVERHEAD TELEMETRY HEARTBEAT
+To preserve the 59ns latency requirement, `quanux-spreader` contains absolutely zero standard logging (e.g. `stdout`, `spdlog`) in the hot path. 
+
+Operators must monitor the "Telemetry Heartbeat" using the `PriceMatrix` struct.
+The engine writes a hardware timestamp (`arrival_tsc`) and an atomic Dirty Bit (`update_seq`) to memory for every Leg update:
+
+.EX
+struct alignas(16) PriceEntry {
+    double price;
+    std::atomic<uint32_t> update_seq;  // Pulse: Increments on every structural update
+    uint32_t arrival_tsc;              // Pulse: Low 32-bits of __builtin_ia32_rdtsc()
+};
+.EE
+
+External profiling tools (like `quanuxctl-top` or custom `eBPF` scripts) can inspect the `update_seq` for throughput metrics and analyze the `arrival_tsc` for tick inter-arrival times completely out-of-band. Because the `update_seq` utilizes `std::memory_order_release` and the struct perfectly aligns to 16-bytes, external observation introduces zero context-switching or memory contention to the primary Spreader.
+.SH ARCHITECTURE RULES
+.TP
+.B Memory Allocation
+Execution will crash if `malloc` or `new` are intercepted. 100% of structures are pre-allocated into `alignas(64)` SIMD-friendly object pools.
+.TP
+.B Thread Affinity
+The binary inherently assumes deployment onto a bare-metal NUMA-aware layout, locking the `innode_pipe_loop` and `strategy_fix_loop` to a solitary core utilizing `_mm_pause()` instructions.
+.SH SEE ALSO
+.BR quanuxctl-spreader-package (1),
+.BR quanuxctl-spreader-deploy (1)
