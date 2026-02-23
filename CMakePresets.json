@@ -38,6 +38,17 @@
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
             }
+        },
+        {
+            "name": "spreader",
+            "displayName": "Spreader Engine",
+            "description": "Configure the QuanuX Spreader Engine",
+            "binaryDir": "${sourceDir}/QuanuX-Spreader/cpp/build",
+            "generator": "Unix Makefiles",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            }
         }
     ],
     "buildPresets": [
@@ -55,6 +66,14 @@
             "configurePreset": "default",
             "targets": [
                 "quanux_backtest"
+            ]
+        },
+        {
+            "name": "build-spreader",
+            "displayName": "Build Spreader Engine",
+            "configurePreset": "spreader",
+            "targets": [
+                "quanux_spreader"
             ]
         }
     ]
