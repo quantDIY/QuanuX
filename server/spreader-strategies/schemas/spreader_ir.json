@@ -1,0 +1,102 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "QuanuX Spreader Strategy Intermediate Representation (IR)",
+    "description": "Defines the deterministic formula, logic gates, and state structure for a multi-leg Spreader Strategy. This JSON is compiled into a C++ header by `quanuxctl spreader package`.",
+    "type": "object",
+    "required": [
+        "strategy_name",
+        "legs",
+        "state_variables",
+        "logic_gates"
+    ],
+    "properties": {
+        "strategy_name": {
+            "type": "string",
+            "description": "Unique identifier for the strategy (e.g., 'CLZ4_CLF5_KalmanSpread')"
+        },
+        "legs": {
+            "type": "array",
+            "description": "The instruments involved in the spread.",
+            "items": {
+                "type": "object",
+                "required": [
+                    "instrument_id",
+                    "symbol",
+                    "multiplier"
+                ],
+                "properties": {
+                    "instrument_id": {
+                        "type": "integer",
+                        "description": "The uint32_t ID used for O(1) PriceMatrix lookups."
+                    },
+                    "symbol": {
+                        "type": "string",
+                        "description": "Human-readable symbol (e.g., 'CLZ4')"
+                    },
+                    "multiplier": {
+                        "type": "number",
+                        "description": "The leg ratio multiplier (e.g., 1.0 for Leg A, -1.0 for Leg B)"
+                    }
+                }
+            },
+            "minItems": 2
+        },
+        "state_variables": {
+            "type": "array",
+            "description": "WARNING: The compiled sum of these variables MUST NOT exceed 64 bytes to satisfy the SHM/DMA Handsake guard.",
+            "items": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "type",
+                    "initial_value"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "double",
+                            "float",
+                            "uint64_t",
+                            "int64_t",
+                            "uint32_t",
+                            "int32_t",
+                            "bool"
+                        ]
+                    },
+                    "initial_value": {
+                        "type": [
+                            "number",
+                            "boolean"
+                        ]
+                    }
+                }
+            }
+        },
+        "logic_gates": {
+            "type": "object",
+            "required": [
+                "entry_condition",
+                "exit_condition",
+                "calculate_spread"
+            ],
+            "properties": {
+                "calculate_spread": {
+                    "type": "string",
+                    "description": "Mathematical formula to compute the spread (e.g., '(Leg1.price * Leg1.multiplier) + (Leg2.price * Leg2.multiplier)')"
+                },
+                "entry_condition": {
+                    "type": "string",
+                    "description": "Boolean expression that triggers an execution Event (e.g., 'current_spread > state.entry_threshold')"
+                },
+                "exit_condition": {
+                    "type": "string",
+                    "description": "Boolean expression to close the spread."
+                }
+            }
+        }
+    }
+}

@@ -1,61 +1,13 @@
 import strawberry
 import asyncio
 from typing import AsyncGenerator, List, Optional
-from ..domain.topstep.accounts import search_accounts
-from ..domain.topstep.contracts import search_contracts
 from ..config import ServerConfig
-
-@strawberry.type
-class TopstepAccount:
-    id: str
-    name: str
-    balance: float
-
-@strawberry.type
-class TopstepContract:
-    id: str
-    contractName: str
-    contractLabel: str
-    tickSize: float
 
 @strawberry.type
 class Query:
     @strawberry.field
     def hello(self) -> str:
         return "Hello from QuanuX GraphQL!"
-
-    @strawberry.field
-    async def active_accounts(self) -> List[TopstepAccount]:
-        config = ServerConfig()
-        token = config.topstep.session_token
-        if not token:
-            raise Exception("No session token found. Please run 'python -m server.cli.refresh_token'.")
-            
-        accounts_data = await search_accounts(token, only_active=True)
-        return [
-            TopstepAccount(
-                id=str(a["id"]),
-                name=a["name"],
-                balance=float(a.get("balance", 0.0))
-            ) for a in accounts_data
-        ]
-
-    @strawberry.field
-    async def map_contracts(self, search_text: str = "NQ") -> List[TopstepContract]:
-        config = ServerConfig()
-        token = config.topstep.session_token
-        if not token:
-            raise Exception("No session token found. Please run 'python -m server.cli.refresh_token'.")
-
-        contracts_data = await search_contracts(token, search_text=search_text)
-        return [
-            TopstepContract(
-                id=str(c["id"]),
-                contractName=c["name"],
-                contractLabel=c["description"],
-                tickSize=c["tickSize"]
-            ) for c in contracts_data
-        ]
 
 @strawberry.type
 class Mutation:
@@ -68,6 +20,14 @@ class MarketMessage:
     symbol: str
     price: float
     ts: float
+
+@strawberry.type
+class FoundryStreamMessage:
+    job_id: str
+    status: str
+    message: str
+    token: Optional[str] = None
+    progress: float
 
 @strawberry.type
 class Subscription:
@@ -94,6 +54,28 @@ class Subscription:
                     symbol=symbol,
                     price=float(data.get("price", 0.0)),
                     ts=float(data.get("ts", 0.0))
+                )
+            except Exception:
+                continue
+
+    @strawberry.subscription
+    async def foundry_stream(self, job_id: str) -> AsyncGenerator[FoundryStreamMessage, None]:
+        from ..services.nats import NatsService
+        nats = NatsService()
+        
+        # Subscribe to sys.foundry.stream.<job_id>
+        iterator = nats.subscribe_iterator(f"sys.foundry.stream.{job_id}")
+        
+        async for msg in iterator:
+            try:
+                import json
+                data = json.loads(msg.data.decode())
+                yield FoundryStreamMessage(
+                    job_id=job_id,
+                    status=data.get("status", "processing"),
+                    message=data.get("message", ""),
+                    token=data.get("token"),
+                    progress=float(data.get("progress", 0.0))
                 )
             except Exception:
                 continue

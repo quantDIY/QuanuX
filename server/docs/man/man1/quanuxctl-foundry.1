@@ -1,0 +1,74 @@
+.TH QUANUXCTL-FOUNDRY 1 "February 2026" "QuanuX System Manual" "QuanuX Commands"
+.SH NAME
+quanuxctl-foundry \- The QuanuX generative AI engine for deterministic strategy compilation.
+
+.SH SYNOPSIS
+.B quanuxctl" "foundry"
+.I COMMAND
+[
+.I OPTIONS
+]
+
+.SH DESCRIPTION
+The
+.B foundry
+module is the CLI interface to the QuanuX Generative AI Engine. It allows users to invoke LLMs to draft, verify, and vendor trading strategies across multiple languages (Python, Cython, C++) while enforcing mathematical equivalence via the Deterministic Sandbox.
+
+Unlike standard code generation, the Foundry utilizes an intermediate JSON representation (IR) to define the logic AST before delegating language-specific bindings. This ensures zero drift between the backtested Python variant and the deployed C++ execution binary.
+
+.SH COMMANDS
+
+.TP
+.B forge
+Initiates an AI generation pipeline to create a new sovereign component.
+.br
+\fBquanuxctl foundry forge --type <entry|exit|indicator|strategy> --name <Name> --lang <cpp|python|cython> [--version <string>]\fR
+.br
+Example: \fBquanuxctl foundry forge --type indicator --name OrderBookDelta --lang cpp --version 20\fR
+.br
+This command hits the REST API \fI/api/foundry/forge\fR, publishing the job to the NATS event bus.
+
+.TP
+.B verify
+Triggers the Deterministic Sandbox against a generated strategy.
+.br
+\fBquanuxctl foundry verify --target <strategy_name>\fR
+.br
+The sandbox will isolate the compiled C++ code and the interpreted Python code, feed both engines an identical mock tick stream, and assert identical state variations. Code that drifts will fail verification.
+
+.TP
+.B deploy
+Vendors the verified code components and pushes a self-sovereign artifact to an edge execution node.
+.br
+\fBquanuxctl foundry deploy --target <strategy_name> --node <remote_node_id>\fR
+
+.TP
+.B inspect
+Connects to an edge node to allow real-time swapping of sovereign modules without halting the overarching execution loop.
+.br
+\fBquanuxctl foundry inspect <node_id>/<strategy>\fR
+
+.SH ARCHITECTURE & NATS
+Behind the scenes, the CLI interacts heavily with the NATS messaging topology:
+.br
+* \fBsys.foundry.request.forge\fR: Submits compilation jobs to the generator.
+.br
+* \fBsys.foundry.request.verify\fR: Submits test payloads to the sandbox.
+.br
+* \fBsys.foundry.stream.<job_id>\fR: Yields real-time generation tokens for UI streaming integration.
+
+.SH FILES
+.I server/foundry/schemas/*.json
+- The mathematically binding Intermediate Representation (IR) schemas.
+.br
+.I server/foundry/engine/
+- The Generator, Router, and Sandbox Python modules.
+.br
+.I server/foundry/entries/
+- Generated files taxonomized by \fI<lang>/<version>/\fR.
+
+.SH BUGS
+Figma UI AI may incorrectly suggest "generic" trading components or assume standard C++ instead of the explicitly required C++20 standard. Always specify \fB--version 20\fR when issuing the C++ target language.
+
+.SH AUTHOR
+QuanuX AI Engineering Team.

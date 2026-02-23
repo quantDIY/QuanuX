@@ -1,0 +1,45 @@
+.TH QUANUXCTL-SPREADER 1 "February 2026" "QuanuX 1.0.0" "QuanuX Commands"
+.SH NAME
+quanuxctl-spreader \- Manage QuanuX-Spreader Engine Deployment and Strategy Injection
+.SH SYNOPSIS
+.B quanuxctl spreader
+.I COMMAND
+[\fIARGS\fR]
+.SH DESCRIPTION
+The
+.B quanuxctl spreader
+tool suite is the administrative interface for managing the 59ns QuanuX-Spreader Engine. It handles the "Cython Forge" pipeline, converting analytical Spread Math (JSON IR) into strictly-typed C++ via Cython transpilation, compiling it into a hardware-optimized binary, and securely deploying it over the NATS/ZMQ mesh to a waiting remote Execution Node.
+.SH COMMANDS
+.TP
+.B package \fI<STRATEGY_JSON_PATH>\fR
+Forges the Spread Formula into a High-Frequency Executive Binary.
+
+This complex command performs the following sequence:
+1. Parses the Spreader JSON IR Schema.
+2. Transpiles the structure into a Cython `_wrapper.pyx` (for Crucible backtesting) and a highly optimized `strategy_injected.hpp` (for the C++ 59ns loop).
+3. Evaluates structural guards, failing the build if `StrategyState` exceeds a 64-byte L1 Cache Line.
+4. Invokes the `spreader` CMake preset to perform a hardware-aware compilation (`-march=native`, `-O3`, `-flto`).
+5. Extracts a SHA-256 binary hash and generates a cryptographic deployment manifest (`.sig`).
+
+.TP
+.B deploy \fI<BINARY_NAME>\fR
+Securely deploys a forged binary to a remote Execution Node.
+
+Before transmitting the payload, the command authenticates the executable against the companion `.sig` Forge Signature generated during the `package` phase. If the binary hash doesn't perfectly match the cryptographically signed manifest, the deployment instantly hard-aborts with a `CRITICAL SHM ERROR`, preventing the deployment of potentially bloated or rogue logic to the Exchange Co-Location.
+.SH EXAMPLES
+Forging a new CLZ4 vs CLF5 strategy from the JSON repository:
+.RS 4
+.EX
+quanuxctl spreader package server/spreader-strategies/CLZ4_CLF5_Spread.json
+.EE
+.RE
+
+Deploying the successfully forged binary to the live Execution Node stub:
+.RS 4
+.EX
+quanuxctl spreader deploy quanux-spreader-063e07ea
+.EE
+.RE
+.SH SEE ALSO
+.BR quanuxctl (1),
+.BR quanuxctl-crucible (1)

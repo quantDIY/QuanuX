@@ -1,0 +1,71 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "StrategyIR",
+    "description": "Intermediate Representation for a deterministic QuanuX Strategy payload",
+    "type": "object",
+    "properties": {
+        "schema_version": {
+            "type": "string",
+            "const": "1.0.0"
+        },
+        "id": {
+            "type": "string"
+        },
+        "metadata": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name"
+            ]
+        },
+        "components": {
+            "description": "The sovereign components this strategy weaves together.",
+            "type": "object",
+            "properties": {
+                "entries": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "exits": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "risk": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "entries",
+                "exits",
+                "risk"
+            ]
+        },
+        "global_parameters": {
+            "description": "High-level variables (e.g., capital allocation) fed down to components.",
+            "type": "object"
+        },
+        "execution_target": {
+            "description": "The expected engine interface for order routing (e.g., QuickFIX, OnixS).",
+            "type": "string"
+        }
+    },
+    "required": [
+        "schema_version",
+        "id",
+        "metadata",
+        "components",
+        "global_parameters",
+        "execution_target"
+    ]
+}

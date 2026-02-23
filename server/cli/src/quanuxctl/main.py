@@ -5,7 +5,7 @@ Unified Developer CLI.
 """
 import typer
 from rich.console import Console
-from .commands import secrets, bridge, skills, extensions, integrate, node, storage, indicators, module, vcs, dashboard, topstepx, geminicli
+from .commands import secrets, bridge, skills, extensions, integrate, node, storage, indicators, module, vcs, dashboard, topstepx, geminicli, foundry, crucible, spreader
 from . import __version__
 
 app = typer.Typer(
@@ -56,7 +56,14 @@ app.add_typer(geminicli.app, name="geminicli", help="Manage Gemini CLI Integrati
 app.add_typer(geminicli.app, name="geminicli", help="Manage Gemini CLI Integration.")
 app.add_typer(geminicli.app, name="gemini", help="Alias for geminicli", hidden=True)
 
-# Top-level aliases for common extension operations
+app.add_typer(foundry.app, name="foundry", help="Manage QuanuX Foundry (Strategy Generator).")
+app.add_typer(foundry.app, name="f", help="Alias for foundry", hidden=True)
+
+app.add_typer(crucible.app, name="crucible", help="Manage QuanuX Crucible (Backtesting Studio).")
+app.add_typer(crucible.app, name="c", help="Alias for crucible", hidden=True)
+
+app.add_typer(spreader.app, name="spreader", help="Manage QuanuX-Spreader Engine Deployment and Strategy Injection.")
+
 # Top-level aliases for common extension operations
 # cli.add_command(integrate.integrate) # REMOVED: Broken and redundant. Use 'quanuxctl ext integrate'
 @app.command("install")

@@ -1,0 +1,112 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "IndicatorIR",
+    "description": "Intermediate Representation for deterministic QuanuX Indicators",
+    "type": "object",
+    "properties": {
+        "schema_version": {
+            "type": "string",
+            "const": "1.0.0"
+        },
+        "id": {
+            "type": "string"
+        },
+        "metadata": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "author": {
+                    "type": "string",
+                    "default": "FoundryAI"
+                },
+                "description": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name"
+            ]
+        },
+        "parameters": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "int",
+                            "float",
+                            "bool",
+                            "string"
+                        ]
+                    },
+                    "default": {},
+                    "constraints": {
+                        "type": "object",
+                        "properties": {
+                            "min": {
+                                "type": "number"
+                            },
+                            "max": {
+                                "type": "number"
+                            }
+                        }
+                    }
+                },
+                "required": [
+                    "name",
+                    "type",
+                    "default"
+                ]
+            }
+        },
+        "inputs": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "stream": {
+                        "type": "string",
+                        "enum": [
+                            "tick",
+                            "bar",
+                            "orderbook"
+                        ]
+                    },
+                    "field": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "stream",
+                    "field"
+                ]
+            }
+        },
+        "logic_ast": {
+            "description": "Abstract Syntax Tree representation of the core mathematical formula. Language generators use this deterministic AST to build Python/C++.",
+            "type": "object"
+        },
+        "outputs": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        }
+    },
+    "required": [
+        "schema_version",
+        "id",
+        "metadata",
+        "parameters",
+        "inputs",
+        "logic_ast",
+        "outputs"
+    ]
+}

@@ -1,0 +1,21 @@
+.TH QUANUXCTL-SPREADER-PACKAGE 1 "February 2026" "QuanuX 1.0.0" "QuanuX Commands"
+.SH NAME
+quanuxctl-spreader-package \- Transpile Spreader JSON into Cython C++ and compile an Execution Engine.
+.SH SYNOPSIS
+.B quanuxctl spreader package
+.I <STRATEGY_JSON_PATH>
+.SH DESCRIPTION
+.B quanuxctl spreader package
+forges Spreader formulas into strict C++ architectures. 
+
+The command replaces arbitrary string templating with the "Cython Forge" pipeline. It evaluates the provided IR (Intermediate Representation) JSON and transpiles the math into two distinct artifacts:
+1. `strategy_injected.hpp` (A strictly-typed `extern "C++"` header injected into the Spreader build tree).
+2. `strategy_wrapper.pyx` (A Cython Python-module allowing the QuanuX Crucible Backtester to evaluate the precise C++ logic).
+
+To guarantee execution integrity within the 59ns Engine Loop:
+*   The command asserts that `StrategyState` compiles to <= 64 bytes to eliminate L1 cache spillage.
+*   The C++ transpilation avoids all usage of PyObjects.
+*   The execution concludes by generating a `.sig` Cryptographic Manifest derived from the SHA-256 hash of the output machine code for remote validation.
+.SH DEPLOYMENT PIPELINE
+After successful packaging, the CLI outputs a localized `.sig` manifest and prints the final binary hash (e.g., `quanux-spreader-063e07ea`).
+Use `quanuxctl spreader deploy` to move this payload into production.

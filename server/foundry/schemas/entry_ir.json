@@ -1,0 +1,73 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "EntryIR",
+    "description": "Intermediate Representation for deterministic QuanuX Entry signals",
+    "type": "object",
+    "properties": {
+        "schema_version": {
+            "type": "string",
+            "const": "1.0.0"
+        },
+        "id": {
+            "type": "string"
+        },
+        "metadata": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "author": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name"
+            ]
+        },
+        "dependencies": {
+            "description": "Indicators required for this entry logic.",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "indicator_id": {
+                        "type": "string"
+                    },
+                    "alias": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "indicator_id",
+                    "alias"
+                ]
+            }
+        },
+        "logic_ast": {
+            "description": "Abstract Syntax Tree representation of the entry conditions (e.g., bool crossover = fast_ma > slow_ma).",
+            "type": "object"
+        },
+        "trigger": {
+            "description": "The exact condition that emits an entry signal.",
+            "type": "string"
+        },
+        "side": {
+            "type": "string",
+            "enum": [
+                "LONG",
+                "SHORT",
+                "DYNAMIC"
+            ]
+        }
+    },
+    "required": [
+        "schema_version",
+        "id",
+        "metadata",
+        "dependencies",
+        "logic_ast",
+        "trigger",
+        "side"
+    ]
+}

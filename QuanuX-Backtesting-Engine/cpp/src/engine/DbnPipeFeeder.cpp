@@ -75,6 +75,14 @@ void DbnPipeFeeder::run() {
         }
       } else if (mbo->action == databento::Action::Cancel) {
         exchange_->on_market_data(mbo->order_id, 0, 0, is_bid, false);
+      } else if (mbo->action == databento::Action::Trade) {
+        exchange_->on_market_trade(mbo->price, mbo->size, is_bid);
+        if (replayer_) {
+          // Trades are crucial for live simulations
+          replayer_->publish_tick(
+              "SIM", mbo->hd.ts_event.time_since_epoch().count(),
+              (double)mbo->price / 1000000000.0, mbo->size, is_bid);
+        }
       }
     }
   }

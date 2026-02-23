@@ -1,0 +1,47 @@
+.TH QUANUXCTL-CRUCIBLE 1 "22 Feb 2026" "QuanuX 0.1.0" "QuanuX User Manual"
+.SH NAME
+quanuxctl\-crucible \- manage and orchestrate the isolated QuanuX Crucible backtesting engine.
+.SH SYNOPSIS
+.B quanuxctl crucible
+.RI [ command ]
+.RI [ options ]
+.br
+.SH DESCRIPTION
+.B quanuxctl crucible
+is the primary interface for initiating, monitoring, and aggressively querying the C++ QuanuX Crucible execution simulation. Crucible enforces process isolation, moving execution off the terminal shell via
+.I os.setsid()
+and trapping the runtime backtest logic inside an isolated OS process.
+.PP
+The backtester is powered by DuckDB Appenders bound to memory via Cython, granting it native throughput 100x faster than traditional Pandas/SQL engines.
+.SH COMMANDS
+.TP
+.B start <strategy> [--version VERSION]
+Ignites the simulator. It searches for a Foundry-generated test harness inside \fBserver/backtests/<strategy>_v<version>\fR.
+If found, it forks the process and writes the PID to \fB/tmp/quanux_crucible.pid\fR.
+.TP
+.B stop
+Sends a POSIX TERM signal to the engine PID. It waits 5 seconds before resorting to an aggressive SIGKILL to halt runway algorithms.
+.TP
+.B status
+Reads the tracked PID and invokes psutil to return real-time CPU matching load (%) and RAM consumption inside the C++ 128-byte aligned memory pools.
+.TP
+.B report <strategy> [--version VERSION]
+Instantaneous Telemetry Extraction. Bypasses the active Python context, loads the compiled Cython bindings from \fBQuanuX-Backtesting-Engine/python\fR, and executes the native \fBDuckDBFeeder::get_metrics_json()\fR query via the C++ DuckDB API.
+.SH FILES
+.I /tmp/quanux_crucible.pid
+.RS
+Stores the OS process ID for the currently running simulation engine.
+.RE
+.I server/backtests/<strategy_name>_v<version>/crucible.duckdb
+.RS
+The physical DuckDB state file written natively by the C++ engine.
+.RE
+.SH ARCHITECTURE NOTES
+Crucible is uncompromising on performance. The \fBCrucibleTrade\fR struct aligns explicitly to 128 bytes to maintain memory locality inside CPU L1/L2 data caches. Modifying this explicitly padded struct without propagating changes down to the C++ \fIquanux_crucible.pxd\fR headers will result in fatal Segmentation Faults.
+.SH SEE ALSO
+.BR quanuxctl (1),
+.BR quanuxctl\-foundry (1)
+.SH BUGS
+No known bugs at present.
+.SH AUTHOR
+QuanuX Architecture Group <architecture@quanux.io>

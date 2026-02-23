@@ -46,7 +46,7 @@ profile.process(4500.25);
 
 *   **Inputs**: accepts generic `std::ranges` (vectors, deques, memory mapped files).
 *   **Outputs**: produces lightweight Views (lazy) or standard Vectors (eager).
-*   **Bindings**: Python bindings enable the **Strategy Builder** UI to visualize these indicators without rewriting logic.
+*   **Bindings**: Python bindings enable execution nodes running Python models to visualize these indicators natively.
 
 ### Python Usage
 ```python

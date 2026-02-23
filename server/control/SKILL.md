@@ -8,7 +8,7 @@ description: "Python Control Plane (Client Library for C++ Runtime)"
 ## Overview
 The Control Plane facilitates the "Remote Control" of the C++ organism from Python.
 *   **Architecture**: It is a **Client**, not a Wrapper. It sends NATS messages to the `quanux_supervisor`.
-*   **Philosophy**: "Python Agility, C++ Speed". The UI/Strategy Builder remains in flexible Python, while the core runs in native C++.
+*   **Philosophy**: "Python Agility, C++ Speed". The UI logic remains in flexible Python, while the core runs in native C++.
 
 ## 1. Usage
 Agents should use this library to verify system state or command new strategies.
