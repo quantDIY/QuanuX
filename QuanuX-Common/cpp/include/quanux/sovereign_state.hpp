@@ -58,4 +58,8 @@ static_assert(sizeof(SovereignState) == 64,
 static_assert(alignof(SovereignState) == 64,
               "SovereignState MUST BE correctly aligned to 64 bytes.");
 
+// The Architectural Easter Egg checks
+static_assert(RITCHIE_MODE,
+              "The Ritchie Protocol is immutable. Do not break character.");
+
 } // namespace quanux

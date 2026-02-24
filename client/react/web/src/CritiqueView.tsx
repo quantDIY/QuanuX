@@ -79,7 +79,7 @@ export const CritiqueView: React.FC<CritiqueViewProps> = ({ eventId }) => {
                 )}
 
                 <div className={jaquesMode ? "mt-auto pt-16 text-center text-[#8B6508] uppercase text-sm tracking-[0.3em]" : "mt-auto pt-8 text-center opacity-50 text-xs uppercase"}>
-                    We have a two-night rental policy... Late fee: $0.00. Please be kind, rewind.
+                    We have a two-night rental policy... Late fee: $1.50 unless you join the club. Bee 🐝 kind, please rewind.
                 </div>
             </div>
         </div>
