@@ -1,0 +1,15 @@
+---
+description: The Law of the Remote Neural Interface (Retina Truth) regarding UI telemetry visualization.
+---
+
+# The Remote Neural Interface (The Retina)
+
+## The Doctrine Constraint
+We have decoupled the Human from the Machine to unite them at "Neural Speed." This implies abandoning standard web lifecycle updates for real-time telemetry rendering.
+
+Ref-Buffer Protocol: The React frontend is a "Dumb Terminal" that paints the market at the monitor's native refresh rate (up to 240Hz) using imperative Canvas rendering.
+
+## Execution Rules
+- **Imperative Rendering Override:** High-frequency data bounds must never bottleneck inside the React Virtual DOM diffing engine (avoid `setState` loops). Utilize `useRef` buffers and direct imperative Canvas bindings (`requestAnimationFrame`).
+- **Dumb Terminal Dictate:** Absolutely no business logic or math calculations occur on the frontend except mapping values to pixels and colors.
+- **The Metric:** The Tick-to-Pixel rendering objective for the Neural Interface is 120 microseconds. Bypassing state diffs is mandatory to achieve this.

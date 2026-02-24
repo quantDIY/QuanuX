@@ -1,0 +1,16 @@
+---
+description: The Law of the Sentinel (L3 Interlock Truth) for risk management architecture.
+---
+
+# The Sovereign Sentinel (The L3 Interlock)
+
+## The Doctrine Constraint
+Traditional Risk Management is an if/else statement—a software check that can be bypassed by memory corruption or logic errors. In QuanuX, Risk is a Hardware Gate.
+
+The Sentinel (Core 5) runs on its own isolated silicon. It monitors the "Sins" of the machine (Stale Data, Notional Breach, Order Storms).
+
+## Execution Rules
+- **Hardware-Enforced Logic:** Risk checks are never executed in the Spreader's critical path as standard control flow. They are implemented as atomic `CMP` instructions against an L3 Cache line.
+- **The Physical Interlock:** If the Sentinel detects a rule violation, it must execute a direct atomic hardware bitmask flip (`LOCK ORB`) across the memory bus to halt logic progression.
+- **Struct Identity:** The `SovereignState` struct must strictly adhere to the 64-Byte Covenant (one L1 cache line). Padding (`_pad[N]`) must be mathematically perfect.
+- **The Metric:** Risk resolution must occur within the 11.33 Nanoseconds Time-to-Halt threshold utilizing raw structural mapping.

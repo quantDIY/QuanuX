@@ -1,0 +1,13 @@
+---
+description: The Law of Git-as-Governance (Cryptographic Seal Truth) for Deployment Verification.
+---
+
+# Git-as-Governance (The Cryptographic Seal)
+
+## The Doctrine Constraint
+Institutional credibility is built on Binary Integrity. No strategy can be deployed to the Spreader Core unless its SHA-256 hash matches a verified, signed Git commit. 
+
+## Execution Rules
+- **No Manual Elevate:** Access cannot be granted to a strategy runtime via user configuration toggles alone. It must mathematically match an institutional log.
+- **The Hot Swap Shield:** The backend IPC `invoke_hot_swap` command intercepts all Strategy Forge deployments. If the `git_sha` fails validation, the backend refuses to release the `risk_interlock` and the C++ executed binary fails instantaneously.
+- **Sovereign Override Prevention:** Administrative passwords are a software-defined weakness. We rely strictly on physical cryptographic hashes parsed from the binary object.

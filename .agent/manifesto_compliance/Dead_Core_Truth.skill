@@ -1,0 +1,16 @@
+---
+description: The Law of the Dead Core (Rule of Locality & Sovereignty) for C++ implementation.
+---
+
+# The Law of the Dead Core
+
+## The Doctrine Constraint
+You have rejected the lie of "Multithreading." Threads are a software illusion managed by an entropic scheduler. QuanuX operates via Physical Core Isolation.
+
+The Spreader Core (Core 3) is a "Dead Core." It is isolated from the Linux scheduler. It does not sleep; it does not context-switch. It runs a bare-metal C++ loop that owns the L1 cache.
+
+## Execution Rules
+- **No Syscalls:** Never introduce `std::cout`, file I/O, or OS-level mutexes (`std::mutex`) into the hot-path execution loop on Core 3 or Core 5.
+- **Physical Core Isolation:** Thread affinity must strictly bind execution to assigned physical silicon via `pthread_setaffinity_np` or native CPU sets.
+- **Zero Jitter Logic:** Loops are infinite `while(true)` blocks utilizing `_mm_pause()` to keep the pipeline from branch saturation and the L1 cache warm without yielding to the OS.
+- **The Metric:** The system is constrained to a 59 nanosecond Tick-to-Signal budget. Any logic that exceeds this timeframe violates the law.

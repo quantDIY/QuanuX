@@ -1,0 +1,26 @@
+.TH QUANUX-GOVERNANCE 1 "FEBRUARY 2026" "QuanuX Institutional" "QuanuX Manual Pages"
+.SH NAME
+quanux-governance \- The Cryptographic Seal and Institutional Git Provenance
+.SH SYNOPSIS
+.B quanux-governance
+[\fICOMMAND\fR] [\fIOPTIONS\fR]
+.SH DESCRIPTION
+The
+.B quanux-governance
+protocol encompasses the firm-wide "Institutional Shield." To prevent rogue algorithmic hot-swaps or unverified execution logic from accessing the L3 Spreader execution node via the Strategy Forge, QuanuX bypasses administrative user paradigms in favor of mathematical cryptography.
+.SH THE HANDSHAKE PROTOCOL
+No strategy can be unleashed from the QuanuX Forge to Core 3 without completing the Cryptographic Handshake via the Tauri Backend.
+
+.B 1. Strategy Forge Cython Compilation
+The strategy source is strictly compiled to a high-speed shared object (`.so`) Cython library.
+.B 2. Binary Hashing
+The execution environment calculates a SHA-256 hash representing the immutable physical footprint of the compiled algorithmic binary.
+.B 3. Institutional Assertion
+The generated `git_sha` is verified utilizing `invoke_hot_swap` intercept logic mapped to the Rust IPC kernel.
+.B 4. Sentinel Override
+If the hash does not map one-to-one to a digitally signed Git Commit representing explicit institutional authorization and testing bounds, the Sovereign Sentinel rejects the deployment, and the HALT state remains locked.
+.SH SEE ALSO
+.BR quanux (1),
+.BR quanux-sovereign (1)
+.SH AUTHORS
+Built by the QuanuX Foundation.

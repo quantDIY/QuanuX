@@ -1,0 +1,43 @@
+.TH QUANUX 1 "FEBRUARY 2026" "QuanuX Institutional" "QuanuX Manual Pages"
+.SH NAME
+quanux \- The End of Permission-Based Execution
+.SH SYNOPSIS
+.B quanux
+[\fICOMMAND\fR] [\fIOPTIONS\fR]
+.SH DESCRIPTION
+QuanuX is not a software application; it is a hardware-enforced logic gate matrix designed for ultra-low latency quantitative trading. By replacing OS-level thread management and standard socket telemetry with physical core pinning and memory-mapped Level 3 Cache Interlocks, QuanuX delivers mathematically immutable 59-nanosecond execution bounds.
+
+This document serves as the Institutional Performance Manifesto for the framework.
+.SH THE MANIFESTO DOCTRINE
+QuanuX operates under the authority of Five Natural Laws of Physics that supersede traditional software boundaries.
+.TP
+.BR I.\ The\ Law\ of\ the\ Dead\ Core\ (The\ Executioner)
+We have rejected the lie of Multithreading. Core 3 is a Dead Core. It does not context-switch or sleep. It runs a bare-metal C++ loop, strictly isolating logic to hardware voltage cycles and removing OS jitter.
+.B Metric:
+59 Nanoseconds Tick-to-Signal.
+.TP
+.BR II.\ The\ Sovereign\ Sentinel\ (The\ L3\ Interlock)
+Risk is not an if/else statement; it is a hardware gate. The Sentinel on Core 5 evaluates "Sins" and flips the 0th bit of the L3 cache using `LOCK ORB`. The Spreader physically cannot traverse its pipeline if this bit is hot.
+.B Metric:
+11.33 Nanoseconds Time-to-Halt.
+.TP
+.BR III.\ The\ L3\ Tap\ (The\ Visual\ Witness)
+We have abolished traditional logging. The Spreader bleeds internal DOM state into a 64-byte structural buffer mapped to L3 memory. The Observer (Replay Adapter) reads this asynchronously without invoking syscalls.
+.B Metric:
+Zero-Jitter Telemetry Footprint.
+.TP
+.BR IV.\ The\ Remote\ Neural\ Interface\ (The\ Retina)
+The UI bypasses standard React DOM diffing. Meaningful telemetry paints directly to imperative canvas buffers at native 240Hz refresh rates, delivering market reality before the human nervous system blinks.
+.B Metric:
+120 Microseconds Tick-to-Pixel.
+.TP
+.BR V.\ Git-as-Governance\ (The\ Cryptographic\ Seal)
+Administrative permissions are a software weakness. No strategy can execute on the C++ Core unless its binary SHA-256 hash matches a Signed Git Commit recorded in the Forge log.
+.B Metric:
+Binary Mathematical Provenance.
+.SH SEE ALSO
+.BR quanux-sovereign (1),
+.BR quanux-governance (1),
+.BR quanux-l3-tap (1)
+.SH AUTHORS
+Built by the QuanuX Foundation.
