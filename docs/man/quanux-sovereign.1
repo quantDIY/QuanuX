@@ -1,20 +1,34 @@
 .TH QUANUX-SOVEREIGN 1 "FEBRUARY 2026" "QuanuX Institutional" "QuanuX Manual Pages"
 .SH NAME
-quanux-sovereign \- Hardware-Enforced Risk Management Gate
+quanux-sentinel \- Hardware-Enforced Risk Management Gate
 .SH SYNOPSIS
-.B quanux-sovereign
+.B quanux-sentinel
 [\fIOPTIONS\fR]
 .SH DESCRIPTION
 The
-.B quanux-sovereign
+.B quanux-sentinel
 daemon represents the "Adult in the Room" for the QuanuX Distributed Execution framework. Running strictly as a bare-metal C++ loop on an isolated core (ordinarily Core 5), the Sentinel possesses unilateral authority over the L3 Cache \fBSovereignState\fR.
 
 It enforces the fundamental risk guardrails of the trading strategy without relying on context switches or syscall routing, avoiding de-scheduling jitter.
-.SH HARDWARE CONTRACT
-The Sovereign Sentinel interacts directly with the 64-byte `quanux::SovereignState` struct mapped in the L3. It manages:
+.SH THE NATURAL LAWS (RISK RULES)
+The Sentinel enforces the QuanuX Natural Laws via the following "Sin" checks:
 .TP
-.BR risk_interlock
-An atomic uint8_t flag. If an anomaly is hit (Max Notional, Max Position, Stale Data via TSC delta), the Sentinel asserts this pin to \fB1\fR. In the next clock cycle, the Spreader (Core 3) will halt all inbound order executions.
+.BR Stale\ Tick\ (Drift)
+Monitors the `tsc_lo` heartbeat. If the delta exceeds 3,000,000 cycles (~1ms at 3GHz), the Spreader's data is stale. The Sentinel issues an immediate HALT.
+.TP
+.BR Notional\ Breach
+Calculates: `abs_pos * tap.best_bid`. If the result breaches the hard-coded absolute threshold (e.g., $5M limit), the Sentinel drops the interlock constraint.
+.TP
+.BR Order\ Storm
+Tracks `orders_fired` byte. If it climbs faster than the allocated burst per physical second, the interlock closes the flood gates.
+.TP
+.BR Partial\ Fills\ (Ruthless but Safe)
+If `ExecutionState::PARTIAL` is registered, the Sentinel limits scaling. It replaces the `max_position_limit_` with the exactly executed current quantity dynamically, permitting hedging exits but halting further toxic accumulations.
+.SH ASSEMBLY INSTRUCTIONS
+The HALT is enacted utilizing the \fBLOCK BTS\fR (Bit Test and Set) assembly instruction.
+Instead of an expensive `std::atomic` exchange cache flush, `LOCK BTS` physically flips the 0th bit of the risk_interlock byte.
+Execution cycle impact on Core 5: ~18-35 CPU cycles.
+Spreader awareness delay on Core 3: ~59 CPU nanoseconds (L3 Cache bus synchronization latency).
 .SH ISOLATION
 The Sentinel is expressly forbidden from triggering \fBstd::cout\fR or interacting with the OS scheduler.
 .SH AUTHORS

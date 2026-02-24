@@ -9,7 +9,8 @@ enum class ExecutionState : uint8_t {
   IDLE = 0,
   WORKING = 1,
   PARTIAL = 2,
-  HEDGING = 3
+  HEDGING = 3,
+  HALT = 4
 };
 
 // 16-byte packed snapshot representing the Level 3 Book Tap
@@ -37,8 +38,13 @@ struct alignas(64) SovereignState {
   // Ring buffer head pointer for telemetry
   std::atomic<uint8_t> tap_index;
 
+  // Natural Law of the Interlock: Expose states securely in the 16-byte header
+  std::atomic<uint8_t> orders_fired;
+  std::atomic<int32_t> current_position;
+
   // Explicit padding to securely bridge the 16-byte structural boundary
-  uint8_t _pad[13];
+  // 1 (risk) + 1 (state) + 1 (tap) + 1 (orders) + 4 (pos) = 8 bytes
+  uint8_t _pad[8];
 
   // Circular buffer acting as the visual flight recorder tap for UI ingestion
   L3Snapshot telemetry_tap[3];

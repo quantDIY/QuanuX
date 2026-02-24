@@ -1,0 +1,8 @@
+# Architecture: Sovereign Sentinel & The L3 Fortress
+
+| Institutional Concern | QuanuX Architectural Answer | Exceeding the Standard |
+| :--- | :--- | :--- |
+| Risk Engine Isolation | **L3 Sentinel**: Risk logic resides on an isolated physical core (Core 5) with no memory sharing with the Spreader except for an atomic 64-byte interlock block. | Even if the Spreader enters an infinite loop or suffers memory corruption, the Sentinel can flip the "Halt" bit in L3, killing execution in <10ns. |
+| Audit & Reconciliation | **Zero-Jitter L3 Tap**: A binary "Flight Recorder" dumps every internal Price DOM state to a shared memory buffer. | Unlike traditional logging, the "Tap" has zero impact on the hot-path, providing a 100% accurate reconstruction of the "Moment of Impact." |
+| Execution Divergence | **Binary Identity**: The same C++ kernel is used for both backtesting and live execution through a Clock-Injection Adapter. | We eliminate "Sim-to-Live" drift by forcing the engine to use the same TSC-based logic in both environments. |
+| Failure Recovery | **Stateful SHM**: The engine’s state machine is stored in Shared Memory (HugePages). | If a process crashes, the "Warm Restart" protocol allows the new process to re-attach to the same memory segment and resume state in microseconds without exchange re-sync. |

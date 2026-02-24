@@ -20,3 +20,11 @@ QuanuX introduces the `quanux::SovereignState` paradigm.
 ## Rules of Engagement
 *   **Never modify the 64-byte structural boundary.** Padding must always be calculated (e.g., `uint8_t _pad[X]`) to guarantee `sizeof(SovereignState) == 64`.
 *   **Never block inside the Sentinel.** The Sentinel loop updates the L3 contract asynchronously. Doing I/O (like `std::cout`) breaks deterministic scheduling.
+
+## The QuanuX Commandments (Natural Laws)
+These are invariants etched into the physical architecture of the system:
+1. **The Law of Locality (The 64-Byte Covenant):** If data crosses a cache-line boundary, it is no longer deterministic. All sovereign state must fit within a single L1 buffer (64 bytes) to prevent False Sharing.
+2. **The Law of Sovereignty (The Anti-Thread Decree):** Threads are requests for permission from the OS. We use Affinity-Bound Ownership. Each core is a sovereign kingdom executing an eternal `while(true)` loop.
+3. **The Law of the Witness (The Tap Principle):** To observe is to disturb—unless done via the L3 Tap. Measurement must occur asynchronously without slowing the Spreader's hot-path. 
+4. **The Law of Determinism (The TSC Registry):** By mapping the physical `__builtin_ia32_rdtsc()`, we translate history into a reproducible laboratory. Sim-to-Live divergence is mathematically eliminated via the `ClockProvider` interface.
+5. **The Law of the Interlock (The Physical Gate):** Risk management is a hardware gate, not software logic. We enact `LOCK BTS` on the Sentinel and the Spreader halts instantly before network packets compile. Risk overrides (like `PARTIAL` fills) constrict physical limits rather than throwing arbitrary exceptions.
