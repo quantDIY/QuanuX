@@ -34,4 +34,12 @@ Observability is a poison pill for latency. Standard `std::cout` or spdlog block
 *   **The Trap:** Logging tick arrivals or latency metrics destroyed the pipeline. 
 *   **The Pivot:** We hijacked the existing `update_seq` "Dirty Bit" in the `PriceMatrix`. We replaced 4 bytes of explicit padding with a `uint32_t arrival_tsc` timestamp. Now, telemetry is purely passive. We `mmap` the `PriceMatrix` array into POSIX shared memory. External `quanux-spreader` man pages instruct humans to read the SHM segment to track engine health without the Executive Loop ever executing a single `write()` system call.
 
+## Epoch 6: The Dead Core Sacrifice (Hardware Ownership)
+
+"Why build one when you can have two for twice the price?" In the QuanuX Forge, this quote from *Contact* defines our Core Isolation Policy. We realized that even with the 64-byte covenant and the Cython Forge, the OS scheduler remained our final enemy. A "fair" scheduler is a slow scheduler.
+
+To achieve true 59ns determinism, we moved to a Pinned-Isolation Model. We treat the CPU like private real estate, using `isolcpus` at the kernel level to forcibly eject the Operating System from specific physical cores. We sacrifice Core 3 for Ingress and Core 4 for Execution, keeping them "hot" in a constant `_mm_pause()` spin-loop.
+
+We pay "twice the price" in power consumption and hardware availability to buy the ultimate HFT luxury: Absolute Determinism. By preventing the CPU from ever entering a power-saving C-state or being interrupted by system tasks, we ensure the engine is always "awake" and waiting for the next tick.
+
 **End of Rationale.**
