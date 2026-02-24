@@ -1,5 +1,6 @@
 import React from 'react';
 import { MarketTicker, MarketTick } from '@quanux/shared-ui/components/domain/MarketTicker';
+import { JitterChart } from '@quanux/shared-ui/components/telemetry/JitterChart';
 
 // QuanuX Connector: Web (GraphQL Subscription via Strawberry)
 const webSubscribe = (onTick: (tick: MarketTick) => void) => {
@@ -41,6 +42,13 @@ export const App = () => {
             <main className="flex-1 p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-qx-surface to-background">
                 {/* Transpiled Figma Art - Decoupled from Mock Data */}
                 <MarketTicker symbol="BTC-PERP" subscribe={webSubscribe} />
+
+                <JitterChart
+                    title="Web Latency (GraphQL)"
+                    description="Strawberry Relay to Browser WebSocket"
+                    color="hsl(var(--color-qx-secondary))"
+                    subscribe={webSubscribe}
+                />
             </main>
         </div>
     );

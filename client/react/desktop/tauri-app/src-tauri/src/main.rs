@@ -8,14 +8,19 @@ use futures::StreamExt;
 use market_tick::MarketTick;
 use tauri::{Manager, Emitter};
 use tauri::tray::TrayIconBuilder;
+use tauri_plugin_notification::NotificationExt;
 
 fn main() {
   tauri::Builder::default()
+    .plugin(tauri_plugin_notification::init())
     .setup(|app| {
       let handle = app.handle().clone();
 
       // Spawn the high-frequency UI background telemetry task
       tauri::async_runtime::spawn(async move {
+          let mut tick_count = 0;
+          let mut notified = false;
+          
           // Connect to the local NATS QuanuX fabric
           if let Ok(client) = async_nats::connect("nats://localhost:4222").await {
               if let Ok(mut subscriber) = client.subscribe("MARKET.BIN").await {
@@ -25,6 +30,16 @@ fn main() {
                           if let Ok(tick) = bytemuck::try_from_bytes::<MarketTick>(&msg.payload) {
                               // Broadcast the decoded telemetry (TSC included) to the React GUI
                               let _ = handle.emit("market-tick", tick);
+                              
+                              tick_count += 1;
+                              if tick_count >= 100 && !notified {
+                                  notified = true;
+                                  let _ = handle.notification()
+                                      .builder()
+                                      .title("System Ready")
+                                      .body("100 Telemetry frames parsed with zero drop.")
+                                      .show();
+                              }
                           }
                       }
                   }

@@ -66,4 +66,12 @@ When porting designs from Figma to the QuanuX frontend, we enforce the "Zero-Ren
 
 The art remains exactly as designed. The logic remains locked in the backend.
 
+## Epoch 10: The Pulse of the Machine
+
+The Brawn (C++), the Nerves (Tauri/Rust), and the Retina (React HTML5 Canvas) are fundamentally connected. We built the `JitterChart` to mathematically prove the determinism gained from the "Dead Core" sacrifice.
+
+By plotting the exact delta between the C++ Time Stamp Counter (`arrival_tsc`) and the React `requestAnimationFrame` loop (`render_tsc`), we visualize the absolute total pipeline latency. On the Desktop (IPC Bypass), this should produce a perfectly flat oscilloscope trace representing the unadulterated heartbeat of the machine. On the Web, it demonstrates the structural cost of the GraphQL "Strawberry" Relay transmission. 
+
+We do not approximate performance; we measure it down to the exact nanosecond cycle. The UI is calibrated.
+
 **End of Rationale.**
