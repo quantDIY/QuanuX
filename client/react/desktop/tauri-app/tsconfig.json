@@ -15,7 +15,7 @@
       "@/shared/*": [
         "../shared/*"
       ],
-      "@quanux/shared/*": [
+      "@quanux/shared-ui/*": [
         "../../shared/*"
       ]
     }

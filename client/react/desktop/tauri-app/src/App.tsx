@@ -1,12 +1,41 @@
 import React from 'react';
+import { listen } from '@tauri-apps/api/event';
+import { MarketTicker, MarketTick } from '@quanux/shared-ui/components/domain/MarketTicker';
+
+// QuanuX Connector: Desktop (Tauri rust backend via JSON/Bincode bypass)
+const tauriSubscribe = (onTick: (tick: MarketTick) => void) => {
+    let unlisten: (() => void) | undefined;
+
+    // Listen directly to the zero-copy parsed Tauri event
+    listen<MarketTick>('market-tick', (event) => {
+        onTick(event.payload);
+    }).then(_unlisten => {
+        unlisten = _unlisten;
+    }).catch(console.error);
+
+    return () => {
+        if (unlisten) unlisten();
+    };
+};
 
 export const App = () => {
     return (
-        <div className="flex h-screen w-screen items-center justify-center bg-background text-foreground font-mono">
-            <div className="text-center space-y-4">
-                <h1 className="text-3xl font-bold tracking-widest uppercase">QuanuX</h1>
-                <p className="text-sm text-muted-foreground">Tauri Desktop Shell initialized. Awaiting UI configuration.</p>
-            </div>
+        <div className="flex h-screen w-screen flex-col bg-background text-foreground font-mono overflow-hidden fade-in">
+            <header className="p-6 border-b border-qx-border bg-qx-surface flex justify-between items-center z-10 shadow-md">
+                <div className="flex items-center gap-4">
+                    <h1 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-qx-primary to-qx-secondary tracking-widest uppercase">QuanuX Core</h1>
+                    <span className="text-xs px-2 py-1 rounded bg-qx-border text-muted-foreground border border-qx-surface">DAEMON ACTIVE</span>
+                </div>
+                <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full bg-qx-accent shadow-[0_0_10px_rgba(41,255,100,0.8)] animate-pulse"></div>
+                    <span className="text-xs font-mono text-muted-foreground tracking-widest">NATS INGRESS</span>
+                </div>
+            </header>
+
+            <main className="flex-1 p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-qx-surface to-background">
+                {/* Transpiled Figma Art - Decoupled from Mock Data */}
+                <MarketTicker symbol="BTC-PERP" subscribe={tauriSubscribe} />
+            </main>
         </div>
     );
 };

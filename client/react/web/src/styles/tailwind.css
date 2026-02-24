@@ -23,6 +23,28 @@
   --color-ring: hsl(var(--ring));
 }
 
+:root {
+  /* Figma QuanuX Theme System */
+  --color-qx-primary: 210 100% 50%;
+  --color-qx-secondary: 250 100% 60%;
+  --color-qx-accent: 140 100% 50%;
+  --color-qx-background: 240 10% 4%;
+  --color-qx-foreground: 210 20% 98%;
+  --color-qx-surface: 240 8% 8%;
+  --color-qx-border: 240 10% 15%;
+  --color-qx-destructive: 0 100% 60%;
+
+  --background: var(--color-qx-background);
+  --foreground: var(--color-qx-foreground);
+  --border: var(--color-qx-border);
+}
+
+.dark {
+  --background: var(--color-qx-background);
+  --foreground: var(--color-qx-foreground);
+  --border: var(--color-qx-border);
+}
+
 * {
   @apply border-border;
 }

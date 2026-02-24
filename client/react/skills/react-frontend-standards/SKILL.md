@@ -69,4 +69,9 @@ Adhere to these Vercel-derived standards for optimal performance.
 To ensure `Tailwind v4` can properly scan CSS classes across project boundaries, the `client/react/shared` directory has been formalized into an internal `pnpm` workspace package named `@quanux/shared-ui`.
 
 - **Do not** use legacy TS path-aliasing (e.g., `@/shared/components`) to reach into the shared folder.
-- **Always** import shared components via the package name: `import { Button } from "@quanux/shared-ui/components/ui/button"`.
+## 6. Figma Injection Protocol & Ref-Buffers
+
+When incorporating code exported from design tools like Figma or Figma AI:
+- **No Mock State**: Strip all `useState` and mock datasets injected by the design tool.
+- **No Calculation**: If the UI requires math or data transformation to render (e.g., spread differences, PnL percentages), it **must** be moved to the backend. The UI only receives the final number.
+- **The Beast Mode Buffer**: For components receiving high-frequency updates (e.g., Tickers, Order Books, Spread Matrices), **never** store the tick in a React State array. You must use the "Ref-Buffer" pattern: capture the payload in a `useRef` and paint the DOM imperatively via a `requestAnimationFrame` loop.
