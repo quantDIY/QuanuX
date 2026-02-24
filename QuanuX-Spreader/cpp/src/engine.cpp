@@ -86,8 +86,19 @@ DualThreadSpreader::handle_market_tick(natsMsg *msg) {
   price_matrix_.update_price(active_tick->instrument_id, active_tick->price,
                              tsc_pulse);
 
-  // 4. Trigger Math
+  // 4. Trigger Math & Update L3 Interlock Tap
   if (strategy::ActiveStrategy::calculate(strategy_state_, *active_tick)) {
+    if (sovereign_state_) {
+      // Update Telemetry Tap for Visual Record and Core 5 Sentinel Vigil
+      uint8_t idx = sovereign_state_->tap_index.load(std::memory_order_relaxed);
+      auto &tap = sovereign_state_->telemetry_tap[idx % 3];
+      tap.best_bid = active_tick->price;
+      tap.best_ask = active_tick->price + 0.5; // Stub ask
+      tap.alpha = 1.0;
+      tap.tsc_lo = tsc_pulse;
+      sovereign_state_->tap_index.store(idx + 1, std::memory_order_relaxed);
+    }
+
     SpreaderEvent *event = event_pool_.next_slot();
     event->trigger_ts = __builtin_ia32_rdtsc();
     event->triggering_tick = active_tick; // Stable pointer from MemoryPool
@@ -132,7 +143,17 @@ void DualThreadSpreader::strategy_fix_loop() {
 
       (void)leg_b_price;
       (void)leg_b_seq;
-      // Execute FIX connection payload here...
+
+      // [MOVEMENT I: THE L3 CMP CHECK]
+      // Inject a single assembly CMP check checking the L3 risk_interlock
+      // before every outbound packet
+      if (sovereign_state_ && sovereign_state_->risk_interlock.load(
+                                  std::memory_order_relaxed) != 0) {
+        // Hardware interlock triggered. Do NOT fire.
+        continue;
+      }
+
+      // Execute FIX connection payload here... -> fire()
     } else {
       _mm_pause(); // Keep L1 Cache warm without yielding CPU scheduler
     }

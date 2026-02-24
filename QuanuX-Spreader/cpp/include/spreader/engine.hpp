@@ -4,6 +4,7 @@
 #include "price_matrix.hpp"
 #include "quanux/MarketTick.hpp"
 #include "quanux/SPSCQueue.hpp"
+#include "quanux/sovereign_state.hpp"
 
 // Deep injection: The compiler physically copies the strategy header here
 #include INJECTED_STRATEGY_HEADER
@@ -68,6 +69,9 @@ private:
 
   // HFT LOCF Price Cache
   PriceMatrix<8192> price_matrix_;
+
+  // L3 Hardware Interlock Memory Map
+  quanux::SovereignState *sovereign_state_{nullptr};
 
   // Zero-Jitter Static Allocators
   MemoryPool<quanux::MarketTick, 8192> tick_pool_;
