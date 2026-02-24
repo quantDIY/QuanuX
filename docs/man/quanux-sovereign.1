@@ -1,0 +1,21 @@
+.TH QUANUX-SOVEREIGN 1 "FEBRUARY 2026" "QuanuX Institutional" "QuanuX Manual Pages"
+.SH NAME
+quanux-sovereign \- Hardware-Enforced Risk Management Gate
+.SH SYNOPSIS
+.B quanux-sovereign
+[\fIOPTIONS\fR]
+.SH DESCRIPTION
+The
+.B quanux-sovereign
+daemon represents the "Adult in the Room" for the QuanuX Distributed Execution framework. Running strictly as a bare-metal C++ loop on an isolated core (ordinarily Core 5), the Sentinel possesses unilateral authority over the L3 Cache \fBSovereignState\fR.
+
+It enforces the fundamental risk guardrails of the trading strategy without relying on context switches or syscall routing, avoiding de-scheduling jitter.
+.SH HARDWARE CONTRACT
+The Sovereign Sentinel interacts directly with the 64-byte `quanux::SovereignState` struct mapped in the L3. It manages:
+.TP
+.BR risk_interlock
+An atomic uint8_t flag. If an anomaly is hit (Max Notional, Max Position, Stale Data via TSC delta), the Sentinel asserts this pin to \fB1\fR. In the next clock cycle, the Spreader (Core 3) will halt all inbound order executions.
+.SH ISOLATION
+The Sentinel is expressly forbidden from triggering \fBstd::cout\fR or interacting with the OS scheduler.
+.SH AUTHORS
+Built by the QuanuX Foundation.

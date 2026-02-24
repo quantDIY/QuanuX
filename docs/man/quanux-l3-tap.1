@@ -1,0 +1,16 @@
+.TH QUANUX-L3-TAP 1 "FEBRUARY 2026" "QuanuX Institutional" "QuanuX Manual Pages"
+.SH NAME
+quanux-l3-tap \- High-Fidelity Visual Flight Recorder
+.SH SYNOPSIS
+.B quanux-l3-tap
+[\fIOPTIONS\fR]
+.SH DESCRIPTION
+The
+.B quanux-l3-tap
+subsystem orchestrates the bridging of binary hardware telemetry into the Neural DOM. It listens passively to the `telemetry_tap` circular buffer running inside the \fBSovereignState\fR L3 cache contract.
+
+By ingesting exact `L3Snapshot` packets containing Bids, Asks, Alpha strings, and raw TSC timestamps, the tap bypasses software simulation and presents the immutable visual representation of what the C++ kernel consumed precisely when an execution was fired.
+.SH USAGE
+This tap natively routes the telemetry payload through a Rust Tauri adapter. Run the desktop cockpit to enable visual output against the React DOM.
+.SH AUTHORS
+Built by the QuanuX Foundation.
