@@ -17,7 +17,8 @@ static void on_nats_message(natsConnection *nc, natsSubscription *sub,
 }
 
 DualThreadSpreader::DualThreadSpreader()
-    : running_(false), event_queue_(1024) {}
+    : running_(false), event_queue_(1024),
+      clock_(std::make_unique<HardwareClock>()) {}
 
 DualThreadSpreader::~DualThreadSpreader() { stop(); }
 
@@ -82,7 +83,7 @@ DualThreadSpreader::handle_market_tick(natsMsg *msg) {
   // 3. The One-Pass Update: Inject into Price Matrix array for O(1) LOCF lookup
   // We capture the low 32-bits of the TSC clock for the zero-overhead telemetry
   // heartbeat
-  uint32_t tsc_pulse = static_cast<uint32_t>(__builtin_ia32_rdtsc());
+  uint32_t tsc_pulse = static_cast<uint32_t>(clock_->rdtsc());
   price_matrix_.update_price(active_tick->instrument_id, active_tick->price,
                              tsc_pulse);
 
@@ -100,7 +101,7 @@ DualThreadSpreader::handle_market_tick(natsMsg *msg) {
     }
 
     SpreaderEvent *event = event_pool_.next_slot();
-    event->trigger_ts = __builtin_ia32_rdtsc();
+    event->trigger_ts = clock_->rdtsc();
     event->triggering_tick = active_tick; // Stable pointer from MemoryPool
 
     event_queue_.push(*event);

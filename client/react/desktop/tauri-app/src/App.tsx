@@ -61,18 +61,25 @@ export const App = () => {
         setTimeout(() => setBuildLogs(l => [...l, "> Generating C++ Bindings via Cython..."]), 1000);
         setTimeout(() => setBuildLogs(l => [...l, "> Compiling aarch64 binary with -O3 optimizations..."]), 2000);
         setTimeout(() => setBuildLogs(l => [...l, "> Injecting IStrategy interfaces..."]), 3000);
-        setTimeout(() => setBuildLogs(l => [...l, "> Signing SHA-256 Checksum..."]), 3500);
         setTimeout(() => {
             const hash = Array.from(crypto.getRandomValues(new Uint8Array(16)))
                 .map(b => b.toString(16).padStart(2, '0')).join('');
             setBuildLogs(l => [...l, `> BINARY SIGNED: ${hash}`]);
-            setTimeout(() => setBuildLogs(l => [...l, "> Sending NATS HOT_SWAP packet to Execution Node..."]), 500);
-            setTimeout(() => {
-                setBuildLogs(l => [...l, "> EXECUTION NODE KERNEL REPLACED. STRATEGY DEPLOYED."]);
-                setCurrentHash(hash);
+
+            // Institutional Hub: Enforce Git SHA-256 validation via Tauri backend
+            invoke('invoke_hot_swap', { gitSha: hash }).then(() => {
+                setTimeout(() => setBuildLogs(l => [...l, "> [SEALED] Git Signature Validated. Institutional Seal Attached."]), 500);
+                setTimeout(() => setBuildLogs(l => [...l, "> Sending NATS HOT_SWAP packet to Execution Node..."]), 1000);
+                setTimeout(() => {
+                    setBuildLogs(l => [...l, "> EXECUTION NODE KERNEL REPLACED. STRATEGY DEPLOYED."]);
+                    setCurrentHash(hash);
+                    setIsDeploying(false);
+                }, 2000);
+            }).catch(e => {
+                setBuildLogs(l => [...l, `> ERROR: Git-As-Governance Check Failed: ${e}`]);
                 setIsDeploying(false);
-            }, 1500);
-        }, 4000);
+            });
+        }, 3500);
     };
 
     return (

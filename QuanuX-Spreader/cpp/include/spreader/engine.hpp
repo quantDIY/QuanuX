@@ -5,6 +5,8 @@
 #include "quanux/MarketTick.hpp"
 #include "quanux/SPSCQueue.hpp"
 #include "quanux/sovereign_state.hpp"
+#include "spreader/clock_provider.hpp"
+#include <memory>
 
 // Deep injection: The compiler physically copies the strategy header here
 #include INJECTED_STRATEGY_HEADER
@@ -79,6 +81,9 @@ private:
 
   std::thread producer_thread_;
   std::thread consumer_thread_;
+
+  // Sim-Live Parity
+  std::unique_ptr<ClockProvider> clock_;
 
   natsConnection *nc_{nullptr};
   natsSubscription *sub_{nullptr};
