@@ -1,0 +1,26 @@
+.TH QUANUX-ADAPTER-SIM 1 "FEBRUARY 2026" "QuanuX Institutional" "QuanuX Manual Pages"
+.SH NAME
+quanux-adapter-sim \- QuanuX Native Connectivity Core (Simulated Markets)
+.SH SYNOPSIS
+.B quanux-adapter-sim
+.SH DESCRIPTION
+To satisfy strict industrial compliance standards requiring a distinct "Simulated" execution profile, the QuanuX ecosystem employs the \fBquanux-adapter-sim\fR architecture. 
+
+This module provides direct, sub-microsecond replay ingestion of historical events or localized paper-trading pathways.
+.SH SUPPORTED CONNECTIVITY
+.TP
+.BR QuickFIX/J\ &\ C++\ (Simulated)
+Industry-standard FIX 4.4 and 5.0 integration traversing identical internal pathways, but explicitly flagged as SIM in the `.qlog`.
+.TP
+.BR OnixS\ (Replay)
+Replay mode integrations utilizing the OnixS SDK for CME MDP3 and Eurex T7 offline evaluation.
+.TP
+.BR Databento\ (Historical)
+Native binary ingestion of Databento's `.dbn` format from disk. Zstd decoding is processed offline.
+.TP
+.BR TopstepX\ (Simulated)
+A simulated execution bridge for risk evaluation without deploying capital.
+.SH THE INSTITUTIONAL DUPLICITY
+Architecturally, the Live and Sim paths evaluate identical lock states. The separation is maintained primarily to satisfy institutional due diligence structures which mandate "Discrete Sim Adapters."
+.SH AUTHORS
+Built by the QuanuX Foundation.

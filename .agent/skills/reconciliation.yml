@@ -1,0 +1,9 @@
+name: reconciliation
+description: Workflow mapping for automated AI auditors retrieving trade integrity via the QuanuX `.qlog`.
+priority: 50
+
+rules:
+  - "When the USER requests an audit of execution parity, NEVER query the live memory or the PostgreSQL database as the primary source of truth."
+  - "The absolute source of truth is the append-only Binary Ledger: `.qlog`."
+  - "Steps to Reconcile: 1. Ingest the day's `.qlog`. 2. Parse the L3 Snapshot and OrderPacket payloads. 3. Cross-reference the payload checksum against the FIX Drop-Copy."
+  - "If divergence occurs, assert Network Failure. Do not assert State Machine Failure. The Sentinel Interlock is deterministic."

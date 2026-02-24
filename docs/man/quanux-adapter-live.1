@@ -1,0 +1,26 @@
+.TH QUANUX-ADAPTER-LIVE 1 "FEBRUARY 2026" "QuanuX Institutional" "QuanuX Manual Pages"
+.SH NAME
+quanux-adapter-live \- QuanuX Native Connectivity Core (Live Markets)
+.SH SYNOPSIS
+.B quanux-adapter-live
+.SH DESCRIPTION
+To satisfy strict industrial connectivity standards, the QuanuX ecosystem employs the \fBquanux-adapter-live\fR architecture. This module provides direct, sub-microsecond ingestion pathways to Tier-1 financial exchanges and brokers.
+
+While internal execution uses the deterministic \fBQuanuX-Spreader\fR loop, this adapter translates external Market Data and FIX formats into the native \fBL3 Snapshot\fR layout.
+.SH SUPPORTED CONNECTIVITY
+.TP
+.BR QuickFIX/J\ &\ C++
+Industry-standard FIX 4.4 and 5.0 integration for clearing house drop-copies and OMS syncs.
+.TP
+.BR OnixS
+Direct DMA integrations utilizing the OnixS SDK for CME MDP3 and Eurex T7.
+.TP
+.BR Databento
+Native binary ingestion of Databento's `.dbn` format direct from the PCAP live stream.
+.TP
+.BR TopstepX\ (Exclusive)
+A proprietary GraphQL / WebSocket bridge exclusively supporting the TopstepX prop-firm platform, providing seamless risk synchronization.
+.SH ISOLATION BOUNDARY
+This adapter is physically firewalled from the \fBQuanuX-Sentinel\fR. It only has permission to WRITE to the front of the cache array. It CANNOT evaluate risk.
+.SH AUTHORS
+Built by the QuanuX Foundation.

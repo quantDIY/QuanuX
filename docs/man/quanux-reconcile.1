@@ -1,0 +1,24 @@
+.TH QUANUX-RECONCILE 1 "FEBRUARY 2026" "QuanuX Institutional" "QuanuX Manual Pages"
+.SH NAME
+quanux-reconcile \- Trade Reconciliation and Integrity Verification
+.SH SYNOPSIS
+.B quanux-reconcile
+[\fB--date\fR \fIYYYYMMDD\fR] [\fB--broker\fR \fIFIX_DROP\fR]
+.SH DESCRIPTION
+The QuanuX Reconciliation Doctrine ensures mathematically provable 1:1 parity between internal execution intent and Brokerage Drop-Copy receipts. 
+
+It accomplishes this via the \fB.qlog\fR High-Speed Binary Journaling System.
+.SH THE BLACK BOX
+Every state transition within the QuanuX-Spreader and consequence validated by the QuanuX-Sentinel is serialized to the append-only `.qlog` before network IO. 
+
+During an audit:
+.IP 1. 3
+The `.qlog` is parsed offline.
+.IP 2. 3
+Every `OrderPacket` is verified against the recorded TSC Timestamp.
+.IP 3. 3
+The sequence is matched against the FIX drop-copy logs from clearing firms.
+.SH RECONCILIATION INTEGRITY
+Any divergence between the `.qlog` sequence and the Exchange sequence indicates a network drop, a brokerage failure, or a hardware latency spike violating the 59ns lock. It NEVER indicates a QuanuX state-machine anomaly. The Physics cannot be wrong.
+.SH AUTHORS
+Built by the QuanuX Foundation.

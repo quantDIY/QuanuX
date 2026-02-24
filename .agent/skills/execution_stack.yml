@@ -1,0 +1,10 @@
+name: execution_stack
+description: Immediate instructions prohibiting the alteration of the hardware Core binding assignments for QuanuX nodes.
+priority: 100
+
+rules:
+  - "The QuanuX-Spreader Execution loop MUST remain permanently bound to Core 3. This core acts as the physical 'Big Ambassador'."
+  - "The QuanuX-Sentinel Risk Interlock MUST remain permanently bound to Core 5. This forms the absolute Privilege Boundary separating execution capabilities."
+  - "The Clerk / Main application thread runs on Core 7, handling UI telemetry projection. It cannot assert risk logic directly."
+  - "Future generation logic scaling MUST respect the isolated Cache Locality of these pins. DO NOT 'jump the line' by dispatching orders from the Sentinel Core."
+  - "RITCHIE_MODE is declared immutably at the base of the hardware lock. Do not attempt to bypass it or 'refactor' it out."

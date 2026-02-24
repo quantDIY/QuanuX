@@ -1,0 +1,50 @@
+.TH QUANUX-FSM-DIAGRAM 1 "FEBRUARY 2026" "QuanuX Institutional" "QuanuX Manual Pages"
+.SH NAME
+quanux-fsm-diagram \- Formal Finite State Machine Invariants and Transitions
+.SH THE RITCHIE DIAGRAM
+.nf
+[INITIALIZATION]
+       |
+       v
+.B STATE_VOID (0) 
+       | (Sovereign Array Allocated)
+       v
+.B STATE_VIGIL (1) <----------+
+       |                      |
+       | (Volatility Ingress) | (Position Flat)
+       v                      |
+.B STATE_ENGAGED (2) ---------+
+       |                      | (Risk Offload Required)
+       v                      v
+.B STATE_HALT (4) <------- STATE_HEDGE (3)
+       |
+       v
+.B STATE_RECOVERY (5)
+.fi
+.SH INVARIANTS
+.TP
+.BR STATE_VOID\ (0)
+.I "Invariant:"
+The L3 memory segment must be zeroed except for structural paddings. No orders permitted.
+.TP
+.BR STATE_VIGIL\ (1)
+.I "Invariant:"
+`current_position` == 0. The tap spins.
+.TP
+.BR STATE_ENGAGED\ (2)
+.I "Invariant:"
+`current_position` > 0 && `current_position` <= Max Limit. Unhedged delta must not exceed nominal max constraints.
+.TP
+.BR STATE_HEDGE\ (3)
+.I "Invariant:"
+Position scalars MUST be negative relative to current delta. Attempting to add correlated risk while HEDGING results in immediate HALT.
+.TP
+.BR STATE_HALT\ (4)
+.I "Invariant:"
+`risk_interlock` == 1. All network transmission paths locked.
+.TP
+.BR STATE_RECOVERY\ (5)
+.I "Invariant:"
+The state inherited via warm-restart sequence must be accurately resumed from the last confirmed `.qlog` deterministic snapshot.
+.SH AUTHORS
+Built by the QuanuX Foundation.
