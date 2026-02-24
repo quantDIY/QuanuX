@@ -127,3 +127,5 @@ client/desktop/tauri-app/src-tauri/src/*.bak.*
 *.zst
 *.duckdb
 *.duckdb.wal
+QuanuX-Sentinel/cpp/src/chaos_test
+tests/survivability/warm_restart_test

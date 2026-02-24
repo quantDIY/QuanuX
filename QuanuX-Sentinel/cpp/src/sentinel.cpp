@@ -142,11 +142,11 @@ private:
   [[gnu::always_inline]] inline void trigger_interlock() {
     // The "Homer" Insight: Instead of a standard std::atomic store instruction
     // which may invoke a full `xchg` or heavier cache line flush, we utilize
-    // the specific x86 `LOCK BTS` (Bit Test and Set) instruction. This sets the
-    // 0th bit directly across the bus without invalidating or looping if it's
-    // already set. ABSOLUTELY NO std::cout OR SYSCALLS PERMITTED IN THIS SCOPE.
+    // the specific x86 `LOCK OR` instruction on the byte (`orb $1`). This sets
+    // the 0th bit directly across the bus natively. ABSOLUTELY NO std::cout OR
+    // SYSCALLS PERMITTED IN THIS SCOPE.
     uint8_t *ptr = reinterpret_cast<uint8_t *>(&state_->risk_interlock);
-    __asm__ volatile("lock btsb $0, %0" : "+m"(*ptr) : : "memory", "cc");
+    __asm__ volatile("lock orb $1, %0" : "+m"(*ptr) : : "memory", "cc");
   }
 };
 
