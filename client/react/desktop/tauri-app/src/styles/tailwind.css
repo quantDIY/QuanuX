@@ -23,78 +23,10 @@
   --color-ring: hsl(var(--ring));
 }
 
-/* Cyberpunk Theme */
-:root {
-  /* Deep Dark Blue/Black Background */
-  --background: 240 52% 4%;
-  /* Neon White Foreground */
-  --foreground: 240 100% 94%;
-
-  /* Glassmorphism Card */
-  --card: 240 52% 6%;
-  --card-foreground: 240 100% 94%;
-
-  --popover: 240 52% 4%;
-  --popover-foreground: 240 100% 94%;
-
-  /* Neon Pink */
-  --primary: 300 100% 50%;
-  --primary-foreground: 0 0% 100%;
-
-  /* Cyan */
-  --secondary: 180 100% 50%;
-  --secondary-foreground: 240 52% 4%;
-
-  /* Dark Muted */
-  --muted: 240 30% 15%;
-  --muted-foreground: 240 20% 60%;
-
-  /* Neon Green Accent */
-  --accent: 110 100% 54%;
-  --accent-foreground: 240 52% 4%;
-
-  --destructive: 0 100% 50%;
-  --destructive-foreground: 0 0% 100%;
-
-  --border: 240 30% 20%;
-  --input: 240 30% 20%;
-  --ring: 300 100% 50%; /* Pink Ring */
-
-  --radius: 0.5rem;
-}
-
-/* Force dark mode styles if class is present, or just use root */
-.dark {
-  --background: 240 52% 4%;
-  --foreground: 240 100% 94%;
-  --card: 240 52% 6%;
-  --card-foreground: 240 100% 94%;
-  --popover: 240 52% 4%;
-  --popover-foreground: 240 100% 94%;
-  --primary: 300 100% 50%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 180 100% 50%;
-  --secondary-foreground: 240 52% 4%;
-  --muted: 240 30% 15%;
-  --muted-foreground: 240 20% 60%;
-  --accent: 110 100% 54%;
-  --accent-foreground: 240 52% 4%;
-  --destructive: 0 100% 50%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 240 30% 20%;
-  --input: 240 30% 20%;
-  --ring: 300 100% 50%;
-}
-
 * {
   @apply border-border;
 }
 
 body {
   @apply bg-background text-foreground;
-  /* Cyberpunk Gradient Mesh Background hint */
-  background-image: 
-    radial-gradient(circle at 15% 50%, rgba(255, 0, 255, 0.08), transparent 25%), 
-    radial-gradient(circle at 85% 30%, rgba(0, 255, 255, 0.08), transparent 25%);
-  background-attachment: fixed;
 }

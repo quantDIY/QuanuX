@@ -8,8 +8,8 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
-      // Mirror desktop: expose client/src as @quanux/shared
-      "@quanux/shared": fileURLToPath(new URL("../shared", import.meta.url)),
+      // Link to the shared UI workspace
+      "@quanux/shared-ui": fileURLToPath(new URL("../shared", import.meta.url)),
     },
   },
   server: {

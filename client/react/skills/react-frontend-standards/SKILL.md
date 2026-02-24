@@ -63,3 +63,10 @@ Adhere to these Vercel-derived standards for optimal performance.
 - **Styling**: Tailwind CSS (strict). Do not write custom CSS files unless absolutely necessary for animations not covered by Tailwind config.
 - **Components**: Shadcn UI (Radix based). Reuse existing components from `client/shared` where possible.
 - **Icons**: Lucide React.
+
+## 5. Monorepo Transition & Shared UI
+
+To ensure `Tailwind v4` can properly scan CSS classes across project boundaries, the `client/react/shared` directory has been formalized into an internal `pnpm` workspace package named `@quanux/shared-ui`.
+
+- **Do not** use legacy TS path-aliasing (e.g., `@/shared/components`) to reach into the shared folder.
+- **Always** import shared components via the package name: `import { Button } from "@quanux/shared-ui/components/ui/button"`.

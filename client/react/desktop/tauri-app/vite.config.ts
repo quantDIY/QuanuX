@@ -9,7 +9,7 @@ export default defineConfig({
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
       "@/shared": fileURLToPath(new URL("../shared", import.meta.url)),
-      "@quanux/shared": fileURLToPath(new URL("../../shared", import.meta.url)),
+      "@quanux/shared-ui": fileURLToPath(new URL("../../shared", import.meta.url)),
     },
   },
   server: {
