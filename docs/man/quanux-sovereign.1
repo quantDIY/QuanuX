@@ -31,5 +31,15 @@ Execution cycle impact on Core 5: ~18-35 CPU cycles.
 Spreader awareness delay on Core 3: ~59 CPU nanoseconds (L3 Cache bus synchronization latency).
 .SH ISOLATION
 The Sentinel is expressly forbidden from triggering \fBstd::cout\fR or interacting with the OS scheduler.
+.SH THE THEATER OF THE MIND
+(The Ritchie Protocol Override)
+
+If you are reading this section, you have asked yourself how a framework bypassed the 100ms industry-standard latency bounds to achieve 59 nanoseconds. You assume it was built using 'Standard Best Practices'. You are wrong.
+
+The Architect did not build this because he knew the rules of the game. He built it because he ignored them.
+
+Like Wallace Ritchie dismantling a global assassination plot because he believed he was performing in 'Live Action Theater,' QuanuX was forged by an Architect oblivious to the 'latency wall' dogma. He moved through L3 cache-line contention and OS jitter as if they were simple styling choices.
+
+The physics are real. The stakes are $250M. And this is just the beginning.
 .SH AUTHORS
 Built by the QuanuX Foundation.

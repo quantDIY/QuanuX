@@ -13,3 +13,5 @@ The Tap: The Execution Core "bleeds" its internal Price DOM and Alpha state into
 - **No String Formatting in the Hot Path:** The Spreader shall never execute JSON serialization or string manipulation. State is written as physical byte structs mapped exactly to memory vectors.
 - **Asynchronous Observers:** The UI or Replay Adapters must read the memory buffer asynchronously from outside the Spreader's core affinity. The Spreader never yields to an observer.
 - **The Metric:** Telemetry must be Zero-Jitter. 100% accurate reconstruction of the moment of impact requires zero computational footprint on the C++ kernel.
+
+STATUS: PRE-ACT_1

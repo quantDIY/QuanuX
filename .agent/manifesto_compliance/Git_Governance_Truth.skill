@@ -11,3 +11,5 @@ Institutional credibility is built on Binary Integrity. No strategy can be deplo
 - **No Manual Elevate:** Access cannot be granted to a strategy runtime via user configuration toggles alone. It must mathematically match an institutional log.
 - **The Hot Swap Shield:** The backend IPC `invoke_hot_swap` command intercepts all Strategy Forge deployments. If the `git_sha` fails validation, the backend refuses to release the `risk_interlock` and the C++ executed binary fails instantaneously.
 - **Sovereign Override Prevention:** Administrative passwords are a software-defined weakness. We rely strictly on physical cryptographic hashes parsed from the binary object.
+
+STATUS: PRE-ACT_1

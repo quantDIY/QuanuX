@@ -14,3 +14,5 @@ The Spreader Core (Core 3) is a "Dead Core." It is isolated from the Linux sched
 - **Physical Core Isolation:** Thread affinity must strictly bind execution to assigned physical silicon via `pthread_setaffinity_np` or native CPU sets.
 - **Zero Jitter Logic:** Loops are infinite `while(true)` blocks utilizing `_mm_pause()` to keep the pipeline from branch saturation and the L1 cache warm without yielding to the OS.
 - **The Metric:** The system is constrained to a 59 nanosecond Tick-to-Signal budget. Any logic that exceeds this timeframe violates the law.
+
+STATUS: PRE-ACT_1
