@@ -2,6 +2,7 @@
 
 mod market_tick;
 mod execution_command;
+mod replay_adapter;
 
 use async_nats;
 use bytemuck;
@@ -78,13 +79,26 @@ fn main() {
       let nats_app_handle = app.handle().clone();
       // Spawn the high-frequency UI background telemetry task
       tauri::async_runtime::spawn(async move {
+          let app_handle_for_nats = nats_app_handle.clone();
+          tauri::async_runtime::spawn(async move {
+              // Initialize the async NATS client bypassing HTTP bloat
+              if let Ok(client) = async_nats::connect("nats://localhost:4222").await {
+                  app_handle_for_nats.manage(client.clone());
+                  println!("Tauri Daemon connected to NATS pipe.");
+              }
+          });
+
+          // Trigger the explicit L3 Memory Map telemtry tap
+          replay_adapter::ReplayAdapter::start_hardware_tap(nats_app_handle.clone());
+          
+          // Generate simulated 120us high-frequency inbound telemetry stream via zero-copy bypass
           let mut tick_count = 0;
           let mut notified = false;
           
           // Connect to the local NATS QuanuX fabric
           if let Ok(client) = async_nats::connect("nats://localhost:4222").await {
               // Inject the verified client into the App state for outbound commands
-              nats_app_handle.manage(client.clone());
+              // nats_app_handle.manage(client.clone()); // This is now handled by the inner spawn
               
               if let Ok(mut subscriber) = client.subscribe("MARKET.BIN").await {
                   while let Some(msg) = subscriber.next().await {

@@ -5,6 +5,7 @@ import { MarketTicker, MarketTick } from '@quanux/shared-ui/components/domain/Ma
 import { JitterChart } from '@quanux/shared-ui/components/telemetry/JitterChart';
 import { StrategyEditor } from '@quanux/shared-ui/components/forge/StrategyEditor';
 import { BuildLog } from '@quanux/shared-ui/components/forge/BuildLog';
+import { Level3DOM, L3Snapshot } from '@quanux/shared-ui/components/telemetry/Level3DOM';
 
 // QuanuX Connector: Desktop (Tauri rust backend via JSON/Bincode bypass)
 const tauriSubscribe = (onTick: (tick: MarketTick) => void) => {
@@ -13,6 +14,20 @@ const tauriSubscribe = (onTick: (tick: MarketTick) => void) => {
     // Listen directly to the zero-copy parsed Tauri event
     listen<MarketTick>('market-tick', (event) => {
         onTick(event.payload);
+    }).then(_unlisten => {
+        unlisten = _unlisten;
+    }).catch(console.error);
+
+    return () => {
+        if (unlisten) unlisten();
+    };
+};
+
+const tauriSubscribeL3 = (onSnapshot: (snapshot: L3Snapshot) => void) => {
+    let unlisten: (() => void) | undefined;
+
+    listen<L3Snapshot>('l3-telemetry-tap', (event) => {
+        onSnapshot(event.payload);
     }).then(_unlisten => {
         unlisten = _unlisten;
     }).catch(console.error);
@@ -84,6 +99,7 @@ export const App = () => {
                         subscribe={tauriSubscribe}
                         fireCommand={fireDesktopCommand}
                     />
+                    <Level3DOM subscribe={tauriSubscribeL3} />
                 </div>
 
                 <div className="col-span-1 md:col-span-1 lg:col-span-2 xl:col-span-2">

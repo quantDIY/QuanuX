@@ -109,4 +109,12 @@ The `risk_interlock` operates as an atomic bitmask (0 = Clear, 1 = Halt). It exi
 
 We moved from "daemons evaluating logic" to physical physics-driven state machines traversing an L3 bus line.
 
+## Epoch 15: The Visual Flight Recorder
+
+With the hardware acting autonomously through the `SovereignState` memory map, the role of the UI shifted. It is no longer a control panel; it is a "Visual Flight Recorder." 
+
+By building the `ReplayAdapter` into the Tauri backend, we actively tap the `telemetry_tap` circular buffer inside the aligned 64-byte structural contract. This bridge bypasses standard socket layers, peeling the binary state of the exact Bids, Asks, Alpha vectors, and Time Stamp Counters (TSC) the machine processed at the moment of packet execution.
+
+The React frontend ingests this and projects the "Neural DOM"—the precise snapshot of physical reality the C++ system parsed, synchronized on-screen in nanoseconds. The pilot can visually debug the atomic intent of the algorithmic core in real-time.
+
 **End of Rationale.**
