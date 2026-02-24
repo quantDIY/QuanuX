@@ -23,7 +23,7 @@ void test_fat_finger() {
   // Aligning to 64 bytes
   alignas(64) SovereignState state{};
   state.risk_interlock.store(0);
-  state.execution_state.store(ExecutionState::WORKING);
+  state.execution_state.store(ExecutionState::STATE_VIGIL);
   state.current_position.store(0);
   state.orders_fired.store(0);
   state.tap_index.store(1);
@@ -54,7 +54,7 @@ void test_fat_finger() {
   // Manual evaluation reproducing Sentinel logic exactly
   double notional = 10000 * 95000.0;
   if (notional > 5000000.0) {
-    state.execution_state.store(ExecutionState::HALT,
+    state.execution_state.store(ExecutionState::STATE_HALT,
                                 std::memory_order_relaxed);
     uint8_t *ptr = reinterpret_cast<uint8_t *>(&state.risk_interlock);
     __asm__ volatile("lock orb $1, %0" : "+m"(*ptr) : : "memory", "cc");
@@ -90,7 +90,7 @@ void test_stale_data() {
 
   alignas(64) SovereignState state{};
   state.risk_interlock.store(0);
-  state.execution_state.store(ExecutionState::WORKING);
+  state.execution_state.store(ExecutionState::STATE_VIGIL);
   state.current_position.store(1);
   state.tap_index.store(1);
 
@@ -110,7 +110,7 @@ void test_stale_data() {
   uint32_t tsc_delta = eval_tsc - stale_tsc;
 
   if (tsc_delta > 3000000) { // Sentinel's 1ms limit
-    state.execution_state.store(ExecutionState::HALT,
+    state.execution_state.store(ExecutionState::STATE_HALT,
                                 std::memory_order_relaxed);
     uint8_t *ptr = reinterpret_cast<uint8_t *>(&state.risk_interlock);
     __asm__ volatile("lock orb $1, %0" : "+m"(*ptr) : : "memory", "cc");

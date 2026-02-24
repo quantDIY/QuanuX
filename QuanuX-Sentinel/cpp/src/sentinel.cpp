@@ -49,30 +49,30 @@ private:
         state_->execution_state.load(std::memory_order_relaxed);
 
     switch (current_state) {
-    case quanux::ExecutionState::PARTIAL:
+    case quanux::ExecutionState::STATE_ENGAGED:
       // Law of the Witness & The Interlock
       // RUTHLESS BUT SAFE: A partial fill implies liquidity just dried up or
       // toxified. We do not HALT the machine; we instantly constrict the
       // hardware limit. By dynamically setting the max position to exactly what
       // we currently hold, we "re-program" the Spreader's intent via L3 memory.
       // It can no longer average down or scale up (blocked by evaluate_risk),
-      // but the hardware remains UNLOCKED for the ExecutionState::HEDGING exit
-      // order to fire.
+      // but the hardware remains UNLOCKED for the ExecutionState::STATE_HEDGE
+      // exit order to fire.
       dynamic_position_limit_ =
           std::abs(state_->current_position.load(std::memory_order_relaxed));
       break;
 
-    case quanux::ExecutionState::HEDGING:
+    case quanux::ExecutionState::STATE_HEDGE:
       // We are offloading risk. Maintain the dynamic limit (or relax if
       // needed).
       break;
 
-    case quanux::ExecutionState::HALT:
+    case quanux::ExecutionState::STATE_HALT:
       trigger_interlock();
       break;
 
-    case quanux::ExecutionState::IDLE:
-    case quanux::ExecutionState::WORKING:
+    case quanux::ExecutionState::STATE_VOID:
+    case quanux::ExecutionState::STATE_VIGIL:
     default:
       // Relax constraints back to normal operating parameters
       dynamic_position_limit_ = max_position_limit_;
@@ -90,7 +90,7 @@ private:
 
     // 1. The Sin of the Order Storm
     if (orders > hard_order_limit_) {
-      state_->execution_state.store(quanux::ExecutionState::HALT,
+      state_->execution_state.store(quanux::ExecutionState::STATE_HALT,
                                     std::memory_order_relaxed);
       trigger_interlock();
       return;
@@ -101,7 +101,7 @@ private:
 
     // 2. The Sin of the Position Breach (or Partial Fill Constriction)
     if (abs_pos > dynamic_position_limit_) {
-      state_->execution_state.store(quanux::ExecutionState::HALT,
+      state_->execution_state.store(quanux::ExecutionState::STATE_HALT,
                                     std::memory_order_relaxed);
       trigger_interlock();
       return;
@@ -117,7 +117,7 @@ private:
     // 3. The Sin of the Notional Breach
     double notional = abs_pos * tap.best_bid;
     if (notional > max_notional_limit_) {
-      state_->execution_state.store(quanux::ExecutionState::HALT,
+      state_->execution_state.store(quanux::ExecutionState::STATE_HALT,
                                     std::memory_order_relaxed);
       trigger_interlock();
       return;
@@ -131,7 +131,7 @@ private:
     // If the Spreader hasn't updated the tap in >1ms, the exchange link is
     // likely dead or paused. We HALT execution instantly.
     if (tsc_delta > max_tick_drift_) {
-      state_->execution_state.store(quanux::ExecutionState::HALT,
+      state_->execution_state.store(quanux::ExecutionState::STATE_HALT,
                                     std::memory_order_relaxed);
       trigger_interlock();
       return;

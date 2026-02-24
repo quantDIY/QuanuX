@@ -1,0 +1,37 @@
+.TH QUANUX-FSM 1 "FEBRUARY 2026" "QuanuX Institutional" "QuanuX Manual Pages"
+.SH NAME
+quanux-fsm \- The Ritchie Wallace Finite State Machine (Theater of Life)
+.SH SYNOPSIS
+.B quanux-fsm
+[\fIOPTIONS\fR]
+.SH DESCRIPTION
+The QuanuX Finite State Machine (FSM) dictates the boundaries of execution on the Spreader Core. 
+Unlike standard trading engines defined by "Orders" and "Cancels," the QuanuX FSM defines reality through the "Theater of Life."
+
+The \fBExecutionState\fR memory map resides directly within the L3 \fBSovereignState\fR. 
+
+.SH THE STATES (RITCHIE FSM)
+.TP
+.BR STATE_VOID\ (0)
+Initial Boot / Uninitialized. The curtain has not yet raised on this process boundary.
+.TP
+.BR STATE_VIGIL\ (1)
+Ready and waiting for the first tick. 
+.I "Please don't call me by my real name, it destroys the reality I'm trying to create."
+.TP
+.BR STATE_ENGAGED\ (2)
+Working the Lead Leg. Execution is active. 
+.TP
+.BR STATE_HEDGE\ (3)
+Executing the Offset order. Scaling is disallowed entirely; only exiting the risk parameter map is valid.
+.I "I'd much rather be a good guy."
+.TP
+.BR STATE_HALT\ (4)
+The "Ritchie Kill-Switch" triggered. The Sentinel hardware override bitmask has severed the Spreader's ability to fire new actions.
+.I "The evil lady torturer? Ha, ha. Bring her in here!"
+.TP
+.BR STATE_RECOVERY\ (5)
+Post-Crash / Warm-Restart Synchronization.
+.I "We both are. In the Theater of Life, I mean."
+.SH AUTHORS
+Built by the QuanuX Foundation.

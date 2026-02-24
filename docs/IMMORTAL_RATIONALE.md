@@ -129,4 +129,28 @@ The results are physically immutable:
 
 The Spreader experienced a full binary lockup via the Core 5 Sentinel without invoking the OS scheduler or awaiting a system call. Combined with the Replay Adapter transmitting the RED SCREEN neural state back to the visual pilot, QuanuX is no longer just high performance—it proves hardware-level execution safety within a 20ns resolution. 
 
+## "Shakespeare in the Sand" Governance
+
+Under the Ritchie Protocol, QuanuX deployment is governed by the rules of the Theater.
+
+### The Casting Approval
+Every strategy deployment is treated as an "Opening Season." The `deployStrategy` hook requires **Casting Approval**—a cryptographic SHA-256 verification of the deployed binary matching signed Git commits. Operating an unCAST strategy throws an immediate Sovereign Interlock violation.
+
+### The Experimental Clause
+> *"Experimental. Cats. Wait a second! With people. People as cats. Let's workshop."*
+
+This is the formal designation for the Sim-Replay environment. We "workshop" all neural interfaces, backtests, and algorithms strictly within this bounds before moving models to the Live Action Theater. Testing experimental execution branches in the production core without simulated proving grounds is an irreversible violation of the performance.
+
+## "Shakespeare in the Sand" Governance
+
+Under the Ritchie Protocol, QuanuX deployment is governed by the rules of the Theater.
+
+### The Casting Approval
+Every strategy deployment is treated as an "Opening Season." The `deployStrategy` hook requires **Casting Approval**—a cryptographic SHA-256 verification of the deployed binary matching signed Git commits. Operating an unCAST strategy throws an immediate Sovereign Interlock violation.
+
+### The Experimental Clause
+> *"Experimental. Cats. Wait a second! With people. People as cats. Let's workshop."*
+
+This is the formal designation for the Sim-Replay environment. We "workshop" all neural interfaces, backtests, and algorithms strictly within this bounds before moving models to the Live Action Theater. Testing experimental execution branches in the production core without simulated proving grounds is an irreversible violation of the performance.
+
 **End of Rationale.**

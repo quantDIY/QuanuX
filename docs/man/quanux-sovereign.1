@@ -10,6 +10,17 @@ The
 daemon represents the "Adult in the Room" for the QuanuX Distributed Execution framework. Running strictly as a bare-metal C++ loop on an isolated core (ordinarily Core 5), the Sentinel possesses unilateral authority over the L3 Cache \fBSovereignState\fR.
 
 It enforces the fundamental risk guardrails of the trading strategy without relying on context switches or syscall routing, avoiding de-scheduling jitter.
+
+.SH PRIVILEGE SEPARATION
+The architecture demands absolute Process Isolation:
+.TP
+.BR quanux-sentinel
+An independent binary explicitly bound to Core 5. It holds absolute ownership of the `risk_interlock` and the Master Kill Switch.
+.TP
+.BR quanux-spreader
+The primary execution engine bound to Core 3. It "leases" execution permissions from the Sentinel across the L3 Cache `SovereignState` memory. 
+
+If the \fBquanux-sentinel\fR process is terminated, or heartbeat drift exceeds 1ms, the \fBquanux-spreader\fR is compelled to enter \fBSTATE_HALT\fR immediately.
 .SH THE NATURAL LAWS (RISK RULES)
 The Sentinel enforces the QuanuX Natural Laws via the following "Sin" checks:
 .TP

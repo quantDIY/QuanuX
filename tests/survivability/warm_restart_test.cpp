@@ -20,7 +20,7 @@ void setup_shared_memory() {
 
   // Simulate Initial Core 3 execution state before "Crash"
   SovereignState *state = new (ptr) SovereignState();
-  state->execution_state.store(ExecutionState::PARTIAL,
+  state->execution_state.store(ExecutionState::STATE_ENGAGED,
                                std::memory_order_release);
   state->current_position.store(
       50, std::memory_order_release); // Managed 50 lots before death
@@ -56,7 +56,7 @@ void test_warm_restart() {
   uint64_t delta = end_tsc - start_tsc;
   double us = tsc_to_us(delta);
 
-  if (recovered_exec == ExecutionState::PARTIAL && recovered_pos == 50) {
+  if (recovered_exec == ExecutionState::STATE_ENGAGED && recovered_pos == 50) {
     std::cout << "[Survivability] STATE_PARTIAL and Position Risk ("
               << recovered_pos << ") successfully inherited." << std::endl;
     std::cout << "[Metrics]       Warm Restart Re-attach Time: " << delta

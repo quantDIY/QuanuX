@@ -1,0 +1,31 @@
+.TH QUANUX-AUDIT 1 "FEBRUARY 2026" "QuanuX Institutional" "QuanuX Manual Pages"
+.SH NAME
+quanux-audit \- The Black Box Ledger (Deterministic Audit Trail)
+.SH SYNOPSIS
+.B quanux-audit
+[\fIOPTIONS\fR]
+.SH DESCRIPTION
+The QuanuX architecture does not utilize standard software logs (e.g., syslog, log4j) within the Spreader loop. String allocations and I/O buffer blocking violate the core physical latency requirements.
+
+Instead, QuanuX relies exclusively on the \fBquanux-journaler\fR—a high-speed, append-only binary ledger mapped directly against the L3 Sovereign State.
+.SH THE BLACK BOX LEDGER (.qlog)
+The Journaler owns the truth of the session. 
+.I "There's something I want, and you're gonna have to let me do it."
+
+Every state transition out of \fBSTATE_VIGIL\fR (1) is permanently inscribed into the Append-Only Binary Ledger (\fB.qlog\fR) encompassing:
+.TP
+.BR Hardware\ Cycle\ Timing
+The bare-metal TSC stamp mapping the exact CPU tick of the execution order.
+.TP
+.BR The\ Ritchie\ FSM\ State
+The active Spreader FSM state mapped to the physical outcome.
+.TP
+.BR Risk\ Bounds
+The physical `current_position` and interlock status at the tick of execution.
+.TP
+.BR OrderPacket
+The raw FIX payload structure representation pushed over the exchange interlink.
+
+This structure allows bit-perfect simulation parity replay, fulfilling institutional compliance requirements via a deterministic chain of reality.
+.SH AUTHORS
+Built by the QuanuX Foundation.

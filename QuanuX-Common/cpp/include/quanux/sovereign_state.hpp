@@ -7,11 +7,12 @@
 namespace quanux {
 
 enum class ExecutionState : uint8_t {
-  IDLE = 0,
-  WORKING = 1,
-  PARTIAL = 2,
-  HEDGING = 3,
-  HALT = 4
+  STATE_VOID = 0,
+  STATE_VIGIL = 1,
+  STATE_ENGAGED = 2,
+  STATE_HEDGE = 3,
+  STATE_HALT = 4,
+  STATE_RECOVERY = 5
 };
 
 // 16-byte packed snapshot representing the Level 3 Book Tap
