@@ -1,0 +1,18 @@
+.TH QUANUX-ANNEX 1 "FEBRUARY 2026" "QuanuX Institutional" "QuanuX Manual Pages"
+.SH NAME
+quanux-annex \- Remote Ping-Back & DuckDB Vault (Le Critique)
+.SH SYNOPSIS
+.B python quanux_critic.py
+.SH DESCRIPTION
+The QuanuX Headquarters (HQ) executing within the 59ns Spreader Loop and 11ns Sentinel Interlock does not possess the capacity to care about aesthetic logging or historical critique. Data is dumped raw via NATS onto the \fBAUDIT.STREAM\fR and instantly forgotten.
+
+The \fBQuanuX Annex\fR is an absolute architectural separation. It is designed to be hosted on entirely decoupled, low-resource remote nodes. 
+.SH THE VAULT (DUCKDB)
+The Annex ingests the \fBAUDIT.STREAM\fR off the wire and processes it via \fBDuckDB\fR (\fBcritique_vault.duckdb\fR). This offline "DuckDB Vault" executes deep-dive operational introspection and historical forensics isolated from the primary L3 hardware lock matrices.
+.SH PING-BACK PROTOCOL
+If the \fRquanuxctl\fR \fBjaques-mode\fR toggle has been engaged by the system administrators, the Annex activates the "Le Critique" persona. 
+Upon ingesting the asynchronous telemetry stream, the Annex will transmit an aristocratic commentary via \fBAUDIT.PINGBACK\fR over NATS, which is then dynamically visualized by the \fBaudit.quanux.io\fR web theater.
+
+.I "It is quite... industrial. I have filed it in my DuckDB vault."
+.SH AUTHORS
+Built by the QuanuX Foundation.

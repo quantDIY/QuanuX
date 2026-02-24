@@ -86,6 +86,30 @@ def upgradeable(name: str):
     """Check for updates (Alias for 'ext upgradeable')."""
     extensions.upgradeable(name)
 
+@app.command("enable")
+def enable(feature: str):
+    """Enable advanced functionality toggles."""
+    if feature.lower() == "jaques-mode":
+        import os
+        config_path = os.path.expanduser("~/.quanux_jaques_mode")
+        with open(config_path, "w") as f:
+            f.write("1")
+        console.print("[bold yellow]I know a couple of guys who are hoping to fire up some big Ambassadors at 11:59.[/bold yellow]")
+    else:
+        console.print(f"Unknown feature: {feature}")
+
+@app.command("disable")
+def disable(feature: str):
+    """Disable advanced functionality toggles."""
+    if feature.lower() == "jaques-mode":
+        import os
+        config_path = os.path.expanduser("~/.quanux_jaques_mode")
+        if os.path.exists(config_path):
+            os.remove(config_path)
+        console.print("[bold green]Jacques-Mode disabled. Return to standard compliance.[/bold green]")
+    else:
+        console.print(f"Unknown feature: {feature}")
+
 
 @app.command()
 def mcp():

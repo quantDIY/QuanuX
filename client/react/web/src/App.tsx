@@ -3,6 +3,7 @@ import { MarketTicker, MarketTick } from '@quanux/shared-ui/components/domain/Ma
 import { JitterChart } from '@quanux/shared-ui/components/telemetry/JitterChart';
 import { StrategyEditor } from '@quanux/shared-ui/components/forge/StrategyEditor';
 import { BuildLog } from '@quanux/shared-ui/components/forge/BuildLog';
+import { CritiqueView } from './CritiqueView';
 
 // QuanuX Connector: Web (GraphQL Subscription via Strawberry)
 const webSubscribe = (onTick: (tick: MarketTick) => void) => {
@@ -55,6 +56,13 @@ export const App = () => {
             }, 1500);
         }, 4000);
     };
+
+    // Standard URL routing
+    const path = window.location.pathname;
+    if (path.startsWith('/critique/')) {
+        const eventId = path.split('/critique/')[1] || 'UNKNOWN_EVENT';
+        return <CritiqueView eventId={eventId} />;
+    }
 
     return (
         <div className="flex h-screen w-screen flex-col bg-background text-foreground font-mono overflow-hidden fade-in">
