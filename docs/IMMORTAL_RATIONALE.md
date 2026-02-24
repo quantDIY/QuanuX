@@ -74,4 +74,15 @@ By plotting the exact delta between the C++ Time Stamp Counter (`arrival_tsc`) a
 
 We do not approximate performance; we measure it down to the exact nanosecond cycle. The UI is calibrated.
 
+## Epoch 11: The Tactical Trigger
+
+A cockpit is useless if the pilot cannot pull the trigger. After establishing the 120µs input telemetry telemetry stream, we engineered the "Tactical Trigger" to serve as the Execution Command Pipe.
+
+1. **The Struct Symmetricity**: We instantiated a `CommandPacket` strictly aligned to 64 bytes (`align(64)`) via `bytemuck`, mirroring the exact L1 Cache Line philosophy of the inbound telemetry.
+2. **The Fast-Path**: The React UI executes Tauri `invoke` calls directly, casting JavaScript primitives immediately into the binary `CommandPacket` in the Rust core.
+3. **The Bypass**: Through the NATS `COMMAND.BIN` subject, the user's action hits the C++ Execution Node perfectly mapped and typed, avoiding JSON serialization bloat altogether.
+4. **The Kill Switch**: We wired the system tray to fire a raw `KILL_ALL` byte sequence through the daemon asynchronously, guaranteeing the pilot can always flatten positions even if the UI thread locks up.
+
+The "Round-Trip" command simulation validates this architecture, charting "Click-to-C++" latency dynamically onto the Canvas. The weapon is armed.
+
 **End of Rationale.**

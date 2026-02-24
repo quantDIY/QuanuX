@@ -7,17 +7,32 @@ interface JitterChartProps {
     color: string;
     /** Hook to the raw telemetry stream */
     subscribe: (onTick: (tick: MarketTick) => void) => () => void;
+    fireCommand?: () => Promise<void>;
 }
 
-export const JitterChart: React.FC<JitterChartProps> = ({ title, description, color, subscribe }) => {
+export const JitterChart: React.FC<JitterChartProps> = ({ title, description, color, subscribe, fireCommand }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const latestTickRef = useRef<MarketTick | null>(null);
     const pointsRef = useRef<number[]>([]);
     const MAX_POINTS = 200;
 
+    const pendingCommandTsRef = useRef<number | null>(null);
+    const lastCmdLatencyRef = useRef<number | null>(null);
+
+    const handleFireCommand = async () => {
+        if (!fireCommand) return;
+        pendingCommandTsRef.current = (performance.timeOrigin + performance.now()) * 1_000_000; // in ns
+        await fireCommand();
+    };
+
     useEffect(() => {
         const unsubscribe = subscribe((tick: MarketTick) => {
             latestTickRef.current = tick;
+            if (pendingCommandTsRef.current !== null) {
+                const nowNs = (performance.timeOrigin + performance.now()) * 1_000_000;
+                lastCmdLatencyRef.current = (nowNs - pendingCommandTsRef.current) / 1_000_000; // ms
+                pendingCommandTsRef.current = null;
+            }
         });
 
         const canvas = canvasRef.current;
@@ -97,6 +112,9 @@ export const JitterChart: React.FC<JitterChartProps> = ({ title, description, co
                     ctx.font = "12px monospace";
                     ctx.textAlign = "right";
                     ctx.fillText(`${pts[pts.length - 1].toFixed(2)}ms`, canvas.width - 5, 15);
+
+                    ctx.fillStyle = "rgba(255, 100, 100, 0.9)";
+                    ctx.fillText(`Cmd RT: ${lastCmdLatencyRef.current ? lastCmdLatencyRef.current.toFixed(2) + 'ms' : '--'}`, canvas.width - 5, 30);
                 }
             }
 
@@ -113,8 +131,20 @@ export const JitterChart: React.FC<JitterChartProps> = ({ title, description, co
 
     return (
         <div className="bg-qx-surface border border-qx-border rounded-xl p-4 flex flex-col space-y-2 shadow-lg hover:shadow-xl transition-all">
-            <h3 className="text-qx-foreground font-bold tracking-wide text-sm">{title}</h3>
-            <p className="text-xs text-muted-foreground">{description}</p>
+            <div className="flex justify-between items-center">
+                <div>
+                    <h3 className="text-qx-foreground font-bold tracking-wide text-sm">{title}</h3>
+                    <p className="text-xs text-muted-foreground">{description}</p>
+                </div>
+                {fireCommand && (
+                    <button
+                        onClick={handleFireCommand}
+                        className="px-3 py-1 text-xs font-black tracking-widest bg-qx-destructive/20 text-qx-destructive border border-qx-destructive/50 rounded-md hover:bg-qx-destructive hover:text-white transition-colors uppercase"
+                    >
+                        Trigger
+                    </button>
+                )}
+            </div>
             <div className="relative w-full h-32 mt-2 bg-background/50 rounded-lg overflow-hidden border border-qx-border/50">
                 <canvas
                     ref={canvasRef}

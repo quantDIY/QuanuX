@@ -1,5 +1,6 @@
 import React from 'react';
 import { listen } from '@tauri-apps/api/event';
+import { invoke } from '@tauri-apps/api/core';
 import { MarketTicker, MarketTick } from '@quanux/shared-ui/components/domain/MarketTicker';
 import { JitterChart } from '@quanux/shared-ui/components/telemetry/JitterChart';
 
@@ -17,6 +18,15 @@ const tauriSubscribe = (onTick: (tick: MarketTick) => void) => {
     return () => {
         if (unlisten) unlisten();
     };
+};
+
+const fireDesktopCommand = async () => {
+    try {
+        // Fast-path to NATS COMMAND.BIN: 1 = Mock EXECUTE, Signature = 0xBEEF
+        await invoke('invoke_execution_trigger', { commandType: 1, signature: 0xBEEF });
+    } catch (e) {
+        console.error("Execution Trigger Failed:", e);
+    }
 };
 
 export const App = () => {
@@ -42,6 +52,7 @@ export const App = () => {
                     description="Tauri Rust Backend bypass -> React Ref-Buffer"
                     color="hsl(var(--color-qx-primary))"
                     subscribe={tauriSubscribe}
+                    fireCommand={fireDesktopCommand}
                 />
             </main>
         </div>
