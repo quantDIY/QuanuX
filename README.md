@@ -74,6 +74,18 @@ QuanuX is the **first** quantitative trading platform to offer an official **Con
 
 ---
 
+## 🤖 AI Agent & Architectural Rationale
+
+QuanuX is built to be understood and extended by both humans and AI agents.
+To ensure our foundational architectural rules (such as the 59ns C++ latency path and the 64-byte L1 cache covenant) are preserved, we maintain a set of explicit instructions and skills:
+
+*   **[Immortal Rationale](docs/IMMORTAL_RATIONALE.md)**: The core C++ engine architecture, historical latency decisions, and memory layouts.
+*   **[Agent Skills Directory](.agent/skills/)**: High-fidelity AI operating procedures and capabilities logically separated by component domain (`SKILL.md`).
+*   **Man Pages**: Operator runbooks logically defined in `server/docs/man`.
+
+Agentic systems evaluating this repository must prioritize reading `docs/IMMORTAL_RATIONALE.md` before embarking on modifications to execution nodes, execution loops, or distributed architectures.
+
+---
 ## 🔌 Universal Connectivity & Integrations
 
 The "Bolt-On" architecture means we integrate with **everything**.

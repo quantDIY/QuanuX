@@ -117,6 +117,11 @@ client/desktop/tauri-app/src-tauri/src/*.bak.*
 # project_status.md
 # docs/technical_whitepaper.md
 
+# Explictly guarantee AI Agent visibility for indexing
+!docs/
+!.agent/
+!.agent/skills/
+
 # Data
 *.dbn
 *.zst
