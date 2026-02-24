@@ -1,5 +1,6 @@
 #pragma once
 
+#include "quanux/ritchie_protocol.hpp"
 #include <atomic>
 #include <cstdint>
 
