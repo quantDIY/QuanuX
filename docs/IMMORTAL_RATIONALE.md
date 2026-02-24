@@ -42,4 +42,12 @@ To achieve true 59ns determinism, we moved to a Pinned-Isolation Model. We treat
 
 We pay "twice the price" in power consumption and hardware availability to buy the ultimate HFT luxury: Absolute Determinism. By preventing the CPU from ever entering a power-saving C-state or being interrupted by system tasks, we ensure the engine is always "awake" and waiting for the next tick.
 
+## Epoch 7: The TSC Proof (Verifying the Sacrifice)
+
+If you kill a core, you must prove it was worth the blood. To verify that our `isolcpus` pinning eliminated all OS jitter, we rely on the hardware itself.
+
+We inject the CPU's internal Time Stamp Counter (`__builtin_ia32_rdtsc()`) directly into the `PriceMatrix` struct at the exact nanosecond the ingress thread touches the network packet. By passing this hardware TSC value through the DMA buffer to the Execution core, and having the Cockpit UI read it out-of-band via Shared Memory, we achieve perfectly synchronous, zero-overhead telemetry. 
+
+The TSC proves our determinism: it allows us to visualize the 59ns heartbeat on our frontend, confirming unequivocally that the OS has not stolen a single cycle.
+
 **End of Rationale.**
