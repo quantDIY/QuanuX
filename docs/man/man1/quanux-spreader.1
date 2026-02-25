@@ -1,0 +1,25 @@
+.TH QUANUX-SPREADER 1 "FEBRUARY 2026" "QuanuX Biological Sovereignty" "QuanuX System Manual"
+.SH NAME
+quanux-spreader \- The Metabolic Enzyme (Execution Engine)
+.SH SYNOPSIS
+.B quanux-spreader
+[\fB--config\fR \fIPATH\fR]
+.SH DESCRIPTION
+The \fBquanux-spreader\fR is the active catalyst of the QuanuX cell. It functions as the metabolic enzyme, processing raw sensory data ingested from the external synapses (NATS/Adapters) and converting it into "Trade-ATP" (Execution Packets).
+.SH METABOLIC FUNCTIONS
+The enzyme operates exclusively within tight execution loops (59ns). It does not hold state or possess an immune response; it strictly calculates and attempts to dispatch limit orders. 
+
+Before execution reaches external markets, it must pass through the \fBSovereign Sentinel\fR (\fBritchie-interlock(2)\fR) for risk binding. This prevents rogue enzymatic activity from damaging the cellular organism.
+.SH ENVIRONMENT AND CATALYSTS
+The enzyme requires specific environmental scalars to function:
+.IP \[ci] 3
+.B QUANUX_MARKET_NATS
+The address of the external sensory fluid (Market Data input stream).
+.IP \[ci] 3
+.B QUANUX_ORDER_ROUTING
+The address of the execution synapse for order dispatch.
+.SH SEE ALSO
+.BR quanux-shm (4),
+.BR quanux-sentinel (8)
+.SH AUTHORS
+Built by the QuanuX Foundation.

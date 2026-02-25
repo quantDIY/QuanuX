@@ -1,0 +1,24 @@
+.TH QUANUX-SENTINEL 8 "FEBRUARY 2026" "QuanuX Biological Sovereignty" "QuanuX System Manual"
+.SH NAME
+quanux-sentinel \- The Homeostatic Admin (System Regulation)
+.SH SYNOPSIS
+.B sudo quanux-sentinel
+.SH DESCRIPTION
+The \fBquanux-sentinel\fR is the fundamental Homeostatic operating system of the cell. It maintains the health, heartbeat, and regenerative capabilities of the overarching host.
+.SH THE HEARTBEAT (PTP Synchronization)
+Before the cell can engage the market, it requires absolute synchronicity with external global clocks. The Sentinel administers PTP (Precision Time Protocol) to ensure market data ingestion timestamps are perfect. If the heartbeat drifts beyond microsecond bounds, the Sentinel refuses to let the cell transition out of `STATE_VOID`.
+.SH CELLULAR REGENERATION (Warm Restart)
+If the cell undergoes Apoptosis (`STATE_HALT`) due to intersecting an Institutional Pathogen (e.g., maximum unhedged delta thresholds breached), it locks its resources. 
+
+The Homeostatic Admin provides the `STATE_RECOVERY` path:
+.IP 1. 3
+Flushes the Cytoplasm queues (\fBquanux-shm(4)\fR).
+.IP 2. 3
+Seals the Memory Vacuole (\fBquanux-vault(5)\fR).
+.IP 3. 3
+Regenerates a fresh `SovereignState` matrix safely.
+.SH SEE ALSO
+.BR ritchie-interlock (2),
+.BR quanux-cell (7)
+.SH AUTHORS
+Built by the QuanuX Foundation.

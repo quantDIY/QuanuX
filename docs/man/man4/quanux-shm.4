@@ -1,0 +1,22 @@
+.TH QUANUX-SHM 4 "FEBRUARY 2026" "QuanuX Biological Sovereignty" "QuanuX System Manual"
+.SH NAME
+quanux-shm \- The Cytoplasm (Inter-Cellular Shared Memory)
+.SH SYNOPSIS
+.B /dev/shm/quanux_l3_state
+.SH DESCRIPTION
+The \fBquanux-shm\fR mapping represents the Cytoplasm of the cell. It is the shared memory fluid (`/dev/shm`) where all distinct organelles (the Sentinel, the Spreader, the Vault) communicate without crossing into the slow, dense kernel (OS context switching).
+.SH THE CYTOPLASM GEOMETRY
+Within this fluid floats the 64-byte `SovereignState` structure.
+Because the organelles are pinned to distinct biological cores (Core 3, Core 5), the Cytoplasm allows them to share risk metrics (the \fBImmune System Constants\fR) instantly via L3 Cache line coherence.
+
+By keeping the state exactly at 64 bytes, the entire cellular structure can fit onto a single CPU cache line, enabling 23ns Sentinel state-checks prior to enzyme execution.
+.SH PATHOGENS AVOIDED
+.IP \[ci] 3
+POSIX Locks (Deadlocks)
+.IP \[ci] 3
+Memory Allocation Jumps
+.SH SEE ALSO
+.BR quanux-spreader (1),
+.BR ritchie-interlock (2)
+.SH AUTHORS
+Built by the QuanuX Foundation.

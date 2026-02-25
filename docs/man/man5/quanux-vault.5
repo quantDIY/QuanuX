@@ -1,0 +1,21 @@
+.TH QUANUX-VAULT 5 "FEBRUARY 2026" "QuanuX Biological Sovereignty" "QuanuX System Manual"
+.SH NAME
+quanux-vault \- The Memory Vacuole (HDF5 Binary Journal)
+.SH SYNOPSIS
+.B critique_vault.h5
+.SH DESCRIPTION
+The \fBquanux-vault\fR defines the structure of the Memory Vacuole. It is the repository where the cell records the exact sequence of its life cycle (every metabolic tick and execution).
+.SH THE HDF5 SWMR DOCTRINE
+The Vacuole uses \fBSWMR (Single Writer Multiple Reader)\fR capabilities within the HDF5 format. Like an RNA transcription process, the Vault listens to the Cytoplasm (\fBquanux-shm(4)\fR) and continuously appends raw 64-byte binary geometry exactly as it occurred physically on the CPU, without locking the execution loop.
+.SH THE REPLICATION INTEGRITY PROOF
+In order to prove to external entities (Auditors/Prop Firms) that the Simulated Cell mimics the Live Cell perfectly, the Vacuole maintains strict metadata:
+.IP \[ci] 3
+The SHA-256 Hash of the active Spreader Engine binary.
+.IP \[ci] 3
+The Databento Parquet Transpilation tables for offline 1:1 playback.
+
+When an auditor inspects the Vacuole, they can forensically rebuild the exact cellular mitosis and state sequence, eliminating simulation drift.
+.SH SEE ALSO
+.BR quanux-shm (4)
+.SH AUTHORS
+Built by the QuanuX Foundation.
