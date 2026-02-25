@@ -1,11 +1,12 @@
 total 136
-drwxr-xr-x@ 26 Duncan  staff   832 Feb 25 13:24 .
+drwxr-xr-x@ 27 Duncan  staff   864 Feb 25 13:32 .
 drwxr-xr-x@ 32 Duncan  staff  1024 Feb 25 13:26 ..
 drwxr-xr-x@  4 Duncan  staff   128 Feb 25 13:25 man1
 drwxr-xr-x@  4 Duncan  staff   128 Feb 25 13:04 man2
 drwxr-xr-x@  3 Duncan  staff    96 Feb 25 13:04 man3
 drwxr-xr-x@  4 Duncan  staff   128 Feb 25 13:25 man4
 drwxr-xr-x@  4 Duncan  staff   128 Feb 25 13:25 man5
+drwxr-xr-x@  5 Duncan  staff   160 Feb 25 13:33 man6
 drwxr-xr-x@  5 Duncan  staff   160 Feb 25 13:04 man7
 drwxr-xr-x@  4 Duncan  staff   128 Feb 25 13:25 man8
 -rw-r--r--@  1 Duncan  staff  1701 Feb 23 11:59 QUANUX_DEV.7
@@ -29,41 +30,49 @@ drwxr-xr-x@  4 Duncan  staff   128 Feb 25 13:25 man8
 docs/man/man1:
 total 8
 drwxr-xr-x@  4 Duncan  staff   128 Feb 25 13:25 .
-drwxr-xr-x@ 26 Duncan  staff   832 Feb 25 13:24 ..
+drwxr-xr-x@ 27 Duncan  staff   864 Feb 25 13:32 ..
 lrwxr-xr-x@  1 Duncan  staff    17 Feb 25 13:25 enzyme.1 -> quanux-spreader.1
 -rw-r--r--@  1 Duncan  staff  1299 Feb 25 13:25 quanux-spreader.1
 
 docs/man/man2:
 total 8
 drwxr-xr-x@  4 Duncan  staff   128 Feb 25 13:04 .
-drwxr-xr-x@ 26 Duncan  staff   832 Feb 25 13:24 ..
+drwxr-xr-x@ 27 Duncan  staff   864 Feb 25 13:32 ..
 -rw-r--r--@  1 Duncan  staff  1618 Feb 25 13:04 ritchie-interlock.2
 lrwxr-xr-x@  1 Duncan  staff    19 Feb 25 13:04 sentinel.2 -> ritchie-interlock.2
 
 docs/man/man3:
 total 8
 drwxr-xr-x@  3 Duncan  staff    96 Feb 25 13:04 .
-drwxr-xr-x@ 26 Duncan  staff   832 Feb 25 13:24 ..
+drwxr-xr-x@ 27 Duncan  staff   864 Feb 25 13:32 ..
 -rw-r--r--@  1 Duncan  staff  1257 Feb 25 13:04 quanux-organelles.3
 
 docs/man/man4:
 total 8
 drwxr-xr-x@  4 Duncan  staff   128 Feb 25 13:25 .
-drwxr-xr-x@ 26 Duncan  staff   832 Feb 25 13:24 ..
+drwxr-xr-x@ 27 Duncan  staff   864 Feb 25 13:32 ..
 lrwxr-xr-x@  1 Duncan  staff    12 Feb 25 13:25 cytoplasm.4 -> quanux-shm.4
 -rw-r--r--@  1 Duncan  staff  1146 Feb 25 13:25 quanux-shm.4
 
 docs/man/man5:
 total 8
 drwxr-xr-x@  4 Duncan  staff   128 Feb 25 13:25 .
-drwxr-xr-x@ 26 Duncan  staff   832 Feb 25 13:24 ..
+drwxr-xr-x@ 27 Duncan  staff   864 Feb 25 13:32 ..
 -rw-r--r--@  1 Duncan  staff  1306 Feb 25 13:25 quanux-vault.5
 lrwxr-xr-x@  1 Duncan  staff    14 Feb 25 13:25 vacuole.5 -> quanux-vault.5
+
+docs/man/man6:
+total 8
+drwxr-xr-x@  5 Duncan  staff   160 Feb 25 13:33 .
+drwxr-xr-x@ 27 Duncan  staff   864 Feb 25 13:32 ..
+lrwxr-xr-x@  1 Duncan  staff    14 Feb 25 13:33 arena.6 -> quanux-arena.6
+-rw-r--r--@  1 Duncan  staff  2172 Feb 25 13:33 quanux-arena.6
+lrwxr-xr-x@  1 Duncan  staff    14 Feb 25 13:33 thymus.6 -> quanux-arena.6
 
 docs/man/man7:
 total 8
 drwxr-xr-x@  5 Duncan  staff   160 Feb 25 13:04 .
-drwxr-xr-x@ 26 Duncan  staff   832 Feb 25 13:24 ..
+drwxr-xr-x@ 27 Duncan  staff   864 Feb 25 13:32 ..
 lrwxr-xr-x@  1 Duncan  staff    13 Feb 25 13:04 membrane.7 -> quanux-cell.7
 lrwxr-xr-x@  1 Duncan  staff    13 Feb 25 13:04 mitochondria.7 -> quanux-cell.7
 -rw-r--r--@  1 Duncan  staff  2374 Feb 25 13:04 quanux-cell.7
@@ -71,6 +80,6 @@ lrwxr-xr-x@  1 Duncan  staff    13 Feb 25 13:04 mitochondria.7 -> quanux-cell.7
 docs/man/man8:
 total 8
 drwxr-xr-x@  4 Duncan  staff   128 Feb 25 13:25 .
-drwxr-xr-x@ 26 Duncan  staff   832 Feb 25 13:24 ..
+drwxr-xr-x@ 27 Duncan  staff   864 Feb 25 13:32 ..
 lrwxr-xr-x@  1 Duncan  staff    17 Feb 25 13:25 heartbeat.8 -> quanux-sentinel.8
 -rw-r--r--@  1 Duncan  staff  1323 Feb 25 13:25 quanux-sentinel.8
