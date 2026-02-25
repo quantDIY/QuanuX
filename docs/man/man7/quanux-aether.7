@@ -1,0 +1,44 @@
+.TH QUANUX-AETHER 7 "FEBRUARY 2026" "QuanuX Biological Sovereignty" "QuanuX System Manual"
+.SH NAME
+quanux-aether \- The Logbook of the Aether (Kernel Bypass & EF_VI)
+.SH SYNOPSIS
+.B quanux-probe-synapse
+.SH DESCRIPTION
+Most algorithmic engines operate within "The Room" (the Operating System), restricted by Kernel stacks, POSIX sockets, and scheduler yields. QuanuX operates in \fBThe Aether\fR.
+
+By utilizing \fBSolarflare EF_VI\fR (User-Space Direct Access), the QuanuX outer membranes bypass the Linux kernel entirely, allowing the NIC to DMA physical market states directly into the \fBquanux-shm\fR Cytoplasm.
+.SH MAPPING THE REEFS (Institutional Pathogens)
+The transition to the Aether is perilous. If you do not map the hidden reefs, the "Room" will claw the process back into the kernel. This manual documents the exact hazards:
+.TP
+.BR 1.\ The\ Interrupt\ Reef
+\fIThe Danger:\fR The OS attempts to pause the CPU to parse an incoming packet via an IRQ, destroying thousands of nanoseconds.
+\fIThe Bypass:\fR We disable \fBirqbalance\fR and bind the NIC interrupts away from the Sovereign Nucleus (Core 3). The Nucleus polls the physical memory register directly.
+.TP
+.BR 2.\ The\ Context-Switch\ Landmine
+\fIThe Danger:\fR The CPU transitions from User-Space to Kernel-Space, flushing the micro-op cache.
+\fIThe Bypass:\fR The Sovereign Spreader is booted via \fBisolcpus\fR. The kernel is strictly forbidden from scheduling tasks on Core 3 or Core 5.
+.TP
+.BR 3.\ The\ Cache-Miss\ Abyss
+\fIThe Danger:\fR The CPU attempts to read a packet, but the page table isn't loaded, incurring a massive TLB miss penalty.
+\fIThe Bypass:\fR The entire Aether connection is mapped exclusively to \fB2MB Hugepages\fR. 
+.SH THE SYNAPSE GENOME (EF_VI Mapping)
+To achieve this, the cell must synthesize an \fBef_vi\fR state-ring mapping:
+.IP \[ci] 3
+The \fBRx Ring\fR (The Ingress Receptor) is pinned to a pre-allocated Hugepage.
+.IP \[ci] 3
+When a packet hits the silicon, the EF_VI driver DMAs it directly into this buffer.
+.IP \[ci] 3
+The Nucleus continuously checks (`ef_eventq_poll()`) the memory address. When the bits flip, the Nucleus casts a C++ struct over the raw wire data, perceiving the state natively without executing a single `memcpy` operation.
+
+For diagnostic validation of this neural silence across the wire, see \fBquanux-probe-synapse(1)\fR.
+.SH SEE ALSO
+.BR quanux-cell (7),
+.BR quanux-shm (4)
+.SH AUTHORS
+Built by the QuanuX Foundation.
+.SH THE GHOST HAND-OFF (The Synaptic Bridge)
+To transition the raw photon data from the NIC overlay to the Nucleus (Core 3), the cell employs the \fBSovereignBuffer\fR. 
+
+The \fBSovereignBuffer\fR is a lock-free, zero-copy ring buffer residing entirely within the \fBquanux-shm(4)\fR Cytoplasm. It strictly enforces the Law of Non-Interference: no `memcpy()` is ever invoked. The Solarflare NIC writes chunks directly into the memory region mapped by this ring via DMA. 
+
+The Nucleus executes the \fBGhost Hand-off\fR by simply observing the \fBef_vi\fR ring advancement and moving its internal read-pointer. By pinning the `head` and `tail` atomic scalars to isolated 64-byte padding boundaries, the buffer completely evades False Sharing (L3 cache-line bounce), ensuring the 16-cycle Silence of the Wire is delivered directly into the calculation matrix uncorrupted by wait-states or locks.
