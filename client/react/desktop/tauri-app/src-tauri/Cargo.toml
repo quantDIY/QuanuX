@@ -13,6 +13,7 @@ async-nats = "0.46.0"
 bytemuck = { version = "1.25.0", features = ["derive"] }
 tokio = { version = "1.49.0", features = ["rt-multi-thread", "macros", "time"] }
 futures = "0.3.32"
+rand = "0.8"
 
 [build-dependencies]
 tauri-build = { version = "2.5.1", features = [] }
