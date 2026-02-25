@@ -1,0 +1,42 @@
+# ==============================================================================
+# QUANUX: THE RITUAL OF COMPILATION (INJECTABLE SOVEREIGNTY)
+# ==============================================================================
+# This Makefile acts as the "Universal Translator" key.
+# When compiling the standard biological chassis, the `NullTranslatorStub`
+# is utilized automatically. 
+#
+# To achieve Linguistic Singularity and speak directly to the Exchange Native 
+# Matching Engine, the user MUST invoke this specific makefile to mount the 
+# proprietary OnixS interface.
+#
+# USAGE: 
+#   make -f Makefile.onixs ONIXS_ROOT=/path/to/sdk
+# ==============================================================================
+
+CXX = g++
+CXXFLAGS = -O3 -std=c++20 -Wall -Wextra -pthread
+
+# The Activation Signal. 
+# This pre-processor flag directs the compiler to drop the Stub and mount 
+# the proprietary Universal Translator defined in `quanux_translator_stub.hpp`.
+DEFINES = -DHAS_ONIXS
+
+# Assuming the user provides ONIXS_ROOT, we link the proprietary SDK dependencies
+ONIXS_ROOT ?= /opt/onixs
+INCLUDES = -Isrc -I$(ONIXS_ROOT)/include
+LDFLAGS = -L$(ONIXS_ROOT)/lib -lOnixS_BOH_Solarflare -Wl,-rpath,$(ONIXS_ROOT)/lib
+
+SRCS = src/organelles/synapse_probe.cpp
+TARGET = quanux-universal-node
+
+all: $(TARGET)
+
+$(TARGET): $(SRCS)
+	@echo "============================================================"
+	@echo "[QuanuX] Injecting the Universal Translator (OnixS SDK)."
+	@echo "[QuanuX] The chassis is now merging with the proprietary engine."
+	@echo "============================================================"
+	$(CXX) $(CXXFLAGS) $(DEFINES) $(INCLUDES) $(SRCS) -o $(TARGET) $(LDFLAGS)
+
+clean:
+	rm -f $(TARGET)
