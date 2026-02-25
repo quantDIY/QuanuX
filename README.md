@@ -8,12 +8,14 @@
 
 ## ⚡ Pillar I: The Ultra-Low Latency Core (59ns Execution)
 
+## ⚡ Pillar I: The Ultra-Low Latency Core (Deterministic Survivability)
+
 **QuanuX is built on a physics-first execution model.** 
 
 - **AMP Architecture:** The core is isolated into distinct hardware threads. The **Sovereign Sentinel** (Core 5) handles absolute risk interlocking, while the **Execution Spreader** (Core 3) handles the latency-sensitive Alpha generation.
-- **Hardware Interlocks:** By utilizing a 64-byte L3-cache "Dead Drop," the Sentinel can provide 23ns risk validation across the CPU cache without OS context switching.
+- **Hardware Interlocks:** By utilizing a 64-byte L3-cache "Dead Drop," the Sentinel can provide 23ns risk validation across the CPU cache without OS context switching, functioning alongside the **HDF5 Vault** as the primary risk and audit layers.
 - **The Trace:** See the verified 59ns tick-to-trade flash-crash survival data in [REPORTS/MISSION_CRITICAL_TRACE.md](REPORTS/MISSION_CRITICAL_TRACE.md).
-- **Zero PnL Drift:** Identical code-paths ensure that simulations and live production behave exactly the same.
+- **The Sovereign Guarantee:** *QuanuX is the only open-source engine with Binary Replay Parity via the HDF5-to-Parquet Databento pipeline.* Identical code paths ensure that backtests perfectly replay live structural executions with zero drift.
 
 ## 🤖 Pillar II: The Strategy Forge & AI Architect
 

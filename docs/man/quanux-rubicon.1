@@ -1,0 +1,47 @@
+.TH QUANUX-RUBICON 1 "FEBRUARY 2026" "QuanuX Institutional" "QuanuX Manual Pages"
+.SH NAME
+quanux-rubicon \- The Institutional Grand Finale: Defeating the "Institutional 8"
+.SH SYNOPSIS
+.B quanux-rubicon
+[\fB--evaluate\fR \fIHALLMARKS\fR]
+.SH DESCRIPTION
+The QuanuX architecture was forged an answer to the "Institutional 8"—the eight hallmark defensive questions posed by legacy Prop Firms and CTOs assessing high-frequency trading infrastructure. 
+
+The Sovereign Rubicon has been crossed. The defenses are absolute.
+.SH THE INSTITUTIONAL 8 (DEFEATED)
+.TP
+.BR 1.\ The\ Execution\ Latency
+.I Question: How fast is your core order dispatch?
+.I Answer: 59 ns. Measured across physical TSC increments, isolated on Core 3.
+.TP
+.BR 2.\ The\ Hardware\ Risk\ Bounds
+.I Question: What prevents the system from dumping the portfolio limit on an OS thread lock?
+.I Answer: The Sovereign Sentinel. An isolated process on Core 5 sharing immediate L3 State bypassing the kernel's scheduler entirely.
+.TP
+.BR 3.\ The\ State\ Validation
+.I Question: How do you verify your Finite State Machine is sound?
+.I Answer: The Ritchie Protocol limits the deterministic bounds. From STATE_VOID to STATE_RECOVERY, invariants cannot be violated without an immediate hardware kill-switch drop.
+.TP
+.BR 4.\ The\ Institutional\ Adapters
+.I Question: What legacy protocols do you support for drop-copies?
+.I Answer: Native QuickFIX/C++ and OnixS structures alongside standard REST/GraphQL.
+.TP
+.BR 5.\ The\ Trade\ Reconciliation
+.I Question: How do you parse logs to confirm position accuracy?
+.I Answer: QuanuX does not parse text logs. It uses the Sovereign Vault high-speed SWMR HDF5 Binary journal for mathematically absolute 1:1 parity matching.
+.TP
+.BR 6.\ The\ Sim-Live\ Drift
+.I Question: Does your backtest behave differently than a live exchange?
+.I Answer: Drift is eliminated. QuanuX records raw L3 arrays via HDF5, transpiles to Databento Parquet schemas, and replays the states exactly as they happened in live fire down to the cache line.
+.TP
+.BR 7.\ The\ Deployment\ Custody
+.I Question: How do you ensure the tested model is what you run?
+.I Answer: Execution binaries require Git SHA-256 signature verification integrated directly into the HDF5 Vault metadata. Unsigned modules trigger Sovereign Interlocks.
+.TP
+.BR 8.\ The\ Post-Mortem\ Forensics
+.I Question: Can you isolate logic failures without halting execution?
+.I Answer: The Annex architecture. DuckDB analysis on remote instances consuming non-blocking NATS audit streams independent of the execution hardware ring.
+.SH THE MANIFESTO
+If you are evaluating this infrastructure, let the record show: "It's like that, is it? Wallace: I'm afraid so."
+.SH AUTHORS
+Built by the QuanuX Foundation.

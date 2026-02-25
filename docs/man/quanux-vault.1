@@ -1,0 +1,24 @@
+.TH QUANUX-VAULT 1 "FEBRUARY 2026" "QuanuX Institutional" "QuanuX Manual Pages"
+.SH NAME
+quanux-vault \- The HDF5 Sovereign Vault (Single Writer Multiple Reader)
+.SH SYNOPSIS
+.B quanux-vault
+[\fB--epoch\fR \fIYYYYMMDD\fR]
+.SH DESCRIPTION
+The QuanuX Binary Journaler has been superseded by \fBThe Sovereign Vault\fR, a NASA-grade storage architecture utilizing \fBHDF5\fR (Hierarchical Data Format v5). 
+.SH THE HDF5 SWMR DOCTRINE
+The QuanuX-Sentinel executes mathematically perfect risk verifications in 23ns. To capture this state without inducing filesystem latency or POSIX locks, the Vault leverages \fBSWMR (Single Writer Multiple Reader)\fR mode. 
+
+The \fBquanux-vault\fR service running in The Annex (Core 0/Remote) continuously writes raw L3 structural alignments as opaque binary blobs into the HDF5 structure. Any authorized Replay Engine or AI Auditor may read from this exact `.h5` file simultaneously, providing a zero-conflict "Neural Speed" persistent audit trail.
+.SH DATABENTO PARQUET TRANSPILATION
+The QuanuX ecosystem supports seamless transpilation from the Vault directly back into the simulated engine:
+.IP 1. 3
+The raw L3 cache records are unpacked.
+.IP 2. 3
+Data is converted to \fBDbN / Parquet\fR format using the \fBquanux-vault-export\fR utility.
+.IP 3. 3
+The live-recorded states are injected natively through the Databento Data Handler, executing perfect "Post-Mortem" replays of live network fire.
+.SH INSTITUTIONAL AUDITING
+An HDF5 file is a literal physical container. QuanuX administrators do not distribute detached JSON dumps to clearing firms; they securely transfer the `.h5` Vault. The auditor reconstructs the exact DOM states and OrderPackets at the exact nanosecond of execution, universally accessible across Python, MATLAB, C++, or R.
+.SH AUTHORS
+Built by the QuanuX Foundation.
