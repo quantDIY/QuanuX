@@ -1,0 +1,31 @@
+.TH RITCHIE-INTERLOCK 2 "FEBRUARY 2026" "QuanuX Biological Sovereignty" "QuanuX System Manual"
+.SH NAME
+ritchie-interlock \- The Cellular Invariants and Immune System Thresholds
+.SH SYNOPSIS
+.B #include <quanux/sovereign_state.hpp>
+.SH DESCRIPTION
+The \fBRitchie Interlock\fR is the absolute immune response governing the QuanuX cell. It dictates the deterministic laws of survival mapped across the L3 cache boundary (`SovereignState`).
+.SH THE CELLULAR INVARIANTS (FSM TIES)
+The cell's health is strictly bound to its physical state:
+.TP
+.BR STATE_VOID\ (0)
+The resting primordial state. The memory segment is zeroed.
+.TP
+.BR STATE_VIGIL\ (1)
+The active listening state. The cell is exposed to data receptors but uncommitted to action. `current_position == 0`.
+.TP
+.BR STATE_ENGAGED\ (2)
+The execution state. The cell has extended its boundaries. `ABS(current_position) <= position_limit_max`. Unhedged delta tolerance is rigidly enforced.
+.TP
+.BR STATE_HEDGE\ (3)
+The defensive contraction. Position scalars must be strictly negative. Action attempting to add risk results in an immediate immune response.
+.TP
+.BR STATE_HALT\ (4)
+Apoptosis. The cell shuts down metabolic function. `risk_interlock == 1`.
+.SH RECEPTOR THRESHOLDS
+The \fBQuanuX-Sentinel\fR monitors the 64-byte structural constraints constantly. 
+These are the hard-coded logic gates ensuring the Nucleus remains healthy. If a threshold is violently crossed, the cell terminates its network connections instantly without waiting on standard OS context switching mechanisms.
+.SH SEE ALSO
+.BR quanux-cell (7)
+.SH AUTHORS
+Built by the QuanuX Foundation.
