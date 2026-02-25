@@ -3,7 +3,6 @@
 
 QuanuX is not merely a trading engine. It is a living, deterministically audited, biological organism. Built for those who refuse to be boxed in by institutional infrastructure and "phony complexity," QuanuX resets the starting line. It is the absolute Equalizer, demanding nothing but **Intellect and Effort**.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![C++20](https://img.shields.io/badge/C++-20-blue.svg)](https://isocpp.org/)
 
 ---
