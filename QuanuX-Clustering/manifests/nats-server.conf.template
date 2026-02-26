@@ -1,0 +1,10 @@
+port: 4222
+server_name: "{{NODE_NAME}}"
+
+cluster {
+  name: "quanux-grid"
+  listen: "0.0.0.0:6222"
+  routes: [
+    "nats-route://{{SEED_NODE_URL}}:6222"
+  ]
+}

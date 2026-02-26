@@ -1,0 +1,32 @@
+.TH QUANUX-NODE-INIT 8 "February 2026" "QuanuX System Manager" "QuanuX Organism Commands"
+.SH NAME
+quanux-node-init \- Foundation One: The Outer Russian Doll initialization script
+.SH SYNOPSIS
+.B /QuanuX-Clustering/scripts/node_init.sh
+.SH DESCRIPTION
+.B quanux-node-init
+is the foundational layer of the QuanuX Organism. It executes Operation "Foundation One", which binds a piece of cold iron to the QuanuX Collective.
+.PP
+.B THE LAW:
+No execution-node deployment is permitted until Step 1 (this initialization) is verified. This script performs the OS Scrub (Ubuntu 22.04 LTS), establishes the Nutrient Layer via Conda, initiates the RSA Handshake, and completes the NATS Grid Integration.
+.SH PHASES
+.TP
+.B 1. OS Scrub
+Updates the Ubuntu 22.04 LTS installation and installs essential packages (build-essential, curl, git).
+.TP
+.B 2. Nutrient Layer
+Installs the 'set-quanux-node' package from the 'quanux-repo' Conda channel.
+.TP
+.B 3. RSA Handshake
+Generates a 4096-bit RSA keypair for secure cluster-wide authentication.
+.TP
+.B 4. NATS Grid Integration
+Generates an Ed25519 NKey pair, configures the local nats-server.conf for Route Handshaking on port 6222, and opens the UFW firewall for ports 4222 and 6222.
+.SH RETURN VALUE
+Upon successful completion, the script outputs the exact string:
+.PP
+\fBQUANUX_NODE_READY\fR
+.PP
+This success signal must be verified before proceeding to the Cluster Health Probe.
+.SH AUTHOR
+QuanuX Architect
