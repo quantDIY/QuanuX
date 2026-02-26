@@ -152,8 +152,8 @@ pnpm -C client/desktop/tauri-app tauri dev
 
 QuanuX is licensed under the **GNU Affero General Public License v3.0 (AGPLv3)**.
 
-- You may use, modify, and distribute this software under the terms of the AGPL.
-- If you run a modified version as a network service, you must make the source available.
+- You may use, modify, and distribute this software under the terms of the AGPL for non-commercial use.
+- Those who wish to host, modify and/or distribute for commercial use, internally or externally, over network or otherwise must     obtain a license from the project owner.
 
 See the `LICENSE` file for full details.
 
