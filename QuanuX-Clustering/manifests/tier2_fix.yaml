@@ -1,0 +1,7 @@
+# QuanuX Tier 2 FIX Manifest
+tier_level: 2
+tier_name: "FIX Liaison"
+shell_type: "native-envoy"
+features:
+  - fix
+  - standard_tcp

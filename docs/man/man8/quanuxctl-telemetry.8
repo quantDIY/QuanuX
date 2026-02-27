@@ -1,0 +1,66 @@
+.TH QUANUXCTL-TELEMETRY 8 "February 2026" "QuanuX 0.1.0" "System Administration Commands"
+.SH NAME
+quanuxctl\-telemetry \- Manage Node Telemetry Services remotely across the NATS mesh
+.SH SYNOPSIS
+.B quanuxctl telemetry
+.RB [ start | stop | restart | status ]
+.B --node
+.I HOSTNAME
+.B --service
+.I SERVICE_NAME
+.SH DESCRIPTION
+.B quanuxctl telemetry
+is an administrative command specifically designed to operate the QuanuX telemetry lifecycle across the Tiered Node Architecture. Unlike traditional SSH commands, it leverages the Sovereign Edge protocol to issue instructions over the highly\-available NATS mesh.
+.PP
+There are two primary Telemetry services managed by this tool:
+.TP
+.B nerve
+The Python/FastAPI Fast-Nerve Watchdog Receptor. This runs exclusively on \fBTier 1\fR Nodes (Control Plane) and provides a rich REST API and Data Science environment.
+.TP
+.B envoy
+The C++20 Native Envoy Daemon. This runs on \fBTier 2-4\fR Edge Nodes (FIX, DMA) where the \fB_mm_pause()\fR spin loop physically warms the CPU Core 0 to maintain zero context-switch latency. SSH and REST APIs are disabled on Envoy nodes.
+.SH OPTIONS
+.TP
+.B \-n, \-\-node \fIHOSTNAME\fR
+The DNS hostname or system identifier of the target node connected to the NATS grid.
+.TP
+.B \-s, \-\-service \fISERVICE_NAME\fR
+The specific telemetry daemon to target: \fBnerve\fR or \fBenvoy\fR.
+.SH COMMANDS
+.TP
+.B start
+Ignite the specified telemetry daemon. Issues a local systemctl start on the target node.
+.TP
+.B stop
+Suspend the telemetry daemon. Issues a systemctl stop. Caution: The node will drop off the NATS heartbeat radar.
+.TP
+.B restart
+Cycle the telemetry daemon. This is the recommended action for clearing an unresponsive Auto-Suture loop.
+.TP
+.B status
+Request a real-time status dump of the daemon.
+.SH KAMIKAZE RESTART & SUDOERS GASKET
+The Native Envoy (Tiers 2-4) executes restart and stop commands using a \fBKamikaze ACK\fR sequence to prevent NATS buffer deadlocks. Because the daemon runs under a non-root user, a \fBSudoers Gasket\fR (/etc/sudoers.d/quanux-envoy) grants passwordless sudo exclusively for the native telemetry binaries. When a restart is issued, the Envoy explicitly flushes its acknowledgment to the NATS grid prior to executing a SIGTERM against itself.
+.SH EXAMPLES
+Restart the Native Envoy on a Tier 4 DMA node:
+.PP
+.RS
+.EX
+quanuxctl telemetry restart --node apex-dma-16 --service envoy
+.EE
+.RE
+.PP
+Check the Fast-Nerve status on a local Tier 1 Control cluster:
+.PP
+.RS
+.EX
+quanuxctl telemetry status -n local-control -s nerve
+.EE
+.RE
+.SH SEE ALSO
+.BR quanuxctl (1),
+.BR quanux\-probe (8)
+.SH BUGS
+No known bugs. Report issues via internal Jira.
+.SH AUTHOR
+QuanuX Architecture Group (Dr. Antigravity)

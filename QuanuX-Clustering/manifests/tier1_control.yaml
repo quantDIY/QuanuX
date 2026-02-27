@@ -1,0 +1,9 @@
+# QuanuX Tier 1 Control Manifest
+tier_level: 1
+tier_name: "Control Plane"
+shell_type: "fast-nerve"
+features:
+  - conda
+  - python
+  - fastapi
+  - jupyter

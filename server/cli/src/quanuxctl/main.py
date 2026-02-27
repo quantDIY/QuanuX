@@ -5,7 +5,7 @@ Unified Developer CLI.
 """
 import typer
 from rich.console import Console
-from .commands import secrets, bridge, skills, extensions, integrate, node, storage, indicators, module, vcs, dashboard, topstepx, geminicli, foundry, crucible, spreader
+from .commands import secrets, bridge, skills, extensions, integrate, node, storage, indicators, module, vcs, dashboard, topstepx, geminicli, foundry, crucible, spreader, probe, telemetry
 from . import __version__
 
 app = typer.Typer(
@@ -63,6 +63,11 @@ app.add_typer(crucible.app, name="crucible", help="Manage QuanuX Crucible (Backt
 app.add_typer(crucible.app, name="c", help="Alias for crucible", hidden=True)
 
 app.add_typer(spreader.app, name="spreader", help="Manage QuanuX-Spreader Engine Deployment and Strategy Injection.")
+
+app.add_typer(probe.app, name="probe", help="Neural Tap Diagnostic & Auto-Suture")
+
+app.add_typer(telemetry.app, name="telemetry", help="Manage Node Telemetry Services remotely.")
+app.add_typer(telemetry.app, name="t", help="Alias for telemetry", hidden=True)
 
 # Top-level aliases for common extension operations
 # cli.add_command(integrate.integrate) # REMOVED: Broken and redundant. Use 'quanuxctl ext integrate'

@@ -1,0 +1,7 @@
+# QuanuX Tier 3 Kinetic Striker Manifest
+tier_level: 3
+tier_name: "Kinetic Striker"
+shell_type: "native-envoy"
+features:
+  - user_space_networking
+  - openonload

@@ -1,0 +1,8 @@
+# QuanuX Tier 4 DMA Manifest
+tier_level: 4
+tier_name: "Apex Predator"
+shell_type: "native-envoy"
+features:
+  - ef_vi
+  - user_space_networking
+  - hugepages

@@ -1,0 +1,71 @@
+.\" Manpage for quanuxctl probe
+.\" Contact quanux@foundation.local
+.TH QUANUXCTL-PROBE 8 "February 2026" "QuanuX v0.1.0" "QuanuX Command Manual"
+.SH NAME
+quanuxctl-probe \- Neural Tap diagnostic stethoscope and surgical kit for QuanuX nodes
+.SH SYNOPSIS
+.B quanuxctl probe
+[\fB\-\-fix\fR] [\fB\-\-watchdog\fR | \fB\-w\fR]
+.SH DESCRIPTION
+The \fBquanuxctl probe\fR command embodies Operation "Neural Tap". It serves as the primary diagnostic tool for a QuanuX Execution Node, evaluating the three physical layers of Node Sovereignty.
+.PP
+Furthermore, the \fBFast-Nerve\fR Watchdog Receptor runs persistently as a systemd service (\fBquanux-nerve.service\fR), exposing a FastAPI REST interface on port \fB8080\fR to assess and trigger these diagnostics remotely.
+.B The Bone (OS/Environment)
+Audits the `conda` environment (quanux-node) and ensures the `set-quanux-node` binary is present in the active PATH.
+.TP
+.B The Nerve (NATS Connectivity)
+Validates local memory-mapped communication (NATS Port 4222) and cluster handshaking routes (Port 6222). Confirms at least one active peer route.
+.TP
+.B The Soul (Security/Identity)
+Verifies the existence of 4096-bit RSA identity keys and Ed25519 NKeys. Strictly enforces 600 permissions to prevent rejection by the NATS server.
+.SH OPTIONS (CLI)
+.TP
+.BR \-\-fix
+Executes the "Auto-Suture" Protocol locally. Attempts to repair any failing layer autonomously.
+.SH FAST-NERVE REST API
+The \fBquanux-nerve.service\fR runs a persistent ASGI gateway on port \fB8080\fR. 
+.TP
+.B GET /probe
+Executes a passive Neural Tap and returns a JSON payload detailing the Sovereignty Status.
+.TP
+.B POST /nudge
+Forces an asynchronous Auto-Suture cycle. Alternatively triggered via NATS subject \fBQUANUX.NODE.PROBE.<HOSTNAME>\fR.
+.TP
+.B GET /logs
+Streams the tail of the Black Box fix log (\fI/var/log/quanux/fix.log\fR).
+.TP
+.B PUT /config/logging
+Restricts the historian's persistence on the fly (e.g., {"max_bytes": 10485760, "backup_count": 5}). Writes to \fI/etc/quanux/logging.conf\fR.
+.SH EXIT CODES (CLI)
+The Apoptoic Avoidance protocol expects one of the following terminal exit states:
+.TP
+\fB0\fR
+\fBSovereign (Nominal)\fR \- All layers operational.
+.TP
+\fB1\fR
+\fBIsolated\fR \- Nerve failure. NATS cluster routes are unresponsive or isolated from peers.
+.TP
+\fB2\fR
+\fBNutrient Deficiency\fR \- Bone failure. The conda environment is corrupt or strictly required binaries are absent.
+.TP
+\fB3\fR
+\fBIdentity Crisis\fR \- Soul failure. Invalid or exposed RSA/NKey files.
+.SH EXAMPLES
+.PP
+Run a standard diagnostic tap:
+.RS 4
+$ quanuxctl probe
+.RE
+.PP
+Attempt a system-wide diagnosis and Auto-Suture repair:
+.RS 4
+$ quanuxctl probe --fix
+.RE
+.PP
+Engage the persistent Watchdog Receptor:
+.RS 4
+$ quanuxctl probe --watchdog
+.RE
+.SH SEE ALSO
+.BR quanuxctl (1),
+.BR quanux-cell (7)
