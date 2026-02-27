@@ -1,0 +1,20 @@
+.TH QUANUXCTL-SSH 8 "August 2026" "QuanuX System Manager" "QuanuX Deployment Documentation"
+.SH NAME
+quanuxctl-ssh \- Execute a deployed payload via Conditioned SSH Execution.
+.SH SYNOPSIS
+\fBquanuxctl -ssh\fR [\fIHOSTNAME\fR] [\fIPAYLOAD_NAME\fR]
+.SH DESCRIPTION
+\fBquanuxctl -ssh\fR initiates a secure shell connection to a Tier 2-4 edge node to execute a staged payload.
+The execution is strictly governed by the \fBTrue Sovereign Lifecycle\fR. The Native Envoy strictly gates
+execution by verifying capabilities and dynamically generating a shell wrapper. 
+.PP
+If the prerequisite Handshake and Out-of-Band (OOB) deploy sequence were not completed, or if the \fIhabitat.json\fR 
+violates the capability registry, the execution wrapper will not exist, resulting in a physical rejection.
+.SH PHYSICS & MECHANISM
+The C++ Native Envoy utilizes the \fBDumb Courier\fR pattern. The python execution CLI constructs the capability hooks 
+(e.g., \fInumactl\fR, \fIonload\fR) and passes them to the Envoy during the payload transfer. The Envoy writes the 
+hook into \fB/opt/quanux/payloads/.run_<payload>.sh\fR and authenticates it with POSIX chmod constraints.
+.SH EXAMPLES
+quanuxctl -ssh tier4-node01 striker_dma
+.SH SEE ALSO
+quanuxctl-telemetry(8), native-envoy(8)

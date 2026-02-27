@@ -16,6 +16,28 @@ while [[ "$#" -gt 0 ]]; do
 done
 echo "[QuanuX-Clustering] Initializing Node as Tier $TIER"
 
+echo "[QuanuX-Clustering] Stamping Habitat DNA (/etc/quanux/habitat.json)..."
+mkdir -p /etc/quanux
+if [ "$TIER" -eq 1 ]; then
+    HABITAT_CAPS='["python_3_10", "tcp_nodelay", "shared_scheduler", "fastapi"]'
+elif [ "$TIER" -eq 2 ]; then
+    HABITAT_CAPS='["cnats_core_1", "tcp_nodelay"]'
+elif [ "$TIER" -eq 3 ]; then
+    HABITAT_CAPS='["cnats_core_1", "onload", "isolcpus"]'
+elif [ "$TIER" -eq 4 ]; then
+    HABITAT_CAPS='["cnats_core_1", "ef_vi", "isolcpus", "hugepages_2M"]'
+else
+    HABITAT_CAPS='[]'
+fi
+
+cat << EOF > /etc/quanux/habitat.json
+{
+  "tier": $TIER,
+  "provides": $HABITAT_CAPS
+}
+EOF
+echo "[+] Habitat DNA sealed."
+
 # 2. The OS Scrub
 echo "[QuanuX-Clustering] OS Scrub: Updating and hardening Ubuntu 22.04 LTS..."
 export DEBIAN_FRONTEND=noninteractive
@@ -34,7 +56,7 @@ if [ "$TIER" -eq 1 ]; then
     fi
 else
     echo "[QuanuX-Clustering] Edge Layer (Tier $TIER): Skipping Conda. Installing C++20 toolchains and Native Envoy dependencies..."
-    apt-get install -y cmake libnats-dev libspdlog-dev
+    apt-get install -y cmake libnats-dev libspdlog-dev libcurl4-openssl-dev
 fi
 
 # 2. The RSA Handshake
@@ -168,6 +190,8 @@ EOF
     sudo mv "$SUDOERS_FILE" /etc/sudoers.d/quanux-envoy
 
     echo "[QuanuX-Clustering] Installing and Starting Native Envoy..."
+    sudo mkdir -p /opt/quanux/payloads
+    sudo chown -R $USER:$USER /opt/quanux/payloads
     sudo mv "$SERVICE_FILE" /etc/systemd/system/quanux-envoy.service
     sudo systemctl daemon-reload
     sudo systemctl enable --now quanux-envoy

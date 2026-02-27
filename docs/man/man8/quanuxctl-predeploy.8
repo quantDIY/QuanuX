@@ -1,0 +1,29 @@
+.TH QUANUXCTL-PREDEPLOY 8 "February 2026" "QuanuX 0.1.0" "System Administration Commands"
+.SH NAME
+quanuxctl\-predeploy \- Simulate and validate a NATS capability handshake before payload deployment
+.SH SYNOPSIS
+.B quanuxctl predeploy
+.B --payload
+.I PATH
+.B --target
+.I HOSTNAME
+.SH DESCRIPTION
+.B quanuxctl predeploy
+interrogates a target node's Sovereign Habitat. It reads the \fBrequirements.json\fR from the specified payload path, compares it against the \fBcapabilities_registry.yaml\fR central dictionary, and publishes a NATS \fIQUANUX.NODE.HANDSHAKE\fR packet. The target node will respond with an ACK if compatible, or a NACK if the habitat lacks the required capabilities.
+.SH OPTIONS
+.TP
+.B \-p, \-\-payload \fIPATH\fR
+The path to the local payload directory containing the 'requirements.json'.
+.TP
+.B \-t, \-\-target \fIHOSTNAME\fR
+The target Habitat node connected to the NATS grid.
+.SH EXAMPLES
+.PP
+.RS
+.EX
+quanuxctl predeploy --payload src/payloads/tier4-striker/ --target node-04
+.EE
+.RE
+.SH EXIT STATUS
+0 if Handshake ACK (Compatible).
+1 if Handshake NACK (Incompatible) or Network/Registry error.

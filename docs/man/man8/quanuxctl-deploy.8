@@ -1,0 +1,29 @@
+.TH QUANUXCTL-DEPLOY 8 "February 2026" "QuanuX 0.1.0" "System Administration Commands"
+.SH NAME
+quanuxctl\-deploy \- Execute a payload deployment following a successful capability handshake
+.SH SYNOPSIS
+.B quanuxctl deploy
+.B --payload
+.I PATH
+.B --target
+.I HOSTNAME
+.SH DESCRIPTION
+.B quanuxctl deploy
+orchestrates the physical transfer and execution of a QuanuX inner payload to the target Node Habitat. It inherently invokes \fIquanuxctl predeploy\fR to guarantee capability matching prior to transfer. The target Native Envoy applies dynamic Linux wiring prefixes based on the payload's requirements and the capability registry.
+.SH OPTIONS
+.TP
+.B \-p, \-\-payload \fIPATH\fR
+The path to the local payload directory containing the 'requirements.json'.
+.TP
+.B \-t, \-\-target \fIHOSTNAME\fR
+The target Habitat node connected to the NATS grid.
+.SH EXAMPLES
+.PP
+.RS
+.EX
+quanuxctl deploy --payload src/payloads/tier4-striker/ --target node-04
+.EE
+.RE
+.SH EXIT STATUS
+0 if Deployment was successful.
+1 if Handshake failed or Deployment was obstructed.

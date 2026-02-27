@@ -5,7 +5,7 @@ Unified Developer CLI.
 """
 import typer
 from rich.console import Console
-from .commands import secrets, bridge, skills, extensions, integrate, node, storage, indicators, module, vcs, dashboard, topstepx, geminicli, foundry, crucible, spreader, probe, telemetry
+from .commands import secrets, bridge, skills, extensions, integrate, node, storage, indicators, module, vcs, dashboard, topstepx, geminicli, foundry, crucible, spreader, probe, telemetry, deploy
 from . import __version__
 
 app = typer.Typer(
@@ -68,6 +68,18 @@ app.add_typer(probe.app, name="probe", help="Neural Tap Diagnostic & Auto-Suture
 
 app.add_typer(telemetry.app, name="telemetry", help="Manage Node Telemetry Services remotely.")
 app.add_typer(telemetry.app, name="t", help="Alias for telemetry", hidden=True)
+
+app.add_typer(deploy.app, name="lifecycle", help="Dynamic Habitat Deployment & Telemetry Lifecycle")
+# Standard shortcut command mapping
+@app.command("predeploy")
+def predeploy_alias(payload: str = typer.Option(..., "--payload", "-p"), target: str = typer.Option(..., "--target", "-t")):
+    """Performs a Capability Handshake prior to deployment."""
+    deploy.predeploy(payload, target)
+
+@app.command("deploy")
+def deploy_alias(payload: str = typer.Option(..., "--payload", "-p"), target: str = typer.Option(..., "--target", "-t")):
+    """Deploys a payload into the outer shell (Habitat) safely using valid wiring hooks."""
+    deploy.deploy(payload, target)
 
 # Top-level aliases for common extension operations
 # cli.add_command(integrate.integrate) # REMOVED: Broken and redundant. Use 'quanuxctl ext integrate'
@@ -140,10 +152,26 @@ def main(
         "-v",
         help="Show version and exit.",
         is_eager=True
+    ),
+    ssh: str = typer.Option(
+        None,
+        "--ssh",
+        "-ssh",
+        help="Execute payload via Conditioned SSH: quanuxctl -ssh <nodeName> <payload_name>"
     )
 ):
     if version:
         console.print(f"[bold green]QuanuX Control (quanuxctl)[/bold green] v{__version__}")
+        raise typer.Exit()
+        
+    if ssh:
+        import sys
+        # Parse payload name from remaining args or prompt
+        if len(sys.argv) > 3:
+            payload_name = sys.argv[3]
+            deploy.ssh_execute(ssh, payload_name)
+        else:
+            console.print("[red]Missing payload name for -ssh execution.[/red]")
         raise typer.Exit()
 
 def cli():
