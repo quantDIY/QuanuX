@@ -1,0 +1,68 @@
+.TH QUANUX-TOPOLOGY 7 "February 2026" "QuanuX 0.1.0" "QuanuX Architecture Manual"
+.SH NAME
+quanux\-topology \- Absolute domain topology of the QuanuX ecosystem
+.SH DESCRIPTION
+The QuanuX ecosystem topology defines the fundamental relationship between code execution environments and operational latency. It establishes the concepts of Habitats and Nests, and partitions operations across five distinct Tiers.
+.SH NOMENCLATURE
+.TP
+.B Habitat
+The physical or virtual OS boundary (e.g., local desktop, Ubuntu VM, bare-metal server). It is the conditioned soil for execution.
+.TP
+.B Nest
+The sovereign logic process deployed into the Habitat (e.g., trading engines, AI models, observation layers). "Payload" is deprecated. A Habitat can host one massive Nest or countless microscopic Nests.
+.SH THE TIER SYSTEM
+The QuanuX architecture enforces a strict 5-Tier layout to separate orchestration from high-frequency kinetic execution.
+.SS Tier 1: The Server (Command Center)
+.B Identity:
+The orchestrator and heart of the system. Does not execute kinetic trades (deploys Nests to Habitats).
+.br
+.B Environment:
+Remote cloud server, local workstation, or desktop.
+.br
+.B Stack:
+Web servers, APIs, Python (quanuxctl, nats-py).
+.SS Tier 2: The Polyglot Nests (Flexibility & Intelligence)
+.B Identity:
+AI strategy labs, observation layers, and standard API execution.
+.br
+.B Environment:
+Extremely flexible (remote or local).
+.br
+.B Stack:
+C++, Python, Cython, Golang (Anaconda integrated).
+.br
+.B Network:
+CNATS (libnats-c) for cluster communication, or ZMQ for purely local, single-machine installations.
+.SS Tier 3: Bare-Metal Nests (The 59ns Compute Engine)
+.B Identity:
+Unforgiving speed (statistics, order book building).
+.br
+.B Environment:
+Bare-metal Linux (strictly conditioned Habitats via isolated cores, NUMA).
+.br
+.B Stack:
+Pure C++ (Python strictly forbidden).
+.br
+.B Network:
+CNATS for telemetry/signaling. Standard Linux networking (epoll, io_uring) for execution.
+.SS Tier 4: The Fiber Nests (The Kinetic Edge)
+.B Identity:
+Pure hardware warfare (Full HFT).
+.br
+.B Environment:
+Exchange colocation only (Bare-metal Linux).
+.br
+.B Stack:
+Pure C++ (Python strictly forbidden).
+.br
+.B Network:
+CNATS for telemetry. Solarflare kernel bypass (ef_vi, onload) for physical execution, completely abandoning standard Linux networking.
+.SS Tier 5: The Global Swarm (Future Horizon)
+.B Identity:
+Interconnected arbitrage across global data centers.
+.br
+.B Network:
+Microwave or millimeter-wave networks.
+.SH SEE ALSO
+.BR quanuxctl (1),
+.BR quanux-envoy (8)
