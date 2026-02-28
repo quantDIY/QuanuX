@@ -20,7 +20,7 @@
 
 ## 📜 The AI Governance Law
 - **Decentralized Context**: AI ecosystem memory has migrated from JSON to Markdown (`*skill.md`) across the repository.
-- **The Prime Directive**: [00_PRIME_DIRECTIVE.md](file:///Users/Duncan/Antigravity/QuanuX/QuanuX/00_PRIME_DIRECTIVE.md) enforces that AI agents must recursively ingest localized `.md` rules before code execution. Divergence from these codified physical laws is strictly forbidden.
+- **The Prime Directive**: [00_PRIME_DIRECTIVE.md](./00_PRIME_DIRECTIVE.md) enforces that AI agents must recursively ingest localized `.md` rules before code execution. Divergence from these codified physical laws is strictly forbidden.
 
 ## 🧬 The True Sovereign Lifecycle & Patches
 The physical deployment pipeline engineered for Tier 2-4 Edge Nodes:
