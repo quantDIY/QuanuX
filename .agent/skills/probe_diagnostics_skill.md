@@ -1,0 +1,17 @@
+---
+name: Probe Diagnostics & Fast-Nerve API
+description: Agent capabilities for evaluating node sovereignty and triggering Auto-Suture via the Fast-Nerve API.
+---
+# Probe Diagnostics & Fast-Nerve API
+
+## Tools
+- `quanuxctl probe`
+
+## Context & Rules
+- The Node is protected by a Telemetry Layer depending on its Tier.
+- Tier 1 Nodes run the Fast-Nerve Watchdog Receptor (Python/FastAPI) on port 8080.
+- Tier 2-4 Edge Nodes run the Native Envoy (C++20) which strictly uses raw NATS messaging (no HTTP server) to maintain zero execution jitter.
+- To gather diagnostic states, use the `quanuxctl probe` command, which abstracts the underlying NATS/HTTP connection.
+- To manually trigger Auto-Suture across the grid, use `quanuxctl probe --fix`.
+- If the Fast-Nerve or Native Envoy are offline or unresponsive to probes, use `quanuxctl telemetry restart` to bounce the service across the NATS mesh.
+- **RESTRICTION**: Do not attempt to SSH into Tier 2-4 nodes to run Python scripts or HTTP requests; they are isolated bare-metal execution environments.

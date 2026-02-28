@@ -37,3 +37,9 @@ The ecosystem is stratified into 5 distinct Tiers based on latency, control, and
 ### Tier 5: The Global Swarm (Future Horizon)
 *   **Identity**: Interconnected arbitrage across global data centers.
 *   **Networking Protocol**: Microwave or millimeter-wave networks.
+
+## Decentralized AI Context Architecture
+
+The QuanuX repository enforces a decentralized context architecture for AI agents. AI Skill files and system mandates are distributed throughout the entire repository, co-located with the specific modules, Habitats, and Nests they govern. 
+
+When adding new modules, developers must place new `skill.md` or `skills.md` files directly alongside the code modules they refer to. The master `00_PRIME_DIRECTIVE.md` located at the repository root guarantees that any AI agent entering the environment will dynamically search for, ingest, and respect these localized, immutable Markdown ecosystem laws.
