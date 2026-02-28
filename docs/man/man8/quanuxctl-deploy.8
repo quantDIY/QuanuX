@@ -9,7 +9,7 @@ quanuxctl\-deploy \- Execute a payload deployment following a successful capabil
 .I HOSTNAME
 .SH DESCRIPTION
 .B quanuxctl deploy
-orchestrates the physical transfer and execution of a QuanuX inner payload to the target Node Habitat. It inherently invokes \fIquanuxctl predeploy\fR to guarantee capability matching prior to transfer. The target Native Envoy applies dynamic Linux wiring prefixes based on the payload's requirements and the capability registry.
+orchestrates the physical transfer and execution of a QuanuX inner payload to the target Node Habitat. It inherently invokes \fIquanuxctl predeploy\fR to guarantee capability matching prior to transfer. The target Native Envoy applies dynamic Linux wiring prefixes based on the payload's requirements and the capability registry. (Note: The payload execution lifecycle is strictly verified against Ubuntu 22.04 LTS "Jammy Jellyfish").
 .SH OPTIONS
 .TP
 .B \-p, \-\-payload \fIPATH\fR
@@ -24,6 +24,14 @@ The target Habitat node connected to the NATS grid.
 quanuxctl deploy --payload src/payloads/tier4-striker/ --target node-04
 .EE
 .RE
+.SH NETWORK PHYSICS
+.B Control Plane vs. Data Plane Routing:
+The capability handshake occurs over the NATS Control Plane (Port 4222), but the actual payload transfer utilizes HTTP Out-of-Band (OOB) via libcurl. Successful handshaking does not guarantee data plane visibility. The
+.B --payload
+staging server or URL must use explicit, fully routable IPv4 addresses (e.g., Physical LAN IPs). You must explicitly bind local staging servers to 0.0.0.0, avoiding IPv6 wildcard bindings (::).
+.PP
+.B WARNING:
+Never use 127.0.0.1 or hypervisor NAT gateways (e.g., 10.0.2.2) unless explicitly bridged, as the edge node will fail to route the download back to the Architect.
 .SH EXIT STATUS
 0 if Deployment was successful.
 1 if Handshake failed or Deployment was obstructed.

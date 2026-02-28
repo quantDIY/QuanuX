@@ -66,6 +66,7 @@ logs/
 *.sock
 # *.lock
 extensions/cpp/deps/
+.vagrant/
 
 # ---- Redis / NATS / External binaries ----
 server/nats-server/

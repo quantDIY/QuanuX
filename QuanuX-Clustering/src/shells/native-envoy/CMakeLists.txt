@@ -11,7 +11,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=native -Wall -Wextra")
 find_package(Threads REQUIRED)
 
 # Try finding spdlog, and CURL using find_package
-# We use explicit find for NATS since Brew config might be missing
 find_package(spdlog QUIET)
 find_package(CURL REQUIRED)
 find_package(OpenSSL REQUIRED)
@@ -34,17 +33,23 @@ FetchContent_Declare(json
 )
 FetchContent_MakeAvailable(json)
 
-# Explicitly map NATS since find_package is brittle on macOS homebrew without natsConfig.cmake
-find_path(NATS_INCLUDE_DIR nats/nats.h
-  PATHS /usr/local/include /opt/homebrew/include /usr/include
+# Fetch CNATS securely
+FetchContent_Declare(nats
+  GIT_REPOSITORY https://github.com/nats-io/nats.c.git
+  GIT_TAG v3.8.2
 )
+set(NATS_BUILD_TESTS OFF CACHE BOOL "Don't build NATS tests" FORCE)
+set(NATS_BUILD_EXAMPLES OFF CACHE BOOL "Don't build NATS examples" FORCE)
+set(NATS_BUILD_STREAMING OFF CACHE BOOL "Don't build streaming" FORCE)
+set(NATS_BUILD_WITH_TLS OFF CACHE BOOL "Don't build TLS" FORCE)
+set(NATS_BUILD_KV OFF CACHE BOOL "Don't build KV" FORCE)
+set(NATS_BUILD_MICRO OFF CACHE BOOL "Don't build Micro" FORCE)
+set(BUILD_TESTING OFF CACHE BOOL "No Testing" FORCE)
+FetchContent_MakeAvailable(nats)
 
-find_library(NATS_LIBRARY NAMES nats nats_static
-  PATHS /usr/local/lib /opt/homebrew/lib /usr/lib
-)
-
-if (NOT NATS_INCLUDE_DIR OR NOT NATS_LIBRARY)
-    message(FATAL_ERROR "Could not find explicit CNATS headers or libraries.")
+FetchContent_GetProperties(nats)
+if(NOT nats_POPULATED)
+    FetchContent_Populate(nats)
 endif()
 
 # Create the source directories if they don't exist
@@ -57,13 +62,16 @@ add_executable(quanux-envoy
 )
 
 # Target include directories
-target_include_directories(quanux-envoy PRIVATE src ${NATS_INCLUDE_DIR})
+target_include_directories(quanux-envoy PRIVATE 
+    src
+    ${nats_SOURCE_DIR}/src
+)
 
 # Link the libraries
 # We link pthread for pthread_setaffinity_np
 target_link_libraries(quanux-envoy PRIVATE
     Threads::Threads
-    ${NATS_LIBRARY}
+    nats
     spdlog::spdlog
     pthread
     nlohmann_json::nlohmann_json

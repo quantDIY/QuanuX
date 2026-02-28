@@ -19,12 +19,6 @@
 #include <sys/stat.h>
 #include <thread>
 
-#ifdef __APPLE__
-#include <mach/mach_init.h>
-#include <mach/thread_act.h>
-#include <mach/thread_policy.h>
-#endif
-
 using json = nlohmann::json;
 
 // Global Collision Matrix updated dynamically
@@ -33,16 +27,8 @@ std::vector<std::vector<std::string>> COLLISION_MATRIX;
 // Global atomic flag to control the spin loop cleanly
 std::atomic<bool> g_keep_running{true};
 
-// Helper function to pin a thread to a specific core cleanly (Linux & macOS
-// support)
+// Helper function to pin a thread to a specific core cleanly
 bool pin_thread_to_core(int core_id) {
-#ifdef __APPLE__
-  thread_affinity_policy_data_t policy = {core_id};
-  thread_port_t mach_thread = pthread_mach_thread_np(pthread_self());
-  thread_policy_set(mach_thread, THREAD_AFFINITY_POLICY,
-                    (thread_policy_t)&policy, 1);
-  return true;
-#else
   cpu_set_t cpuset;
   CPU_ZERO(&cpuset);
   CPU_SET(core_id, &cpuset);
@@ -52,7 +38,6 @@ bool pin_thread_to_core(int core_id) {
       pthread_setaffinity_np(current_thread, sizeof(cpu_set_t), &cpuset);
 
   return result == 0;
-#endif
 }
 
 // Global logger pointer

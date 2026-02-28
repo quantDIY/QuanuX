@@ -123,7 +123,7 @@ def deploy(payload: str = typer.Option(..., "--payload", "-p", help="Path to pay
     
     # For simulation, if binary doesn't exist, we mock a hash
     file_hash = compute_local_hash(str(binary_path)) if binary_path.exists() else "mock_sha256_hash_if_binary_absent"
-    mock_url = f"http://tier1-server:8080/payloads/{binary_name}"
+    mock_url = f"http://192.168.1.173:8080/{binary_name}"
 
     async def send_deploy():
         nc = await nats.connect("nats://127.0.0.1:4222")

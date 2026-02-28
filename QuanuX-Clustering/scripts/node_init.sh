@@ -56,7 +56,7 @@ if [ "$TIER" -eq 1 ]; then
     fi
 else
     echo "[QuanuX-Clustering] Edge Layer (Tier $TIER): Skipping Conda. Installing C++20 toolchains and Native Envoy dependencies..."
-    apt-get install -y cmake libnats-dev libspdlog-dev libcurl4-openssl-dev
+    apt-get install -y cmake libnats-dev libspdlog-dev libcurl4-openssl-dev libssl-dev
 fi
 
 # 2. The RSA Handshake
@@ -107,6 +107,7 @@ EOF
 echo "[+] nats-server.conf configured at $NATS_CONF"
 
 echo "[QuanuX-Clustering] Security: Configuring UFW for NATS traffic..."
+ufw allow 22/tcp comment 'Vagrant SSH Access'
 ufw allow 4222/tcp comment 'NATS Client'
 ufw allow 6222/tcp comment 'NATS Cluster Route Handshaking'
 ufw --force enable
@@ -155,6 +156,7 @@ else
     ENVOY_SRC_DIR="$(pwd)/QuanuX-Clustering/src/shells/native-envoy"
     mkdir -p "$ENVOY_SRC_DIR/build"
     cd "$ENVOY_SRC_DIR/build"
+    git config --global --add safe.directory '*'
     cmake ..
     cmake --build .
     sudo cp quanux-envoy /usr/local/bin/

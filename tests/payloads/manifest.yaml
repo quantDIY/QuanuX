@@ -1,0 +1,5 @@
+name: striker
+version: 1.0.0
+entrypoint: striker.bin
+requires:
+  - onload
