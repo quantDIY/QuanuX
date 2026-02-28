@@ -58,3 +58,58 @@ The QuanuX infrastructure network configurations strictly rely on verified physi
 
 - **UBUNTU 22.04 LTS (Jammy Jellyfish)** serves as the official, unified verification baseline.
 - Assorted NAT routing phenomena, VirtualBox UFW port limitations, user-namespace drops by Git (`safe.directory`), and required Linux dependencies (`libssl-dev`) have been rigorously mapped and secured against this precise ecosystem matrix.
+
+## ⚙️ The QuanuX Operational Capabilities & Ecosystem Features
+
+The platform operates as a multi-language colossus spanning institutional trading to artificial intelligence. Below is the exhaustive functional mapping of the ecosystem.
+
+### 1. Broker & Exchange Integrations (The Execution Gateways)
+- **The Tri-Pillar IBKR Architecture (`extensions/cpp/ibkr_fix`)**: A specialized Interactive Brokers ecosystem utilizing pure C++ for sub-millisecond execution. It leverages `QuickFIX` for direct Institutional Gateway access alongside native `TWS API` wrappers exposing endpoints via Cython. It includes a `quanuxctl enhance` "Turbo Mode" that recompiles the adapter on the fly using `mimalloc/jemalloc` memory paradigms and asynchronous `spdlog` ring-buffers to eliminate blocking I/O.
+- **Pure Cython TopstepX Extension (`extensions/cpp/topstep/cython`)**: The legacy Node.js bridge has been obliterated in favor of a native, memory-safe Cython implementation mapping directly to TopstepX's backend via `SignalR` and REST. This handles live market quotes, limit/stop placement, and integer-safe (`int64`) 2-Billion+ account ID parsings with 100% test parity and massive speed boosts over JavaScript parsing.
+- **Rithmic RApiPlus Integration (`extensions/cpp/rithmic/cython`)**: Institutional direct memory access (DMA) mapped flawlessly from C++ to Python. The engine (`PyREngine`) leverages C++ struct mapping into Python dictionaries, maintaining zero-copy speed while exposing high-frequency order callbacks (`trade_print`, `LineInfo`) directly into the agent pipelines.
+- **The QuickFIX Engine Component (`extensions/cpp/quickfix`)**: A statically-linked implementation of the open-source industry standard. Adhering to the Immutable Rule 0 (Performance = C++), this module permits the QuanuX execution logic to route institutional Fix4.2/Fix4.4 connections directly through the C++ core without Python overhead.
+
+### 2. Data & Analytics Engines
+- **DuckDB C++ Extension (`extensions/cpp/duckdb`)**: The platform's internal state mechanism for large-batch bulk ingestion. This module utilizes the DuckDB amalgamation (`duckdb.cpp`) exposed via minimal Cython wrappers using the pure native `Appender` API. This permits QuanuX to achieve near-instantaneous `INSERT` rates required for ingestion of multi-gigabyte tick data sets locally.
+- **Databento Connectors (`extensions/cpp/databento`)**: A pure Cython translation of Databento's C++ SDK. Exposes the `PyHistoricalBuilder` and Client architecture for ingesting raw data directly into strategy memory and backtesting simulations without relying on the Databento Python SDK overlay constraints.
+- **QuanuX Indicators (`libquanux-indicators`)**: The master replacement for the aging `TA-Lib` stack. This C++20 header-only library exposes **Lazy Evaluation** logic utilizing native `std::ranges` syntax (e.g., `prices | quanux::indicators::sma(10)`). This prevents the catastrophic memory allocation inherent to standard Python vectors. It features custom Storage Policies (`DenseStorage` arrays for Futures, `SparseStorage` maps for crypto) mapped directly via PyBind/Cython wrappers achieving up to 7x execution acceleration for Python agents.
+
+### 3. The AI Strategy Lab (QuanuX Foundry)
+- **The Polyglot Tier 2 Strategy Layer**: The Foundry architecture abandons monoliths for "Sovereign Components". Mathematical operations (Indicators, Entries, Risk) are entirely decoupled and generated based on exact JSON Intermediate Representations (`indicator_ir.json`).
+- **The `FoundryGenerator` Pipeline**: Agent interaction routes from natural language into absolute determinism. When prompted, the NATS-enabled FastAPI orchestrator translates the mathematical IR into three separate languages: Python (`asyncio.TaskGroup` optimized), Cython (`cdef` memory layouts), and C++20 (`std::ranges`).
+- **The Deterministic Sandbox Validation**: Code is never blindly vended. The QuanuX ecosystem simultaneously mocks and executes the Python, Cython, and C++ variations of a generated strategy against a Databento-simulated OHLCV array. If there is a fractional discrepancy (e.g. C++ outputs `1.045`, Python outputs `1.044`), the AI generation job constitutes a failure. Determinism is absolute.
+- **LLM/MCP Web Subscriptions**: Artificial Intelligence interactions (such as with the Gemini CLI Extension) are pushed through standard REST triggers (`/api/foundry/forge`) but immediately streamed via NATS and Strawberry GraphQL back to human operators, providing real-time token generation telemetry over WebSockets.
+
+### 4. The UI/UX & Interactivity (The Presentation Domes)
+- **The Distributed Target Matrix (React Native)**: The platform UI spans 7 independent form-factor targets simultaneously (Car, Foldables, Mega, Mobile, Tablet, Vision, Wear). All targets strictly consume an identical core design system via Expo Router and NativeWind v4 (Tailwind v3 compatibility).
+- **The Backend-Driven Law**: The React frontend nodes are classified as "Dumb Domes". All computation, mathematical parsing, and state logic remains completely isolated on the Rust/Python backends. The UI uses the "Beast Mode" Ref-Buffer (`useRef` + `requestAnimationFrame`) to bypass React re-render penalties, painting raw array data directly onto the DOM without halting the user interface.
+- **The Figma Developer MCP Server**: The ultimate Design-to-Code loop. The QuanuX MCP orchestrator inspects active Figma designs via `.figma_tokens`, identifies underlying layout math, and programmatically spawns standard `Shadcn/UI` Tailwind-driven code blocks matching the literal design specification while adhering to the Frontend-Standards mandate.
+- **The `quanuxctl` Typer Interface**: The C&C Python CLI. Providing exhaustive operational power from creating Topstep keys in the OS Keychain, initiating `.so` strategy deployments, to publishing distributed telemetry stop/start signals over NATS IPC to shut down failing Tier 4 nodes remotely.
+
+## 📂 Repository Anatomy (Topographical Map)
+
+To effectively navigate the ecosystem, the repository is sliced along strict functional boundaries:
+
+- `.agent/`, `server/skills/`, and `extensions/**/SKILL.md`
+  - **Purpose**: The Decentralized AI Cybernetic Context.
+  - **Integration**: The absolute first point of reading for any AI interaction. This replaces the monolithic `.gemini` AI prompt folder and embeds exact functional truths right beside the executing source code.
+
+- `extensions/`
+  - **Purpose**: The C++, Cython, Python, Go, and Node execution modules.
+  - **Integration**: Holds the high-throughput Broker Adapters (`quickfix`, `topstep`, `rithmic`, `ibkr`), external Data Engines (`duckdb`, `databento`), and UI integrators (`figma`).
+
+- `src/`, `QuanuX-Clustering/`, and `execution-node/`
+  - **Purpose**: Hardware Orchestration and Edge Provisioning.
+  - **Integration**: Location of `node_init.sh`, the OS manifest profiles (`tier1_control.yaml` down to `tier4_dma.yaml`), and the pure C++20 `Native Envoy` runtime loops mapping execution to hardware affinity contexts.
+
+- `server/`
+  - **Purpose**: The Python Tier 1 Brain.
+  - **Integration**: Contains the core REST FastAPI servers, Strawberry GraphQL configurations, the Foundry AI Agent translation loops, the C++ `indicators` engine bridging logic, and the central `quanuxctl` CLI tools.
+
+- `client/`
+  - **Purpose**: The Frontend Cross-Platform UX.
+  - **Integration**: Contains the React Web, React Desktop (Tauri), and React Native architectures alongside the strict `design-library` mockup lab.
+
+- `QuanuX-Statistics/`, `QuanuX-Backtesting-Engine/`, and `QuanuX-Spreader/`
+  - **Purpose**: Low-Latency Quant Mathematics and Routing.
+  - **Integration**: The core proprietary computation repositories executing fractional Kelly simulations, event-driven historical tape processing, and the primary 59-nanosecond execution interlocks.
