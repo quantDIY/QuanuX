@@ -3,7 +3,7 @@ capabilities:
   isolcpus:
     description: "Linux kernel boot parameter isolating specific cores from the OS scheduler."
     wiring_hook: "numactl --physcpubind={isolated_cores} --localalloc"
-  
+
   hugepages_2M:
     description: "2MB memory pages allocated via sysctl for CNATS ring buffers."
     wiring_hook: "env HUGETLB_MORECORE=yes"
@@ -12,19 +12,19 @@ capabilities:
   ef_vi:
     description: "Solarflare raw hardware API driver loaded in the kernel."
     wiring_hook: "env EF_VI_USE_HUGEPAGES=1"
-  
+
   onload:
     description: "Solarflare OpenOnload user-space TCP bypass."
     wiring_hook: "onload --profile=latency"
 
   tcp_nodelay:
     description: "Standard kernel networking with TCP_NODELAY and SO_BUSY_POLL tuned."
-    wiring_hook: "" # Native socket tuning handled in application code
+    wiring_hook: ""  # Native socket tuning handled in application code
 
   # --- RUNTIME WIRING ---
   cnats_core_1:
     description: "C NATS daemon running with I/O threads pinned to Core 1."
-    wiring_hook: "" # Pre-configured by Native Envoy
+    wiring_hook: ""  # Pre-configured by Native Envoy
 
   python_3_10:
     description: "Anaconda Python 3.10 environment available."
