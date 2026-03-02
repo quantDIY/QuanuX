@@ -1,0 +1,81 @@
+// QuanuX Observability Plane - Core Telemetry Schema
+// Rule: Memory is strictly structured in zero-copy FlatBuffers via C++. No JSON in execution.
+// FIXED: Flawless institutional memory constraints applied (no floats, no variable strings for core identifiers).
+
+namespace QuanuX.Telemetry;
+
+enum Side : byte {
+    BUY = 0,
+    SELL = 1
+}
+
+enum LogLevel : byte {
+    TRACE = 0,
+    DEBUG = 1,
+    INFO = 2,
+    WARN = 3,
+    ERROR = 4,
+    FATAL = 5
+}
+
+enum ExchangeCode : uint16 {
+    UNKNOWN = 0,
+    NYSE = 1,
+    NASDAQ = 2,
+    LSE = 3,
+    TSE = 4,
+    ASX = 5,
+    CME = 6,
+    CBOT = 7,
+    NYMEX = 8,
+    COMEX = 9,
+    EUREX = 10,
+    ICE = 11,
+    CRYPTO_BINANCE = 12,
+    CRYPTO_COINBASE = 13,
+    CRYPTO_KRAKEN = 14
+}
+
+table TradeExecution {
+    trade_id: uint64;               // Unique execution identifier (zero-copy uint64)
+    symbol: uint32;                 // Asset identifier mapped to ticker dictionary (e.g., AAPL = 1045)
+    exchange: ExchangeCode;         // Enum representing the venue to maintain CPU cache locality
+    price: int64;                   // Execution price (fixed-point integer with implied decimals)
+    quantity: int64;                // Execution size (fixed-point integer with implied decimals)
+    side: Side;                     // Buy or Sell
+    timestamp_ns: uint64;           // Engine execution timestamp (nanoseconds)
+    latency_ns: uint64;             // Internal engine routing latency (nanoseconds)
+}
+
+table NodeVitals {
+    node_id: string;                // Identifier of the Tier 1 Edge Node
+    timestamp_ns: uint64;           // Poll timestamp (nanoseconds)
+    cpu_usage_pct: float;           // Total CPU utilization
+    memory_used_bytes: uint64;      // Current memory footprint
+    cnats_messages_sent: uint64;    // Number of CNATS jetstream payloads sent
+    cnats_messages_dropped: uint64; // Dropped payloads over CNATS due to backpressure
+    latency_p99_ns: uint64;         // P99 roundtrip latency on execution threads
+    is_healthy: bool;               // Binary toggle for Alertmanager routing
+}
+
+table SystemLog {
+    node_id: string;                // Identifier of the Tier 1 Edge Node
+    timestamp_ns: uint64;           // Generation timestamp (nanoseconds)
+    level: LogLevel;                // Enum detailing severity
+    component: string;              // High-level node component (e.g., "RiskEngine", "OrderRouter")
+    message: string;                // Free-form UTF-8 message body for OpenSearch ingestion
+}
+
+union Payload {
+    TradeExecution,
+    NodeVitals,
+    SystemLog
+}
+
+// The core envelope shipped across the CNATS Global Mesh
+table TelemetryEnvelope {
+    sent_timestamp_ns: uint64;
+    payload: Payload;
+}
+
+root_type TelemetryEnvelope;

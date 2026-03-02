@@ -1,0 +1,36 @@
+// QuanuX Observability Plane - Exchange Registry Schema
+// Rule: Settlement times are dynamic and global. No myopic hardcodes.
+// FIXED: Timezone math corrected for high-speed C++ environments and fractional offsets.
+
+namespace QuanuX.Registry;
+
+enum MarketStatus : byte {
+    PRE_MARKET = 0,
+    OPEN = 1,
+    POST_MARKET = 2,
+    CLOSED = 3,
+    FROZEN_SETTLEMENT = 4           // Exchange is actively being pulled tightly into Parquet
+}
+
+table SettlementConfig {
+    settlement_close_time: uint32;  // Seconds from local midnight (e.g., 59400 for 16:30)
+    settlement_window_sec: uint32;  // Duration to settle (DuckDB pull), before rotating the buffer (e.g., 300)
+}
+
+table ExchangeEpoch {
+    exchange_code: string;          // Exchange code string mapping (or mapped into ExchangeCode Enum)
+    timezone: string;               // IANA local Timezone string (e.g., "Europe/London", "Asia/Tokyo")
+    current_offset_minutes: int16;  // Current offset from UTC in minutes (handles fractional zones like India +5:30)
+    is_24_7: bool;                  // True for crypto markets (static epoch rollovers)
+    
+    status: MarketStatus;           // Status for global state tracking
+    settlement: SettlementConfig;   // Settlement trigger parameters
+}
+
+table ExchangeRegistryState {
+    timestamp_ns: uint64;           // Engine emit time (nanoseconds)
+    version: uint32;                // Registry schema versioning index
+    exchanges: [ExchangeEpoch];     // Vector mapping of all global exchanges
+}
+
+root_type ExchangeRegistryState;
