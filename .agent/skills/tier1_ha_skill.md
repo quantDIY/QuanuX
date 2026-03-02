@@ -24,7 +24,8 @@ This is the most critical axiom of QuanuX high availability. If a Follower promo
 - **No Infinite Blocking:** The STONITH sequence MUST have a severe hard-timeout (e.g., 2000ms). If it fails to reach the BMC/PDU, it must abort and transition to `CRITICAL_PENDING` with alarms sent to the Architect. It cannot block the event loop infinitely.
 - We cannot permit a Split-Brain reality where two Tier 1 nodes believe they are the Leader and issue conflicting logic to the Tier 4 Fiber Nests. 
 
-## 4. BGP Convergence & The "Long-Dark"
+## 4. BGP Convergence, The "Long-Dark", & Control Plane Genesis
+- **Control Plane Genesis Resilience:** An edge Nest must be able to boot before the central Leader. If the NATS `quanux_tier1` bucket is missing (`BucketNotFoundError`), the Nest must drop into the Long-Dark until the Control Plane generates the bucket.
 - Do not assume immediate route convergence. Global BGP shifts take 3 seconds to 3 minutes.
 - Tier 4 Nests must be programmed to survive the "Long-Dark," halting *new* entries and executing *existing* exit logic blindly until routes converge.
 
