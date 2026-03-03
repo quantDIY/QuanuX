@@ -8,7 +8,7 @@
     "corepack": "^0.34.6"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.2.0",
+    "@tailwindcss/postcss": "^4.2.1",
     "json-schema-to-typescript": "^15.0.4"
   },
   "pnpm": {
