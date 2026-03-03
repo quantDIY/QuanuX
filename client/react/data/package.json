@@ -8,7 +8,7 @@
         "lint": "eslint ."
     },
     "dependencies": {
-        "graphql": "^16.12.0",
+        "graphql": "^16.13.0",
         "graphql-ws": "^5.16.2",
         "urql": "^4.2.2",
         "wonka": "^6.3.5"
