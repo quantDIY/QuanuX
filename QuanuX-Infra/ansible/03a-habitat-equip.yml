@@ -1,7 +1,7 @@
 ---
 - name: Operation Control Plane - Equip Edge Habitats
   hosts: edge_nodes
-  become: yes
+  become: true
 
   vars:
     # Extract Panopticon IP dynamically from the Terraform inventory
@@ -10,7 +10,7 @@
   tasks:
     - name: Update APT cache
       apt:
-        update_cache: yes
+        update_cache: true
 
     - name: Ensure /etc/quanux directory exists
       file:
@@ -50,7 +50,7 @@
       unarchive:
         src: /tmp/nats.c.tar.gz
         dest: /tmp
-        remote_src: yes
+        remote_src: true
 
     - name: Compile and Install NATS C Client via CMake
       shell: |
@@ -72,7 +72,7 @@
       unarchive:
         src: https://github.com/duckdb/duckdb/releases/download/v0.10.0/libduckdb-linux-amd64.zip
         dest: /tmp/duckdb
-        remote_src: yes
+        remote_src: true
       args:
         creates: /tmp/duckdb/duckdb.h
 
@@ -86,7 +86,7 @@
       copy:
         src: "/tmp/duckdb/{{ item }}"
         dest: "/usr/local/include/duckdb/{{ item }}"
-        remote_src: yes
+        remote_src: true
       with_items:
         - duckdb.h
         - duckdb.hpp
@@ -95,7 +95,7 @@
       copy:
         src: "/tmp/duckdb/libduckdb.so"
         dest: "/usr/local/lib/libduckdb.so"
-        remote_src: yes
+        remote_src: true
 
     - name: Refresh dynamic linker cache (ldconfig)
       command: ldconfig

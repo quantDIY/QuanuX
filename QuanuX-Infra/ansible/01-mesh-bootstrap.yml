@@ -1,7 +1,7 @@
 ---
 - name: Panopticon Genesis - Bootstrap NATS JetStream Mesh
   hosts: panopticon_buffer
-  become: yes
+  become: true
   tasks:
     - name: Update apt cache and install dependencies
       apt:
@@ -9,7 +9,7 @@
           - curl
           - unzip
         state: present
-        update_cache: yes
+        update_cache: true
 
     - name: Download NATS Server
       get_url:
@@ -20,13 +20,13 @@
       unarchive:
         src: /tmp/nats-server.zip
         dest: /tmp
-        remote_src: yes
+        remote_src: true
 
     - name: Install NATS Server Binary
       copy:
         src: /tmp/nats-server-v2.10.11-linux-amd64/nats-server
         dest: /usr/local/bin/nats-server
-        remote_src: yes
+        remote_src: true
         mode: '0755'
 
     - name: Ensure NATS config directory exists
@@ -48,7 +48,7 @@
           # Bind exclusively to the internal VPC Network
           host: "{{ hostvars[inventory_hostname]['internal_ip'] | default('10.10.10.2') }}"
           port: 4222
-          
+
           # Enable persistent storage JetStream
           jetstream {
               store_dir: /var/lib/nats/jetstream
@@ -77,10 +77,10 @@
 
     - name: Reload SystemD to accept NATS
       systemd:
-        daemon_reload: yes
+        daemon_reload: true
 
     - name: Enable and restart NATS Server
       systemd:
         name: nats-server
         state: restarted
-        enabled: yes
+        enabled: true

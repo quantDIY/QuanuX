@@ -1,14 +1,14 @@
 ---
 - name: Panopticon Genesis - Install Observability Stack (OpenSearch Ledger)
   hosts: panopticon_ledger
-  become: yes
+  become: true
   tasks:
     - name: Increase vm.max_map_count for OpenSearch requirement
       sysctl:
         name: vm.max_map_count
         value: '262144'
         state: present
-        reload: yes
+        reload: true
 
     - name: Install dependencies for APT repositories
       apt:
@@ -17,7 +17,7 @@
           - gnupg
           - curl
         state: present
-        update_cache: yes
+        update_cache: true
 
     - name: Add OpenSearch GPG key
       apt_key:
@@ -34,7 +34,7 @@
         name:
           - opensearch
         state: present
-        update_cache: yes
+        update_cache: true
       environment:
         OPENSEARCH_INITIAL_ADMIN_PASSWORD: "QuanuxMasterPassword123!"
 
@@ -49,7 +49,7 @@
         path: /etc/opensearch/opensearch.yml
         regexp: '^#?discovery\.type:'
         line: "discovery.type: single-node"
-        
+
     - name: Disable OpenSearch security plugin internally
       lineinfile:
         path: /etc/opensearch/opensearch.yml
@@ -59,12 +59,12 @@
     - name: Enable and restart OpenSearch service
       systemd:
         name: opensearch
-        enabled: yes
+        enabled: true
         state: restarted
 
 - name: Panopticon Genesis - Install Observability Stack (ValKey Buffer & Python Shadow)
   hosts: panopticon_buffer
-  become: yes
+  become: true
   tasks:
     - name: Install dependencies for APT repositories
       apt:
@@ -73,14 +73,14 @@
           - gnupg
           - curl
         state: present
-        update_cache: yes
+        update_cache: true
 
     - name: Install Native ValKey
       apt:
         name:
           - valkey-server
         state: present
-        update_cache: yes
+        update_cache: true
 
     - name: Configure ValKey network bind
       lineinfile:
@@ -91,7 +91,7 @@
     - name: Enable and restart ValKey service
       systemd:
         name: valkey-server
-        enabled: yes
+        enabled: true
         state: restarted
 
     - name: Install Python 3 VENV and PIP natively
@@ -100,7 +100,7 @@
           - python3-venv
           - python3-pip
         state: present
-        update_cache: yes
+        update_cache: true
 
     - name: Ensure QuanuX base directory exists for Shadow Node
       file:
@@ -113,7 +113,7 @@
       args:
         creates: /opt/quanux/shadow_env/bin/activate
 
-    - name: Install Observability Python packages 
+    - name: Install Observability Python packages
       pip:
         name:
           - opensearch-py

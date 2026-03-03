@@ -1,7 +1,7 @@
 ---
 - name: Operation Control Plane - Drop Sovereign Nests
   hosts: edge_nodes
-  become: yes
+  become: true
 
   vars:
     quanux_src_dir: "/opt/quanux/src"
@@ -49,7 +49,7 @@
       copy:
         src: "{{ quanux_build_dir }}/QuanuX-Spreader/cpp/quanux_spreader"
         dest: "{{ quanux_install_dir }}/quanux_spreader"
-        remote_src: yes
+        remote_src: true
         mode: '0755'
 
     - name: Create quanux-engine.service systemd file
@@ -67,7 +67,7 @@
           RestartSec=3
           LimitNOFILE=65535
           LimitCORE=infinity
-          
+
           # The Nest STRICTLY binds to the pre-rendered OS Habitat soil
           # If this file is missing, the C++ binary intentionally crashes.
           EnvironmentFile=/etc/quanux/habitat.env
@@ -78,10 +78,10 @@
 
     - name: Reload SystemD to ingest the Sovereign Engine service
       systemd:
-        daemon_reload: yes
+        daemon_reload: true
 
     - name: Enable and start the Sovereign Engine
       systemd:
         name: quanux-engine
-        enabled: yes
+        enabled: true
         state: restarted
