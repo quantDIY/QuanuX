@@ -8,6 +8,17 @@ from rich.console import Console
 from .commands import secrets, bridge, skills, extensions, integrate, node, storage, indicators, module, vcs, dashboard, topstepx, geminicli, foundry, crucible, spreader, probe, telemetry, deploy
 from . import __version__
 
+import os
+import sys
+
+# Dynamically link the decoupled QuanuX-Infra CLI tools
+infra_cli_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../QuanuX-Infra/cli"))
+if infra_cli_path not in sys.path:
+    sys.path.insert(0, infra_cli_path)
+
+import habitat_commands
+import nest_commands
+
 app = typer.Typer(
     name="quanuxctl",
     help="QuanuX Control CLI",
@@ -18,6 +29,9 @@ app = typer.Typer(
 console = Console()
 
 # Register subcommands
+app.add_typer(habitat_commands.app, name="habitat", help="Manage QuanuX OS-level Habitat Provisioning.")
+app.add_typer(nest_commands.app, name="nest", help="Manage QuanuX C++ Sovereign Engine Nest Deployment.")
+
 app.add_typer(secrets.app, name="secrets", help="Manage API keys and secrets via OS Keyring.")
 app.add_typer(secrets.app, name="sec", help="Alias for secrets", hidden=True)
 

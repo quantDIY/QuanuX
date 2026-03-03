@@ -1,0 +1,86 @@
+---
+- name: Panopticon Genesis - Bootstrap NATS JetStream Mesh
+  hosts: panopticon_buffer
+  become: yes
+  tasks:
+    - name: Update apt cache and install dependencies
+      apt:
+        name:
+          - curl
+          - unzip
+        state: present
+        update_cache: yes
+
+    - name: Download NATS Server
+      get_url:
+        url: https://github.com/nats-io/nats-server/releases/download/v2.10.11/nats-server-v2.10.11-linux-amd64.zip
+        dest: /tmp/nats-server.zip
+
+    - name: Unarchive NATS Server
+      unarchive:
+        src: /tmp/nats-server.zip
+        dest: /tmp
+        remote_src: yes
+
+    - name: Install NATS Server Binary
+      copy:
+        src: /tmp/nats-server-v2.10.11-linux-amd64/nats-server
+        dest: /usr/local/bin/nats-server
+        remote_src: yes
+        mode: '0755'
+
+    - name: Ensure NATS config directory exists
+      file:
+        path: /etc/nats
+        state: directory
+        mode: '0755'
+
+    - name: Ensure NATS JetStream storage directory exists
+      file:
+        path: /var/lib/nats/jetstream
+        state: directory
+        mode: '0755'
+
+    - name: Configure NATS JetStream on the internal VPC (10.10.10.x)
+      copy:
+        dest: /etc/nats/nats-server.conf
+        content: |
+          # Bind exclusively to the internal VPC Network
+          host: "{{ hostvars[inventory_hostname]['internal_ip'] | default('10.10.10.2') }}"
+          port: 4222
+          
+          # Enable persistent storage JetStream
+          jetstream {
+              store_dir: /var/lib/nats/jetstream
+              max_mem: 1G
+              max_file: 10G
+          }
+        mode: '0644'
+
+    - name: Install SystemD Service for NATS
+      copy:
+        dest: /etc/systemd/system/nats-server.service
+        content: |
+          [Unit]
+          Description=NATS JetStream Mesh Node
+          After=network.target
+
+          [Service]
+          ExecStart=/usr/local/bin/nats-server -c /etc/nats/nats-server.conf
+          Restart=always
+          RestartSec=3
+          LimitNOFILE=65535
+
+          [Install]
+          WantedBy=multi-user.target
+        mode: '0644'
+
+    - name: Reload SystemD to accept NATS
+      systemd:
+        daemon_reload: yes
+
+    - name: Enable and restart NATS Server
+      systemd:
+        name: nats-server
+        state: restarted
+        enabled: yes

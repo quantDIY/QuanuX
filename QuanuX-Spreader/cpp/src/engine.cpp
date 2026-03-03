@@ -1,4 +1,5 @@
 #include "spreader/engine.hpp"
+#include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <nats.h>
@@ -29,8 +30,15 @@ void DualThreadSpreader::start() {
   // NATS configuration
   natsOptions *opts = nullptr;
   natsOptions_Create(&opts);
-  // In production this URL would be injected, defaulting to localhost for dev
-  natsOptions_SetURL(opts, NATS_DEFAULT_URL);
+
+  const char *nats_env = std::getenv("NATS_URL");
+  if (!nats_env) {
+    std::cerr << "[Spreader] CRITICAL: NATS_URL environment variable is "
+                 "missing. Executing fatal abort."
+              << std::endl;
+    std::exit(EXIT_FAILURE);
+  }
+  natsOptions_SetURL(opts, nats_env);
 
   natsStatus s = natsConnection_Connect(&nc_, opts);
   if (s == NATS_OK) {

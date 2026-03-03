@@ -1,0 +1,87 @@
+---
+- name: Operation Control Plane - Drop Sovereign Nests
+  hosts: edge_nodes
+  become: yes
+
+  vars:
+    quanux_src_dir: "/opt/quanux/src"
+    quanux_build_dir: "/opt/quanux/build"
+    quanux_install_dir: "/opt/quanux/bin"
+    quanux_engine_type: "spreader"
+
+  tasks:
+    - name: Ensure target directories exist
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: root
+        mode: '0755'
+      with_items:
+        - "{{ quanux_src_dir }}"
+        - "{{ quanux_build_dir }}"
+        - "{{ quanux_install_dir }}"
+
+    - name: Synchronize QuanuX execution source code
+      synchronize:
+        src: "{{ playbook_dir }}/../../"
+        dest: "{{ quanux_src_dir }}/"
+        recursive: true
+        delete: true
+        rsync_opts:
+          - "--exclude=.git"
+          - "--exclude=build"
+          - "--exclude=.venv"
+          - "--exclude=data"
+
+    - name: Compile FlatBuffer Schemas natively
+      command: flatc --cpp -o "{{ quanux_src_dir }}/QuanuX-Observability/schemas" "{{ quanux_src_dir }}/QuanuX-Observability/schemas/telemetry.fbs"
+
+    - name: Configure SovereignEngine via CMake (Max Optimization)
+      command: cmake -S "{{ quanux_src_dir }}" -B "{{ quanux_build_dir }}" -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-O3 -march=native"
+      environment:
+        CC: clang
+        CXX: clang++
+
+    - name: Compile SovereignEngine natively (-march=native)
+      command: make -C "{{ quanux_build_dir }}" -j{{ ansible_processor_vcpus | default(2) }} quanux_spreader
+
+    - name: Install SovereignEngine binary
+      copy:
+        src: "{{ quanux_build_dir }}/QuanuX-Spreader/cpp/quanux_spreader"
+        dest: "{{ quanux_install_dir }}/quanux_spreader"
+        remote_src: yes
+        mode: '0755'
+
+    - name: Create quanux-engine.service systemd file
+      copy:
+        dest: /etc/systemd/system/quanux-engine.service
+        content: |
+          [Unit]
+          Description=QuanuX Sovereign Engine (59ns {{ quanux_engine_type | capitalize }} Nest)
+          After=network.target
+
+          [Service]
+          Type=simple
+          ExecStart={{ quanux_install_dir }}/quanux_spreader
+          Restart=always
+          RestartSec=3
+          LimitNOFILE=65535
+          LimitCORE=infinity
+          
+          # The Nest STRICTLY binds to the pre-rendered OS Habitat soil
+          # If this file is missing, the C++ binary intentionally crashes.
+          EnvironmentFile=/etc/quanux/habitat.env
+
+          [Install]
+          WantedBy=multi-user.target
+        mode: '0644'
+
+    - name: Reload SystemD to ingest the Sovereign Engine service
+      systemd:
+        daemon_reload: yes
+
+    - name: Enable and start the Sovereign Engine
+      systemd:
+        name: quanux-engine
+        enabled: yes
+        state: restarted

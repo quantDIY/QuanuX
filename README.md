@@ -118,17 +118,20 @@ QuanuX operates as a globally distributed, polyglot organism. Absolute separatio
 - **JetStream KV Elections:** Real-time, cryptographically-backed leader elections running directly on the NATS JetStream mesh. 
 
 ### 2. The Execution Plane (The Sovereign Engine)
-- **C++20 Dominance:** The unyielding core engine. All path-critical trade execution, order book logic, and quantitative computations are written strictly in modern C++20.
+- **C++20 Dominance:** The unyielding core engine. All path-critical trade execution, order book logic, and quantitative computations are natively compiled on the explicit **Edge Nodes** using `-O3 -march=native`. Cross-compilation and Docker are strictly forbidden to guarantee deterministic routing.
 - **Zero-Copy FlatBuffers:** JSON is strictly forbidden on the execution plane. Memory states are transferred natively via FlatBuffers, utilizing fixed-point integer math (`int64`) for perfect, zero-loss institutional pricing and CPU cache locality.
 - **The CNATS Global Mesh:** All inter-node communication is blasted over the CNATS C client without exception.
 
 ### 3. The Observability & Data Plane (The Guest Layer)
+- **The Decoupled Panopticon:** The architectural control plane is physically severed into two distinct Terraform-provisioned droplets operating exclusively within the `10.10.10.x` VPC:
+  - **`panopticon-ledger`**: Operates exclusively as the Forensic Ledger running the Java OpenSearch engine.
+  - **`panopticon-buffer`**: Operates as the High-Frequency Hub running Native ValKey, the NATS JetStream Mesh, and the asynchronous Python Shadow Node.
 - **The Python Shadow Node:** A non-blocking asynchronous traffic cop. Python nodes are strictly forbidden from touching the core engine state or blocking the NATS ingestion loop.
 - **The Cython Bridge:** Execution loops rely on optimized `quanux_cython_bridge` modules to instantly unmarshal raw bytes. Pure Python `struct.unpack()` is disabled.
 - **Tri-Partite Decoupling:** Event-driven, CPU-efficient asynchronous batching queues decoupled into three tiers:
-  - **ValKey (Hot State):** Live ticker prices and queue depths managed via asynchronous pipelines.
+  - **ValKey (Hot State):** Live ticker prices and queue depths managed natively on the buffer node.
   - **Prometheus (Vitals):** Instantaneous in-memory node counter and heartbeat aggregation.
-  - **OpenSearch (Forensics):** Background asynchronous bulk-HTTP logging preventing structural backpressure.
+  - **OpenSearch (Forensics):** Background asynchronous HTTP logging to the isolated ledger node.
 - **The Air-Gapped CLI:** `quanuxctl obs` (built on Typer). A purely stateless remote control. The terminal interface has zero database access—it communicates solely by publishing authenticated intent payloads directly to the CNATS mesh.
 
 ### 4. The Quant Vault (Cold Storage & Settlement)
@@ -202,5 +205,51 @@ QuanuX is licensed under the **GNU Affero General Public License v3.0 (AGPLv3)**
 - Those who wish to host, modify and/or distribute for commercial use, internally or externally, over network or otherwise must     obtain a license from the project owner.
 
 See the `LICENSE` file for full details.
+
+---
+
+## 📡 Appendix: Live Matrix Telemetry (Institutional Receipts)
+
+The physical capabilities of the QuanuX execution and observability planes have been systematically verified on bare metal. Below are the exact, extracted hardware telemetry proofs gathered from the live matrix nodes, demonstrating the rigorous `10.10.x.x` VPC network decoupling and C++ component integration.
+
+### The Observability Buffer (ValKey & NATS)
+Executes strictly on `10.10.10.5`. 
+* **NATS JetStream** is successfully bound exclusively to the internal VPC and active.
+* **ValKey Cache** responds to live PING requests bridging memory states.
+
+```bash
+$ systemctl status nats-server
+● nats-server.service - NATS JetStream Mesh Node
+   Active: active (running)
+Listening for client connections on 10.10.10.5:4222
+Server is ready
+
+$ valkey-cli ping
+PONG
+```
+
+### The Institutional Ledger (OpenSearch)
+Executes strictly on `10.10.10.6`. Isolated entirely from execution cycles, guaranteeing forensic immutability.
+* **Cluster Health**: `Green` and perfectly discovering the internal IP boundary without external exposure.
+
+```json
+$ curl -s http://10.10.10.6:9200/_cluster/health
+{"cluster_name":"opensearch","status":"green","timed_out":false,"number_of_nodes":1,"active_primary_shards":4}
+```
+
+### The Sovereign Engine (C++20 Spreader)
+Deployed via `quanuxctl nest` onto `edge-nyc` droplets natively compiled against explicit `-O3 -march=native` parameters.
+* **SystemD Daemon**: Flawlessly active, bound to the `habitat.env` contract.
+
+```bash
+$ systemctl status quanux-engine
+● quanux-engine.service - QuanuX Sovereign Engine (59ns Spreader Nest)
+   Active: active (running)
+   Main PID: 6699 (quanux_spreader)
+Starting QuanuX-Spreader (59ns Dual-Thread Core)...
+[Spreader] Connected to NATS DMA pipe.
+[Thread 1] Innode Data Pipe Started. Spinning on MARKET.BIN.
+[Thread 2] Strategy & FIX Order Entry Started.
+```
 
 

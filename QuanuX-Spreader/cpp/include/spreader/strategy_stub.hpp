@@ -15,7 +15,7 @@ struct StrategyState {
 
 class InjectionStub {
 public:
-  static inline void init(StrategyState &state) {
+  static inline void init([[maybe_unused]] StrategyState &state) {
     // Initialization logic for the math layer
   }
 
@@ -25,7 +25,8 @@ public:
    * ZERO allocations. Operates directly on the cache-aligned MarketTick.
    */
   [[gnu::always_inline]] static inline bool
-  calculate(StrategyState &state, const quanux::MarketTick &tick) {
+  calculate([[maybe_unused]] StrategyState &state,
+            [[maybe_unused]] const quanux::MarketTick &tick) {
     // Evaluate the tick against the strategy logic here.
     // Return true if an execution event should be triggered.
     return false;

@@ -1,24 +1,35 @@
 ---
-description: Local C++ constraints instructing subsequent AI agents regarding RiskKernel modifications.
+description: The absolute separation of physical C++ execution and NATS matrix routing.
 ---
 
-# QuanuX Execution Plane: Hot Path Rules (RiskKernel)
+# The Precept of the Blind Engine
 
-This directory contains the core L1/L2 Execution Path elements (`QuanuX-Execution/src/`). It is subject to extreme latency and mathematical sensitivity.
+The `QuanuX` architecture achieves its 59-nanosecond execution latency by entirely stripping the execution plane of dynamic network resolution, system discovery, or configuration management.
 
-## 1. The Hydration Gate Doctrine
-The `RiskKernel.hpp` operates on two explicit tracks that you may **NEVER** merge.
+**The QuanuX C++ Engine is entirely blind.**
 
-### 1a. The Hot Track (`check_trade()`)
-- This inline function represents the final gate before a packet hits a fiber-optic NIC.
-- **Rule**: You are STRICTLY FORBIDDEN from adding external I/O here.
-- Any suggestion to query Redis, write to a log file synchronously, interact with `libcurl`, or perform a JetStream `KVStore_Get` inside `check_trade()` is an architectural violation.
-- The function must remain `[[nodiscard]]`, `inline`, and `noexcept`. It uses pure integer arithmetic against local class variables (the RAM matrix). 
+## The Laws of the Nest
 
-### 1b. The Cold Track (`hydrate_from_mesh()`)
-- This is the initialization barrier. It is designed specifically to block execution via synchronous I/O.
-- We deliberately hit the network here (JetStream KV) to ensure that the process cannot fire without perfect consensus validation.
-- The private variable `is_hot_` is completely dependent on this function completing cleanly. 
+1. **Zero Dynamic Discovery**: The sovereign engine does not ping, search, or query for the Observatory Plane.
+2. **The Sacred Binding**: It is instantiated by the `quanux-engine.service` systemd wrapper.
+3. **The Physics Injection**: The systemd wrapper forcibly binds the Engine to the environment file synthesized during the Habitat phase (`/etc/quanux/habitat.env`).
 
-## 2. Hard Limits
-The integer constraints (`MAX_ORDER_QTY`) defined as `constexpr` protect the system against configuration tampering via API payloads. Do not abstract these back out into network configurations. They are intended to force a C++ compiler error if violated structurally, protecting capital at the lowest silicon level.
+### The Matrix Handshake
+
+When `quanux_spreader` drops onto an Edge Node and initializes, it reads the `NATS_URL` hardcoded by Ansible during the OS conditioning phase.
+
+```systemd
+[Service]
+ExecStart=/opt/quanux/bin/quanux_spreader
+EnvironmentFile=/etc/quanux/habitat.env
+```
+
+If `/etc/quanux/habitat.env` is missing, the C++ binary is engineered to **crash immediately** via an explicit fatal abort in `engine.cpp` if `std::getenv("NATS_URL")` is null. It will not attempt to guess the NATS IP. It will not fall back to `localhost`.
+
+We enforce a hard fail. A blind engine must be given explicit coordinates, or it must die.
+
+### The C++20 Deterministic Compiler Standard
+
+To ensure that the Spreader binary is entirely pure without any masked logic errors, the `QuanuX-Spreader` compiles natively against maximum optimization flags (`-O3 -march=native`) and strict `-Werror` boundaries. 
+
+Any unused variable signatures in Strategy Stubs must be decorated explicitly with the `[[maybe_unused]]` C++20 attribute, or the native Ansible compilation task will deliberately fail.

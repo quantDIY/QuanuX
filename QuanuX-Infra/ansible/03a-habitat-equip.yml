@@ -1,0 +1,101 @@
+---
+- name: Operation Control Plane - Equip Edge Habitats
+  hosts: edge_nodes
+  become: yes
+
+  vars:
+    # Extract Panopticon IP dynamically from the Terraform inventory
+    panopticon_internal_ip: "{{ hostvars['panopticon-buffer']['internal_ip'] | default('10.10.10.5') }}"
+
+  tasks:
+    - name: Update APT cache
+      apt:
+        update_cache: yes
+
+    - name: Ensure /etc/quanux directory exists
+      file:
+        path: /etc/quanux
+        state: directory
+        mode: '0755'
+
+    - name: Render strict Habitat OS environment (habitat.env)
+      copy:
+        dest: /etc/quanux/habitat.env
+        content: |
+          # IMMUTABLE HABITAT TOPOLOGY
+          QUANUX_NODE_ID={{ inventory_hostname }}
+          NATS_URL="nats://{{ hostvars[groups['panopticon_buffer'][0]]['internal_ip'] }}:4222"
+        mode: '0644'
+
+    - name: Install C++20 build toolchain and cryptographic dependencies
+      apt:
+        name:
+          - build-essential
+          - cmake
+          - clang
+          - git
+          - libssl-dev          # Fixes CMake missing OpenSSL for NATS
+          - flatbuffers-compiler
+          - libflatbuffers-dev
+          - unzip
+          - rsync
+        state: present
+
+    - name: Download NATS C Client source
+      get_url:
+        url: https://github.com/nats-io/nats.c/archive/refs/tags/v3.8.0.tar.gz
+        dest: /tmp/nats.c.tar.gz
+
+    - name: Extract NATS C Client
+      unarchive:
+        src: /tmp/nats.c.tar.gz
+        dest: /tmp
+        remote_src: yes
+
+    - name: Compile and Install NATS C Client via CMake
+      shell: |
+        mkdir -p /tmp/nats.c-3.8.0/build
+        cd /tmp/nats.c-3.8.0/build
+        cmake ..
+        make -j{{ ansible_processor_vcpus | default(2) }}
+        make install
+        ldconfig
+      args:
+        creates: /usr/local/lib/libnats.so
+
+    - name: Ensure DuckDB download directory exists
+      file:
+        path: /tmp/duckdb
+        state: directory
+
+    - name: Download DuckDB C API Headers/Lib
+      unarchive:
+        src: https://github.com/duckdb/duckdb/releases/download/v0.10.0/libduckdb-linux-amd64.zip
+        dest: /tmp/duckdb
+        remote_src: yes
+      args:
+        creates: /tmp/duckdb/duckdb.h
+
+    - name: Ensure DuckDB include directory exists
+      file:
+        path: /usr/local/include/duckdb
+        state: directory
+        mode: '0755'
+
+    - name: Install DuckDB C API Headers to System
+      copy:
+        src: "/tmp/duckdb/{{ item }}"
+        dest: "/usr/local/include/duckdb/{{ item }}"
+        remote_src: yes
+      with_items:
+        - duckdb.h
+        - duckdb.hpp
+
+    - name: Install DuckDB Library to System
+      copy:
+        src: "/tmp/duckdb/libduckdb.so"
+        dest: "/usr/local/lib/libduckdb.so"
+        remote_src: yes
+
+    - name: Refresh dynamic linker cache (ldconfig)
+      command: ldconfig

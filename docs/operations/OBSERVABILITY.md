@@ -7,22 +7,23 @@ Designed for local strategy generation, algorithm testing, and individual portfo
 
 * **Execution Plane**: 1 C++ Execution Node running natively on the host workstation.
 * **Mesh**: 1 embedded NATS JetStream server.
-* **Observability Pod**: A single, local `docker-compose.yml` stack orchestrating:
+* **Observability Pod**: Native OS local stack managed by SystemD or Homebrew services orchestrating:
   * ValKey (Hot Buffer)
   * Prometheus & Alertmanager
   * OpenSearch (Single-node configuration)
   * DuckDB C++ Writer instance pushing local Parquet files.
-* **Shadow Node**: Local Python daemon routing NATS traffic into the docker stack.
+* **Shadow Node**: Local Python daemon routing NATS traffic natively. Docker is banned globally.
 
 ## 2. Regular (The Lean Fund)
 Designed for multi-venue retail execution or low-latency proprietary trading from dedicated servers.
 
 * **Execution Plane**: 1 C++ Execution Node deployed per region (e.g., one in AWS us-east-1, one in eu-west-2).
-* **Mesh**: Distributed CNATS cluster bridging regions.
-* **Observability Droplet**: A heavy, isolated DigitalOcean Droplet (or AWS EC2 instance) solely dedicated to telemetry ingestion. It runs:
+* **Mesh**: Distributed CNATS cluster bridging regions. Operates exclusively on the isolated VPC (`10.10.10.2:4222`).
+* **Observability Droplet**: A heavy, isolated DigitalOcean Droplet (or AWS EC2 instance) solely dedicated to telemetry ingestion via the `10.10.10.2:4222` JetStream firehose. It runs:
   * The Python Cython Shadow Node.
   * Standalone ValKey server.
   * Prometheus server aggregating regional execution targets.
+  * OpenSearch Node for async JSON forensic indexing.
 * **Vault**: Regional C++ `SettlementDaemons` pushing directly into shared S3 backend buckets (DuckDB `COPY TO` S3).
 
 ## 3. HA (The Tier 1 Institutional Matrix)
