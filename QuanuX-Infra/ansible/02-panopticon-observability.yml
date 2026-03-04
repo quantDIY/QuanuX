@@ -36,7 +36,7 @@
         state: present
         update_cache: true
       environment:
-        OPENSEARCH_INITIAL_ADMIN_PASSWORD: "QuanuxMasterPassword123!"
+        OPENSEARCH_INITIAL_ADMIN_PASSWORD: "{{ opensearch_admin_password }}"
 
     - name: Configure OpenSearch network host
       lineinfile:
@@ -49,12 +49,6 @@
         path: /etc/opensearch/opensearch.yml
         regexp: '^#?discovery\.type:'
         line: "discovery.type: single-node"
-
-    - name: Disable OpenSearch security plugin internally
-      lineinfile:
-        path: /etc/opensearch/opensearch.yml
-        regexp: '^#?plugins\.security\.disabled:'
-        line: "plugins.security.disabled: true"
 
     - name: Enable and restart OpenSearch service
       systemd:

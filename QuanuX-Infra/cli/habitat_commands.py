@@ -31,5 +31,31 @@ def equip(target: str = typer.Argument(..., help="Ansible inventory target (e.g.
         console.print("[bold red]Habitat Equip Failed.[/bold red] Playbook execution aborted.")
         raise typer.Exit(code=1)
 
+@app.command("observe")
+def observe(target: str = typer.Argument("all", help="Ansible inventory target (e.g., panopticon_ledger)")):
+    """
+    Deploys the Panopticon Observability Stack (Ledger, Buffer, and Shadow Node).
+    Expects QUANUX_OS_PASS in the environment for OpenSearch native security.
+    """
+    console.print(f"[bold cyan]Initiating Observability Protocol for:[/bold cyan] {target}")
+    try:
+        ansible_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../ansible"))
+        playbook_path = os.path.join(ansible_dir, "02-panopticon-observability.yml")
+        
+        cmd = [
+            "ansible-playbook",
+            "-i", "dynamic_inventory.py",
+            playbook_path,
+            "--limit", target,
+            "-e", "opensearch_admin_password={{ lookup('env', 'QUANUX_OS_PASS') }}"
+        ]
+        
+        console.print(f"[dim]Executing: {' '.join(cmd)}[/dim]")
+        subprocess.run(cmd, cwd=ansible_dir, check=True)
+        console.print("[bold green]Success:[/bold green] Panopticon Observability Matrix activated.")
+    except subprocess.CalledProcessError:
+        console.print("[bold red]Observability Deployment Failed.[/bold red] Playbook execution aborted; verify QUANUX_OS_PASS is exported.")
+        raise typer.Exit(code=1)
+
 if __name__ == "__main__":
     app()
