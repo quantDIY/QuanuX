@@ -1,0 +1,86 @@
+---
+- name: Aleph Protocol - Core VPC Autobahn Conditioning
+  hosts: panopticon_forge, panopticon_ledger, panopticon_vault, panopticon_oracle, panopticon_nexus
+  become: true
+  tasks:
+    - name: Update APT cache
+      apt:
+        update_cache: true
+
+    - name: VPC Autobahn - Maximize TCP Receive Window (tcp_rmem)
+      sysctl:
+        name: net.ipv4.tcp_rmem
+        value: '4096 87380 16777216'
+        state: present
+        reload: true
+
+    - name: VPC Autobahn - Maximize TCP Send Window (tcp_wmem)
+      sysctl:
+        name: net.ipv4.tcp_wmem
+        value: '4096 65536 16777216'
+        state: present
+        reload: true
+
+    - name: Ensure UFW is installed
+      apt:
+        name: ufw
+        state: present
+
+    - name: Ensure UFW is active with default drop inbound
+      ufw:
+        state: enabled
+        default: deny
+        direction: incoming
+
+    - name: Allow native SSH ingress
+      ufw:
+        rule: allow
+        port: '22'
+        proto: tcp
+
+- name: Aleph Protocol - Oracle Fencing & Toolchain (panopticon-oracle)
+  hosts: panopticon_oracle
+  become: true
+  tasks:
+    - name: Compile Toolchain - Prepare Bare Metal for Cython (-O3 / .pyx)
+      apt:
+        name:
+          - build-essential
+          - python3-dev
+        state: present
+
+    - name: Strict Fencing - Accept API traffic exclusively from Nexus IP
+      ufw:
+        rule: allow
+        proto: tcp
+        port: '5432' # DuckDB-Oculus emulated pg-port
+        src: "{{ hostvars[groups['panopticon_nexus'][0]]['internal_ip'] }}"
+
+- name: Aleph Protocol - Vault Fencing (panopticon-vault)
+  hosts: panopticon_vault
+  become: true
+  tasks:
+    - name: Strict Fencing - Accept S3 writes exclusively from Forge IP
+      ufw:
+        rule: allow
+        proto: tcp
+        port: '9000' # MinIO S3 API port
+        src: "{{ hostvars[groups['panopticon_forge'][0]]['internal_ip'] }}"
+
+    - name: Strict Fencing - Accept S3 reads exclusively from Oracle IP
+      ufw:
+        rule: allow
+        proto: tcp
+        port: '9000' # MinIO S3 API port
+        src: "{{ hostvars[groups['panopticon_oracle'][0]]['internal_ip'] }}"
+
+- name: Aleph Protocol - MCP Translation Layer Conditioning (panopticon-nexus)
+  hosts: panopticon_nexus
+  become: true
+  tasks:
+    - name: Compile Toolchain - Prepare Bare Metal for Cython (-O3 / .pyx)
+      apt:
+        name:
+          - build-essential
+          - python3-dev
+        state: present
