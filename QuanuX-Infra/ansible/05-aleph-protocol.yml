@@ -74,15 +74,20 @@
         delay: 2
         timeout: 30
 
+    - name: Remove stale MinIO CLI alias (Idempotency)
+      command: "mc alias rm myminio"
+      failed_when: false
+      changed_when: false
+
     - name: Authenticate MinIO CLI (mc) to local daemon
-      command: "mc alias set myminio http://127.0.0.1:9000 {{ minio_root_user }} {{ minio_root_password }}"
+      command: "mc alias set myminio http://127.0.0.1:9000 {{ minio_root_user }} {{ minio_root_password }} --api s3v4"
       retries: 5
       delay: 5
       register: result
       until: result.rc == 0
 
     - name: Provision the 'quanux-telemetry' bucket via API
-      command: "mc mb myminio/quanux-telemetry"
+      command: "mc mb myminio/quanux-telemetry --insecure"
       register: mb_result
       failed_when: mb_result.rc != 0 and 'Bucket already exists' not in mb_result.stderr and 'BucketAlreadyOwnedByYou' not in mb_result.stderr
       changed_when: "mb_result.rc == 0"
