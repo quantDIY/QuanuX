@@ -65,5 +65,7 @@ $ quanuxctl obs cluster-health --duration 5
 ## ARCHITECTURE
 The CLI is strictly stateless. Operations are achieved by publishing JSON dictionaries onto explicit CNATS control paths (e.g. `quanux.control.registry.config`, `quanux.control.obs.freeze`). Execution relies entirely on daemon presence and JetStream message queueing. 
 
+**THE ALEPH PROTOCOL:** Analytical queries, AI Model Context Protocol (MCP) data assimilation, and frontend client retrievals do not execute through the CLI. They query the unified **panopticon-nexus Hasura GraphQL** Supergraph. The Nexus node natively bridges the OpenSearch text logs with the DuckDB telemetry Hive partitions, physically severing the Read Path from the Write Path.
+
 ## SEE ALSO
 `quanuxctl(1)`

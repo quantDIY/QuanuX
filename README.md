@@ -122,20 +122,18 @@ QuanuX operates as a globally distributed, polyglot organism. Absolute separatio
 - **Zero-Copy FlatBuffers:** JSON is strictly forbidden on the execution plane. Memory states are transferred natively via FlatBuffers, utilizing fixed-point integer math (`int64`) for perfect, zero-loss institutional pricing and CPU cache locality.
 - **The CNATS Global Mesh:** All inter-node communication is blasted over the CNATS C client without exception.
 
-### 3. The Observability & Data Plane (The Guest Layer)
-- **The Decoupled Panopticon:** The architectural control plane is physically severed into two distinct Terraform-provisioned droplets operating exclusively within the `10.10.10.x` VPC:
-  - **`panopticon-ledger`**: Operates exclusively as the Forensic Ledger running the Java OpenSearch engine.
-  - **`panopticon-buffer`**: Operates as the High-Frequency Hub running Native ValKey, the NATS JetStream Mesh, and the asynchronous Python Shadow Node.
-- **The Python Shadow Node:** A non-blocking asynchronous traffic cop. Python nodes are strictly forbidden from touching the core engine state or blocking the NATS ingestion loop.
-- **The Cython Bridge:** Execution loops rely on optimized `quanux_cython_bridge` modules to instantly unmarshal raw bytes. Pure Python `struct.unpack()` is disabled.
-- **Tri-Partite Decoupling:** Event-driven, CPU-efficient asynchronous batching queues decoupled into three tiers:
-  - **ValKey (Hot State):** Live ticker prices and queue depths managed natively on the buffer node.
-  - **Prometheus (Vitals):** Instantaneous in-memory node counter and heartbeat aggregation.
-  - **OpenSearch (Forensics):** Background asynchronous HTTP logging to the isolated ledger node.
-- **The Air-Gapped CLI:** `quanuxctl obs` (built on Typer). A purely stateless remote control. The terminal interface has zero database access—it communicates solely by publishing authenticated intent payloads directly to the CNATS mesh.
+### 3. The Observability & Data Plane (The Aleph Protocol Matrix)
+- **The Decoupled Supergraph:** The architectural control plane is physically severed into five distinct, strictly fenced droplets operating exclusively within the `10.10.10.x` VPC:
+  - **`panopticon-forge` (The Write Path):** Pure compute ingestion running Vector and GreptimeDB. Scrapes NATS Firehose and flushes into partitioned Parquet.
+  - **`panopticon-ledger` (The Forensic Log):** The OpenSearch engine dedicated exclusively to asynchronous text-log indexing, isolated from the high-frequency metrics.
+  - **`panopticon-vault` (The Cold Storage):** MinIO S3 cluster holding the immutable Parquet chunks. Features a 7-day hard-delete ILM policy and Active-Active cross-region replication readiness.
+  - **`panopticon-oracle` (The Read Path):** Pure analytical compute running DuckDB via an `httpfs` mount against The Vault. Employs mathematically strict Hive Partitioning to achieve sub-millisecond Parquet queries.
+  - **`panopticon-nexus` (The Intelligence Brain):** The single-unified Hasura GraphQL API. Introspects both the DuckDB Oracle and OpenSearch Ledger into a singular queryable Supergraph.
+- **The Cython AI Bridge:** To prevent AI context bloat, the Python MCP Server (`read_historical_telemetry`) operates a strictly compiled `.pyx` C-extension loop that natively compresses the heavyweight Hasura JSON payloads into pristine LLM Markdown tables. The Python interpreter is physically eradicated from the read-path bottleneck.
+- **The Python Shadow Node:** A non-blocking asynchronous traffic cop managing websocket transmissions and real-time dashboard UI hydration, cleanly separated from historical querying.
 
 ### 4. The Quant Vault (Cold Storage & Settlement)
-- **C++ DuckDB Settlement Daemons:** DuckDB analytical logic lives explicitly inside the C++ Core using native `duckdb.h` C API queries. The Python library is structurally forbidden.
+- **C++ DuckDB Settlement Daemons:** DuckDB analytical logic lives explicitly inside the C++ Core using native `duckdb.h` C API queries. The Python library is structurally forbidden on the Execution Plane.
 - **Dynamic Global Epochs:** Market closes are coordinated via the global Exchange Registry running on JetStream. Markets operate on exact localized epochs.
 - **Native Parquet Generation:** The C++ Settlement Daemons natively trigger high-speed `COPY TO` commands to flush the hot buffers into partitioned Parquet chunks natively dispatched to S3 cold storage.
 

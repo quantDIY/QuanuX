@@ -15,5 +15,10 @@ Python must NEVER operate within the critical execution path of the C++ Sovereig
 - **Transformation**: Raw FlatBuffer bytes are unpacked via the `libflatbuffers-dev` Cython bindings to bypass the Python interpreter loop penalty.
 - **Storage**: Unpacked metrics are immediately batched and flushed to the internal Panopticon Ledger (Async OpenSearch cluster) strictly using the low-level `opensearch-py` asynchronous client via `helpers.async_bulk`. No synchronous database writes are permitted, rigorously preserving the Tri-Partite Decoupling Law.
 
-## 3. The Visualization Boundary
+## 3. The Cython Intelligence Bridge (The Aleph Protocol)
+The Model Context Protocol (MCP) Server interacts with the Nexus GraphQL Supergraph. To physically protect AI token context limits and eliminate JSON processing bloat, strict Cython C-extension rules apply:
+- **Rule (JSON Compression)**: All massive JSON payloads retrieved from the API MUST be passed sequentially into natively compiled `.so` C-extensions (via `.pyx` logic) before being transferred to the LLM context.
+- **Rule (Cython Mandate)**: Python loops manipulating strings or formatting Markdown tables by iterating over thousands of raw telemetry rows are strictly prohibited. These formatting procedures must exist compiled in C.
+
+## 4. The Visualization Boundary
 The Python application provides aggregated dashboard summaries and GraphQL subscriptions for the "Dumb Dome" frontend clients (React). The UI does not query the engines; the UI queries the Shadow Node's internal aggregation states.
