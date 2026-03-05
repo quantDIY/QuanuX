@@ -7,7 +7,8 @@ from mcp.server.fastmcp import FastMCP
 mcp = FastMCP("QuanuX-Observability-Bridge")
 
 # Nexus Supergraph Endpoint
-NEXUS_URL = "http://10.10.10.9:8080/v1/graphql"
+# Dynamically constructed via Ansible SystemD injection
+NEXUS_URL = os.environ.get("QUANUX_HASURA_URL", "http://127.0.0.1:8080/v1/graphql")
 
 @mcp.tool()
 def read_historical_telemetry(limit: int = 100) -> str:
@@ -42,21 +43,27 @@ def read_historical_telemetry(limit: int = 100) -> str:
         response.raise_for_status()
         data = response.json()
         
-        # Strip boilerplate payload wrappers
-        rows = data.get("data", {}).get("quanux_telemetry_live", [])
-        if not rows:
-            return "No telemetry data found for QuanuX."
+        # 3. The Cython Translation Armor (Graceful Catch)
+        try:
+            # Check for GraphQL native errors first
+            if "errors" in data:
+                return f"[FATAL] Hasura returned GraphQL errors: {data['errors']}"
+                
+            rows = data.get("data", {}).get("quanux_telemetry_live", [])
+            if not rows:
+                return f"No telemetry data found. Raw Payload: {data}"
+                
+            columns = ["timestamp", "cpu_usage", "memory_usage", "latency_ns"]
             
-        columns = ["timestamp", "cpu_usage", "memory_usage", "latency_ns"]
-        
-        # 3. The Cython Translation Handoff (C-level execution)
-        # Bypassing pure Python loops entirely for formatting.
-        markdown_output = telemetry_compiler.json_to_markdown(rows, columns)
-        
-        return markdown_output
-        
+            # The Cython Translation Handoff
+            return telemetry_compiler.json_to_markdown(rows, columns)
+            
+        except Exception as e:
+            return f"[FATAL] Schema mismatch or Cython panic. Raw JSON: {data} | Error: {str(e)}"
+            
     except requests.exceptions.RequestException as e:
         return f"[FATAL] Nexus API Communication Failure: {str(e)}"
 
 if __name__ == "__main__":
-    mcp.run_stdio_async()
+    import asyncio
+    asyncio.run(mcp.run_stdio_async())

@@ -1,5 +1,5 @@
 ---
-- name: Aleph Protocol - Phase 2 The Vault (panopticon-vault)
+- name: Aleph Protocol - Play 1 The Vault Initialization (panopticon-vault)
   hosts: panopticon_vault
   become: true
   tasks:
@@ -89,7 +89,7 @@
     - name: Provision the 'quanux-telemetry' bucket via API
       command: "mc mb myminio/quanux-telemetry --insecure"
       register: mb_result
-      failed_when: mb_result.rc != 0 and 'Bucket already exists' not in mb_result.stderr and 'BucketAlreadyOwnedByYou' not in mb_result.stderr
+      failed_when: mb_result.rc != 0 and 'Bucket already exists' not in mb_result.stderr and 'BucketAlreadyOwnedByYou' not in mb_result.stderr and 'already own it' not in mb_result.stderr
       changed_when: "mb_result.rc == 0"
 
     - name: Enable Bucket Versioning (Absolute HA/Active-Active Readiness)
@@ -102,7 +102,7 @@
       changed_when: "ilm_result.rc == 0"
 
 
-- name: Aleph Protocol - Phase 3 The Write Path (panopticon-forge)
+- name: Aleph Protocol - Play 2 The Forge Artifacts (panopticon-forge)
   hosts: panopticon_forge
   become: true
   tasks:
@@ -111,14 +111,16 @@
         url: https://packages.timber.io/vector/0.38.0/vector-0.38.0-x86_64-unknown-linux-musl.tar.gz
         dest: /tmp/vector.tar.gz
 
-    - name: Extract Vector
+    - name: Extract Vector Tarball natively bypassing `strip-components` syntax
       unarchive:
         src: /tmp/vector.tar.gz
-        dest: /usr/local/bin
-        extra_opts:
-          - --strip-components=2
-          - "vector-x86_64-unknown-linux-musl/bin/vector"
+        dest: /tmp
         remote_src: true
+
+    - name: Transplant Vector Binary to System PATH
+      command: mv /tmp/vector-x86_64-unknown-linux-musl/bin/vector /usr/local/bin/vector
+      args:
+        creates: /usr/local/bin/vector
 
     - name: Ensure Vector config directory exists
       file:
@@ -218,7 +220,7 @@
         enabled: true
         state: restarted
 
-- name: Aleph Protocol - Phase 3 The Write Path (panopticon-ledger)
+- name: Aleph Protocol - Play 3 The Ledger Audit (panopticon-ledger)
   hosts: panopticon_ledger
   become: true
   tasks:
@@ -241,13 +243,11 @@
         repo: deb https://artifacts.opensearch.org/releases/bundle/opensearch/2.x/apt stable main
         state: present
 
-    - name: Install Native OpenSearch
-      apt:
-        name: opensearch
-        state: present
-        update_cache: true
-      environment:
-        OPENSEARCH_INITIAL_ADMIN_PASSWORD: "{{ opensearch_admin_password }}"
+    - name: Install Native OpenSearch (Forced Shell Environment to secure zxcvbn password)
+      shell: "env OPENSEARCH_INITIAL_ADMIN_PASSWORD='{{ opensearch_admin_password }}' DEBIAN_FRONTEND=noninteractive apt-get install -y opensearch=2.19.4"
+      args:
+        executable: /bin/bash
+        creates: /etc/opensearch/opensearch.yml
 
     - name: OpenSearch VPC Binding
       lineinfile:
@@ -284,7 +284,7 @@
         state: restarted
 
 
-- name: Aleph Protocol - Phase 4 The Read Path (panopticon-oracle)
+- name: Aleph Protocol - Play 4 The Oracle Compilation (panopticon-oracle)
   hosts: panopticon_oracle
   become: true
   tasks:
@@ -328,101 +328,67 @@
           CREATE VIEW IF NOT EXISTS quanux_telemetry_live AS 
           SELECT * FROM read_parquet('s3://quanux-telemetry/telemetry/*/*/*/*/*.parquet', hive_partitioning=1);
 
-    - name: Install DuckDB PostgreSQL Emulation Wrapper (Hasura Connector Dependency)
-      # In a true Tier-1 physical drop, this would be a custom compiled C++ daemon.
-      # For Phase 4 automated dropping, we utilize a lightweight Python psycopg2/duckdb bridge to expose port 5432.
+    - name: Install Native PostgreSQL Database
       apt:
         name:
-          - python3-venv
-          - python3-pip
+          - postgresql
+          - postgresql-contrib
         state: present
+        update_cache: true
 
-    - name: Create Python VENV for DuckDB-Oculus PG Bridge
-      command: python3 -m venv /opt/quanux/oculus_env
-      args:
-        creates: /opt/quanux/oculus_env/bin/activate
-
-    - name: Install DuckDB, PGServer & Cython natively
-      pip:
-        name:
-          - duckdb
-          - pgserver
-          - Cython
-        virtualenv: /opt/quanux/oculus_env
-        virtualenv_command: /usr/bin/python3 -m venv
-
-    - name: Generate DuckDB PG Emulation Wrapper (Cython source)
-      copy:
-        dest: /opt/quanux/oculus_env/duckdb_pg_wrapper.pyx
-        content: |
-          # cython: language_level=3
-          import sys
-          from runpy import run_module
-
-          def run():
-              sys.argv = [
-                  "duckdb_pg_wrapper",
-                  "--host", "0.0.0.0",
-                  "--port", "5432",
-                  "--init-sql", "/etc/duckdb/init.sql",
-                  "/var/lib/duckdb/quanux.duckdb"
-              ]
-              run_module("pgserver", run_name="__main__")
-
-    - name: Generate Setup script for Cython compilation
-      copy:
-        dest: /opt/quanux/oculus_env/setup.py
-        content: |
-          from setuptools import setup
-          from Cython.Build import cythonize
-
-          setup(
-              ext_modules=cythonize("duckdb_pg_wrapper.pyx", compiler_directives={'language_level' : "3"})
-          )
-
-    - name: Compile DuckDB Oculus wrapper into C-extension (.so)
+    - name: Configure PostgreSQL Network Bindings
       shell: |
-        source /opt/quanux/oculus_env/bin/activate
-        python3 setup.py build_ext --inplace
-      args:
-        chdir: /opt/quanux/oculus_env
-        creates: /opt/quanux/oculus_env/duckdb_pg_wrapper.c
+        for conf in /etc/postgresql/*/main/postgresql.conf; do
+          sed -i "s/^#\?listen_addresses.*/listen_addresses = '*'/g" "$conf"
+        done
 
-    - name: Create DuckDB-Oculus SystemD Service Wrapper (Cythonized)
-      copy:
-        dest: /etc/systemd/system/duckdb-oculus.service
-        content: |
-          [Unit]
-          Description=DuckDB Oculus PostgreSQL Emulator (C-Extension)
-          After=network-online.target
+    - name: Configure PostgreSQL VPC Subnet Trust
+      shell: |
+        for hba in /etc/postgresql/*/main/pg_hba.conf; do
+          if ! grep -q "0.0.0.0/0 trust" "$hba"; then
+            echo "host all all 0.0.0.0/0 trust" >> "$hba"
+          fi
+        done
 
-          [Service]
-          WorkingDirectory=/opt/quanux/oculus_env
-          ExecStart=/opt/quanux/oculus_env/bin/python3 -c "import duckdb_pg_wrapper; duckdb_pg_wrapper.run()"
-          Restart=always
-          LimitNOFILE=65536
-
-          [Install]
-          WantedBy=multi-user.target
-
-    - name: Enable and restart DuckDB-Oculus 
+    - name: Enable and restart PostgreSQL
       systemd:
-        name: duckdb-oculus
+        name: postgresql
         daemon_reload: true
         enabled: true
         state: restarted
 
-- name: Aleph Protocol - Phase 4 The Read Path (panopticon-nexus)
+    - name: Hydrate QuanuX Database and Users
+      become: true
+      become_user: postgres
+      shell: |
+        psql -tc "SELECT 1 FROM pg_database WHERE datname = 'quanux'" | grep -q 1 || psql -c "CREATE DATABASE quanux;"
+        psql -c "ALTER USER postgres WITH PASSWORD 'postgres';"
+
+    - name: Execute Extension Protocol
+      become: true
+      become_user: postgres
+      shell: psql -d quanux -c "CREATE EXTENSION IF NOT EXISTS pgcrypto;"
+
+- name: Aleph Protocol - Play 5 The Nexus & AI Bridge (panopticon-nexus)
   hosts: panopticon_nexus
   become: true
   tasks:
-    - name: Ensure Docker and Docker Compose are installed
+    - name: Install Docker daemon natively and start the service
       apt:
         name:
           - docker.io
           - docker-compose-v2
         state: present
         update_cache: true
+
+    - name: Ensure Docker daemon is enabled and started
+      systemd:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Pull the Hasura GraphQL Docker image explicitly
+      command: docker pull hasura/graphql-engine:v2.37.0
 
     - name: Ensure Nexus directory exists
       file:
@@ -436,20 +402,67 @@
           services:
             graphql-engine:
               image: hasura/graphql-engine:v2.37.0
-              ports:
-                - "8080:8080"
+              network_mode: "host"
               environment:
                 HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
                 HASURA_GRAPHQL_DEV_MODE: "true"
                 HASURA_GRAPHQL_ADMIN_SECRET: "${QUANUX_HASURA_SECRET}"
                 # The Supergraph mappings to the decoupled matrix:
+                HASURA_GRAPHQL_DATABASE_URL: "postgresql://postgres:postgres@{{ hostvars[groups['panopticon_oracle'][0]]['internal_ip'] }}:5432/quanux"
                 QUANUX_ORACLE_URL: "postgresql://postgres:postgres@{{ hostvars[groups['panopticon_oracle'][0]]['internal_ip'] }}:5432/quanux"
                 QUANUX_LEDGER_URL: "http://{{ hostvars[groups['panopticon_ledger'][0]]['internal_ip'] }}:9200"
               restart: always
 
-    - name: Launch Hasura Supergraph (Dynamic Injection)
+    - name: Execute docker compose up -d with dynamic vault secrets
       command: docker compose up -d
       args:
         chdir: /opt/quanux/nexus
       environment:
         QUANUX_HASURA_SECRET: "{{ hasura_admin_secret }}"
+
+    - name: Create Python VENV for FastMCP Bridge
+      command: python3 -m venv /opt/quanux/mcp_env
+      args:
+        creates: /opt/quanux/mcp_env/bin/activate
+
+    - name: Pip install setuptools, Cython, fastmcp via explicit VENV binary
+      shell: /opt/quanux/mcp_env/bin/pip install --upgrade setuptools Cython fastmcp
+
+    - name: Transplant FastMCP Bridge Source Core (Cython & Python)
+      copy:
+        src: "/Users/Duncan/Antigravity/QuanuX/QuanuX/QuanuX-Observability/python/mcp_bridge/{{ item }}"
+        dest: "/opt/quanux/nexus/{{ item }}"
+      loop:
+        - mcp_server.py
+        - telemetry_compiler.pyx
+        - setup_compiler.py
+
+    - name: Compile the telemetry_compiler.pyx translation bridge
+      command: /opt/quanux/mcp_env/bin/python setup_compiler.py build_ext --inplace
+      args:
+        chdir: /opt/quanux/nexus
+        creates: /opt/quanux/nexus/telemetry_compiler.c
+
+    - name: Create FastMCP SystemD Service Wrapper
+      copy:
+        dest: /etc/systemd/system/quanux-mcp.service
+        content: |
+          [Unit]
+          Description=QuanuX FastMCP Bridge (Cython Native)
+          After=docker.service network-online.target
+
+          [Service]
+          WorkingDirectory=/opt/quanux/nexus
+          Environment="QUANUX_HASURA_URL=http://{{ hostvars[groups['panopticon_nexus'][0]]['internal_ip'] }}:8080/v1/graphql"
+          ExecStart=/opt/quanux/mcp_env/bin/python -m mcp_server
+          Restart=always
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Start the quanux-mcp service natively
+      systemd:
+        name: quanux-mcp
+        daemon_reload: true
+        enabled: true
+        state: restarted

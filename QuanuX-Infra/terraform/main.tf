@@ -43,6 +43,54 @@ resource "digitalocean_droplet" "panopticon_buffer" {
   tags = ["quanux-node", "quanux-panopticon"]
 }
 
+# Tier 2 Aleph Protocol (Forge: Ingestion/Routing)
+resource "digitalocean_droplet" "panopticon_forge" {
+  name     = "quanux-panopticon-forge"
+  region   = var.region
+  size     = "s-2vcpu-4gb"
+  image    = "ubuntu-24-04-x64"
+  vpc_uuid = digitalocean_vpc.quanux_matrix.id
+  ssh_keys = var.ssh_keys
+
+  tags = ["quanux-node", "quanux-panopticon", "quanux-aleph"]
+}
+
+# Tier 2 Aleph Protocol (Vault: Cold Storage/MinIO S3)
+resource "digitalocean_droplet" "panopticon_vault" {
+  name     = "quanux-panopticon-vault"
+  region   = var.region
+  size     = "s-2vcpu-4gb"
+  image    = "ubuntu-24-04-x64"
+  vpc_uuid = digitalocean_vpc.quanux_matrix.id
+  ssh_keys = var.ssh_keys
+
+  tags = ["quanux-node", "quanux-panopticon", "quanux-aleph"]
+}
+
+# Tier 2 Aleph Protocol (Oracle: Analytical Compute/DuckDB)
+resource "digitalocean_droplet" "panopticon_oracle" {
+  name     = "quanux-panopticon-oracle"
+  region   = var.region
+  size     = "s-4vcpu-8gb"
+  image    = "ubuntu-24-04-x64"
+  vpc_uuid = digitalocean_vpc.quanux_matrix.id
+  ssh_keys = var.ssh_keys
+
+  tags = ["quanux-node", "quanux-panopticon", "quanux-aleph"]
+}
+
+# Tier 2 Aleph Protocol (Nexus: Hasura Supergraph API)
+resource "digitalocean_droplet" "panopticon_nexus" {
+  name     = "quanux-panopticon-nexus"
+  region   = var.region
+  size     = "s-4vcpu-8gb"
+  image    = "ubuntu-24-04-x64"
+  vpc_uuid = digitalocean_vpc.quanux_matrix.id
+  ssh_keys = var.ssh_keys
+
+  tags = ["quanux-node", "quanux-panopticon", "quanux-aleph"]
+}
+
 # Tier 4 Nests (The Edge Sovereign Engines)
 resource "digitalocean_droplet" "edge_nyc" {
   name     = "quanux-edge-nyc"
@@ -75,6 +123,10 @@ resource "digitalocean_firewall" "paranoia" {
   droplet_ids = [
     digitalocean_droplet.panopticon_ledger.id,
     digitalocean_droplet.panopticon_buffer.id,
+    digitalocean_droplet.panopticon_forge.id,
+    digitalocean_droplet.panopticon_vault.id,
+    digitalocean_droplet.panopticon_oracle.id,
+    digitalocean_droplet.panopticon_nexus.id,
     digitalocean_droplet.edge_nyc.id,
     digitalocean_droplet.edge_nyc_2.id
   ]

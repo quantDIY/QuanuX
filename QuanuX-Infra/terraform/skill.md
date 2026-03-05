@@ -7,6 +7,13 @@ description: QuanuX Infrastructure - Terraform Genesis and VPC Matrix Security R
 ## 1. Zero-Disk Keyring Doctrine
 Terraform state and variables must NEVER store plain-text secrets on disk. The DigitalOcean API token and local SSH keys are dynamically fetched from the OS Keyring and injected into the Terraform variable space via `quanuxctl infra auth-shell`.
 
+### Aleph Protocol Prerequisites
+Before executing the Ansible playbooks, the following credentials MUST be explicitly generated and loaded into the local Keyring logic, bridging them directly into the execution shell environment:
+- `MINIO_ROOT_USER`
+- `MINIO_ROOT_PASSWORD`
+- `HASURA_ADMIN_SECRET`
+- `OPENSEARCH_ADMIN_PASSWORD`
+
 ## 2. The VPC Matrix (10.10.10.0/24)
 All QuanuX nodes (Panopticon, Edge Sovereign Engines) are deployed into a strictly isolated, VPC-backed private subnet. 
 - **Immutable Rule**: No internal node cluster communication takes place over the public internet.

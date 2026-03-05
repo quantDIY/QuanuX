@@ -28,6 +28,18 @@ def build_inventory():
         "panopticon_buffer": {
             "hosts": []
         },
+        "panopticon_forge": {
+            "hosts": []
+        },
+        "panopticon_vault": {
+            "hosts": []
+        },
+        "panopticon_oracle": {
+            "hosts": []
+        },
+        "panopticon_nexus": {
+            "hosts": []
+        },
         "edge_nodes": {
             "hosts": []
         }
@@ -53,6 +65,50 @@ def build_inventory():
         priv_ip = outputs["quanux_panopticon_buffer_internal_ip"]["value"]
         inventory["panopticon_buffer"]["hosts"].append("panopticon-buffer")
         inventory["_meta"]["hostvars"]["panopticon-buffer"] = {
+            "ansible_host": pub_ip,
+            "ansible_user": "root",
+            "internal_ip": priv_ip
+        }
+
+    # Panopticon Forge Node
+    if "quanux_panopticon_forge_public_ip" in outputs:
+        pub_ip = outputs["quanux_panopticon_forge_public_ip"]["value"]
+        priv_ip = outputs["quanux_panopticon_forge_internal_ip"]["value"]
+        inventory["panopticon_forge"]["hosts"].append("panopticon-forge")
+        inventory["_meta"]["hostvars"]["panopticon-forge"] = {
+            "ansible_host": pub_ip,
+            "ansible_user": "root",
+            "internal_ip": priv_ip
+        }
+
+    # Panopticon Vault Node
+    if "quanux_panopticon_vault_public_ip" in outputs:
+        pub_ip = outputs["quanux_panopticon_vault_public_ip"]["value"]
+        priv_ip = outputs["quanux_panopticon_vault_internal_ip"]["value"]
+        inventory["panopticon_vault"]["hosts"].append("panopticon-vault")
+        inventory["_meta"]["hostvars"]["panopticon-vault"] = {
+            "ansible_host": pub_ip,
+            "ansible_user": "root",
+            "internal_ip": priv_ip
+        }
+
+    # Panopticon Oracle Node
+    if "quanux_panopticon_oracle_public_ip" in outputs:
+        pub_ip = outputs["quanux_panopticon_oracle_public_ip"]["value"]
+        priv_ip = outputs["quanux_panopticon_oracle_internal_ip"]["value"]
+        inventory["panopticon_oracle"]["hosts"].append("panopticon-oracle")
+        inventory["_meta"]["hostvars"]["panopticon-oracle"] = {
+            "ansible_host": pub_ip,
+            "ansible_user": "root",
+            "internal_ip": priv_ip
+        }
+
+    # Panopticon Nexus Node
+    if "quanux_panopticon_nexus_public_ip" in outputs:
+        pub_ip = outputs["quanux_panopticon_nexus_public_ip"]["value"]
+        priv_ip = outputs["quanux_panopticon_nexus_internal_ip"]["value"]
+        inventory["panopticon_nexus"]["hosts"].append("panopticon-nexus")
+        inventory["_meta"]["hostvars"]["panopticon-nexus"] = {
             "ansible_host": pub_ip,
             "ansible_user": "root",
             "internal_ip": priv_ip

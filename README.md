@@ -181,6 +181,15 @@ QuanuX uses the OS Keyring to securely store API keys. You can set them up inter
 python -m server.cli.setup_secrets
 ```
 
+**Aleph Protocol Prerequisites (VPC Matrix Initialization):**
+Before deploying the infrastructure playbooks via Ansible, you MUST explicitly generate and load the following variables into your local OS Keyring and active shell environment:
+- `MINIO_ROOT_USER`
+- `MINIO_ROOT_PASSWORD`
+- `HASURA_ADMIN_SECRET`
+- `OPENSEARCH_ADMIN_PASSWORD`
+
+Failure to pre-seed these high-entropy strings will cause the deployment playbooks to halt securely, protecting the cluster via the Zero-Disk secret doctrine.
+
 ### 5. Running the Application
 
 **Terminal 1: Start the Core Server**
