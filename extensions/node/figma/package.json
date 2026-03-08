@@ -9,6 +9,6 @@
     },
     "dependencies": {
         "@modelcontextprotocol/sdk": "1.27.1",
-        "figma-developer-mcp": "^0.6.4"
+        "figma-developer-mcp": "^0.6.6"
     }
 }
