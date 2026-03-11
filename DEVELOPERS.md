@@ -23,6 +23,8 @@ terraform apply "v12_matrix.tfplan"
 ## 2. QuanuX-Orchestra Compilation (The Naming Registry)
 Before conditioning the Habitat, compile the Universal Naming Registry natively. The Standardizer CLI utilizes `pugixml` directly embedded in the C++ tree, enforcing a zero-dependency, JVM-free build perimeter. It defines the exact memory layout for all Tier-2 algorithms.
 
+**FIGI Setup Context:** Developers must provide a localized `venues/<venue>/figi_map.csv` mapping file. The compiler consumes this literal to generate the zero-latency `constexpr` translation arrays natively.
+
 ```bash
 cd QuanuX-Orchestra/
 mkdir build && cd build

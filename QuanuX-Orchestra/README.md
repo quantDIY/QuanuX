@@ -10,7 +10,7 @@ QuanuX-Orchestra bridges the gap. It provides the strict, unifying taxonomy of I
 ## The Standards
 
 1. **ISO 20022 (FIX Orchestra):** We map every variable in the execution matrix against the definitive FIX protocol XML schema. This means when we identify an Execution Report, the fields and nested `codeSets` (like Side = 1 for Buy) are intrinsically mapped across the entire codebase. No localized nomenclature.
-2. **FIGI (Financial Instrument Global Identifier):** A universal 12-character identification system. We discard the chaos of venue-specific symbols (e.g., IBKR throwing `ES M4` while CME throws `ESM4`). By executing on FIGI standardizations, the matrix remains immune to downstream symbol mutations.
+2. **FIGI (Financial Instrument Global Identifier):** A universal 12-character identification system. We discard the chaos of venue-specific symbols (e.g., IBKR throwing `ES M4` while CME throws `ESM4`). By executing on FIGI standardizations—generated dynamically via a purely C++17 `constexpr std::string_view` binary search for pristine zero-latency mappings at compile time—the matrix remains immune to downstream symbol mutations.
 
 ## The Boundary (The OnixS Bridge)
 
@@ -35,5 +35,5 @@ There is no actual function call overhead. It is a direct memory instruction. Th
 
 Orchestra acts strictly offline prior to runtime via `quanuxctl`. The entire pipeline is driven by a pure C++ `pugixml` native execution layer, guaranteeing zero JVM dependencies and absolute control over the memory model:
 1. `quanuxctl orchestra bootstrap`: Lobotomized fetcher. Pulls the raw `FIX.latest.xml` master schema directly to disk.
-2. `quanuxctl orchestra compile --venue [venue]`: The `pugixml` standardizer natively traverses the schema to synthesize the Cython parity wrappers and constexpr OnixS bridges.
-3. `quanuxctl orchestra verify`: Cryptographically fingerprint the schema sync.
+2. `quanuxctl orchestra compile --venue [venue]`: The `pugixml` standardizer natively traverses the schema to synthesize the Cython parity wrappers, constexpr OnixS bridges, and the `constexpr` binary-search FIGI mapper.
+3. `quanuxctl orchestra verify`: Cryptographically fingerprint the schema sync utilizing a true OS-level `popen` invocation of SHA-256 against the master XML.
