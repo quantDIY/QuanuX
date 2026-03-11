@@ -888,8 +888,8 @@ importers:
         specifier: 1.26.0
         version: 1.26.0(zod@4.3.6)
       figma-developer-mcp:
-        specifier: ^0.6.4
-        version: 0.6.4
+        specifier: ^0.6.6
+        version: 0.6.6
 
   extensions/python/signalr_bridge/src/node:
     dependencies:
@@ -2163,8 +2163,8 @@ packages:
   '@iarna/toml@2.2.5':
     resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
 
-  '@img/colour@1.0.0':
-    resolution: {integrity: sha512-A5P/LfWGFSl6nsckYtjw9da+19jB8hkJ6ACTGcDfEJ0aE+l2n2El7dsVM7UVHZQ9s2lmYMWlrS21YLy2IR1LUw==}
+  '@img/colour@1.1.0':
+    resolution: {integrity: sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==}
     engines: {node: '>=18'}
 
   '@img/sharp-darwin-arm64@0.34.5':
@@ -5544,8 +5544,8 @@ packages:
   fflate@0.8.2:
     resolution: {integrity: sha512-cPJU47OaAoCbg0pBvzsgpTPhmhqI5eJjh/JIu8tPj5q+T7iLvW/JAYUqmE7KOB4R1ZyEhzBaIQpQpardBF5z8A==}
 
-  figma-developer-mcp@0.6.4:
-    resolution: {integrity: sha512-3veoTrBHabx3bKwOLjftsWqBuAVeCCT8JdlK46ofYoT5lv/qKbiR+ycbySzrW53Dk41kVI3dVOIyC3b/ThRStQ==}
+  figma-developer-mcp@0.6.6:
+    resolution: {integrity: sha512-swAlacSmK9Ht5mX5yizn3SCcJKIpj7vxBluqmWPqEQzS+/fkYveQLOvVGztb86V0pOlOJLjbQQbs71msOMv2Iw==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
@@ -7619,8 +7619,8 @@ packages:
     resolution: {integrity: sha512-NZQZdC5wOE/H3UT28fVGL+ikOZcEzfMGk/c3iN9UGxzWHMa1op7274oyiUVrAG4B2EuFhus8SvkaYnhvW92p9Q==}
     hasBin: true
 
-  remeda@2.33.4:
-    resolution: {integrity: sha512-ygHswjlc/opg2VrtiYvUOPLjxjtdKvjGz1/plDhkG66hjNjFr1xmfrs2ClNFo/E6TyUFiwYNh53bKV26oBoMGQ==}
+  remeda@2.33.6:
+    resolution: {integrity: sha512-tazDGH7s75kUPGBKLvhgBEHMgW+TdDFhjUAMdQj57IoWz6HsGa5D2RX5yDUz6IIqiRRvZiaEHzCzWdTeixc/Kg==}
 
   remove-trailing-slash@0.1.1:
     resolution: {integrity: sha512-o4S4Qh6L2jpnCy83ysZDau+VORNvnFw07CKSAymkd6ICNVEPisMyzlc00KlvvicsxKck94SEwhDnMNdICzO+tA==}
@@ -10604,7 +10604,7 @@ snapshots:
 
   '@iarna/toml@2.2.5': {}
 
-  '@img/colour@1.0.0': {}
+  '@img/colour@1.1.0': {}
 
   '@img/sharp-darwin-arm64@0.34.5':
     optionalDependencies:
@@ -10912,7 +10912,7 @@ snapshots:
 
   '@npmcli/fs@3.1.1':
     dependencies:
-      semver: 7.7.3
+      semver: 7.7.4
 
   '@oxc-project/runtime@0.82.3': {}
 
@@ -14732,7 +14732,7 @@ snapshots:
 
   fflate@0.8.2: {}
 
-  figma-developer-mcp@0.6.4:
+  figma-developer-mcp@0.6.6:
     dependencies:
       '@figma/rest-api-spec': 0.33.0
       '@modelcontextprotocol/sdk': 1.26.0(zod@3.25.76)
@@ -14741,7 +14741,7 @@ snapshots:
       dotenv: 16.6.1
       express: 4.22.1
       js-yaml: 4.1.1
-      remeda: 2.33.4
+      remeda: 2.33.6
       sharp: 0.34.5
       yargs: 17.7.2
       zod: 3.25.76
@@ -17012,7 +17012,7 @@ snapshots:
     dependencies:
       jsesc: 3.1.0
 
-  remeda@2.33.4: {}
+  remeda@2.33.6: {}
 
   remove-trailing-slash@0.1.1: {}
 
@@ -17285,9 +17285,9 @@ snapshots:
 
   sharp@0.34.5:
     dependencies:
-      '@img/colour': 1.0.0
+      '@img/colour': 1.1.0
       detect-libc: 2.1.2
-      semver: 7.7.3
+      semver: 7.7.4
     optionalDependencies:
       '@img/sharp-darwin-arm64': 0.34.5
       '@img/sharp-darwin-x64': 0.34.5
