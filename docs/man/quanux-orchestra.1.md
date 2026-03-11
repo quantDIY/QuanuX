@@ -14,15 +14,15 @@ The `quanuxctl orchestra` framework controls the Rosetta Stone of the QuanuX Mat
 ### bootstrap
 `quanuxctl orchestra bootstrap`
 
-Initiates the bootstrap protocol. Operates as a pure, lobotomized fetcher to pull the raw `FIX.latest.xml` definitive schema from the FIX Trading Community without invoking any intermediate Java logic or parsers.
+Initiates the bootstrap protocol. Operates as a pure, lobotomized fetcher to pull the raw 7.6MB `FIX.latest.xml` true instance from the FIX Trading Community without invoking any intermediate Java logic or parsers. This operates under a strict `sys.exit(1)` fail-fast network enforcement.
 
 ### compile
 `quanuxctl orchestra compile --venue <venue_name>`
 
 Triggers the C++ Standardizer API. Driven by `pugixml`, this native execution pipeline bypasses all JVM overhead:
-1. Natively parses the raw venue-specific dictionary mapping (e.g., `venues/<venue_name>/broker.xml`) or universal standard XML.
-2. Outputs Cython polyglot wrappers (`.pxd` and `.pyx`) for exact memory parity between Python Nests and C++ logic.
-3. Generates the `venue_bridge.hpp` file for the Tier-2 Spreader execution engines. This file contains inline `constexpr` switch statements that physically map raw venue integers/chars to our globally unified `constants.hpp` enumerations with zero runtime overhead.
+1. Natively parses the true global standard XML, extracting 6,100+ strongly typed elements and codeSets.
+2. Outputs Cython polyglot wrappers (`orchestra_constants.pxd` and `.pyx`) for exact memory parity between Python Nests and C++ logic.
+3. Generates the `constants.hpp` header containing the entire FIX telemetry block and unmapped schema fallback integer (`99999`), and creates `venue_bridge.hpp` for the Tier-2 Spreader execution engines containing inline `constexpr` switch statements that physically map raw venue integers/chars to our globally unified enumerations.
 4. Generates the `figi_mapper.hpp` layer, baking a strictly sorted 12-character FIGI translation array evaluated via a C++17 pure `constexpr std::string_view` binary search loop for nanosecond ticker translation.
 
 **Example:**
