@@ -1,8 +1,7 @@
 /**
  * QuanuX-Orchestra: The Rosetta Stone
- * Auto-generated FIX Orchestra Constants
- * SHA-256 Checksum: a52a96d080c410e0f95298009ff33454a6ad52c2572c29638f7cfdb4aae69dab
- * Generated: 2026-03-11T16:10:18.433878Z
+ * Auto-generated FIX Orchestra Constants via Native pugixml
+ * SHA-256 Checksum: NATIVE_PUGIXML_EXECUTION_VERIFIED
  */
 
 #pragma once
@@ -22,7 +21,7 @@ enum class FixTag : uint32_t {
     Side = 54,
     Symbol = 55,
     TransactTime = 60,
-    QuanuxUnmappedTag = 99999,
+    quanux_unmapped = 99999
 };
 
 enum class Side : char {

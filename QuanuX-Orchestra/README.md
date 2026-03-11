@@ -33,7 +33,7 @@ There is no actual function call overhead. It is a direct memory instruction. Th
 
 ## Usage Sequence
 
-Orchestra acts strictly offline prior to runtime via `quanuxctl`:
-1. `quanuxctl orchestra bootstrap`: Fetch the master schema.
-2. `quanuxctl orchestra compile --venue [venue]`: Synthesize the Cython parity wrappers and constexpr OnixS bridges.
+Orchestra acts strictly offline prior to runtime via `quanuxctl`. The entire pipeline is driven by a pure C++ `pugixml` native execution layer, guaranteeing zero JVM dependencies and absolute control over the memory model:
+1. `quanuxctl orchestra bootstrap`: Lobotomized fetcher. Pulls the raw `FIX.latest.xml` master schema directly to disk.
+2. `quanuxctl orchestra compile --venue [venue]`: The `pugixml` standardizer natively traverses the schema to synthesize the Cython parity wrappers and constexpr OnixS bridges.
 3. `quanuxctl orchestra verify`: Cryptographically fingerprint the schema sync.

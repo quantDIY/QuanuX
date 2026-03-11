@@ -25,15 +25,32 @@ def bootstrap():
         raise typer.Exit(code=1)
 
     try:
-        # Run inside the QuanuX-Orchestra directory to preserve relative paths
+        # Step 1: Procurement
         subprocess.run(
             ["python3", str(script_path)],
             cwd=str(ORCHESTRA_DIR),
             check=True
         )
-        console.print("[bold green]Bootstrap absolute parity achieved.[/bold green]")
+        
+        # Step 2: The QuanuX Translation (Native C++)
+        cli_executable = ORCHESTRA_DIR / "src" / "cli" / "standardizer_cli"
+        if (ORCHESTRA_DIR / "build" / "standardizer_cli").exists():
+            cli_executable = ORCHESTRA_DIR / "build" / "standardizer_cli"
+            
+        xml_path = "repository/FIX.latest.xml"
+        if not (ORCHESTRA_DIR / xml_path).exists():
+            # Fallback for dev / isolated environments
+            xml_path = "scripts/fix_repository.xml"
+            
+        subprocess.run(
+            [str(cli_executable), xml_path],
+            cwd=str(ORCHESTRA_DIR),
+            check=True
+        )
+            
+        console.print("[bold green]Zero-Dependency native compilation complete![/bold green]")
     except subprocess.CalledProcessError as e:
-        console.print(f"[bold red]Bootstrap execution failed: {e}[/bold red]")
+        console.print(f"[bold red]Orchestra override execution failed: {e}[/bold red]")
         raise typer.Exit(code=1)
 
 @app.command("compile")

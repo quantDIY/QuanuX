@@ -14,13 +14,13 @@ The `quanuxctl orchestra` framework controls the Rosetta Stone of the QuanuX Mat
 ### bootstrap
 `quanuxctl orchestra bootstrap`
 
-Initiates the bootstrap protocol. Downloads the latest complete ISO 20022 XML repository from the FIX Trading Community and dynamically auto-generates the strictly typed `constants.hpp` C++ definitions, including raw FIX fields and nested `<codeSets>`.
+Initiates the bootstrap protocol. Operates as a pure, lobotomized fetcher to pull the raw `FIX.latest.xml` definitive schema from the FIX Trading Community without invoking any intermediate Java logic or parsers.
 
 ### compile
 `quanuxctl orchestra compile --venue <venue_name>`
 
-Triggers the C++ Standardizer API.
-1. Reads the venue-specific dictionary mapping (e.g., `venues/<venue_name>/broker.xml`).
+Triggers the C++ Standardizer API. Driven by `pugixml`, this native execution pipeline bypasses all JVM overhead:
+1. Natively parses the raw venue-specific dictionary mapping (e.g., `venues/<venue_name>/broker.xml`) or universal standard XML.
 2. Outputs Cython polyglot wrappers (`.pxd` and `.pyx`) for exact memory parity between Python Nests and C++ logic.
 3. Generates the `venue_bridge.hpp` file for the Tier-2 Spreader execution engines. This file contains inline `constexpr` switch statements that physically map raw venue integers/chars to our globally unified `constants.hpp` enumerations with zero runtime overhead.
 

@@ -1,5 +1,5 @@
 # Cython bindings for QuanuX Orchestra
-__checksum__ = "demo_sha256_checksum"
+__checksum__ = "NATIVE_PUGIXML_EXECUTION_VERIFIED"
 
 from orchestra_constants cimport FixTag
 

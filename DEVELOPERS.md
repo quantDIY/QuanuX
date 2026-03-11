@@ -21,7 +21,7 @@ terraform apply "v12_matrix.tfplan"
 *At this stage, raw Ubuntu 24.04 LTS droplets have been provisioned across the `10.10.10.0/24` subnet.*
 
 ## 2. QuanuX-Orchestra Compilation (The Naming Registry)
-Before conditioning the Habitat, compile the Universal Naming Registry natively. The Standardizer CLI defines the exact memory layout for all Tier-2 algorithms.
+Before conditioning the Habitat, compile the Universal Naming Registry natively. The Standardizer CLI utilizes `pugixml` directly embedded in the C++ tree, enforcing a zero-dependency, JVM-free build perimeter. It defines the exact memory layout for all Tier-2 algorithms.
 
 ```bash
 cd QuanuX-Orchestra/
@@ -29,7 +29,7 @@ mkdir build && cd build
 cmake ..
 make -j$(nproc)
 ```
-*At this stage, the `standardizer_cli` binary is available to ingest FIX `.xml` dictionaries and output `constexpr` bridges and Cython `.pyx` bindings.*
+*At this stage, the `standardizer_cli` binary is available to natively parse raw FIX `.xml` dictionaries and output `constexpr` bridges and Cython `.pyx` bindings.*
 
 ## 2. Habitat Conditioning (The PEP 668 Bypass)
 Ubuntu 24.04 aggressively prevents global pip installations to protect the OS kernel (PEP 668). We must establish the pristine "Habitat" by instructing Ansible to create isolated `python3-venv` environments, circumventing the package manager prior to application deployment.
