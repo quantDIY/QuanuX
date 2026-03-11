@@ -31,7 +31,7 @@ make -j$(nproc)
 ```
 *At this stage, the `standardizer_cli` binary is available to natively parse raw FIX `.xml` dictionaries and output `constexpr` bridges and Cython `.pyx` bindings.*
 
-## 2. Habitat Conditioning (The PEP 668 Bypass)
+## 3. Habitat Conditioning (The PEP 668 Bypass)
 Ubuntu 24.04 aggressively prevents global pip installations to protect the OS kernel (PEP 668). We must establish the pristine "Habitat" by instructing Ansible to create isolated `python3-venv` environments, circumventing the package manager prior to application deployment.
 
 ```bash
@@ -40,7 +40,7 @@ ansible-playbook -i dynamic_inventory.py 04-aleph-habitat.yml
 ```
 *At this stage, the VPC is securely firewalled locking ingress ports locally, and the pristine Python Nests have been established on the raw metal.*
 
-## 3. The Aleph Protocol (Application Deployment)
+## 4. The Aleph Protocol (Application Deployment)
 Deploy the distributed microservices. This playbook locks in the NATS Ingestion Crucible, the GreptimeDB storage routers, and executes the "Midnight Pivot"—injecting bare-metal PostgreSQL 16 directly via APT and enabling the `pgcrypto` engine.
 
 ```bash
