@@ -37,7 +37,7 @@ def bootstrap():
         if (ORCHESTRA_DIR / "build" / "standardizer_cli").exists():
             cli_executable = ORCHESTRA_DIR / "build" / "standardizer_cli"
             
-        xml_path = "repository/repository.xsd"
+        xml_path = "repository/FIX.latest.xml"
         if not (ORCHESTRA_DIR / xml_path).exists():
             # Fallback for dev / isolated environments
             xml_path = "scripts/fix_repository.xml"
@@ -65,7 +65,7 @@ def compile_registry(
     venue_xml = ORCHESTRA_DIR / "venues" / venue / "broker.xml"
     if not venue_xml.exists():
         console.print(f"[yellow]Venue dictionary not found at {venue_xml}. Defaulting to true master XML.[/yellow]")
-        venue_xml = ORCHESTRA_DIR / "repository" / "repository.xsd"
+        venue_xml = ORCHESTRA_DIR / "repository" / "FIX.latest.xml"
         if not venue_xml.exists():
             console.print(f"[bold red]Master dictionary not found at {venue_xml}[/bold red]")
             raise typer.Exit(code=1)
@@ -84,7 +84,7 @@ def compile_registry(
 
     try:
         # Pass the relative path from QuanuX-Orchestra root due to C++ file assumptions
-        rel_venue_xml = f"venues/{venue}/broker.xml" if venue_xml.parent.name == venue else "repository/repository.xsd"
+        rel_venue_xml = f"venues/{venue}/broker.xml" if venue_xml.parent.name == venue else "repository/FIX.latest.xml"
         subprocess.run(
             [str(cli_executable), rel_venue_xml],
             cwd=str(ORCHESTRA_DIR),
