@@ -1,0 +1,27 @@
+---
+description: The AI Agent manual for interacting with the QuanuX-Orchestra Universal Naming Registry.
+---
+
+# QuanuX-Orchestra Agent Skill
+
+## 1. Objective
+This skill dictates how autonomous agents within the QuanuX matrix interpret data streams standardized by QuanuX-Orchestra. Using the `FastMCP` wrapper, the Spreader engine maps venue-specific field tags (e.g., FIX Tag 54, Side) and values (e.g., '1') to standardized internal enumerations (e.g., `quanux::orchestra::FixTag::Side`, `quanux::orchestra::Side::Buy`).
+
+## 2. Standardized Field References
+When processing tick streams or FIX log artifacts, agents must enforce strict mapping. We utilize two global standards:
+
+1. **ISO 20022 (FIX Orchestra):** Universal protocol naming definitions. You must prefer referencing standardized Tag Names (e.g., `ClOrdID`, `TransactTime`) instead of numerical values.
+2. **FIGI (Financial Instrument Global Identifier):** A universal ticker mapping standard utilized to ensure symbols are translated to a single source of truth prior to processing.
+
+If a script or query references an underlying exchange symbol, ensure it traces back to its FIGI mapping to maintain analytical purity.
+
+## 3. The Compliance Hook SOP (Code 99999)
+QuanuX-Orchestra compiles a strict registry. If an external bridge or venue adapter encounters a field or enum that it cannot translate against the `constants.hpp` header at runtime, it evaluates to:
+
+`quanux::orchestra::FixTag::QuanuxUnmappedTag = 99999`
+
+**If an agent detects Tag 99999 in any system log, telemetry stream, or database output:**
+1. **Halt active model updates:** Do not attempt to synthesize the data contextually, as the format is structurally untyped (Schema Drift).
+2. **Query the Origin:** Identify the source `venue` and locate the raw message packet.
+3. **Route to Annex:** Automatically script an extraction of the unknown packet and route it to the `QuanuX-Annex` HDF5 storage for offline analysis.
+4. **Notify the User:** Alert the operator that a schema drift event has occurred at the boundary and requires a `QuanuX-Orchestra` dictionary patch.

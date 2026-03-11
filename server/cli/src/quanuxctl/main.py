@@ -5,7 +5,7 @@ Unified Developer CLI.
 """
 import typer
 from rich.console import Console
-from .commands import secrets, bridge, skills, extensions, integrate, node, storage, indicators, module, vcs, dashboard, topstepx, geminicli, foundry, crucible, spreader, probe, telemetry, deploy
+from .commands import secrets, bridge, skills, extensions, integrate, node, storage, indicators, module, vcs, dashboard, topstepx, geminicli, foundry, crucible, spreader, probe, telemetry, deploy, orchestra
 from . import __version__
 
 import os
@@ -77,6 +77,9 @@ app.add_typer(crucible.app, name="crucible", help="Manage QuanuX Crucible (Backt
 app.add_typer(crucible.app, name="c", help="Alias for crucible", hidden=True)
 
 app.add_typer(spreader.app, name="spreader", help="Manage QuanuX-Spreader Engine Deployment and Strategy Injection.")
+
+app.add_typer(orchestra.app, name="orchestra", help="Manage QuanuX-Orchestra Universal Naming Registry.")
+app.add_typer(orchestra.app, name="o", help="Alias for orchestra", hidden=True)
 
 app.add_typer(probe.app, name="probe", help="Neural Tap Diagnostic & Auto-Suture")
 
