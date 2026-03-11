@@ -27,6 +27,8 @@ Before conditioning the Habitat, compile the Universal Naming Registry natively.
 
 **FIGI Setup Context:** Developers must provide a localized `venues/<venue>/figi_map.csv` mapping file. The compiler consumes this literal to generate the zero-latency `constexpr` translation arrays natively.
 
+**FIGI Setup Context:** Developers must provide a localized `venues/<venue>/figi_map.csv` mapping file. The compiler consumes this literal to generate the zero-latency `constexpr` translation arrays natively.
+
 ```bash
 cd QuanuX-Orchestra/
 mkdir build && cd build
@@ -34,6 +36,25 @@ cmake ..
 make -j$(nproc)
 ```
 *At this stage, the `standardizer_cli` binary is available to natively parse raw FIX `.xml` dictionaries and output `constexpr` bridges and Cython `.pyx` bindings.*
+
+### The Downstream Contract (CMake Integration)
+Any Spreader algorithm or downstream execution node structurally depends on the Universal Naming Registry. Instead of relying on static git artifacts, downstream components integrate Orchestra directly into their `CMakeLists.txt` using mandatory pre-build hooks.
+
+```cmake
+# Execute the Pipeline as a strict pre-build step
+add_custom_command(
+    OUTPUT ${CMAKE_BINARY_DIR}/generated/constants.hpp
+    COMMAND quanuxctl orchestra compile --venue ibkr_onixs
+    COMMAND quanuxctl orchestra verify
+    DEPENDS ${CMAKE_SOURCE_DIR}/QuanuX-Orchestra/repository/FIX.latest.xml
+    COMMENT "Enforcing QuanuX-Orchestra Source-of-Truth Doctrine..."
+)
+
+# Standardizer outputs become the explicit target dependency
+add_custom_target(OrchestraMatrix DEPENDS ${CMAKE_BINARY_DIR}/generated/constants.hpp)
+add_dependencies(Tier2_SpreaderEngine OrchestraMatrix)
+```
+If the schema fingerprint diverges, `quanuxctl orchestra verify` violently crashes the `make` process.
 
 ## 3. Habitat Conditioning (The PEP 668 Bypass)
 Ubuntu 24.04 aggressively prevents global pip installations to protect the OS kernel (PEP 668). We must establish the pristine "Habitat" by instructing Ansible to create isolated `python3-venv` environments, circumventing the package manager prior to application deployment.

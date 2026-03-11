@@ -4,7 +4,7 @@
 
 namespace quanux {
 namespace orchestra {
-namespace ibkr_onixs_figi {
+namespace cme_mdp3_figi {
 
 struct TickerMap {
     std::string_view venue_ticker;
@@ -34,6 +34,6 @@ inline constexpr std::string_view resolve_figi(std::string_view ticker) {
     return "UNKNOWN_FIGI";
 }
 
-} // namespace ibkr_onixs_figi
+} // namespace cme_mdp3_figi
 } // namespace orchestra
 } // namespace quanux

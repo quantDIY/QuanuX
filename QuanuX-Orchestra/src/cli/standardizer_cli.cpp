@@ -276,11 +276,13 @@ int main(int argc, char* argv[]) {
     // 2. Cython polyglot artifacts (fully expanded with vector fields)
     generate_cython_bindings(schema_checksum, fields);
     
-    // 3. Execution engine bridge
+    // 3. Execution engine bridges
     generate_venue_bridge("ibkr_onixs");
+    generate_venue_bridge("cme_mdp3");
     
-    // 4. FIGI Global Resolution Mapper
+    // 4. FIGI Global Resolution Mappers
     generate_figi_mapper("ibkr_onixs");
+    generate_figi_mapper("cme_mdp3");
     
     std::cout << "[+] Standardization complete. Zero-latency headers embedded.\n";
     return 0;
