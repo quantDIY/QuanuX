@@ -54,7 +54,7 @@
       ufw:
         rule: allow
         proto: tcp
-        port: '5432' # DuckDB-Oculus emulated pg-port
+        port: '5432'  # DuckDB-Oculus emulated pg-port
         src: "{{ hostvars[groups['panopticon_nexus'][0]]['internal_ip'] }}"
 
 - name: Aleph Protocol - Vault Fencing (panopticon-vault)
@@ -65,14 +65,14 @@
       ufw:
         rule: allow
         proto: tcp
-        port: '9000' # MinIO S3 API port
+        port: '9000'  # MinIO S3 API port
         src: "{{ hostvars[groups['panopticon_forge'][0]]['internal_ip'] }}"
 
     - name: Strict Fencing - Accept S3 reads exclusively from Oracle IP
       ufw:
         rule: allow
         proto: tcp
-        port: '9000' # MinIO S3 API port
+        port: '9000'  # MinIO S3 API port
         src: "{{ hostvars[groups['panopticon_oracle'][0]]['internal_ip'] }}"
 
 - name: Aleph Protocol - MCP Translation Layer Conditioning (panopticon-nexus)

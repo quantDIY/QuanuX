@@ -49,7 +49,7 @@
           Documentation=https://min.io/docs/minio/linux/index.html
           Wants=network-online.target
           After=network-online.target
-          
+
           [Service]
           User=minio-user
           Group=minio-user
@@ -57,7 +57,7 @@
           ExecStart=/usr/local/bin/minio server $MINIO_OPTS $MINIO_VOLUMES
           Restart=always
           LimitNOFILE=65536
-          
+
           [Install]
           WantedBy=multi-user.target
 
@@ -192,7 +192,7 @@
           access_key_id = "{{ minio_root_user }}"
           secret_access_key = "{{ minio_root_password }}"
           region = "nyc3"
-          
+
           # Enforce Hive Partitioning for DuckDB Oculus partition pruning
           [storage.manifest]
           partition_format = "year=%Y/month=%m/day=%d/hour=%H"
@@ -325,7 +325,7 @@
           SET s3_use_ssl=false;
 
           -- Force Byte-Range Requests and Hive Partition Pruning against the Vault
-          CREATE VIEW IF NOT EXISTS quanux_telemetry_live AS 
+          CREATE VIEW IF NOT EXISTS quanux_telemetry_live AS
           SELECT * FROM read_parquet('s3://quanux-telemetry/telemetry/*/*/*/*/*.parquet', hive_partitioning=1);
 
     - name: Install Native PostgreSQL Database
