@@ -1,0 +1,124 @@
+---
+- name: The Sentinel Protocol - Low Overhead Annex Telemetry
+  hosts: quanux_annex_node
+  become: true
+  vars:
+    # Target the OpenSearch / Loki ledger IP
+    ledger_ip: "{{ hostvars['panopticon-ledger']['internal_ip'] | default('10.10.10.2') }}"
+  
+  tasks:
+    - name: Download and Install Telegraf (Minimal Tap)
+      apt:
+        name: telegraf
+        state: present
+        update_cache: true
+
+    - name: Configure STRICT Low-Overhead Telegraf (60s aggregate only)
+      copy:
+        dest: /etc/telegraf/telegraf.conf
+        content: |
+          [global_tags]
+            node_type = "annex_ingestion"
+            
+          [agent]
+            interval = "{{ telemetry_interval }}"
+            round_interval = true
+            metric_batch_size = 1000
+            metric_buffer_limit = 10000
+            collection_jitter = "1s"
+            flush_interval = "{{ telemetry_interval }}"
+            flush_jitter = "1s"
+            omit_hostname = false
+
+          # Output to Ledger InfluxDB/OpenSearch sink
+          [[outputs.http]]
+            url = "http://{{ ledger_ip }}:8086/telegraf"
+            timeout = "5s"
+            method = "POST"
+            data_format = "influx"
+
+          # SIP ONLY: CPU Aggregate
+          [[inputs.cpu]]
+            percpu = false
+            totalcpu = true
+            collect_cpu_time = false
+            report_active = false
+
+          # SIP ONLY: Memory Aggregate
+          [[inputs.mem]]
+
+          # SIP ONLY: Primary NIC traffic
+          [[inputs.net]]
+            interfaces = ["eth0", "eth1"]
+        mode: '0644'
+
+    - name: Ensure Telegraf holds strict SIP mode
+      systemd:
+        name: telegraf
+        state: restarted
+        enabled: true
+
+    - name: Download Promtail (spdlog exhaustion)
+      get_url:
+        url: https://github.com/grafana/loki/releases/download/v2.9.2/promtail-linux-amd64.zip
+        dest: /tmp/promtail.zip
+
+    - name: Extract Promtail
+      unarchive:
+        src: /tmp/promtail.zip
+        dest: /usr/local/bin/
+        remote_src: true
+
+    - name: Ensure Promtail is executable
+      file:
+        path: /usr/local/bin/promtail-linux-amd64
+        mode: '0755'
+
+    - name: Build Promtail Configuration for spdlog
+      copy:
+        dest: /etc/promtail.yaml
+        content: |
+          server:
+            http_listen_port: 9080
+            grpc_listen_port: 0
+
+          positions:
+            filename: /tmp/positions.yaml
+
+          clients:
+            - url: http://{{ ledger_ip }}:3100/loki/api/v1/push
+
+          scrape_configs:
+          - job_name: quanux-annex-spdlog
+            static_configs:
+            - targets:
+                - localhost
+              labels:
+                job: annex_engine
+                __path__: /var/log/quanux/annex_*.log
+        mode: '0644'
+
+    - name: Create Promtail SystemD Service
+      copy:
+        dest: /etc/systemd/system/promtail.service
+        content: |
+          [Unit]
+          Description=Promtail Log Collector
+          After=network.target
+
+          [Service]
+          Type=simple
+          ExecStart=/usr/local/bin/promtail-linux-amd64 -config.file=/etc/promtail.yaml
+          Restart=on-failure
+          RestartSec=10
+
+          [Install]
+          WantedBy=multi-user.target
+        mode: '0644'
+
+    - name: Reload SystemD and enable Promtail
+      systemd:
+        daemon_reload: true
+        name: promtail
+        enabled: true
+        state: restarted
