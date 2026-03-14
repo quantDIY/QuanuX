@@ -95,14 +95,14 @@ app.add_typer(telemetry.app, name="t", help="Alias for telemetry", hidden=True)
 app.add_typer(deploy.app, name="lifecycle", help="Dynamic Habitat Deployment & Telemetry Lifecycle")
 # Standard shortcut command mapping
 @app.command("predeploy")
-def predeploy_alias(payload: str = typer.Option(..., "--payload", "-p"), target: str = typer.Option(..., "--target", "-t")):
+def predeploy_alias(payload: str = typer.Option(..., "--payload", "-p"), target: str = typer.Option(..., "--target", "-t"), payload_type: str = typer.Option("extension", "--type", "-ty")):
     """Performs a Capability Handshake prior to deployment."""
-    deploy.predeploy(payload, target)
+    deploy.predeploy(payload, target, payload_type)
 
 @app.command("deploy")
-def deploy_alias(payload: str = typer.Option(..., "--payload", "-p"), target: str = typer.Option(..., "--target", "-t")):
+def deploy_alias(payload: str = typer.Option(..., "--payload", "-p"), target: str = typer.Option(..., "--target", "-t"), payload_type: str = typer.Option("extension", "--type", "-ty")):
     """Deploys a payload into the outer shell (Habitat) safely using valid wiring hooks."""
-    deploy.deploy(payload, target)
+    deploy.deploy(payload, target, payload_type)
 
 # Top-level aliases for common extension operations
 # cli.add_command(integrate.integrate) # REMOVED: Broken and redundant. Use 'quanuxctl ext integrate'

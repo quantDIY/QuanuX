@@ -33,7 +33,11 @@ def load_capability_registry():
     with open(registry_path, "r") as f:
         return yaml.safe_load(f).get("capabilities", {})
 
-async def do_predeploy(payload_path: str, target: str):
+async def do_predeploy(payload_path: str, target: str, payload_type: str = "extension"):
+    if payload_type == "cpp_binary":
+        console.print(f"[cyan]Bypassing handshake for bare-metal C++ binary deployment to {target}...[/cyan]")
+        return True, {}
+
     req_file = Path(payload_path) / "requirements.json"
     if not req_file.exists():
         console.print(f"[red]Error: {req_file} missing. Cannot verify handshake.[/red]")
@@ -82,39 +86,44 @@ async def do_predeploy(payload_path: str, target: str):
 
 @app.command("predeploy")
 def predeploy(payload: str = typer.Option(..., "--payload", "-p", help="Path to payload directory"),
-              target: str = typer.Option(..., "--target", "-t", help="Target Node Hostname")):
+              target: str = typer.Option(..., "--target", "-t", help="Target Node Hostname"),
+              payload_type: str = typer.Option("extension", "--type", help="Payload Type")):
     """Performs a Capability Handshake prior to deployment."""
     # Typer async wrapper
     loop = asyncio.get_event_loop()
-    success, _ = loop.run_until_complete(do_predeploy(payload, target))
+    success, _ = loop.run_until_complete(do_predeploy(payload, target, payload_type))
     if not success:
         raise typer.Exit(1)
 
 @app.command("deploy")
 def deploy(payload: str = typer.Option(..., "--payload", "-p", help="Path to payload directory"),
-           target: str = typer.Option(..., "--target", "-t", help="Target Node Hostname")):
+           target: str = typer.Option(..., "--target", "-t", help="Target Node Hostname"),
+           payload_type: str = typer.Option("extension", "--type", help="Payload Type")):
     """Deploys a payload into the outer shell (Habitat) safely using valid wiring hooks."""
     loop = asyncio.get_event_loop()
-    success, registry = loop.run_until_complete(do_predeploy(payload, target))
+    success, registry = loop.run_until_complete(do_predeploy(payload, target, payload_type))
     
     if not success:
         console.print("[red]Deployment Aborted due to failed handshake.[/red]")
         raise typer.Exit(1)
 
-    console.print("[green]Handshake verified. Proceeding with deployment...[/green]")
+    console.print(f"[green]Handshake verified (or bypassed for {payload_type}). Proceeding with deployment...[/green]")
     
-    # Read requirements to build the execution string
-    req_file = Path(payload) / "requirements.json"
-    with open(req_file, "r") as f:
-        requires = json.load(f).get("requires", [])
+    execution_prefix = ""
+    if payload_type != "cpp_binary":
+        # Read requirements to build the execution string
+        req_file = Path(payload) / "requirements.json"
+        with open(req_file, "r") as f:
+            requires = json.load(f).get("requires", [])
 
-    wiring_prefixes = []
-    for req in requires:
-        hook = registry[req].get("wiring_hook", "")
-        if hook:
-            wiring_prefixes.append(hook)
+        wiring_prefixes = []
+        for req in requires:
+            hook = registry[req].get("wiring_hook", "")
+            if hook:
+                wiring_prefixes.append(hook)
 
-    execution_prefix = " ".join(wiring_prefixes)
+        execution_prefix = " ".join(wiring_prefixes)
+        
     console.print(f"[yellow]Wiring Execution Command: {execution_prefix} ./{Path(payload).name}_binary[/yellow]")
     
     # Send OOB Transfer Request
@@ -133,7 +142,8 @@ def deploy(payload: str = typer.Option(..., "--payload", "-p", help="Path to pay
             "url": mock_url, 
             "hash": file_hash, 
             "payload_name": Path(payload).name,
-            "execution_prefix": execution_prefix
+            "execution_prefix": execution_prefix,
+            "type": payload_type
         }).encode('utf-8')
         await nc.publish(subject, ipc_msg)
         await nc.flush()
