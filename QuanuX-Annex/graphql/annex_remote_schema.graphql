@@ -1,0 +1,64 @@
+schema {
+  query: Query
+  subscription: Subscription
+}
+
+type Query {
+  """
+  MANDATE 4: Deep Storage Retrieval (Historical)
+  Forwards historical queries to the IStorageResolver. Pulls raw binary chunks,
+  deserializes them, and returns them as Markdown. Zero math calculation.
+  """
+  getHistoricalExhaust(query: String!): MarkdownResponse!
+  
+  """
+  MANDATE 3: Cluster Monitoring (Live)
+  Exposes purely operational health, NATS pipeline throughput, and queue states.
+  """
+  getClusterHealth: ClusterHealthResponse!
+}
+
+type Subscription {
+  """
+  MANDATE 1: Execution Exhaust (Live)
+  Catches execution logs (fills, latencies, order IDs) from NATS JetStream and routes them.
+  """
+  executionExhaustFeed(strategyId: Int): ExecutionLog!
+  
+  """
+  MANDATE 2: Live Market Data (Live)
+  Catches subscribed L2/L3 order book data from NATS and routes it.
+  """
+  marketDataFeed(instrumentId: Int!): MarketTick!
+}
+
+type MarkdownResponse {
+  reportText: String!
+  retrievedAtNs: String!
+}
+
+type ClusterHealthResponse {
+  uptimeSeconds: Int!
+  natsThroughputMsgPerSec: Int!
+  ramUsageBytes: String!
+  status: String!
+}
+
+type ExecutionLog {
+  orderId: String!
+  executionTimestampNs: String!
+  fillPrice: Float!
+  fillQuantity: Int!
+  strategyId: Int!
+  latencyMicros: Int!
+}
+
+type MarketTick {
+  timestampNs: String!
+  instrumentId: Int!
+  bidPrice: Float!
+  askPrice: Float!
+  bidSize: Int!
+  askSize: Int!
+  level: Int!
+}

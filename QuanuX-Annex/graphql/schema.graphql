@@ -1,0 +1,59 @@
+schema {
+  query: Query
+  subscription: Subscription
+}
+
+type Query {
+  """
+  Retrieves historical anomaly reports dynamically synthesized into Markdown.
+  """
+  getAnomalyReport(ticker: String!, timeframe: String!): MarkdownResponse!
+}
+
+type Subscription {
+  """
+  Live feed of market ticks (L2/L3 data) streamed directly from NATS/Redpanda buffer.
+  """
+  marketTickFeed(instrumentId: Int!): MarketTick!
+  
+  """
+  Live stream of execution logs and latencies.
+  """
+  executionLogFeed(strategyId: Int): ExecutionLog!
+  
+  """
+  Real-time stream of schema drift anomalies (e.g. unexpected FIX Tag 99999).
+  """
+  schemaDriftEvents: SchemaDriftEvent!
+}
+
+type MarkdownResponse {
+  reportText: String!
+  generatedAtNs: String!
+}
+
+type MarketTick {
+  timestampNs: String!
+  instrumentId: Int!
+  bidPrice: Float!
+  askPrice: Float!
+  bidSize: Int!
+  askSize: Int!
+  level: Int!
+}
+
+type ExecutionLog {
+  orderId: String!
+  executionTimestampNs: String!
+  fillPrice: Float!
+  fillQuantity: Int!
+  strategyId: Int!
+  latencyMicros: Int!
+}
+
+type SchemaDriftEvent {
+  eventTimestampNs: String!
+  connectionId: Int!
+  anomalyCode: Int!
+  fixPayloadSnippet: String!
+}
