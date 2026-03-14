@@ -11,13 +11,18 @@ from . import __version__
 import os
 import sys
 
-# Dynamically link the decoupled QuanuX-Infra CLI tools
+# Dynamically link the decoupled QuanuX-Infra CLI tools and QuanuX root
 infra_cli_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../QuanuX-Infra/cli"))
+quanux_root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../.."))
+
 if infra_cli_path not in sys.path:
     sys.path.insert(0, infra_cli_path)
+if quanux_root_path not in sys.path:
+    sys.path.insert(0, quanux_root_path)
 
 import habitat_commands
 import nest_commands
+import infra_commands
 
 app = typer.Typer(
     name="quanuxctl",
@@ -31,6 +36,7 @@ console = Console()
 # Register subcommands
 app.add_typer(habitat_commands.app, name="habitat", help="Manage QuanuX OS-level Habitat Provisioning.")
 app.add_typer(nest_commands.app, name="nest", help="Manage QuanuX C++ Sovereign Engine Nest Deployment.")
+app.add_typer(infra_commands.app, name="infra", help="QuanuX Control Plane: Ephemeral Infrastructure Auth & Provisioning.")
 
 app.add_typer(secrets.app, name="secrets", help="Manage API keys and secrets via OS Keyring.")
 app.add_typer(secrets.app, name="sec", help="Alias for secrets", hidden=True)
