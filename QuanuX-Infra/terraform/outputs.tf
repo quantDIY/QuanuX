@@ -64,3 +64,19 @@ output "quanux_panopticon_nexus_public_ip" {
 output "quanux_panopticon_nexus_internal_ip" {
   value = digitalocean_droplet.panopticon_nexus.ipv4_address_private
 }
+
+# ---------------------------------------------------------
+# The Data Lake (QuanuX-Annex) IPs & Endpoints
+# ---------------------------------------------------------
+output "quanux_annex_node_public_ip" {
+  value = digitalocean_droplet.quanux_annex_node.ipv4_address
+}
+
+output "quanux_annex_node_internal_ip" {
+  value = digitalocean_droplet.quanux_annex_node.ipv4_address_private
+}
+
+# Output the Spaces endpoint for the C++ S3ConnectionPool
+output "quanux_zarr_vault_endpoint" {
+  value = digitalocean_spaces_bucket.quanux_zarr_vault.endpoint
+}

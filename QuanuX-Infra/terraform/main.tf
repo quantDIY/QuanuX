@@ -115,6 +115,44 @@ resource "digitalocean_droplet" "edge_nyc_2" {
 }
 
 # ---------------------------------------------------------
+# The Data Lake (QuanuX-Annex Ingestion & Storage)
+# ---------------------------------------------------------
+
+# THE OBJECT STORAGE (ZARR TARGET)
+resource "digitalocean_spaces_bucket" "quanux_zarr_vault" {
+  name   = "quanux-telemetry-zarr-vault"
+  region = var.region
+  acl    = "private"
+  
+  # Enforcing lifecycle rules to clear out orphaned blosc2 chunks if flusher fails
+  lifecycle_rule {
+    enabled = true
+    abort_incomplete_multipart_upload_days = 1
+  }
+}
+
+# THE DEDICATED SILICON (THE PARALLEL FORK HOST)
+resource "digitalocean_droplet" "quanux_annex_node" {
+  name     = "quanux-annex-ingestion-01"
+  region   = var.region
+  image    = "ubuntu-24-04-x64"
+  
+  # CRITICAL PHYSICS: Compute-Optimized, 2 Dedicated vCPUs
+  # This size slug guarantees the hypervisor will not steal our clock cycles.
+  # Core 1: Hasura Read Path | Core 2: NATS Write Path
+  size     = "c-2" 
+  
+  vpc_uuid   = digitalocean_vpc.quanux_matrix.id
+  monitoring = true
+  ipv6       = false
+
+  # SSH keys mapped from your deployment environment
+  ssh_keys = var.ssh_keys
+
+  tags = ["quanux-node", "quanux-annex", "high-frequency"]
+}
+
+# ---------------------------------------------------------
 # The Paranoia Firewall (Strict Zero-Trust Perimeter)
 # ---------------------------------------------------------
 resource "digitalocean_firewall" "paranoia" {
@@ -128,7 +166,8 @@ resource "digitalocean_firewall" "paranoia" {
     digitalocean_droplet.panopticon_oracle.id,
     digitalocean_droplet.panopticon_nexus.id,
     digitalocean_droplet.edge_nyc.id,
-    digitalocean_droplet.edge_nyc_2.id
+    digitalocean_droplet.edge_nyc_2.id,
+    digitalocean_droplet.quanux_annex_node.id
   ]
 
   # INBOUND: Deny all EXCEPT specific Admin IP and 10.10.10.0/24 Mesh chatter
