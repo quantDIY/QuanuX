@@ -40,13 +40,18 @@ void HasuraRemoteWorker::bind_query_routes() {
         
         std::string graphql_ast = parse_graphql(req->body());
         
-        // Route directly to the compiler-linked CLOUD_TARGET driver
-        // Bypassing all math calculations. True headless I/O.
-        std::string markdown_payload = m_resolver->get_historical_analytics(graphql_ast);
-        
-        auto resp = HttpResponse::newHttpResponse();
-        resp->setBody(wrap_json(markdown_payload));
-        callback(resp);
+        // Fire the heavy I/O into a background thread
+        std::thread([this, graphql_ast, callback = std::move(callback)]() {
+            // Resolve storage (Takes time)
+            std::string markdown_payload = m_resolver->get_historical_analytics(graphql_ast);
+            
+            // Construct response
+            auto resp = HttpResponse::newHttpResponse();
+            resp->setBody(wrap_json(markdown_payload));
+            
+            // Execute the HTTP callback asynchronously 
+            callback(resp);
+        }).detach(); 
 
     }, {Post});
     */
