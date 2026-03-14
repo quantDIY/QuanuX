@@ -12,11 +12,8 @@ provider "digitalocean" {
 }
 
 # The Isolated Matrix VPC (No public subnet cross-talk)
-resource "digitalocean_vpc" "quanux_matrix" {
-  name        = "quanux-vpc-matrix"
-  region      = var.region
-  ip_range    = "10.10.10.0/24"
-  description = "Absolute isolated global mesh routing for QuanuX nodes."
+data "digitalocean_vpc" "quanux_matrix" {
+  name = "quanux-vpc-matrix"
 }
 
 # Tier 1 Sentinel (Observability: OpenSearch Ledger)
@@ -25,7 +22,7 @@ resource "digitalocean_droplet" "panopticon_ledger" {
   region   = var.region
   size     = "s-4vcpu-8gb"
   image    = "ubuntu-24-04-x64"
-  vpc_uuid = digitalocean_vpc.quanux_matrix.id
+  vpc_uuid = data.digitalocean_vpc.quanux_matrix.id
   ssh_keys = var.ssh_keys
 
   tags = ["quanux-node", "quanux-panopticon"]
@@ -37,7 +34,7 @@ resource "digitalocean_droplet" "panopticon_buffer" {
   region   = var.region
   size     = "s-2vcpu-4gb"
   image    = "ubuntu-24-04-x64"
-  vpc_uuid = digitalocean_vpc.quanux_matrix.id
+  vpc_uuid = data.digitalocean_vpc.quanux_matrix.id
   ssh_keys = var.ssh_keys
 
   tags = ["quanux-node", "quanux-panopticon"]
@@ -49,7 +46,7 @@ resource "digitalocean_droplet" "panopticon_forge" {
   region   = var.region
   size     = "s-2vcpu-4gb"
   image    = "ubuntu-24-04-x64"
-  vpc_uuid = digitalocean_vpc.quanux_matrix.id
+  vpc_uuid = data.digitalocean_vpc.quanux_matrix.id
   ssh_keys = var.ssh_keys
 
   tags = ["quanux-node", "quanux-panopticon", "quanux-aleph"]
@@ -61,7 +58,7 @@ resource "digitalocean_droplet" "panopticon_vault" {
   region   = var.region
   size     = "s-2vcpu-4gb"
   image    = "ubuntu-24-04-x64"
-  vpc_uuid = digitalocean_vpc.quanux_matrix.id
+  vpc_uuid = data.digitalocean_vpc.quanux_matrix.id
   ssh_keys = var.ssh_keys
 
   tags = ["quanux-node", "quanux-panopticon", "quanux-aleph"]
@@ -73,7 +70,7 @@ resource "digitalocean_droplet" "panopticon_oracle" {
   region   = var.region
   size     = "s-4vcpu-8gb"
   image    = "ubuntu-24-04-x64"
-  vpc_uuid = digitalocean_vpc.quanux_matrix.id
+  vpc_uuid = data.digitalocean_vpc.quanux_matrix.id
   ssh_keys = var.ssh_keys
 
   tags = ["quanux-node", "quanux-panopticon", "quanux-aleph"]
@@ -85,7 +82,7 @@ resource "digitalocean_droplet" "panopticon_nexus" {
   region   = var.region
   size     = "s-4vcpu-8gb"
   image    = "ubuntu-24-04-x64"
-  vpc_uuid = digitalocean_vpc.quanux_matrix.id
+  vpc_uuid = data.digitalocean_vpc.quanux_matrix.id
   ssh_keys = var.ssh_keys
 
   tags = ["quanux-node", "quanux-panopticon", "quanux-aleph"]
@@ -97,7 +94,7 @@ resource "digitalocean_droplet" "edge_nyc" {
   region   = var.region
   size     = "s-2vcpu-4gb"
   image    = "ubuntu-24-04-x64"
-  vpc_uuid = digitalocean_vpc.quanux_matrix.id
+  vpc_uuid = data.digitalocean_vpc.quanux_matrix.id
   ssh_keys = var.ssh_keys
 
   tags = ["quanux-node", "quanux-edge"]
@@ -108,7 +105,7 @@ resource "digitalocean_droplet" "edge_nyc_2" {
   region   = var.region
   size     = "s-2vcpu-4gb"
   image    = "ubuntu-24-04-x64"
-  vpc_uuid = digitalocean_vpc.quanux_matrix.id
+  vpc_uuid = data.digitalocean_vpc.quanux_matrix.id
   ssh_keys = var.ssh_keys
 
   tags = ["quanux-node", "quanux-edge"]
@@ -142,7 +139,7 @@ resource "digitalocean_droplet" "quanux_annex_node" {
   # Core 1: Hasura Read Path | Core 2: NATS Write Path
   size     = "c-2" 
   
-  vpc_uuid   = digitalocean_vpc.quanux_matrix.id
+  vpc_uuid   = data.digitalocean_vpc.quanux_matrix.id
   monitoring = true
   ipv6       = false
 
@@ -180,13 +177,13 @@ resource "digitalocean_firewall" "paranoia" {
   inbound_rule {
     protocol         = "tcp"
     port_range       = "1-65535"
-    source_addresses = [digitalocean_vpc.quanux_matrix.ip_range]
+    source_addresses = [data.digitalocean_vpc.quanux_matrix.ip_range]
   }
 
   inbound_rule {
     protocol         = "udp"
     port_range       = "1-65535"
-    source_addresses = [digitalocean_vpc.quanux_matrix.ip_range]
+    source_addresses = [data.digitalocean_vpc.quanux_matrix.ip_range]
   }
 
   # OUTBOUND: Allow everything (Node OS updates)
