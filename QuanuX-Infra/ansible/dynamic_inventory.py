@@ -40,6 +40,9 @@ def build_inventory():
         "panopticon_nexus": {
             "hosts": []
         },
+        "quanux_annex_node": {
+            "hosts": []
+        },
         "edge_nodes": {
             "hosts": []
         }
@@ -133,6 +136,17 @@ def build_inventory():
             "ansible_host": pub_ip2,
             "ansible_user": "root",
             "internal_ip": priv_ip2
+        }
+
+    # QuanuX Annex Node mapping
+    if "quanux_annex_node_public_ip" in outputs:
+        pub_ip_annex = outputs["quanux_annex_node_public_ip"]["value"]
+        priv_ip_annex = outputs["quanux_annex_node_internal_ip"]["value"]
+        inventory["quanux_annex_node"]["hosts"].append("quanux_annex_node")
+        inventory["_meta"]["hostvars"]["quanux_annex_node"] = {
+            "ansible_host": pub_ip_annex,
+            "ansible_user": "root",
+            "internal_ip": priv_ip_annex
         }
 
     return inventory

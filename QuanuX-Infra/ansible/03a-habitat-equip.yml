@@ -1,9 +1,11 @@
 ---
 - name: Operation Control Plane - Equip Edge Habitats
-  hosts: edge_nodes
+  hosts: all
   become: true
-
+  
   vars:
+    # Strict VPC Routing boundary
+    vpc_subnet: "10.10.10.0/24"
     # Extract Panopticon IP dynamically from the Terraform inventory
     panopticon_internal_ip: "{{ hostvars['panopticon-buffer']['internal_ip'] | default('10.10.10.5') }}"
 
@@ -39,7 +41,26 @@
           - libflatbuffers-dev
           - unzip
           - rsync
+          - ufw
         state: present
+
+    - name: Enforce UFW Base Policy (Deny Incoming, Allow Outgoing)
+      ufw:
+        state: enabled
+        direction: incoming
+        policy: deny
+
+    - name: Open UFW - Allow SSH (Standard Port 22)
+      ufw:
+        rule: allow
+        port: '22'
+        proto: tcp
+
+    - name: Open UFW - Whitelist Internal Matrix Network
+      ufw:
+        rule: allow
+        src: "{{ vpc_subnet }}"
+        comment: Allow all traffic from internal QuanuX VPC subnet
 
     - name: Download NATS C Client source
       get_url:

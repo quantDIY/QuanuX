@@ -86,6 +86,11 @@ The platform operates as a multi-language colossus spanning institutional tradin
 - **The Figma Developer MCP Server**: The ultimate Design-to-Code loop. The QuanuX MCP orchestrator inspects active Figma designs via `.figma_tokens`, identifies underlying layout math, and programmatically spawns standard `Shadcn/UI` Tailwind-driven code blocks matching the literal design specification while adhering to the Frontend-Standards mandate.
 - **The `quanuxctl` Typer Interface**: The C&C Python CLI. Providing exhaustive operational power from creating Topstep keys in the OS Keychain, initiating `.so` strategy deployments, to publishing distributed telemetry stop/start signals over NATS IPC to shut down failing Tier 4 nodes remotely.
 
+### 5. The QuanuX-Annex Ingestion Engine
+- **HA Zero-Allocation NATS Core (`QuanuX-Annex/`)**: A sovereign C++ telemetry ingestion daemon deployed via Ansible to the outer Habitats. It maps high-velocity NATS JetStream data directly into byte-aligned C++ structs (e.g. `MarketTick`, `ExecutionLog`) using `<nats/nats.h>`, bypassing JVM and Python garbage collection completely.
+- **The Sentinel Protocol Pivot**: Incorporates rigorous Red Team mitigations for observability. Telegraf is deployed via direct static `.deb` injection into the outer droplets, avoiding hypervisor APT repository corruptions, with its telemetry interval dynamically orchestrated via `quanuxctl`.
+- **Phase 12 Pipeline Proving Ground (`tests/nats_injector.py`)**: Real-time NATS mocking tools written in Python that map native `struct` byte-alignments to validate the C++ QuanuX-Annex core without requiring a live colocation feed.
+
 ## 📂 Repository Anatomy (Topographical Map)
 
 To effectively navigate the ecosystem, the repository is sliced along strict functional boundaries:

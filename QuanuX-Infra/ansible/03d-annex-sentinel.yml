@@ -7,11 +7,22 @@
     ledger_ip: "{{ hostvars['panopticon-ledger']['internal_ip'] | default('10.10.10.2') }}"
   
   tasks:
-    - name: Download and Install Telegraf (Minimal Tap)
+    - name: Ensure gnupg and curl are installed
       apt:
-        name: telegraf
+        name:
+          - gnupg
+          - curl
         state: present
-        update_cache: true
+
+    - name: Download Telegraf .deb package explicitly
+      get_url:
+        url: https://dl.influxdata.com/telegraf/releases/telegraf_1.30.0-1_amd64.deb
+        dest: /tmp/telegraf.deb
+
+    - name: Install Telegraf from bare .deb file
+      apt:
+        deb: /tmp/telegraf.deb
+        state: present
 
     - name: Configure STRICT Low-Overhead Telegraf (60s aggregate only)
       copy:

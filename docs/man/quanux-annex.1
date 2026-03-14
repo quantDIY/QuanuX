@@ -14,5 +14,13 @@ If the \fRquanuxctl\fR \fBjaques-mode\fR toggle has been engaged by the system a
 Upon ingesting the asynchronous telemetry stream, the Annex will transmit an aristocratic commentary via \fBAUDIT.PINGBACK\fR over NATS, which is then dynamically visualized by the \fBaudit.quanux.io\fR web theater.
 
 .I "It is quite... industrial. I have filed it in my DuckDB vault."
+.SH NATIVE ZERO-ALLOCATION C-CLIENT
+The QuanuX Annex core now utilizes a pure C++ Native \fB<nats/nats.h>\fR client to bypass JVM and Python Garbage Collection latency completely. C++ Structs (\fBMarketTick\fR, \fBExecutionLog\fR, \fBSchemaDriftEvent\fR) are transmitted directly to the async JetStream event loop at 59ns wire speed.
+.SH SENTINEL PROTOCOL (TELEMETRY)
+The edge-node observability utilizes dynamically injected Telegraf payloads. The data ingestion rate is configured remotely using:
+.B quanuxctl habitat sentinel --telemetry-interval <seconds>
+.SH DYNAMIC NATS DEPLOY
+The \fBquanuxctl deploy\fR command parses the Terraform and Ansible \fBdynamic_inventory.py\fR output to automatically target the isolated \fB10.10.10.x\fR IP layer of the Remote Node, securing the HA pipeline deployment without manual IP overrides:
+.B quanuxctl deploy -p annex_core -t quanux_annex_node --type cpp_binary
 .SH AUTHORS
 Built by the QuanuX Foundation.

@@ -5,8 +5,6 @@ Unified Developer CLI.
 """
 import typer
 from rich.console import Console
-from .commands import secrets, bridge, skills, extensions, integrate, node, storage, indicators, module, vcs, dashboard, topstepx, geminicli, foundry, crucible, spreader, probe, telemetry, deploy, orchestra
-from . import __version__
 
 import os
 import sys
@@ -19,6 +17,9 @@ if infra_cli_path not in sys.path:
     sys.path.insert(0, infra_cli_path)
 if quanux_root_path not in sys.path:
     sys.path.insert(0, quanux_root_path)
+
+from .commands import secrets, bridge, skills, extensions, integrate, node, storage, indicators, module, vcs, dashboard, topstepx, geminicli, foundry, crucible, spreader, probe, telemetry, deploy, orchestra
+from . import __version__
 
 import habitat_commands
 import nest_commands

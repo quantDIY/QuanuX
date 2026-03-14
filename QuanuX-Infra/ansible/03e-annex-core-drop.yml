@@ -1,0 +1,86 @@
+---
+- name: The Payload Drop - QuanuX Annex HA-Aware Drop
+  hosts: quanux_annex_node
+  become: true
+  
+  vars:
+    quanux_src_dir: "/opt/quanux/src"
+    quanux_build_dir: "/opt/quanux/build"
+    quanux_install_dir: "/opt/quanux/bin"
+    quanux_log_dir: "/var/log/quanux"
+
+  tasks:
+    - name: Ensure target directories exist
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: root
+        mode: '0755'
+      with_items:
+        - "{{ quanux_src_dir }}"
+        - "{{ quanux_build_dir }}"
+        - "{{ quanux_install_dir }}"
+        - "{{ quanux_log_dir }}"
+
+    - name: Synchronize QuanuX execution source code (Annex specifically)
+      synchronize:
+        src: "{{ playbook_dir }}/../../"
+        dest: "{{ quanux_src_dir }}/"
+        recursive: true
+        delete: true
+        rsync_opts:
+          - "--exclude=.git"
+          - "--exclude=build"
+          - "--exclude=.venv"
+          - "--exclude=data"
+
+    - name: Configure Sovereign Annex via CMake (Max Optimization)
+      command: cmake -S "{{ quanux_src_dir }}" -B "{{ quanux_build_dir }}" -DCMAKE_BUILD_TYPE=Release -DCLOUD_TARGET=DO -DCMAKE_CXX_FLAGS="-O3 -march=native"
+      environment:
+        CC: clang
+        CXX: clang++
+
+    - name: Compile Annex Binary natively
+      command: make -C "{{ quanux_build_dir }}" -j{{ ansible_processor_vcpus | default(2) }} quanux_annex
+      
+    - name: Install Annex Binary
+      copy:
+        src: "{{ quanux_build_dir }}/QuanuX-Annex/quanux_annex"
+        dest: "{{ quanux_install_dir }}/quanux_annex"
+        remote_src: true
+        mode: '0755'
+
+    - name: Create HA-Aware SystemD Service (No Aggressive Restart / No .env)
+      copy:
+        dest: /etc/systemd/system/quanux-annex.service
+        content: |
+          [Unit]
+          Description=QuanuX Annex Ingestion Engine (HA-Aware)
+          After=network.target nats-server.service
+
+          [Service]
+          Type=simple
+          ExecStart={{ quanux_install_dir }}/quanux_annex
+          
+          # HA Readiness: Disable aggressive restart to prevent flapping during NATS KV Split-Brain elections
+          Restart=no
+          
+          LimitNOFILE=65535
+          LimitCORE=infinity
+          
+          # NOTE: No EnvironmentFile is sourced here as per HA-readiness strict guidelines.
+          # The binary accesses Keyring DO/AWS credentials injected prior to execution.
+
+          [Install]
+          WantedBy=multi-user.target
+        mode: '0644'
+
+    - name: Reload SystemD to ingest HA Annex
+      systemd:
+        daemon_reload: true
+
+    - name: Pre-Enable (Do not forcefully start to respect HA election)
+      systemd:
+        name: quanux-annex
+        enabled: true
+        state: stopped

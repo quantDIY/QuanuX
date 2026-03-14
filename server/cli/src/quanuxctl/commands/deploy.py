@@ -25,6 +25,30 @@ def compute_local_hash(filepath: str):
             sha256_hash.update(byte_block)
     return sha256_hash.hexdigest()
 
+def get_dynamic_nats_url(target: str) -> str:
+    env_url = os.getenv("QUANUX_NATS_URL")
+    if env_url:
+        return env_url
+    
+    try:
+        cli_dir = Path(__file__).resolve().parent
+        root_dir = cli_dir.parent.parent.parent.parent.parent
+        inv_script = root_dir / "QuanuX-Infra" / "ansible" / "dynamic_inventory.py"
+        if inv_script.exists():
+            res = subprocess.run(["python3", str(inv_script)], capture_output=True, text=True)
+            if res.returncode == 0:
+                inv = json.loads(res.stdout)
+                hostvars = inv.get("_meta", {}).get("hostvars", {})
+                if target in hostvars:
+                    target_ip = hostvars[target].get("ansible_host")
+                    if target_ip:
+                        console.print(f"[dim]Dynamically learned NATS IP for {target}: {target_ip}[/dim]")
+                        return f"nats://{target_ip}:4222"
+    except Exception as e:
+        console.print(f"[yellow]Dynamic NATS lookup failed: {e}[/yellow]")
+        
+    return "nats://127.0.0.1:4222"
+
 def load_capability_registry():
     registry_path = Path("QuanuX-Clustering/manifests/capability_registry.yaml")
     if not registry_path.exists():
@@ -57,7 +81,8 @@ async def do_predeploy(payload_path: str, target: str, payload_type: str = "exte
 
     console.print(f"[cyan]Executing Habitat Interrogation to {target}...[/cyan]")
     try:
-        nc = await nats.connect("nats://127.0.0.1:4222")
+        nats_url = get_dynamic_nats_url(target)
+        nc = await nats.connect(nats_url)
         subject = f"QUANUX.NODE.HANDSHAKE.{target}"
         
         ipc_msg = json.dumps({"action": "predeploy", "requires": requires}).encode('utf-8')
@@ -135,7 +160,8 @@ def deploy(payload: str = typer.Option(..., "--payload", "-p", help="Path to pay
     mock_url = f"http://192.168.1.173:8080/{binary_name}"
 
     async def send_deploy():
-        nc = await nats.connect("nats://127.0.0.1:4222")
+        nats_url = get_dynamic_nats_url(target)
+        nc = await nats.connect(nats_url)
         subject = f"QUANUX.NODE.DEPLOY.{target}"
         ipc_msg = json.dumps({
             "action": "deploy", 

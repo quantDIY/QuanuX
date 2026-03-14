@@ -19,7 +19,8 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 set(RESOLVER_SOURCES "")
 
 if(CLOUD_TARGET STREQUAL "DO")
-    set(RESOLVER_SOURCES src/resolvers/ZarrResolver_DO.cpp)
+    add_compile_definitions(CLOUD_TARGET_DO)
+    set(RESOLVER_SOURCES src/resolvers/ZarrResolver_DO.cpp src/resolvers/ZarrRamFlusher.cpp src/resolvers/NatsSubscriber.cpp)
 elseif(CLOUD_TARGET STREQUAL "AWS")
     set(RESOLVER_SOURCES src/resolvers/FSxResolver_AWS.cpp)
 elseif(CLOUD_TARGET STREQUAL "GCP")
@@ -33,3 +34,15 @@ endif()
 # Library for Storage Resolvers
 add_library(quanux_annex_resolvers STATIC ${RESOLVER_SOURCES})
 target_include_directories(quanux_annex_resolvers PUBLIC include)
+
+# Main Executable
+find_package(Threads REQUIRED)
+
+find_library(NATS_LIBRARY nats)
+if (NOT NATS_LIBRARY)
+    set(NATS_LIBRARY "nats") # Fallback to generic -lnats flag
+endif()
+
+add_executable(quanux_annex src/main.cpp src/federation/HasuraRemoteWorker.cpp)
+target_include_directories(quanux_annex PUBLIC include)
+target_link_libraries(quanux_annex PRIVATE quanux_annex_resolvers Threads::Threads ${NATS_LIBRARY})
