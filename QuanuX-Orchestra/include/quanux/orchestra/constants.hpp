@@ -6194,26 +6194,26 @@ enum class FixTag : uint32_t {
     quanux_unmapped = 99999
 };
 
-enum class AdvSide : char {
+enum class AdvSide : uint64_t {
     Buy = 'B',
     Sell = 'S',
     Trade = 'T',
     Cross = 'X',
 };
 
-enum class AdvTransType : int {
-    New = N,
-    Cancel = C,
-    Replace = R,
+enum class AdvTransType : uint64_t {
+    New = 12638230081509142225ULL,
+    Cancel = 12638224583951001170ULL,
+    Replace = 12638243275648680757ULL,
 };
 
-enum class BeginString : int {
-    FIX42 = FIX.4.2,
-    FIX44 = FIX.4.4,
-    FIXT11 = FIXT.1.1,
+enum class BeginString : uint64_t {
+    FIX42 = 10880902916178547586ULL,
+    FIX44 = 10880896319108778320ULL,
+    FIXT11 = 4635631797947628008ULL,
 };
 
-enum class CommType : char {
+enum class CommType : uint64_t {
     PerUnit = '1',
     Percent = '2',
     Absolute = '3',
@@ -6224,7 +6224,7 @@ enum class CommType : char {
     AmountPerContract = '8',
 };
 
-enum class ExecInst : int {
+enum class ExecInst : uint64_t {
     StayOnOfferSide = 0,
     NotHeld = 1,
     Work = 2,
@@ -6235,67 +6235,67 @@ enum class ExecInst : int {
     StrictScale = 7,
     TryToScale = 8,
     StayOnBidSide = 9,
-    NoCross = A,
-    OKToCross = B,
-    CallFirst = C,
-    PercentOfVolume = D,
-    DoNotIncrease = E,
-    DoNotReduce = F,
-    AllOrNone = G,
-    ReinstateOnSystemFailure = H,
-    InstitutionsOnly = I,
-    ReinstateOnTradingHalt = J,
-    CancelOnTradingHalt = K,
-    LastPeg = L,
-    MidPricePeg = M,
-    NonNegotiable = N,
-    OpeningPeg = O,
-    MarketPeg = P,
-    CancelOnSystemFailure = Q,
-    PrimaryPeg = R,
-    Suspend = S,
-    FixedPegToLocalBestBidOrOfferAtTimeOfOrder = T,
-    CustomerDisplayInstruction = U,
-    Netting = V,
-    PegToVWAP = W,
-    TradeAlong = X,
-    TryToStop = Y,
-    CancelIfNotBest = Z,
-    TrailingStopPeg = a,
-    StrictLimit = b,
-    IgnorePriceValidityChecks = c,
-    PegToLimitPrice = d,
-    WorkToTargetStrategy = e,
-    IntermarketSweep = f,
-    ExternalRoutingAllowed = g,
-    ExternalRoutingNotAllowed = h,
-    ImbalanceOnly = i,
-    SingleExecutionRequestedForBlockTrade = j,
-    BestExecution = k,
-    SuspendOnSystemFailure = l,
-    SuspendOnTradingHalt = m,
-    ReinstateOnConnectionLoss = n,
-    CancelOnConnectionLoss = o,
-    SuspendOnConnectionLoss = p,
-    Release = q,
-    ExecuteAsDeltaNeutral = r,
-    ExecuteAsDurationNeutral = s,
-    ExecuteAsFXNeutral = t,
-    MinGuaranteedFillEligible = u,
-    BypassNonDisplayLiquidity = v,
-    Lock = w,
-    IgnoreNotionalValueChecks = x,
-    TrdAtRefPx = y,
-    AllowFacilitation = z,
+    NoCross = 12638222384927744748ULL,
+    OKToCross = 12638225683462629381ULL,
+    CallFirst = 12638224583951001170ULL,
+    PercentOfVolume = 12638219086392860115ULL,
+    DoNotIncrease = 12638217986881231904ULL,
+    DoNotReduce = 12638221285416116537ULL,
+    AllOrNone = 12638220185904488326ULL,
+    ReinstateOnSystemFailure = 12638232280532398647ULL,
+    InstitutionsOnly = 12638231181020770436ULL,
+    ReinstateOnTradingHalt = 12638234479555655069ULL,
+    CancelOnTradingHalt = 12638233380044026858ULL,
+    LastPeg = 12638227882485885803ULL,
+    MidPricePeg = 12638226782974257592ULL,
+    NonNegotiable = 12638230081509142225ULL,
+    OpeningPeg = 12638228981997514014ULL,
+    MarketPeg = 12638241076625424335ULL,
+    CancelOnSystemFailure = 12638239977113796124ULL,
+    PrimaryPeg = 12638243275648680757ULL,
+    Suspend = 12638242176137052546ULL,
+    FixedPegToLocalBestBidOrOfferAtTimeOfOrder = 12638236678578911491ULL,
+    CustomerDisplayInstruction = 12638235579067283280ULL,
+    Netting = 12638238877602167913ULL,
+    PegToVWAP = 12638237778090539702ULL,
+    TradeAlong = 12638249872718450023ULL,
+    TryToStop = 12638248773206821812ULL,
+    CancelIfNotBest = 12638252071741706445ULL,
+    TrailingStopPeg = 12638187200555641996ULL,
+    StrictLimit = 12638190499090526629ULL,
+    IgnorePriceValidityChecks = 12638189399578898418ULL,
+    PegToLimitPrice = 12638183902020757363ULL,
+    WorkToTargetStrategy = 12638182802509129152ULL,
+    IntermarketSweep = 12638186101044013785ULL,
+    ExternalRoutingAllowed = 12638185001532385574ULL,
+    ExternalRoutingNotAllowed = 12638197096160295895ULL,
+    ImbalanceOnly = 12638195996648667684ULL,
+    SingleExecutionRequestedForBlockTrade = 12638199295183552317ULL,
+    BestExecution = 12638198195671924106ULL,
+    SuspendOnSystemFailure = 12638192698113783051ULL,
+    SuspendOnTradingHalt = 12638191598602154840ULL,
+    ReinstateOnConnectionLoss = 12638194897137039473ULL,
+    CancelOnConnectionLoss = 12638193797625411262ULL,
+    SuspendOnConnectionLoss = 12638205892253321583ULL,
+    Release = 12638204792741693372ULL,
+    ExecuteAsDeltaNeutral = 12638208091276578005ULL,
+    ExecuteAsDurationNeutral = 12638206991764949794ULL,
+    ExecuteAsFXNeutral = 12638201494206808739ULL,
+    MinGuaranteedFillEligible = 12638200394695180528ULL,
+    BypassNonDisplayLiquidity = 12638203693230065161ULL,
+    Lock = 12638202593718436950ULL,
+    IgnoreNotionalValueChecks = 12638214688346347271ULL,
+    TrdAtRefPx = 12638213588834719060ULL,
+    AllowFacilitation = 12638216887369603693ULL,
 };
 
-enum class HandlInst : char {
+enum class HandlInst : uint64_t {
     AutomatedExecutionNoIntervention = '1',
     AutomatedExecutionInterventionOK = '2',
     ManualOrder = '3',
 };
 
-enum class SecurityIDSource : int {
+enum class SecurityIDSource : uint64_t {
     CUSIP = 1,
     SEDOL = 2,
     QUIK = 3,
@@ -6305,52 +6305,52 @@ enum class SecurityIDSource : int {
     ISOCountryCode = 7,
     ExchangeSymbol = 8,
     ConsolidatedTapeAssociation = 9,
-    BloombergSymbol = A,
-    Wertpapier = B,
-    Dutch = C,
-    Valoren = D,
-    Sicovam = E,
-    Belgian = F,
-    Common = G,
-    ClearingHouse = H,
-    ISDAFpMLSpecification = I,
-    OptionPriceReportingAuthority = J,
-    ISDAFpMLURL = K,
-    LetterOfCredit = L,
-    MarketplaceAssignedIdentifier = M,
-    MarkitREDEntityCLIP = N,
-    MarkitREDPairCLIP = P,
-    CFTCCommodityCode = Q,
-    ISDACommodityReferencePrice = R,
-    FinancialInstrumentGlobalIdentifier = S,
-    LegalEntityIdentifier = T,
-    Synthetic = U,
-    FidessaInstrumentMnemonic = V,
-    IndexName = W,
-    UniformSymbol = X,
-    DigitalTokenIdentifier = Y,
+    BloombergSymbol = 12638222384927744748ULL,
+    Wertpapier = 12638225683462629381ULL,
+    Dutch = 12638224583951001170ULL,
+    Valoren = 12638219086392860115ULL,
+    Sicovam = 12638217986881231904ULL,
+    Belgian = 12638221285416116537ULL,
+    Common = 12638220185904488326ULL,
+    ClearingHouse = 12638232280532398647ULL,
+    ISDAFpMLSpecification = 12638231181020770436ULL,
+    OptionPriceReportingAuthority = 12638234479555655069ULL,
+    ISDAFpMLURL = 12638233380044026858ULL,
+    LetterOfCredit = 12638227882485885803ULL,
+    MarketplaceAssignedIdentifier = 12638226782974257592ULL,
+    MarkitREDEntityCLIP = 12638230081509142225ULL,
+    MarkitREDPairCLIP = 12638241076625424335ULL,
+    CFTCCommodityCode = 12638239977113796124ULL,
+    ISDACommodityReferencePrice = 12638243275648680757ULL,
+    FinancialInstrumentGlobalIdentifier = 12638242176137052546ULL,
+    LegalEntityIdentifier = 12638236678578911491ULL,
+    Synthetic = 12638235579067283280ULL,
+    FidessaInstrumentMnemonic = 12638238877602167913ULL,
+    IndexName = 12638237778090539702ULL,
+    UniformSymbol = 12638249872718450023ULL,
+    DigitalTokenIdentifier = 12638248773206821812ULL,
 };
 
-enum class IOIQltyInd : char {
+enum class IOIQltyInd : uint64_t {
     High = 'H',
     Low = 'L',
     Medium = 'M',
 };
 
-enum class IOIQty : int {
-    Small = S,
-    Medium = M,
-    Large = L,
-    UndisclosedQuantity = U,
+enum class IOIQty : uint64_t {
+    Small = 12638242176137052546ULL,
+    Medium = 12638226782974257592ULL,
+    Large = 12638227882485885803ULL,
+    UndisclosedQuantity = 12638235579067283280ULL,
 };
 
-enum class IOITransType : char {
+enum class IOITransType : uint64_t {
     New = 'N',
     Cancel = 'C',
     Replace = 'R',
 };
 
-enum class LastCapacity : char {
+enum class LastCapacity : uint64_t {
     Agent = '1',
     CrossAsAgent = '2',
     CrossAsPrincipal = '3',
@@ -6358,7 +6358,7 @@ enum class LastCapacity : char {
     RisklessPrincipal = '5',
 };
 
-enum class MsgType : int {
+enum class MsgType : uint64_t {
     Heartbeat = 0,
     TestRequest = 1,
     ResendRequest = 2,
@@ -6369,180 +6369,180 @@ enum class MsgType : int {
     Advertisement = 7,
     ExecutionReport = 8,
     OrderCancelReject = 9,
-    Logon = A,
-    News = B,
-    Email = C,
-    NewOrderSingle = D,
-    NewOrderList = E,
-    OrderCancelRequest = F,
-    OrderCancelReplaceRequest = G,
-    OrderStatusRequest = H,
-    AllocationInstruction = J,
-    ListCancelRequest = K,
-    ListExecute = L,
-    ListStatusRequest = M,
-    ListStatus = N,
-    AllocationInstructionAck = P,
-    DontKnowTrade = Q,
-    QuoteRequest = R,
-    Quote = S,
-    SettlementInstructions = T,
-    MarketDataRequest = V,
-    MarketDataSnapshotFullRefresh = W,
-    MarketDataIncrementalRefresh = X,
-    MarketDataRequestReject = Y,
-    QuoteCancel = Z,
-    QuoteStatusRequest = a,
-    MassQuoteAck = b,
-    SecurityDefinitionRequest = c,
-    SecurityDefinition = d,
-    SecurityStatusRequest = e,
-    SecurityStatus = f,
-    TradingSessionStatusRequest = g,
-    TradingSessionStatus = h,
-    MassQuote = i,
-    BusinessMessageReject = j,
-    BidRequest = k,
-    BidResponse = l,
-    ListStrikePrice = m,
-    XMLnonFIX = n,
-    RegistrationInstructions = o,
-    RegistrationInstructionsResponse = p,
-    OrderMassCancelRequest = q,
-    OrderMassCancelReport = r,
-    NewOrderCross = s,
-    CrossOrderCancelReplaceRequest = t,
-    CrossOrderCancelRequest = u,
-    SecurityTypeRequest = v,
-    SecurityTypes = w,
-    SecurityListRequest = x,
-    SecurityList = y,
-    DerivativeSecurityListRequest = z,
-    DerivativeSecurityList = AA,
-    NewOrderMultileg = AB,
-    MultilegOrderCancelReplace = AC,
-    TradeCaptureReportRequest = AD,
-    TradeCaptureReport = AE,
-    OrderMassStatusRequest = AF,
-    QuoteRequestReject = AG,
-    RFQRequest = AH,
-    QuoteStatusReport = AI,
-    QuoteResponse = AJ,
-    Confirmation = AK,
-    PositionMaintenanceRequest = AL,
-    PositionMaintenanceReport = AM,
-    RequestForPositions = AN,
-    RequestForPositionsAck = AO,
-    PositionReport = AP,
-    TradeCaptureReportRequestAck = AQ,
-    TradeCaptureReportAck = AR,
-    AllocationReport = AS,
-    AllocationReportAck = AT,
-    ConfirmationAck = AU,
-    SettlementInstructionRequest = AV,
-    AssignmentReport = AW,
-    CollateralRequest = AX,
-    CollateralAssignment = AY,
-    CollateralResponse = AZ,
-    CollateralReport = BA,
-    CollateralInquiry = BB,
-    NetworkCounterpartySystemStatusRequest = BC,
-    NetworkCounterpartySystemStatusResponse = BD,
-    UserRequest = BE,
-    UserResponse = BF,
-    CollateralInquiryAck = BG,
-    ConfirmationRequest = BH,
-    ContraryIntentionReport = BO,
-    SecurityDefinitionUpdateReport = BP,
-    SecurityListUpdateReport = BK,
-    AdjustedPositionReport = BL,
-    AllocationInstructionAlert = BM,
-    ExecutionAck = BN,
-    TradingSessionList = BJ,
-    TradingSessionListRequest = BI,
-    SettlementObligationReport = BQ,
-    DerivativeSecurityListUpdateReport = BR,
-    TradingSessionListUpdateReport = BS,
-    MarketDefinitionRequest = BT,
-    MarketDefinition = BU,
-    MarketDefinitionUpdateReport = BV,
-    ApplicationMessageRequest = BW,
-    ApplicationMessageRequestAck = BX,
-    ApplicationMessageReport = BY,
-    OrderMassActionReport = BZ,
-    OrderMassActionRequest = CA,
-    UserNotification = CB,
-    StreamAssignmentRequest = CC,
-    StreamAssignmentReport = CD,
-    StreamAssignmentReportACK = CE,
-    PartyDetailsListRequest = CF,
-    PartyDetailsListReport = CG,
-    MarginRequirementInquiry = CH,
-    MarginRequirementInquiryAck = CI,
-    MarginRequirementReport = CJ,
-    PartyDetailsListUpdateReport = CK,
-    PartyRiskLimitsRequest = CL,
-    PartyRiskLimitsReport = CM,
-    SecurityMassStatusRequest = CN,
-    SecurityMassStatus = CO,
-    AccountSummaryReport = CQ,
-    PartyRiskLimitsUpdateReport = CR,
-    PartyRiskLimitsDefinitionRequest = CS,
-    PartyRiskLimitsDefinitionRequestAck = CT,
-    PartyEntitlementsRequest = CU,
-    PartyEntitlementsReport = CV,
-    QuoteAck = CW,
-    PartyDetailsDefinitionRequest = CX,
-    PartyDetailsDefinitionRequestAck = CY,
-    PartyEntitlementsUpdateReport = CZ,
-    PartyEntitlementsDefinitionRequest = DA,
-    PartyEntitlementsDefinitionRequestAck = DB,
-    TradeMatchReport = DC,
-    TradeMatchReportAck = DD,
-    PartyRiskLimitsReportAck = DE,
-    PartyRiskLimitCheckRequest = DF,
-    PartyRiskLimitCheckRequestAck = DG,
-    PartyActionRequest = DH,
-    PartyActionReport = DI,
-    MassOrder = DJ,
-    MassOrderAck = DK,
-    PositionTransferInstruction = DL,
-    PositionTransferInstructionAck = DM,
-    PositionTransferReport = DN,
-    MarketDataStatisticsRequest = DO,
-    MarketDataStatisticsReport = DP,
-    CollateralReportAck = DQ,
-    MarketDataReport = DR,
-    CrossRequest = DS,
-    CrossRequestAck = DT,
-    AllocationInstructionAlertRequest = DU,
-    AllocationInstructionAlertRequestAck = DV,
-    TradeAggregationRequest = DW,
-    TradeAggregationReport = DX,
-    PayManagementReport = EA,
-    PayManagementReportAck = EB,
-    PayManagementRequest = DY,
-    PayManagementRequestAck = DZ,
-    SettlementStatusRequest = EC,
-    SettlementStatusRequestAck = ED,
-    SettlementStatusReport = EE,
-    SettlementStatusReportAck = EF,
-    SecurityRiskMetricsReport = EG,
-    AlgoCertificateRequest = EH,
-    AlgoCertificateRequestAck = EI,
-    AlgoCertificateReport = EJ,
-    AlgoCertificateReportAck = EK,
-    TestSuiteDefinitionRequest = EL,
-    TestSuiteDefinitionRequestAck = EM,
-    TestActionRequest = EN,
-    TestActionRequestAck = EO,
-    TestActionReport = EP,
-    MarketDataAck = EQ,
-    SecurityStatusAck = ER,
-    TradingSessionStatusAck = ES,
+    Logon = 12638222384927744748ULL,
+    News = 12638225683462629381ULL,
+    Email = 12638224583951001170ULL,
+    NewOrderSingle = 12638219086392860115ULL,
+    NewOrderList = 12638217986881231904ULL,
+    OrderCancelRequest = 12638221285416116537ULL,
+    OrderCancelReplaceRequest = 12638220185904488326ULL,
+    OrderStatusRequest = 12638232280532398647ULL,
+    AllocationInstruction = 12638234479555655069ULL,
+    ListCancelRequest = 12638233380044026858ULL,
+    ListExecute = 12638227882485885803ULL,
+    ListStatusRequest = 12638226782974257592ULL,
+    ListStatus = 12638230081509142225ULL,
+    AllocationInstructionAck = 12638241076625424335ULL,
+    DontKnowTrade = 12638239977113796124ULL,
+    QuoteRequest = 12638243275648680757ULL,
+    Quote = 12638242176137052546ULL,
+    SettlementInstructions = 12638236678578911491ULL,
+    MarketDataRequest = 12638238877602167913ULL,
+    MarketDataSnapshotFullRefresh = 12638237778090539702ULL,
+    MarketDataIncrementalRefresh = 12638249872718450023ULL,
+    MarketDataRequestReject = 12638248773206821812ULL,
+    QuoteCancel = 12638252071741706445ULL,
+    QuoteStatusRequest = 12638187200555641996ULL,
+    MassQuoteAck = 12638190499090526629ULL,
+    SecurityDefinitionRequest = 12638189399578898418ULL,
+    SecurityDefinition = 12638183902020757363ULL,
+    SecurityStatusRequest = 12638182802509129152ULL,
+    SecurityStatus = 12638186101044013785ULL,
+    TradingSessionStatusRequest = 12638185001532385574ULL,
+    TradingSessionStatus = 12638197096160295895ULL,
+    MassQuote = 12638195996648667684ULL,
+    BusinessMessageReject = 12638199295183552317ULL,
+    BidRequest = 12638198195671924106ULL,
+    BidResponse = 12638192698113783051ULL,
+    ListStrikePrice = 12638191598602154840ULL,
+    XMLnonFIX = 12638194897137039473ULL,
+    RegistrationInstructions = 12638193797625411262ULL,
+    RegistrationInstructionsResponse = 12638205892253321583ULL,
+    OrderMassCancelRequest = 12638204792741693372ULL,
+    OrderMassCancelReport = 12638208091276578005ULL,
+    NewOrderCross = 12638206991764949794ULL,
+    CrossOrderCancelReplaceRequest = 12638201494206808739ULL,
+    CrossOrderCancelRequest = 12638200394695180528ULL,
+    SecurityTypeRequest = 12638203693230065161ULL,
+    SecurityTypes = 12638202593718436950ULL,
+    SecurityListRequest = 12638214688346347271ULL,
+    SecurityList = 12638213588834719060ULL,
+    DerivativeSecurityListRequest = 12638216887369603693ULL,
+    DerivativeSecurityList = 650879030918179831ULL,
+    NewOrderMultileg = 650880130429808042ULL,
+    MultilegOrderCancelReplace = 650881229941436253ULL,
+    TradeCaptureReportRequest = 650873533360038776ULL,
+    TradeCaptureReport = 650874632871666987ULL,
+    OrderMassStatusRequest = 650875732383295198ULL,
+    QuoteRequestReject = 650876831894923409ULL,
+    RFQRequest = 650869135313525932ULL,
+    QuoteStatusReport = 650870234825154143ULL,
+    QuoteResponse = 650871334336782354ULL,
+    Confirmation = 650872433848410565ULL,
+    PositionMaintenanceRequest = 650864737267013088ULL,
+    PositionMaintenanceReport = 650865836778641299ULL,
+    RequestForPositions = 650866936290269510ULL,
+    RequestForPositionsAck = 650868035801897721ULL,
+    PositionReport = 650895523592602996ULL,
+    TradeCaptureReportRequestAck = 650896623104231207ULL,
+    TradeCaptureReportAck = 650897722615859418ULL,
+    AllocationReport = 650898822127487629ULL,
+    AllocationReportAck = 650891125546090152ULL,
+    ConfirmationAck = 650892225057718363ULL,
+    SettlementInstructionRequest = 650893324569346574ULL,
+    AssignmentReport = 650894424080974785ULL,
+    CollateralRequest = 650886727499577308ULL,
+    CollateralAssignment = 650887827011205519ULL,
+    CollateralResponse = 650888926522833730ULL,
+    CollateralReport = 653887294732397452ULL,
+    CollateralInquiry = 653890593267282085ULL,
+    NetworkCounterpartySystemStatusRequest = 653889493755653874ULL,
+    NetworkCounterpartySystemStatusResponse = 653883996197512819ULL,
+    UserRequest = 653882896685884608ULL,
+    UserResponse = 653886195220769241ULL,
+    CollateralInquiryAck = 653885095709141030ULL,
+    ConfirmationRequest = 653897190337051351ULL,
+    ContraryIntentionReport = 653893891802166718ULL,
+    SecurityDefinitionUpdateReport = 653905986430077039ULL,
+    SecurityListUpdateReport = 653898289848679562ULL,
+    AdjustedPositionReport = 653892792290538507ULL,
+    AllocationInstructionAlert = 653891692778910296ULL,
+    ExecutionAck = 653894991313794929ULL,
+    TradingSessionList = 653899389360307773ULL,
+    TradingSessionListRequest = 653896090825423140ULL,
+    SettlementObligationReport = 653904886918448828ULL,
+    DerivativeSecurityListUpdateReport = 653908185453333461ULL,
+    TradingSessionListUpdateReport = 653907085941705250ULL,
+    MarketDefinitionRequest = 653901588383564195ULL,
+    MarketDefinition = 653900488871935984ULL,
+    MarketDefinitionUpdateReport = 653903787406820617ULL,
+    ApplicationMessageRequest = 653902687895192406ULL,
+    ApplicationMessageRequestAck = 653914782523102727ULL,
+    ApplicationMessageReport = 653913683011474516ULL,
+    OrderMassActionReport = 653916981546359149ULL,
+    OrderMassActionRequest = 652792181150888521ULL,
+    UserNotification = 652788882616003888ULL,
+    StreamAssignmentRequest = 652789982127632099ULL,
+    StreamAssignmentReport = 652795479685773154ULL,
+    StreamAssignmentReportACK = 652796579197401365ULL,
+    PartyDetailsListRequest = 652793280662516732ULL,
+    PartyDetailsListReport = 652794380174144943ULL,
+    MarginRequirementInquiry = 652799877732285998ULL,
+    MarginRequirementInquiryAck = 652800977243914209ULL,
+    MarginRequirementReport = 652797678709029576ULL,
+    PartyDetailsListUpdateReport = 652798778220657787ULL,
+    PartyRiskLimitsRequest = 652804275778798842ULL,
+    PartyRiskLimitsReport = 652805375290427053ULL,
+    SecurityMassStatusRequest = 652802076755542420ULL,
+    SecurityMassStatus = 652803176267170631ULL,
+    AccountSummaryReport = 652774588964837145ULL,
+    PartyRiskLimitsUpdateReport = 652771290429952512ULL,
+    PartyRiskLimitsDefinitionRequest = 652772389941580723ULL,
+    PartyRiskLimitsDefinitionRequestAck = 652777887499721778ULL,
+    PartyEntitlementsRequest = 652778987011349989ULL,
+    PartyEntitlementsReport = 652775688476465356ULL,
+    QuoteAck = 652776787988093567ULL,
+    PartyDetailsDefinitionRequest = 652782285546234622ULL,
+    PartyDetailsDefinitionRequestAck = 652783385057862833ULL,
+    PartyEntitlementsUpdateReport = 652780086522978200ULL,
+    PartyEntitlementsDefinitionRequest = 648007106545860374ULL,
+    PartyEntitlementsDefinitionRequestAck = 648006007034232163ULL,
+    TradeMatchReport = 648004907522603952ULL,
+    TradeMatchReportAck = 648012604104001429ULL,
+    PartyRiskLimitsReportAck = 648011504592373218ULL,
+    PartyRiskLimitCheckRequest = 648010405080745007ULL,
+    PartyRiskLimitCheckRequestAck = 648009305569116796ULL,
+    PartyActionRequest = 648017002150514273ULL,
+    PartyActionReport = 648015902638886062ULL,
+    MassOrder = 648014803127257851ULL,
+    MassOrderAck = 648013703615629640ULL,
+    PositionTransferInstruction = 648021400197027117ULL,
+    PositionTransferInstructionAck = 648020300685398906ULL,
+    PositionTransferReport = 648019201173770695ULL,
+    MarketDataStatisticsRequest = 648018101662142484ULL,
+    MarketDataStatisticsReport = 647990613871437209ULL,
+    CollateralReportAck = 647989514359808998ULL,
+    MarketDataReport = 647988414848180787ULL,
+    CrossRequest = 647987315336552576ULL,
+    CrossRequestAck = 647995011917950053ULL,
+    AllocationInstructionAlertRequest = 647993912406321842ULL,
+    AllocationInstructionAlertRequestAck = 647992812894693631ULL,
+    TradeAggregationRequest = 647991713383065420ULL,
+    TradeAggregationReport = 647999409964462897ULL,
+    PayManagementReport = 647193467941173459ULL,
+    PayManagementReportAck = 647194567452801670ULL,
+    PayManagementRequest = 647998310452834686ULL,
+    PayManagementRequestAck = 647997210941206475ULL,
+    SettlementStatusRequest = 647195666964429881ULL,
+    SettlementStatusRequestAck = 647196766476058092ULL,
+    SettlementStatusReport = 647197865987686303ULL,
+    SettlementStatusReportAck = 647198965499314514ULL,
+    SecurityRiskMetricsReport = 647200065010942725ULL,
+    AlgoCertificateRequest = 647201164522570936ULL,
+    AlgoCertificateRequestAck = 647202264034199147ULL,
+    AlgoCertificateReport = 647203363545827358ULL,
+    AlgoCertificateReportAck = 647204463057455569ULL,
+    TestSuiteDefinitionRequest = 647205562569083780ULL,
+    TestSuiteDefinitionRequestAck = 647206662080711991ULL,
+    TestActionRequest = 647207761592340202ULL,
+    TestActionRequestAck = 647208861103968413ULL,
+    TestActionReport = 647209960615596624ULL,
+    MarketDataAck = 647211060127224835ULL,
+    SecurityStatusAck = 647212159638853046ULL,
+    TradingSessionStatusAck = 647213259150481257ULL,
 };
 
-enum class OrdStatus : char {
+enum class OrdStatus : uint64_t {
     New = '0',
     PartiallyFilled = '1',
     Filled = '2',
@@ -6560,7 +6560,7 @@ enum class OrdStatus : char {
     PendingReplace = 'E',
 };
 
-enum class OrdType : char {
+enum class OrdType : uint64_t {
     Market = '1',
     Limit = '2',
     Stop = '3',
@@ -6589,12 +6589,12 @@ enum class OrdType : char {
     StopLimitOnBidOrOffer = 'S',
 };
 
-enum class PossDupFlag : int {
-    OriginalTransmission = N,
-    PossibleDuplicate = Y,
+enum class PossDupFlag : uint64_t {
+    OriginalTransmission = 12638230081509142225ULL,
+    PossibleDuplicate = 12638248773206821812ULL,
 };
 
-enum class Side : char {
+enum class Side : uint64_t {
     Buy = '1',
     Sell = '2',
     BuyMinus = '3',
@@ -6614,7 +6614,7 @@ enum class Side : char {
     SellUndisclosed = 'H',
 };
 
-enum class TimeInForce : char {
+enum class TimeInForce : uint64_t {
     Day = '0',
     GoodTillCancel = '1',
     AtTheOpening = '2',
@@ -6630,13 +6630,13 @@ enum class TimeInForce : char {
     GoodForMonth = 'C',
 };
 
-enum class Urgency : char {
+enum class Urgency : uint64_t {
     Normal = '0',
     Flash = '1',
     Background = '2',
 };
 
-enum class SettlType : int {
+enum class SettlType : uint64_t {
     Regular = 0,
     Cash = 1,
     NextDay = 2,
@@ -6647,23 +6647,23 @@ enum class SettlType : int {
     WhenAndIfIssued = 7,
     SellersOption = 8,
     TPlus5 = 9,
-    BrokenDate = B,
-    FXSpotNextSettlement = C,
+    BrokenDate = 12638225683462629381ULL,
+    FXSpotNextSettlement = 12638224583951001170ULL,
 };
 
-enum class SymbolSfx : int {
-    EUCPWithLumpSumInterest = CD,
-    WhenIssued = WI,
+enum class SymbolSfx : uint64_t {
+    EUCPWithLumpSumInterest = 652795479685773154ULL,
+    WhenIssued = 664420616128577357ULL,
 };
 
-enum class AllocTransType : char {
+enum class AllocTransType : uint64_t {
     New = '0',
     Replace = '1',
     Cancel = '2',
     Reversal = '6',
 };
 
-enum class PositionEffect : char {
+enum class PositionEffect : uint64_t {
     Close = 'C',
     FIFO = 'F',
     Open = 'O',
@@ -6672,7 +6672,7 @@ enum class PositionEffect : char {
     Default = 'D',
 };
 
-enum class ProcessCode : char {
+enum class ProcessCode : uint64_t {
     Regular = '0',
     SoftDollar = '1',
     StepIn = '2',
@@ -6682,7 +6682,7 @@ enum class ProcessCode : char {
     PlanSponsor = '6',
 };
 
-enum class AllocStatus : int {
+enum class AllocStatus : uint64_t {
     Accepted = 0,
     BlockLevelReject = 1,
     AccountLevelReject = 2,
@@ -6700,7 +6700,7 @@ enum class AllocStatus : int {
     ReversalPending = 14,
 };
 
-enum class AllocRejCode : int {
+enum class AllocRejCode : uint64_t {
     UnknownAccount = 0,
     IncorrectQuantity = 1,
     IncorrectAveragePrice = 2,
@@ -6733,18 +6733,18 @@ enum class AllocRejCode : int {
     Other = 99,
 };
 
-enum class EmailType : char {
+enum class EmailType : uint64_t {
     New = '0',
     Reply = '1',
     AdminReply = '2',
 };
 
-enum class PossResend : int {
-    OriginalTransmission = N,
-    PossibleResend = Y,
+enum class PossResend : uint64_t {
+    OriginalTransmission = 12638230081509142225ULL,
+    PossibleResend = 12638248773206821812ULL,
 };
 
-enum class EncryptMethod : int {
+enum class EncryptMethod : uint64_t {
     None = 0,
     PKCS = 1,
     DES = 2,
@@ -6754,7 +6754,7 @@ enum class EncryptMethod : int {
     PEM = 6,
 };
 
-enum class CxlRejReason : int {
+enum class CxlRejReason : uint64_t {
     TooLateToCancel = 0,
     UnknownOrder = 1,
     BrokerCredit = 2,
@@ -6768,7 +6768,7 @@ enum class CxlRejReason : int {
     Other = 99,
 };
 
-enum class OrdRejReason : int {
+enum class OrdRejReason : uint64_t {
     BrokerCredit = 0,
     UnknownSymbol = 1,
     ExchangeClosed = 2,
@@ -6805,7 +6805,7 @@ enum class OrdRejReason : int {
     Other = 99,
 };
 
-enum class IOIQualifier : char {
+enum class IOIQualifier : uint64_t {
     AllOrNone = 'A',
     MarketOnClose = 'B',
     AtTheClose = 'C',
@@ -6843,27 +6843,27 @@ enum class IOIQualifier : char {
     NegotiatedSpot = 'n',
 };
 
-enum class ReportToExch : int {
-    SenderReports = N,
-    ReceiverReports = Y,
+enum class ReportToExch : uint64_t {
+    SenderReports = 12638230081509142225ULL,
+    ReceiverReports = 12638248773206821812ULL,
 };
 
-enum class LocateReqd : int {
-    No = N,
-    Yes = Y,
+enum class LocateReqd : uint64_t {
+    No = 12638230081509142225ULL,
+    Yes = 12638248773206821812ULL,
 };
 
-enum class ForexReq : int {
-    DoNotExecuteForexAfterSecurityTrade = N,
-    ExecuteForexAfterSecurityTrade = Y,
+enum class ForexReq : uint64_t {
+    DoNotExecuteForexAfterSecurityTrade = 12638230081509142225ULL,
+    ExecuteForexAfterSecurityTrade = 12638248773206821812ULL,
 };
 
-enum class GapFillFlag : int {
-    SequenceReset = N,
-    GapFillMessage = Y,
+enum class GapFillFlag : uint64_t {
+    SequenceReset = 12638230081509142225ULL,
+    GapFillMessage = 12638248773206821812ULL,
 };
 
-enum class DKReason : char {
+enum class DKReason : uint64_t {
     UnknownSymbol = 'A',
     WrongSide = 'B',
     QuantityExceedsOrder = 'C',
@@ -6874,12 +6874,12 @@ enum class DKReason : char {
     Other = 'Z',
 };
 
-enum class IOINaturalFlag : int {
-    NotNatural = N,
-    Natural = Y,
+enum class IOINaturalFlag : uint64_t {
+    NotNatural = 12638230081509142225ULL,
+    Natural = 12638248773206821812ULL,
 };
 
-enum class MiscFeeType : int {
+enum class MiscFeeType : uint64_t {
     Regulatory = 1,
     Tax = 2,
     LocalCommission = 3,
@@ -6918,12 +6918,12 @@ enum class MiscFeeType : int {
     NonMonetaryPayments = 36,
 };
 
-enum class ResetSeqNumFlag : int {
-    No = N,
-    Yes = Y,
+enum class ResetSeqNumFlag : uint64_t {
+    No = 12638230081509142225ULL,
+    Yes = 12638248773206821812ULL,
 };
 
-enum class ExecType : char {
+enum class ExecType : uint64_t {
     New = '0',
     DoneForDay = '3',
     Canceled = '4',
@@ -6948,12 +6948,12 @@ enum class ExecType : char {
     Released = 'N',
 };
 
-enum class SettlCurrFxRateCalc : char {
+enum class SettlCurrFxRateCalc : uint64_t {
     Multiply = 'M',
     Divide = 'D',
 };
 
-enum class SettlInstMode : char {
+enum class SettlInstMode : uint64_t {
     Default = '0',
     StandingInstructionsProvided = '1',
     SpecificAllocationAccountOverriding = '2',
@@ -6962,205 +6962,205 @@ enum class SettlInstMode : char {
     RequestReject = '5',
 };
 
-enum class SettlInstTransType : char {
+enum class SettlInstTransType : uint64_t {
     New = 'N',
     Cancel = 'C',
     Replace = 'R',
     Restate = 'T',
 };
 
-enum class SettlInstSource : char {
+enum class SettlInstSource : uint64_t {
     BrokerCredit = '1',
     Institution = '2',
     Investor = '3',
 };
 
-enum class SecurityType : int {
-    USTreasuryNoteOld = UST,
-    USTreasuryBillOld = USTB,
-    EuroSupranationalCoupons = EUSUPRA,
-    FederalAgencyCoupon = FAC,
-    FederalAgencyDiscountNote = FADN,
-    PrivateExportFunding = PEF,
-    USDSupranationalCoupons = SUPRA,
-    CorporateBond = CORP,
-    CorporatePrivatePlacement = CPP,
-    ConvertibleBond = CB,
-    DualCurrency = DUAL,
-    EuroCorporateBond = EUCORP,
-    EuroCorporateFloatingRateNotes = EUFRN,
-    USCorporateFloatingRateNotes = FRN,
-    IndexedLinked = XLINKD,
-    StructuredNotes = STRUCT,
-    YankeeCorporateBond = YANK,
-    OffshoreIssuedChineseYuanCorporateBond = DIMSUMCORP,
-    PreferredCorporateBond = PRCORP,
-    ForeignExchangeContract = FOR,
-    NonDeliverableForward = FXNDF,
-    FXSpot = FXSPOT,
-    FXForward = FXFWD,
-    FXSwap = FXSWAP,
-    NonDeliverableSwap = FXNDS,
-    FXBankNote = FXBN,
-    ForeignCurrencyDiscountNote = FXDN,
-    Cap = CAP,
-    CreditDefaultSwap = CDS,
-    Collar = CLLR,
-    CommoditySwap = CMDTYSWAP,
-    Exotic = EXOTIC,
-    OptionsOnCombo = OOC,
-    Floor = FLR,
-    FRA = FRA,
-    Future = FUT,
-    DerivativeForward = FWD,
-    InterestRateSwap = IRS,
-    TotalReturnSwap = TRS,
-    LoanLease = LOANLEASE,
-    OptionsOnFutures = OOF,
-    OptionsOnPhysical = OOP,
-    Option = OPT,
-    SpotForward = SPOTFWD,
-    SwapOption = SWAPTION,
-    Transmission = XMISSION,
-    Index = INDEX,
-    BondBasket = BDBSKT,
-    ContractForDifference = CFD,
-    CorrelationSwap = CRLTNSWAP,
-    DiviendSwap = DVDNDSWAP,
-    EquityBasket = EQBSKT,
-    EquityForward = EQFWD,
-    ReturnSwap = RTRNSWAP,
-    VarianceSwap = VARSWAP,
-    PortfolioSwaps = PRTFLIOSWAP,
-    FuturesOnASwap = FUTSWAP,
-    ForwardsOnASwap = FWDSWAP,
-    ForwardFreightAgreement = FWDFRTAGMT,
-    SpreadBetting = SPREADBET,
-    ExchangeTradedCommodity = ETC,
-    CommonStock = CS,
-    PreferredStock = PS,
-    DepositoryReceipts = DR,
-    Repurchase = REPO,
-    Forward = FORWARD,
-    BuySellback = BUYSELL,
-    SecuritiesLoan = SECLOAN,
-    SecuritiesPledge = SECPLEDGE,
-    DeliveryVersusPledge = DVPLDG,
-    CollateralBasket = COLLBSKT,
-    StructuredFinanceProduct = SFP,
-    MarginLoan = MRGNLOAN,
-    BradyBond = BRADY,
-    CanadianTreasuryNotes = CAN,
-    CanadianTreasuryBills = CTB,
-    EuroSovereigns = EUSOV,
-    CanadianProvincialBonds = PROV,
-    TreasuryBill = TB,
-    USTreasuryBond = TBOND,
-    InterestStripFromAnyBondOrNote = TINT,
-    USTreasuryBill = TBILL,
-    TreasuryInflationProtectedSecurities = TIPS,
-    PrincipalStripOfACallableBondOrNote = TCAL,
-    PrincipalStripFromANonCallableBondOrNote = TPRN,
-    USTreasuryNote = TNOTE,
-    OffshoreIssuedChineseYuanSovereignBond = DIMSUMSOV,
-    SovereignBond = SOV,
-    USTreasuryFloatingRateNote = TFRN,
-    TermLoan = TERM,
-    RevolverLoan = RVLV,
-    Revolver = RVLVTRM,
-    BridgeLoan = BRIDGE,
-    LetterOfCredit = LOFC,
-    SwingLineFacility = SWING,
-    DebtorInPossession = DINP,
-    Defaulted = DEFLTED,
-    Withdrawn = WITHDRN,
-    Replaced = REPLACD,
-    Matured = MATURED,
-    Amended = AMENDED,
-    Retired = RETIRED,
-    BankersAcceptance = BA,
-    BankDepositoryNote = BDN,
-    BankNotes = BN,
-    BillOfExchanges = BOX,
-    CanadianMoneyMarkets = CAMM,
-    CertificateOfDeposit = CD,
-    CallLoans = CL,
-    CommercialPaper = CP,
-    DepositNotes = DN,
-    EuroCertificateOfDeposit = EUCD,
-    EuroCommercialPaper = EUCP,
-    LiquidityNote = LQN,
-    MediumTermNotes = MTN,
-    Overnight = ONITE,
-    PromissoryNote = PN,
-    ShortTermLoanNote = STN,
-    PlazosFijos = PZFJ,
-    SecuredLiquidityNote = SLQN,
-    TimeDeposit = TD,
-    TermLiquidityNote = TLQN,
-    ExtendedCommNote = XCN,
-    YankeeCertificateOfDeposit = YCD,
-    BankAcceptedBill = BAB,
-    ShortTermBankNote = BNST,
-    CallableCommercialPaper = CLCP,
-    CommercialNote = CN,
-    InterestBearingCommercialPaper = CPIB,
-    EuroMediumTermNote = EUMTN,
-    EuroNegotiableCommercialPaper = EUNCP,
-    EuroStructuredLiquidityNote = EUSTLQN,
-    EuroTimeDeposit = EUTD,
-    JumboCertificateOfDeposit = JCD,
-    MoneyMarketFund = MMF,
-    MasterNote = MN,
-    NegotiableCertificateOfDeposit = NCD,
-    NegotiableCommercialPaper = NCP,
-    RetailCertificateOfDeposit = RCD,
-    TermDepositReceipt = TDR,
-    AssetBackedSecurities = ABS,
-    CanadianMortgageBonds = CMB,
-    Corp = CMBS,
-    CollateralizedMortgageObligation = CMO,
-    IOETTEMortgage = IET,
-    MortgageBackedSecurities = MBS,
-    MortgageInterestOnly = MIO,
-    MortgagePrincipalOnly = MPO,
-    MortgagePrivatePlacement = MPP,
-    MiscellaneousPassThrough = MPT,
-    Pfandbrief = PFAND,
-    ToBeAnnounced = TBA,
-    OtherAnticipationNotes = AN,
-    CertificateOfObligation = COFO,
-    CertificateOfParticipation = COFP,
-    GeneralObligationBonds = GO,
-    MandatoryTender = MT,
-    RevenueAnticipationNote = RAN,
-    RevenueBonds = REV,
-    SpecialAssessment = SPCLA,
-    SpecialObligation = SPCLO,
-    SpecialTax = SPCLT,
-    TaxAnticipationNote = TAN,
-    TaxAllocation = TAXA,
-    TaxExemptCommercialPaper = TECP,
-    TaxableMunicipalCP = TMCP,
-    TaxRevenueAnticipationNote = TRAN,
-    VariableRateDemandNote = VRDN,
-    Warrant = WAR,
-    MunicipalInterestBearingCommercialPaper = MCPIB,
-    TaxableMunicipalBond = TMB,
-    VariableRateDemandObligation = VRDO,
-    MutualFund = MF,
-    MultilegInstrument = MLEG,
-    NoSecurityType = NONE,
-    Wildcard = ?,
-    Cash = CASH,
-    Other = Other,
-    ExchangeTradedNote = ETN,
-    SecuritizedDerivative = SECDERIV,
-    ExchangeTradedFund = ETF,
-    DigitalAsset = DIGITAL,
+enum class SecurityType : uint64_t {
+    USTreasuryNoteOld = 7056754798559285463ULL,
+    USTreasuryBillOld = 10469835521409051951ULL,
+    EuroSupranationalCoupons = 1276364625232750320ULL,
+    FederalAgencyCoupon = 17523146719803759761ULL,
+    FederalAgencyDiscountNote = 3225777474620869374ULL,
+    PrivateExportFunding = 10185099575971746856ULL,
+    USDSupranationalCoupons = 5782606588002396098ULL,
+    CorporateBond = 2308958597764834637ULL,
+    CorporatePrivatePlacement = 812122488246864578ULL,
+    ConvertibleBond = 652788882616003888ULL,
+    DualCurrency = 3587235242070107743ULL,
+    EuroCorporateBond = 1797416338278071115ULL,
+    EuroCorporateFloatingRateNotes = 10395422188945576591ULL,
+    USCorporateFloatingRateNotes = 17510723337919063597ULL,
+    IndexedLinked = 2984126061665494317ULL,
+    StructuredNotes = 50268097060398944ULL,
+    YankeeCorporateBond = 15948751881977205096ULL,
+    OffshoreIssuedChineseYuanCorporateBond = 10810784579107799884ULL,
+    PreferredCorporateBond = 17759506872441796883ULL,
+    ForeignExchangeContract = 17521386401687372400ULL,
+    NonDeliverableForward = 2421653950174956525ULL,
+    FXSpot = 1562519551723866939ULL,
+    FXForward = 16009810071738373956ULL,
+    FXSwap = 5916199669708572228ULL,
+    NonDeliverableSwap = 2421630860430764094ULL,
+    FXBankNote = 7310985437937573239ULL,
+    ForeignCurrencyDiscountNote = 7316861228077597473ULL,
+    Cap = 828384265224888443ULL,
+    CreditDefaultSwap = 831252891062323267ULL,
+    Collar = 2915762572538842672ULL,
+    CommoditySwap = 7467776652958919623ULL,
+    Exotic = 12166344870821696583ULL,
+    OptionsOnCombo = 3434214728776973472ULL,
+    Floor = 17520289089082607047ULL,
+    FRA = 17510706845244640432ULL,
+    Future = 17511818451500572528ULL,
+    DerivativeForward = 17513582068151844522ULL,
+    InterestRateSwap = 4712218875353373315ULL,
+    TotalReturnSwap = 7829216692764967888ULL,
+    LoanLease = 9072427279923040399ULL,
+    OptionsOnFutures = 3434220226335114527ULL,
+    OptionsOnPhysical = 3434235619497909481ULL,
+    Option = 3431370292195359290ULL,
+    SpotForward = 1533538518120171826ULL,
+    SwapOption = 15281467317350886224ULL,
+    Transmission = 5891815213677739015ULL,
+    Index = 3359039816862963179ULL,
+    BondBasket = 13277573678286388591ULL,
+    ContractForDifference = 829318850108678568ULL,
+    CorrelationSwap = 2222155159596422829ULL,
+    DiviendSwap = 2577490255725072620ULL,
+    EquityBasket = 11597565275602039871ULL,
+    EquityForward = 12364748537349575988ULL,
+    ReturnSwap = 16568778398173016704ULL,
+    VarianceSwap = 8877281744868177081ULL,
+    PortfolioSwaps = 13224197780273434580ULL,
+    FuturesOnASwap = 5779871852997140531ULL,
+    ForwardsOnASwap = 18109886412705662141ULL,
+    ForwardFreightAgreement = 17551328116392509331ULL,
+    SpreadBetting = 12402165738380327013ULL,
+    ExchangeTradedCommodity = 15670879744595450989ULL,
+    CommonStock = 652772389941580723ULL,
+    PreferredStock = 667154002035742228ULL,
+    DepositoryReceipts = 647988414848180787ULL,
+    Repurchase = 9903513627637691709ULL,
+    Forward = 15889899359972850522ULL,
+    BuySellback = 10441480706364721303ULL,
+    SecuritiesLoan = 13822140622123166348ULL,
+    SecuritiesPledge = 3382374111433407127ULL,
+    DeliveryVersusPledge = 2047115121406067942ULL,
+    CollateralBasket = 12593530622049173451ULL,
+    StructuredFinanceProduct = 10938567406803868756ULL,
+    MarginLoan = 10926612824169931573ULL,
+    BradyBond = 3760208235813943555ULL,
+    CanadianTreasuryNotes = 828364474015580645ULL,
+    CanadianTreasuryBills = 816069734991385168ULL,
+    EuroSovereigns = 3923735232349921461ULL,
+    CanadianProvincialBonds = 11064023880918349962ULL,
+    TreasuryBill = 663451946384312691ULL,
+    USTreasuryBond = 9957209711688573374ULL,
+    InterestStripFromAnyBondOrNote = 3691621262064979276ULL,
+    USTreasuryBill = 8814111243820469662ULL,
+    TreasuryInflationProtectedSecurities = 3689737798646232283ULL,
+    PrincipalStripOfACallableBondOrNote = 15788786839593441229ULL,
+    PrincipalStripFromANonCallableBondOrNote = 9339888360999545885ULL,
+    USTreasuryNote = 14182656415993278755ULL,
+    OffshoreIssuedChineseYuanSovereignBond = 2309341950376874104ULL,
+    SovereignBond = 10946994063920774835ULL,
+    USTreasuryFloatingRateNote = 567124775350499483ULL,
+    TermLoan = 1068719780976696311ULL,
+    RevolverLoan = 1923139484940050171ULL,
+    Revolver = 17708079772922832784ULL,
+    BridgeLoan = 3374921106890050064ULL,
+    LetterOfCredit = 7317503548591175687ULL,
+    SwingLineFacility = 5692302527495033417ULL,
+    DebtorInPossession = 16056354610646841296ULL,
+    Defaulted = 7783919751831439437ULL,
+    Withdrawn = 8347281432897749923ULL,
+    Replaced = 4484211197718279856ULL,
+    Matured = 4817587435385096351ULL,
+    Amended = 18299078270544082881ULL,
+    Retired = 11023251891584205302ULL,
+    BankersAcceptance = 653887294732397452ULL,
+    BankDepositoryNote = 1570201670846757287ULL,
+    BankNotes = 653894991313794929ULL,
+    BillOfExchanges = 1578914200986998226ULL,
+    CanadianMoneyMarkets = 14495704686160744243ULL,
+    CertificateOfDeposit = 652795479685773154ULL,
+    CallLoans = 652804275778798842ULL,
+    CommercialPaper = 652773489453208934ULL,
+    DepositNotes = 648019201173770695ULL,
+    EuroCertificateOfDeposit = 814304277717987552ULL,
+    EuroCommercialPaper = 814326267950551772ULL,
+    LiquidityNote = 2714379859133574976ULL,
+    MediumTermNotes = 2186850672737874366ULL,
+    Overnight = 12783795113866219048ULL,
+    PromissoryNote = 667124315221780531ULL,
+    ShortTermLoanNote = 10955779161828477700ULL,
+    PlazosFijos = 6186306625468385299ULL,
+    SecuredLiquidityNote = 9140615251305741597ULL,
+    TimeDeposit = 663458543454081957ULL,
+    TermLiquidityNote = 6809738382313903422ULL,
+    ExtendedCommNote = 15180471172686783110ULL,
+    YankeeCertificateOfDeposit = 14684493571967980931ULL,
+    BankAcceptedBill = 1573203337591205642ULL,
+    ShortTermBankNote = 16794139232778314262ULL,
+    CallableCommercialPaper = 2918599312539059377ULL,
+    CommercialNote = 652802076755542420ULL,
+    InterestBearingCommercialPaper = 3898301553979959341ULL,
+    EuroMediumTermNote = 6024360991145517864ULL,
+    EuroNegotiableCommercialPaper = 5508268924704197376ULL,
+    EuroStructuredLiquidityNote = 7254916186815787251ULL,
+    EuroTimeDeposit = 828661700556328415ULL,
+    JumboCertificateOfDeposit = 6568440793887600154ULL,
+    MoneyMarketFund = 2195305917157113931ULL,
+    MasterNote = 654842770337123586ULL,
+    NegotiableCertificateOfDeposit = 3949329329381003606ULL,
+    NegotiableCommercialPaper = 3949316135241465074ULL,
+    RetailCertificateOfDeposit = 11561762900928029554ULL,
+    TermDepositReceipt = 7819656439159565493ULL,
+    AssetBackedSecurities = 18027894025267469851ULL,
+    CanadianMortgageBonds = 839988510946756637ULL,
+    Corp = 3668217753161571466ULL,
+    CollateralizedMortgageObligation = 839974217295589894ULL,
+    IOETTEMortgage = 4691960373607559365ULL,
+    MortgageBackedSecurities = 2200111882483078087ULL,
+    MortgageInterestOnly = 2191636846854530724ULL,
+    MortgagePrincipalOnly = 2183016675691059509ULL,
+    MortgagePrivatePlacement = 2183000183016636344ULL,
+    MiscellaneousPassThrough = 2183004581063149188ULL,
+    Pfandbrief = 16773436735794392124ULL,
+    ToBeAnnounced = 7813755360252092406ULL,
+    OtherAnticipationNotes = 650866936290269510ULL,
+    CertificateOfObligation = 2289819398856350260ULL,
+    CertificateOfParticipation = 2289791911065644985ULL,
+    GeneralObligationBonds = 649108817197138571ULL,
+    MandatoryTender = 654831775220841476ULL,
+    RevenueAnticipationNote = 11559834357532525910ULL,
+    RevenueBonds = 11555867319578697522ULL,
+    SpecialAssessment = 12975062822840329704ULL,
+    SpecialObligation = 12975060623817073282ULL,
+    SpecialTax = 12975050728212419383ULL,
+    TaxAnticipationNote = 7814855971391742392ULL,
+    TaxAllocation = 17181548114295144353ULL,
+    TaxExemptCommercialPaper = 1084984856489604809ULL,
+    TaxableMunicipalCP = 6200889315911801377ULL,
+    TaxRevenueAnticipationNote = 8073369712889167448ULL,
+    VariableRateDemandNote = 8954722901933687619ULL,
+    Warrant = 8440916792818453381ULL,
+    MunicipalInterestBearingCommercialPaper = 14629030966833846868ULL,
+    TaxableMunicipalBond = 7826330474741481688ULL,
+    VariableRateDemandObligation = 8954721802422059408ULL,
+    MutualFund = 654851566430149274ULL,
+    MultilegInstrument = 3767507032432618804ULL,
+    NoSecurityType = 5836340512931272827ULL,
+    Wildcard = 12638141021067257134ULL,
+    Cash = 14516893374743835474ULL,
+    Other = 14547916283907374261ULL,
+    ExchangeTradedNote = 15670865450944284246ULL,
+    SecuritizedDerivative = 4775409222435808614ULL,
+    ExchangeTradedFund = 15670874247037309934ULL,
+    DigitalAsset = 2713059863175233403ULL,
 };
 
-enum class StandInstDbType : int {
+enum class StandInstDbType : uint64_t {
     Other = 0,
     DTCSID = 1,
     ThomsonALERT = 2,
@@ -7168,43 +7168,43 @@ enum class StandInstDbType : int {
     AccountNet = 4,
 };
 
-enum class SettlDeliveryType : int {
+enum class SettlDeliveryType : uint64_t {
     Versus = 0,
     Free = 1,
     TriParty = 2,
     HoldInCustody = 3,
 };
 
-enum class AllocLinkType : int {
+enum class AllocLinkType : uint64_t {
     FXNetting = 0,
     FXSwap = 1,
 };
 
-enum class PutOrCall : int {
+enum class PutOrCall : uint64_t {
     Put = 0,
     Call = 1,
     Other = 2,
     Chooser = 3,
 };
 
-enum class CoveredOrUncovered : int {
+enum class CoveredOrUncovered : uint64_t {
     Covered = 0,
     Uncovered = 1,
 };
 
-enum class NotifyBrokerOfCredit : int {
-    DetailsShouldNotBeCommunicated = N,
-    DetailsShouldBeCommunicated = Y,
+enum class NotifyBrokerOfCredit : uint64_t {
+    DetailsShouldNotBeCommunicated = 12638230081509142225ULL,
+    DetailsShouldBeCommunicated = 12638248773206821812ULL,
 };
 
-enum class AllocHandlInst : int {
+enum class AllocHandlInst : uint64_t {
     Match = 1,
     Forward = 2,
     ForwardAndMatch = 3,
     AutoClaimGiveUp = 4,
 };
 
-enum class RoutingType : int {
+enum class RoutingType : uint64_t {
     TargetFirm = 1,
     TargetList = 2,
     BlockFirm = 3,
@@ -7213,227 +7213,227 @@ enum class RoutingType : int {
     BlockPerson = 6,
 };
 
-enum class BenchmarkCurveName : int {
-    EONIA = EONIA,
-    EUREPO = EUREPO,
-    Euribor = Euribor,
-    FutureSWAP = FutureSWAP,
-    LIBID = LIBID,
-    LIBOR = LIBOR,
-    MuniAAA = MuniAAA,
-    OTHER = OTHER,
-    Pfandbriefe = Pfandbriefe,
-    SONIA = SONIA,
-    SWAP = SWAP,
-    Treasury = Treasury,
-    FedFundRateEffective = FEDEFF,
-    FedOpen = FEDOPEN,
-    EURIBOR = EURIBOR,
-    AUBSW = AUBSW,
-    BUBOR = BUBOR,
-    CDOR = CDOR,
-    CIBOR = CIBOR,
-    EONIASWAP = EONIASWAP,
-    ESTR = ESTR,
-    EURODOLLAR = EURODOLLAR,
-    EUROSWISS = EUROSWISS,
-    GCFREPO = GCFREPO,
-    ISDAFIX = ISDAFIX,
-    JIBAR = JIBAR,
-    MOSPRIM = MOSPRIM,
-    NIBOR = NIBOR,
-    PRIBOR = PRIBOR,
-    SOFR = SOFR,
-    STIBOR = STIBOR,
-    TELBOR = TELBOR,
-    TIBOR = TIBOR,
-    WIBOR = WIBOR,
-    AONIA = AONIA,
-    AONIAR = AONIA-R,
-    BKBM = BKBM,
-    CD91D = CD91D,
-    CORRA = CORRA,
-    DIRRTN = DIRR-TN,
-    EIBOR = EIBOR,
-    FixingRepoRate = FixingRepoRate,
-    HIBOR = HIBOR,
-    IBR = IBR,
-    KLIBOR = KLIBOR,
-    MIBOR = MIBOR,
-    NZONIA = NZONIA,
-    PHIREF = PHIREF,
-    REIBOR = REIBOR,
-    SAIBOR = SAIBOR,
-    SARON = SARON,
-    SORA = SORA,
-    TLREF = TLREF,
-    TIIE = TIIE,
-    THBFIX = THBFIX,
-    TONAR = TONAR,
-    OBFR = OBFR,
+enum class BenchmarkCurveName : uint64_t {
+    EONIA = 279326770075580851ULL,
+    EUREPO = 5717438682275973399ULL,
+    Euribor = 17337898781274235877ULL,
+    FutureSWAP = 3808901014557729169ULL,
+    LIBID = 7499149515624303169ULL,
+    LIBOR = 7497366107763723377ULL,
+    MuniAAA = 17744482852899089735ULL,
+    OTHER = 13038716679093713333ULL,
+    Pfandbriefe = 14555572886603226203ULL,
+    SONIA = 12429503666028278261ULL,
+    SWAP = 13370114327001639374ULL,
+    Treasury = 4082022080075972880ULL,
+    FedFundRateEffective = 1624827916661283191ULL,
+    FedOpen = 787922432909846040ULL,
+    EURIBOR = 15827973138807507685ULL,
+    AUBSW = 16720142084593597533ULL,
+    BUBOR = 17178942559913982923ULL,
+    CDOR = 16383497981581177311ULL,
+    CIBOR = 11842595476171453232ULL,
+    EONIASWAP = 7283619911538281636ULL,
+    ESTR = 18034879581041300559ULL,
+    EURODOLLAR = 12351795145896231894ULL,
+    EUROSWISS = 8609156557474711583ULL,
+    GCFREPO = 12198658971019808275ULL,
+    ISDAFIX = 6608065484402238729ULL,
+    JIBAR = 3077046981075930601ULL,
+    MOSPRIM = 2467043881141889670ULL,
+    NIBOR = 11793930832855281251ULL,
+    PRIBOR = 8291046355814013413ULL,
+    SOFR = 8371866407867770819ULL,
+    STIBOR = 5866214938569999392ULL,
+    TELBOR = 16921840763694166261ULL,
+    TIBOR = 2389965301453423625ULL,
+    WIBOR = 4163212818622507180ULL,
+    AONIA = 2942959334645017359ULL,
+    AONIAR = 1916610156152830332ULL,
+    BKBM = 354751547940463151ULL,
+    CD91D = 7027810793902383516ULL,
+    CORRA = 5633208084538518802ULL,
+    DIRRTN = 4232311337226214031ULL,
+    EIBOR = 3789087507990237530ULL,
+    FixingRepoRate = 7625733403250656478ULL,
+    HIBOR = 17173386590099030325ULL,
+    IBR = 4696736652119561824ULL,
+    KLIBOR = 4273802352488204272ULL,
+    MIBOR = 17123428865528305810ULL,
+    NZONIA = 14321260774257860042ULL,
+    PHIREF = 551476640627289497ULL,
+    REIBOR = 15051360123709801514ULL,
+    SAIBOR = 8790154018531168523ULL,
+    SARON = 16436533796131606844ULL,
+    SORA = 8360371013797095514ULL,
+    TLREF = 15633578638009305226ULL,
+    TIIE = 3698465721949268176ULL,
+    THBFIX = 9662378479077113708ULL,
+    TONAR = 11986093842626332173ULL,
+    OBFR = 9503018251013804556ULL,
 };
 
-enum class StipulationType : int {
-    AlternativeMinimumTax = AMT,
-    AutoReinvestment = AUTOREINV,
-    BankQualified = BANKQUAL,
-    BargainConditions = BGNCON,
-    CouponRange = COUPON,
-    ISOCurrencyCode = CURRENCY,
-    CustomStart = CUSTOMDATE,
-    Geographics = GEOG,
-    ValuationDiscount = HAIRCUT,
-    Insured = INSURED,
-    IssueDate = ISSUE,
-    Issuer = ISSUER,
-    IssueSizeRange = ISSUESIZE,
-    LookbackDays = LOOKBACK,
-    ExplicitLotIdentifier = LOT,
-    LotVariance = LOTVAR,
-    MaturityYearAndMonth = MAT,
-    MaturityRange = MATURITY,
-    MaximumSubstitutions = MAXSUBS,
-    MinimumDenomination = MINDNOM,
-    MinimumIncrement = MININCR,
-    MinimumQuantity = MINQTY,
-    PaymentFrequency = PAYFREQ,
-    NumberOfPieces = PIECES,
-    PoolsMaximum = PMAX,
-    PoolsPerLot = PPL,
-    PoolsPerMillion = PPM,
-    PoolsPerTrade = PPT,
-    PriceRange = PRICE,
-    PricingFrequency = PRICEFREQ,
-    ProductionYear = PROD,
-    CallProtection = PROTECT,
-    Purpose = PURPOSE,
-    BenchmarkPriceSource = PXSOURCE,
-    RatingSourceAndRange = RATING,
-    TypeOfRedemption = REDEMPTION,
-    Restricted = RESTRICTED,
-    MarketSector = SECTOR,
-    SecurityTypeIncludedOrExcluded = SECTYPE,
-    Structure = STRUCT,
-    SubstitutionsFrequency = SUBSFREQ,
-    SubstitutionsLeft = SUBSLEFT,
-    FreeformText = TEXT,
-    TradeVariance = TRDVAR,
-    WeightedAverageCoupon = WAC,
-    WeightedAverageLifeCoupon = WAL,
-    WeightedAverageLoanAge = WALA,
-    WeightedAverageMaturity = WAM,
-    WholePool = WHOLE,
-    YieldRange = YIELD,
-    OriginalAmount = ORIGAMT,
-    PoolEffectiveDate = POOLEFFDT,
-    PoolInitialFactor = POOLINITFCTR,
-    Tranche = TRANCHE,
-    Substitution = SUBSTITUTION,
-    MULTEXCHFLLBCK = MULTEXCHFLLBCK,
-    COMPSECFLLBCK = COMPSECFLLBCK,
-    LOCLJRSDCTN = LOCLJRSDCTN,
-    RELVJRSDCTN = RELVJRSDCTN,
-    IncurredRecovery = INCURRCVY,
-    AdditionalTerm = ADDTRM,
-    ModifiedEquityDelivery = MODEQTYDLVY,
-    NoReferenceOblication = NOREFOBLIG,
-    UnknownReferenceObligation = UNKREFOBLIG,
-    AllGuarantees = ALLGUARANTEES,
-    ReferencePrice = REFPX,
-    ReferencePolicy = REFPOLICY,
-    SecuredList = SECRDLIST,
-    AverageFICOScore = AVFICO,
-    AverageLoanSize = AVSIZE,
-    MaximumLoanBalance = MAXBAL,
-    PoolIdentifier = POOL,
-    TypeOfRollTrade = ROLLTYPE,
-    ReferenceToRollingOrClosingTrade = REFTRADE,
-    PrincipalOfRollingOrClosingTrade = REFPRIN,
-    InterestOfRollingOrClosingTrade = REFINT,
-    AvailableOfferQuantityToBeShownToTheStreet = AVAILQTY,
-    BrokerCredit = BROKERCREDIT,
-    OfferPriceToBeShownToInternalBrokers = INTERNALPX,
-    OfferQuantityToBeShownToInternalBrokers = INTERNALQTY,
-    TheMinimumResidualOfferQuantity = LEAVEQTY,
-    MaximumOrderSize = MAXORDQTY,
-    OrderQuantityIncrement = ORDRINCR,
-    PrimaryOrSecondaryMarketIndicator = PRIMARY,
-    BrokerSalesCreditOverride = SALESCREDITOVR,
-    TraderCredit = TRADERCREDIT,
-    DiscountRate = DISCOUNT,
-    YieldToMaturity = YTM,
-    InterestPayoffOfRollingOrAmendingTrade = PAYOFF,
-    AbsolutePrepaymentSpeed = ABS,
-    ConstantPrepaymentPenalty = CPP,
-    ConstantPrepaymentRate = CPR,
-    ConstantPrepaymentYield = CPY,
-    FinalCPROfHomeEquityPrepaymentCurve = HEP,
-    PercentOfManufacturedHousingPrepaymentCurve = MHP,
-    MonthlyPrepaymentRate = MPR,
-    PercentOfProspectusPrepaymentCurve = PPC,
-    PercentOfBMAPrepaymentCurve = PSA,
-    SingleMonthlyMortality = SMM,
+enum class StipulationType : uint64_t {
+    AlternativeMinimumTax = 18015428861940901669ULL,
+    AutoReinvestment = 7078953653474876426ULL,
+    BankQualified = 1546895893056010528ULL,
+    BargainConditions = 4636568391250861964ULL,
+    CouponRange = 13406367695932677611ULL,
+    ISOCurrencyCode = 13611167394257134166ULL,
+    CustomStart = 16260907403657191130ULL,
+    Geographics = 8889776349206664671ULL,
+    ValuationDiscount = 18343050328437921871ULL,
+    Insured = 6499936244235925997ULL,
+    IssueDate = 11234927822589944512ULL,
+    Issuer = 10363383416078433814ULL,
+    IssueSizeRange = 17337443817083016465ULL,
+    LookbackDays = 6003892767630462885ULL,
+    ExplicitLotIdentifier = 2693363793876112872ULL,
+    LotVariance = 18238793651712791721ULL,
+    MaturityYearAndMonth = 2199266358041173053ULL,
+    MaturityRange = 18004454303421081758ULL,
+    MaximumSubstitutions = 17093135609112159726ULL,
+    MinimumDenomination = 2962018007343228105ULL,
+    MinimumIncrement = 16588020812815747277ULL,
+    MinimumQuantity = 16697107900829113265ULL,
+    PaymentFrequency = 9382780718349960315ULL,
+    NumberOfPieces = 8901626378499214594ULL,
+    PoolsMaximum = 12658202489273400519ULL,
+    PoolsPerLot = 10205321793833829843ULL,
+    PoolsPerMillion = 10205320694322201632ULL,
+    PoolsPerTrade = 10205348182112906907ULL,
+    PriceRange = 12525686484408896202ULL,
+    PricingFrequency = 11896474831323453660ULL,
+    ProductionYear = 11064039274081144916ULL,
+    CallProtection = 8886163475653872236ULL,
+    Purpose = 15643146944948527201ULL,
+    BenchmarkPriceSource = 3586052953802185160ULL,
+    RatingSourceAndRange = 13148160347923972624ULL,
+    TypeOfRedemption = 3449672362200540584ULL,
+    Restricted = 16866321809295025100ULL,
+    MarketSector = 2013607832299131919ULL,
+    SecurityTypeIncludedOrExcluded = 132455846728614018ULL,
+    Structure = 50268097060398944ULL,
+    SubstitutionsFrequency = 10984058222031987908ULL,
+    SubstitutionsLeft = 9108894277066002431ULL,
+    FreeformText = 1078249248256508798ULL,
+    TradeVariance = 6116709918549591422ULL,
+    WeightedAverageCoupon = 8440933285492876546ULL,
+    WeightedAverageLifeCoupon = 8440936584027761179ULL,
+    WeightedAverageLoanAge = 11491716214009640686ULL,
+    WeightedAverageMaturity = 8440935484516132968ULL,
+    WholePool = 12818328633093901172ULL,
+    YieldRange = 8947595455203016974ULL,
+    OriginalAmount = 7210946329461984154ULL,
+    PoolEffectiveDate = 8288424101576610238ULL,
+    PoolInitialFactor = 1531877310575918476ULL,
+    Tranche = 10260383315128305386ULL,
+    Substitution = 5009507114889751472ULL,
+    MULTEXCHFLLBCK = 8463138764287809323ULL,
+    COMPSECFLLBCK = 17511714180888132781ULL,
+    LOCLJRSDCTN = 17654027451106530471ULL,
+    RELVJRSDCTN = 16769751600600267060ULL,
+    IncurredRecovery = 8494918331491041898ULL,
+    AdditionalTerm = 7744521491324600129ULL,
+    ModifiedEquityDelivery = 8466273896511824623ULL,
+    NoReferenceOblication = 8283265301633422298ULL,
+    UnknownReferenceObligation = 10413853631424767831ULL,
+    AllGuarantees = 14469441115356486391ULL,
+    ReferencePrice = 15887981916752948650ULL,
+    ReferencePolicy = 1363787015857606436ULL,
+    SecuredList = 6219134696732055828ULL,
+    AverageFICOScore = 9053714199006265949ULL,
+    AverageLoanSize = 7856850376326184207ULL,
+    MaximumLoanBalance = 12748249517129210052ULL,
+    PoolIdentifier = 11545806784105405571ULL,
+    TypeOfRollTrade = 16012517198080796190ULL,
+    ReferenceToRollingOrClosingTrade = 15849969744394448672ULL,
+    PrincipalOfRollingOrClosingTrade = 16030717825901233315ULL,
+    InterestOfRollingOrClosingTrade = 5923334330196222683ULL,
+    AvailableOfferQuantityToBeShownToTheStreet = 5581117892431898548ULL,
+    BrokerCredit = 9566089495726003025ULL,
+    OfferPriceToBeShownToInternalBrokers = 1847348980258950776ULL,
+    OfferQuantityToBeShownToInternalBrokers = 2211179229660487428ULL,
+    TheMinimumResidualOfferQuantity = 9231228088741592612ULL,
+    MaximumOrderSize = 2269819948934942624ULL,
+    OrderQuantityIncrement = 6399690283453391220ULL,
+    PrimaryOrSecondaryMarketIndicator = 2915274499320900953ULL,
+    BrokerSalesCreditOverride = 9626744834873297007ULL,
+    TraderCredit = 17383955166715793368ULL,
+    DiscountRate = 15447657783316881822ULL,
+    YieldToMaturity = 14662511035989510583ULL,
+    InterestPayoffOfRollingOrAmendingTrade = 17016572254940377070ULL,
+    AbsolutePrepaymentSpeed = 18027894025267469851ULL,
+    ConstantPrepaymentPenalty = 812122488246864578ULL,
+    ConstantPrepaymentRate = 812120289223608156ULL,
+    ConstantPrepaymentYield = 812132383851518477ULL,
+    FinalCPROfHomeEquityPrepaymentCurve = 5314348826196802514ULL,
+    PercentOfManufacturedHousingPrepaymentCurve = 2190512046459060096ULL,
+    MonthlyPrepaymentRate = 2183002382039892766ULL,
+    PercentOfProspectusPrepaymentCurve = 10205336087484996586ULL,
+    PercentOfBMAPrepaymentCurve = 10202466362135933551ULL,
+    SingleMonthlyMortality = 10949057847246548432ULL,
 };
 
-enum class YieldType : int {
-    AfterTaxYield = AFTERTAX,
-    AnnualYield = ANNUAL,
-    YieldAtIssue = ATISSUE,
-    YieldToAverageMaturity = AVGMATURITY,
-    BookYield = BOOK,
-    YieldToNextCall = CALL,
-    YieldChangeSinceClose = CHANGE,
-    ClosingYield = CLOSE,
-    CompoundYield = COMPOUND,
-    CurrentYield = CURRENT,
-    GvntEquivalentYield = GOVTEQUIV,
-    TrueGrossYield = GROSS,
-    YieldWithInflationAssumption = INFLATION,
-    InverseFloaterBondYield = INVERSEFLOATER,
-    MostRecentClosingYield = LASTCLOSE,
-    ClosingYieldMostRecentMonth = LASTMONTH,
-    ClosingYieldMostRecentQuarter = LASTQUARTER,
-    ClosingYieldMostRecentYear = LASTYEAR,
-    YieldToLongestAverageLife = LONGAVGLIFE,
-    MarkToMarketYield = MARK,
-    YieldToMaturity = MATURITY,
-    YieldToNextRefund = NEXTREFUND,
-    OpenAverageYield = OPENAVG,
-    PreviousCloseYield = PREVCLOSE,
-    ProceedsYield = PROCEEDS,
-    YieldToNextPut = PUT,
-    SemiAnnualYield = SEMIANNUAL,
-    YieldToShortestAverageLife = SHORTAVGLIFE,
-    SimpleYield = SIMPLE,
-    TaxEquivalentYield = TAXEQUIV,
-    YieldToTenderDate = TENDER,
-    TrueYield = TRUE,
-    YieldValueOf32nds = VALUE1_32,
-    YieldToWorst = WORST,
+enum class YieldType : uint64_t {
+    AfterTaxYield = 8724608744211628830ULL,
+    AnnualYield = 9357827150405730602ULL,
+    YieldAtIssue = 18231315154429369827ULL,
+    YieldToAverageMaturity = 17658608747761132536ULL,
+    BookYield = 16294461775431338968ULL,
+    YieldToNextCall = 14496660161765470377ULL,
+    YieldChangeSinceClose = 9737661712021964861ULL,
+    ClosingYield = 5300824654192172131ULL,
+    CompoundYield = 8776125194532953724ULL,
+    CurrentYield = 10879326818518724794ULL,
+    GvntEquivalentYield = 17928744433359288073ULL,
+    TrueGrossYield = 9552941320000520071ULL,
+    YieldWithInflationAssumption = 17371043127731605561ULL,
+    InverseFloaterBondYield = 11851548505312243516ULL,
+    MostRecentClosingYield = 5807662219998371159ULL,
+    ClosingYieldMostRecentMonth = 13530740671586055377ULL,
+    ClosingYieldMostRecentQuarter = 12552829791608414139ULL,
+    ClosingYieldMostRecentYear = 16450364959618448600ULL,
+    YieldToLongestAverageLife = 2361975242696749023ULL,
+    MarkToMarketYield = 6873971528448033472ULL,
+    YieldToMaturity = 18004454303421081758ULL,
+    YieldToNextRefund = 4023861255529518058ULL,
+    OpenAverageYield = 17940441088602209335ULL,
+    PreviousCloseYield = 12340081516109616980ULL,
+    ProceedsYield = 8139116979507733130ULL,
+    YieldToNextPut = 10200565306531135182ULL,
+    SemiAnnualYield = 2950594219039307280ULL,
+    YieldToShortestAverageLife = 5833265964365914057ULL,
+    SimpleYield = 7939396965940951455ULL,
+    TaxEquivalentYield = 4350590794765495080ULL,
+    YieldToTenderDate = 11193000282160012071ULL,
+    TrueYield = 8092504513751138981ULL,
+    YieldValueOf32nds = 14000795874753847323ULL,
+    YieldToWorst = 2552351112198744020ULL,
 };
 
-enum class TradedFlatSwitch : int {
-    NotTradedFlat = N,
-    TradedFlat = Y,
+enum class TradedFlatSwitch : uint64_t {
+    NotTradedFlat = 12638230081509142225ULL,
+    TradedFlat = 12638248773206821812ULL,
 };
 
-enum class SubscriptionRequestType : char {
+enum class SubscriptionRequestType : uint64_t {
     Snapshot = '0',
     SnapshotAndUpdates = '1',
     DisablePreviousSnapshot = '2',
 };
 
-enum class MDUpdateType : int {
+enum class MDUpdateType : uint64_t {
     FullRefresh = 0,
     IncrementalRefresh = 1,
 };
 
-enum class AggregatedBook : int {
-    BookEntriesToBeAggregated = Y,
-    BookEntriesShouldNotBeAggregated = N,
+enum class AggregatedBook : uint64_t {
+    BookEntriesToBeAggregated = 12638248773206821812ULL,
+    BookEntriesShouldNotBeAggregated = 12638230081509142225ULL,
 };
 
-enum class MDEntryType : char {
+enum class MDEntryType : uint64_t {
     Bid = '0',
     Offer = '1',
     Trade = '2',
@@ -7481,66 +7481,66 @@ enum class MDEntryType : char {
     TWAP = 't',
 };
 
-enum class TickDirection : char {
+enum class TickDirection : uint64_t {
     PlusTick = '0',
     ZeroPlusTick = '1',
     MinusTick = '2',
     ZeroMinusTick = '3',
 };
 
-enum class QuoteCondition : int {
-    Open = A,
-    Closed = B,
-    ExchangeBest = C,
-    ConsolidatedBest = D,
-    Locked = E,
-    Crossed = F,
-    Depth = G,
-    FastTrading = H,
-    NonFirm = I,
-    Manual = L,
-    OutrightPrice = J,
-    ImpliedPrice = K,
-    DepthOnOffer = M,
-    DepthOnBid = N,
-    Closing = O,
-    NewsDissemination = P,
-    TradingRange = Q,
-    OrderInflux = R,
-    DueToRelated = S,
-    NewsPending = T,
-    AdditionalInfo = U,
-    AdditionalInfoDueToRelated = V,
-    Resume = W,
-    ViewOfCommon = X,
-    VolumeAlert = Y,
-    OrderImbalance = Z,
-    EquipmentChangeover = a,
-    NoOpen = b,
-    RegularETH = c,
-    AutomaticExecution = d,
-    AutomaticExecutionETH = e,
-    FastMarketETH = f,
-    InactiveETH = g,
-    Rotation = h,
-    RotationETH = i,
-    Halt = j,
-    HaltETH = k,
-    DueToNewsDissemination = l,
-    DueToNewsPending = m,
-    TradingResume = n,
-    OutOfSequence = o,
-    BidSpecialist = p,
-    OfferSpecialist = q,
-    BidOfferSpecialist = r,
-    EndOfDaySAM = s,
-    ForbiddenSAM = t,
-    FrozenSAM = u,
-    PreOpeningSAM = v,
-    OpeningSAM = w,
-    OpenSAM = x,
-    SurveillanceSAM = y,
-    SuspendedSAM = z,
+enum class QuoteCondition : uint64_t {
+    Open = 12638222384927744748ULL,
+    Closed = 12638225683462629381ULL,
+    ExchangeBest = 12638224583951001170ULL,
+    ConsolidatedBest = 12638219086392860115ULL,
+    Locked = 12638217986881231904ULL,
+    Crossed = 12638221285416116537ULL,
+    Depth = 12638220185904488326ULL,
+    FastTrading = 12638232280532398647ULL,
+    NonFirm = 12638231181020770436ULL,
+    Manual = 12638227882485885803ULL,
+    OutrightPrice = 12638234479555655069ULL,
+    ImpliedPrice = 12638233380044026858ULL,
+    DepthOnOffer = 12638226782974257592ULL,
+    DepthOnBid = 12638230081509142225ULL,
+    Closing = 12638228981997514014ULL,
+    NewsDissemination = 12638241076625424335ULL,
+    TradingRange = 12638239977113796124ULL,
+    OrderInflux = 12638243275648680757ULL,
+    DueToRelated = 12638242176137052546ULL,
+    NewsPending = 12638236678578911491ULL,
+    AdditionalInfo = 12638235579067283280ULL,
+    AdditionalInfoDueToRelated = 12638238877602167913ULL,
+    Resume = 12638237778090539702ULL,
+    ViewOfCommon = 12638249872718450023ULL,
+    VolumeAlert = 12638248773206821812ULL,
+    OrderImbalance = 12638252071741706445ULL,
+    EquipmentChangeover = 12638187200555641996ULL,
+    NoOpen = 12638190499090526629ULL,
+    RegularETH = 12638189399578898418ULL,
+    AutomaticExecution = 12638183902020757363ULL,
+    AutomaticExecutionETH = 12638182802509129152ULL,
+    FastMarketETH = 12638186101044013785ULL,
+    InactiveETH = 12638185001532385574ULL,
+    Rotation = 12638197096160295895ULL,
+    RotationETH = 12638195996648667684ULL,
+    Halt = 12638199295183552317ULL,
+    HaltETH = 12638198195671924106ULL,
+    DueToNewsDissemination = 12638192698113783051ULL,
+    DueToNewsPending = 12638191598602154840ULL,
+    TradingResume = 12638194897137039473ULL,
+    OutOfSequence = 12638193797625411262ULL,
+    BidSpecialist = 12638205892253321583ULL,
+    OfferSpecialist = 12638204792741693372ULL,
+    BidOfferSpecialist = 12638208091276578005ULL,
+    EndOfDaySAM = 12638206991764949794ULL,
+    ForbiddenSAM = 12638201494206808739ULL,
+    FrozenSAM = 12638200394695180528ULL,
+    PreOpeningSAM = 12638203693230065161ULL,
+    OpeningSAM = 12638202593718436950ULL,
+    OpenSAM = 12638214688346347271ULL,
+    SurveillanceSAM = 12638213588834719060ULL,
+    SuspendedSAM = 12638216887369603693ULL,
     ReservedSAM = 0,
     NoActiveSAM = 1,
     Restricted = 2,
@@ -7551,89 +7551,89 @@ enum class QuoteCondition : int {
     FlatCurve = 7,
 };
 
-enum class TradeCondition : int {
-    Cash = A,
-    AveragePriceTrade = B,
-    CashTrade = C,
-    NextDay = D,
-    Opening = E,
-    IntradayTradeDetail = F,
-    Rule127Trade = G,
-    Rule155Trade = H,
-    SoldLast = I,
-    NextDayTrade = J,
-    Opened = K,
-    Seller = L,
-    Sold = M,
-    StoppedStock = N,
-    ImbalanceMoreBuyers = P,
-    ImbalanceMoreSellers = Q,
-    OpeningPrice = R,
-    BargainCondition = S,
-    ConvertedPriceIndicator = T,
-    ExchangeLast = U,
-    FinalPriceOfSession = V,
-    ExPit = W,
-    Crossed = X,
-    TradesResultingFromManual = Y,
-    TradesResultingFromIntermarketSweep = Z,
-    VolumeOnly = a,
-    DirectPlus = b,
-    Acquisition = c,
-    Bunched = d,
-    Distribution = e,
-    BunchedSale = f,
-    SplitTrade = g,
-    CancelStopped = h,
-    CancelETH = i,
-    CancelStoppedETH = j,
-    OutOfSequenceETH = k,
-    CancelLastETH = l,
-    SoldLastSaleETH = m,
-    CancelLast = n,
-    SoldLastSale = o,
-    CancelOpen = p,
-    CancelOpenETH = q,
-    OpenedSaleETH = r,
-    CancelOnly = s,
-    CancelOnlyETH = t,
-    LateOpenETH = u,
-    AutoExecutionETH = v,
-    Reopen = w,
-    ReopenETH = x,
-    Adjusted = y,
-    AdjustedETH = z,
-    Spread = AA,
-    SpreadETH = AB,
-    Straddle = AC,
-    StraddleETH = AD,
-    Stopped = AE,
-    StoppedETH = AF,
-    RegularETH = AG,
-    Combo = AH,
-    ComboETH = AI,
-    OfficialClosingPrice = AJ,
-    PriorReferencePrice = AK,
-    StoppedSoldLast = AL,
-    StoppedOutOfSequence = AM,
-    OfficialClosingPriceDup = AN,
-    CrossedOld = AO,
-    FastMarket = AP,
-    AutomaticExecution = AQ,
-    FormT = AR,
-    BasketIndex = AS,
-    BurstBasket = AT,
-    TradeThroughExempt = AU,
-    QuoteSpread = AV,
-    LastAuctionPrice = AW,
-    HighPrice = AX,
-    LowPrice = AY,
-    SystematicInternaliser = AZ,
-    AwayMarket = BA,
-    MidpointPrice = BB,
-    TradedBeforeIssueDate = BC,
-    PreviousClosingPrice = BD,
-    NationalBestBidOffer = BE,
+enum class TradeCondition : uint64_t {
+    Cash = 12638222384927744748ULL,
+    AveragePriceTrade = 12638225683462629381ULL,
+    CashTrade = 12638224583951001170ULL,
+    NextDay = 12638219086392860115ULL,
+    Opening = 12638217986881231904ULL,
+    IntradayTradeDetail = 12638221285416116537ULL,
+    Rule127Trade = 12638220185904488326ULL,
+    Rule155Trade = 12638232280532398647ULL,
+    SoldLast = 12638231181020770436ULL,
+    NextDayTrade = 12638234479555655069ULL,
+    Opened = 12638233380044026858ULL,
+    Seller = 12638227882485885803ULL,
+    Sold = 12638226782974257592ULL,
+    StoppedStock = 12638230081509142225ULL,
+    ImbalanceMoreBuyers = 12638241076625424335ULL,
+    ImbalanceMoreSellers = 12638239977113796124ULL,
+    OpeningPrice = 12638243275648680757ULL,
+    BargainCondition = 12638242176137052546ULL,
+    ConvertedPriceIndicator = 12638236678578911491ULL,
+    ExchangeLast = 12638235579067283280ULL,
+    FinalPriceOfSession = 12638238877602167913ULL,
+    ExPit = 12638237778090539702ULL,
+    Crossed = 12638249872718450023ULL,
+    TradesResultingFromManual = 12638248773206821812ULL,
+    TradesResultingFromIntermarketSweep = 12638252071741706445ULL,
+    VolumeOnly = 12638187200555641996ULL,
+    DirectPlus = 12638190499090526629ULL,
+    Acquisition = 12638189399578898418ULL,
+    Bunched = 12638183902020757363ULL,
+    Distribution = 12638182802509129152ULL,
+    BunchedSale = 12638186101044013785ULL,
+    SplitTrade = 12638185001532385574ULL,
+    CancelStopped = 12638197096160295895ULL,
+    CancelETH = 12638195996648667684ULL,
+    CancelStoppedETH = 12638199295183552317ULL,
+    OutOfSequenceETH = 12638198195671924106ULL,
+    CancelLastETH = 12638192698113783051ULL,
+    SoldLastSaleETH = 12638191598602154840ULL,
+    CancelLast = 12638194897137039473ULL,
+    SoldLastSale = 12638193797625411262ULL,
+    CancelOpen = 12638205892253321583ULL,
+    CancelOpenETH = 12638204792741693372ULL,
+    OpenedSaleETH = 12638208091276578005ULL,
+    CancelOnly = 12638206991764949794ULL,
+    CancelOnlyETH = 12638201494206808739ULL,
+    LateOpenETH = 12638200394695180528ULL,
+    AutoExecutionETH = 12638203693230065161ULL,
+    Reopen = 12638202593718436950ULL,
+    ReopenETH = 12638214688346347271ULL,
+    Adjusted = 12638213588834719060ULL,
+    AdjustedETH = 12638216887369603693ULL,
+    Spread = 650879030918179831ULL,
+    SpreadETH = 650880130429808042ULL,
+    Straddle = 650881229941436253ULL,
+    StraddleETH = 650873533360038776ULL,
+    Stopped = 650874632871666987ULL,
+    StoppedETH = 650875732383295198ULL,
+    RegularETH = 650876831894923409ULL,
+    Combo = 650869135313525932ULL,
+    ComboETH = 650870234825154143ULL,
+    OfficialClosingPrice = 650871334336782354ULL,
+    PriorReferencePrice = 650872433848410565ULL,
+    StoppedSoldLast = 650864737267013088ULL,
+    StoppedOutOfSequence = 650865836778641299ULL,
+    OfficialClosingPriceDup = 650866936290269510ULL,
+    CrossedOld = 650868035801897721ULL,
+    FastMarket = 650895523592602996ULL,
+    AutomaticExecution = 650896623104231207ULL,
+    FormT = 650897722615859418ULL,
+    BasketIndex = 650898822127487629ULL,
+    BurstBasket = 650891125546090152ULL,
+    TradeThroughExempt = 650892225057718363ULL,
+    QuoteSpread = 650893324569346574ULL,
+    LastAuctionPrice = 650894424080974785ULL,
+    HighPrice = 650886727499577308ULL,
+    LowPrice = 650887827011205519ULL,
+    SystematicInternaliser = 650888926522833730ULL,
+    AwayMarket = 653887294732397452ULL,
+    MidpointPrice = 653890593267282085ULL,
+    TradedBeforeIssueDate = 653889493755653874ULL,
+    PreviousClosingPrice = 653883996197512819ULL,
+    NationalBestBidOffer = 653882896685884608ULL,
     Cancel = 0,
     ImpliedTrade = 1,
     MarketplaceEnteredTrade = 2,
@@ -7643,7 +7643,7 @@ enum class TradeCondition : int {
     Benchmark = 6,
 };
 
-enum class MDUpdateAction : char {
+enum class MDUpdateAction : uint64_t {
     New = '0',
     Change = '1',
     Delete = '2',
@@ -7652,7 +7652,7 @@ enum class MDUpdateAction : char {
     Overlay = '5',
 };
 
-enum class MDReqRejReason : char {
+enum class MDReqRejReason : uint64_t {
     UnknownSymbol = '0',
     DuplicateMDReqID = '1',
     InsufficientBandwidth = '2',
@@ -7669,12 +7669,12 @@ enum class MDReqRejReason : char {
     InsufficientCredit = 'D',
 };
 
-enum class DeleteReason : char {
+enum class DeleteReason : uint64_t {
     Cancellation = '0',
     Error = '1',
 };
 
-enum class OpenCloseSettlFlag : int {
+enum class OpenCloseSettlFlag : uint64_t {
     DailyOpen = 0,
     SessionOpen = 1,
     DeliverySettlementEntry = 2,
@@ -7683,39 +7683,39 @@ enum class OpenCloseSettlFlag : int {
     TheoreticalPriceValue = 5,
 };
 
-enum class FinancialStatus : int {
+enum class FinancialStatus : uint64_t {
     Bankrupt = 1,
     PendingDelisting = 2,
     Restricted = 3,
 };
 
-enum class CorporateAction : int {
-    ExDividend = A,
-    ExDistribution = B,
-    ExRights = C,
-    New = D,
-    ExInterest = E,
-    CashDividend = F,
-    StockDividend = G,
-    NonIntegerStockSplit = H,
-    ReverseStockSplit = I,
-    StandardIntegerStockSplit = J,
-    PositionConsolidation = K,
-    LiquidationReorganization = L,
-    MergerReorganization = M,
-    RightsOffering = N,
-    ShareholderMeeting = O,
-    Spinoff = P,
-    TenderOffer = Q,
-    Warrant = R,
-    SpecialAction = S,
-    SymbolConversion = T,
-    CUSIP = U,
-    LeapRollover = V,
-    SuccessionEvent = W,
+enum class CorporateAction : uint64_t {
+    ExDividend = 12638222384927744748ULL,
+    ExDistribution = 12638225683462629381ULL,
+    ExRights = 12638224583951001170ULL,
+    New = 12638219086392860115ULL,
+    ExInterest = 12638217986881231904ULL,
+    CashDividend = 12638221285416116537ULL,
+    StockDividend = 12638220185904488326ULL,
+    NonIntegerStockSplit = 12638232280532398647ULL,
+    ReverseStockSplit = 12638231181020770436ULL,
+    StandardIntegerStockSplit = 12638234479555655069ULL,
+    PositionConsolidation = 12638233380044026858ULL,
+    LiquidationReorganization = 12638227882485885803ULL,
+    MergerReorganization = 12638226782974257592ULL,
+    RightsOffering = 12638230081509142225ULL,
+    ShareholderMeeting = 12638228981997514014ULL,
+    Spinoff = 12638241076625424335ULL,
+    TenderOffer = 12638239977113796124ULL,
+    Warrant = 12638243275648680757ULL,
+    SpecialAction = 12638242176137052546ULL,
+    SymbolConversion = 12638236678578911491ULL,
+    CUSIP = 12638235579067283280ULL,
+    LeapRollover = 12638238877602167913ULL,
+    SuccessionEvent = 12638237778090539702ULL,
 };
 
-enum class QuoteStatus : int {
+enum class QuoteStatus : uint64_t {
     Accepted = 0,
     CancelForSymbol = 1,
     CanceledForSecurityType = 2,
@@ -7742,7 +7742,7 @@ enum class QuoteStatus : int {
     ContractTerminates = 23,
 };
 
-enum class QuoteCancelType : int {
+enum class QuoteCancelType : uint64_t {
     CancelForOneOrMoreSecurities = 1,
     CancelForSecurityType = 2,
     CancelForUnderlyingSecurity = 3,
@@ -7753,7 +7753,7 @@ enum class QuoteCancelType : int {
     CancelForIssuerOfUnderlyingSecurity = 8,
 };
 
-enum class QuoteRejectReason : int {
+enum class QuoteRejectReason : uint64_t {
     UnknownSymbol = 1,
     Exchange = 2,
     QuoteRequestExceedsLimit = 3,
@@ -7781,20 +7781,20 @@ enum class QuoteRejectReason : int {
     Other = 99,
 };
 
-enum class QuoteResponseLevel : int {
+enum class QuoteResponseLevel : uint64_t {
     NoAcknowledgement = 0,
     AcknowledgeOnlyNegativeOrErroneousQuotes = 1,
     AcknowledgeEachQuoteMessage = 2,
     SummaryAcknowledgement = 3,
 };
 
-enum class QuoteRequestType : int {
+enum class QuoteRequestType : uint64_t {
     Manual = 1,
     Automatic = 2,
     ConfirmQuote = 3,
 };
 
-enum class SecurityRequestType : int {
+enum class SecurityRequestType : uint64_t {
     RequestSecurityIdentityAndSpecifications = 0,
     RequestSecurityIdentityForSpecifications = 1,
     RequestListSecurityTypes = 2,
@@ -7807,19 +7807,19 @@ enum class SecurityRequestType : int {
     MarketIDOrMarketID = 9,
 };
 
-enum class SecurityResponseType : int {
+enum class SecurityResponseType : uint64_t {
     AcceptAsIs = 1,
     AcceptWithRevisions = 2,
     RejectSecurityProposal = 5,
     CannotMatchSelectionCriteria = 6,
 };
 
-enum class UnsolicitedIndicator : int {
-    MessageIsBeingSentAsAResultOfAPriorRequest = N,
-    MessageIsBeingSentUnsolicited = Y,
+enum class UnsolicitedIndicator : uint64_t {
+    MessageIsBeingSentAsAResultOfAPriorRequest = 12638230081509142225ULL,
+    MessageIsBeingSentUnsolicited = 12638248773206821812ULL,
 };
 
-enum class SecurityTradingStatus : int {
+enum class SecurityTradingStatus : uint64_t {
     OpeningDelay = 1,
     TradingHalt = 2,
     Resume = 3,
@@ -7848,7 +7848,7 @@ enum class SecurityTradingStatus : int {
     NoCancel = 27,
 };
 
-enum class HaltReason : int {
+enum class HaltReason : uint64_t {
     NewsDissemination = 0,
     OrderInflux = 1,
     OrderImbalance = 2,
@@ -7857,23 +7857,23 @@ enum class HaltReason : int {
     EquipmentChangeover = 5,
 };
 
-enum class InViewOfCommon : int {
-    HaltWasNotRelatedToAHaltOfTheCommonStock = N,
-    HaltWasDueToCommonStockBeingHalted = Y,
+enum class InViewOfCommon : uint64_t {
+    HaltWasNotRelatedToAHaltOfTheCommonStock = 12638230081509142225ULL,
+    HaltWasDueToCommonStockBeingHalted = 12638248773206821812ULL,
 };
 
-enum class DueToRelated : int {
-    NotRelatedToSecurityHalt = N,
-    RelatedToSecurityHalt = Y,
+enum class DueToRelated : uint64_t {
+    NotRelatedToSecurityHalt = 12638230081509142225ULL,
+    RelatedToSecurityHalt = 12638248773206821812ULL,
 };
 
-enum class Adjustment : int {
+enum class Adjustment : uint64_t {
     Cancel = 1,
     Error = 2,
     Correction = 3,
 };
 
-enum class TradingSessionID : int {
+enum class TradingSessionID : uint64_t {
     Day = 1,
     HalfDay = 2,
     Morning = 3,
@@ -7883,20 +7883,20 @@ enum class TradingSessionID : int {
     Holiday = 7,
 };
 
-enum class TradSesMethod : int {
+enum class TradSesMethod : uint64_t {
     Electronic = 1,
     OpenOutcry = 2,
     TwoParty = 3,
     Voice = 4,
 };
 
-enum class TradSesMode : int {
+enum class TradSesMode : uint64_t {
     Testing = 1,
     Simulated = 2,
     Production = 3,
 };
 
-enum class TradSesStatus : int {
+enum class TradSesStatus : uint64_t {
     Unknown = 0,
     Halted = 1,
     Open = 2,
@@ -7908,7 +7908,7 @@ enum class TradSesStatus : int {
     PartialOutage = 8,
 };
 
-enum class SessionRejectReason : int {
+enum class SessionRejectReason : uint64_t {
     InvalidTagNumber = 0,
     RequiredTagMissing = 1,
     TagNotDefinedForThisMessageType = 2,
@@ -7931,17 +7931,17 @@ enum class SessionRejectReason : int {
     Other = 99,
 };
 
-enum class BidRequestTransType : char {
+enum class BidRequestTransType : uint64_t {
     Cancel = 'C',
     New = 'N',
 };
 
-enum class SolicitedFlag : int {
-    WasNotSolicited = N,
-    WasSolicited = Y,
+enum class SolicitedFlag : uint64_t {
+    WasNotSolicited = 12638230081509142225ULL,
+    WasSolicited = 12638248773206821812ULL,
 };
 
-enum class ExecRestatementReason : int {
+enum class ExecRestatementReason : uint64_t {
     GTCorporateAction = 0,
     GTRenewal = 1,
     VerbalChange = 2,
@@ -7966,7 +7966,7 @@ enum class ExecRestatementReason : int {
     Other = 99,
 };
 
-enum class BusinessRejectReason : int {
+enum class BusinessRejectReason : uint64_t {
     Other = 0,
     UnknownID = 1,
     UnknownSecurity = 2,
@@ -7981,12 +7981,12 @@ enum class BusinessRejectReason : int {
     InvalidPriceIncrement = 18,
 };
 
-enum class MsgDirection : char {
+enum class MsgDirection : uint64_t {
     Receive = 'R',
     Send = 'S',
 };
 
-enum class DiscretionInst : char {
+enum class DiscretionInst : uint64_t {
     RelatedToDisplayedPrice = '0',
     RelatedToMarketPrice = '1',
     RelatedToPrimaryPrice = '2',
@@ -7997,54 +7997,54 @@ enum class DiscretionInst : char {
     AveragePriceGuarantee = '7',
 };
 
-enum class BidType : int {
+enum class BidType : uint64_t {
     NonDisclosed = 1,
     Disclosed = 2,
     NoBiddingProcess = 3,
 };
 
-enum class BidDescriptorType : int {
+enum class BidDescriptorType : uint64_t {
     Sector = 1,
     Country = 2,
     Index = 3,
 };
 
-enum class SideValueInd : int {
+enum class SideValueInd : uint64_t {
     SideValue1 = 1,
     SideValue2 = 2,
 };
 
-enum class LiquidityIndType : int {
+enum class LiquidityIndType : uint64_t {
     FiveDayMovingAverage = 1,
     TwentyDayMovingAverage = 2,
     NormalMarketSize = 3,
     Other = 4,
 };
 
-enum class ExchangeForPhysical : int {
-    False = N,
-    True = Y,
+enum class ExchangeForPhysical : uint64_t {
+    False = 12638230081509142225ULL,
+    True = 12638248773206821812ULL,
 };
 
-enum class ProgRptReqs : int {
+enum class ProgRptReqs : uint64_t {
     BuySideRequests = 1,
     SellSideSends = 2,
     RealTimeExecutionReports = 3,
 };
 
-enum class IncTaxInd : int {
+enum class IncTaxInd : uint64_t {
     Net = 1,
     Gross = 2,
 };
 
-enum class BidTradeType : char {
+enum class BidTradeType : uint64_t {
     Agency = 'A',
     VWAPGuarantee = 'G',
     GuaranteedClose = 'J',
     RiskTrade = 'R',
 };
 
-enum class BasisPxType : char {
+enum class BasisPxType : uint64_t {
     ClosingPriceAtMorningSession = '2',
     ClosingPrice = '3',
     CurrentPrice = '4',
@@ -8060,7 +8060,7 @@ enum class BasisPxType : char {
     Others = 'Z',
 };
 
-enum class PriceType : int {
+enum class PriceType : uint64_t {
     Percentage = 1,
     PerUnit = 2,
     FixedAmount = 3,
@@ -8088,13 +8088,13 @@ enum class PriceType : int {
     PercentageNotional = 25,
 };
 
-enum class GTBookingInst : int {
+enum class GTBookingInst : uint64_t {
     BookOutAllTradesOnDayOfExecution = 0,
     AccumulateUntilFilledOrExpired = 1,
     AccumulateUntilVerballyNotifiedOtherwise = 2,
 };
 
-enum class ListStatusType : int {
+enum class ListStatusType : uint64_t {
     Ack = 1,
     Response = 2,
     Timed = 3,
@@ -8103,12 +8103,12 @@ enum class ListStatusType : int {
     Alert = 6,
 };
 
-enum class NetGrossInd : int {
+enum class NetGrossInd : uint64_t {
     Net = 1,
     Gross = 2,
 };
 
-enum class ListOrderStatus : int {
+enum class ListOrderStatus : uint64_t {
     InBiddingProcess = 1,
     ReceivedForExecution = 2,
     Executing = 3,
@@ -8118,7 +8118,7 @@ enum class ListOrderStatus : int {
     Reject = 7,
 };
 
-enum class ListExecInstType : char {
+enum class ListExecInstType : uint64_t {
     Immediate = '1',
     WaitForInstruction = '2',
     SellDriven = '3',
@@ -8126,18 +8126,18 @@ enum class ListExecInstType : char {
     BuyDrivenCashWithdraw = '5',
 };
 
-enum class CxlRejResponseTo : char {
+enum class CxlRejResponseTo : uint64_t {
     OrderCancelRequest = '1',
     OrderCancelReplaceRequest = '2',
 };
 
-enum class MultiLegReportingType : char {
+enum class MultiLegReportingType : uint64_t {
     SingleSecurity = '1',
     IndividualLegOfAMultiLegSecurity = '2',
     MultiLegSecurity = '3',
 };
 
-enum class PartyIDSource : char {
+enum class PartyIDSource : uint64_t {
     UKNationalInsuranceOrPensionNumber = '6',
     USSocialSecurityNumber = '7',
     USEmployerOrTaxIDNumber = '8',
@@ -8171,7 +8171,7 @@ enum class PartyIDSource : char {
     KoreaShortSellingRegistrationNumber = 'V',
 };
 
-enum class PartyRole : int {
+enum class PartyRole : uint64_t {
     ExecutingFirm = 1,
     BrokerOfCredit = 2,
     ClientID = 3,
@@ -8302,7 +8302,7 @@ enum class PartyRole : int {
     SecondaryPlaceOfListing = 130,
 };
 
-enum class Product : int {
+enum class Product : uint64_t {
     AGENCY = 1,
     COMMODITY = 2,
     CORPORATE = 3,
@@ -8318,18 +8318,18 @@ enum class Product : int {
     FINANCING = 13,
 };
 
-enum class TestMessageIndicator : int {
-    False = N,
-    True = Y,
+enum class TestMessageIndicator : uint64_t {
+    False = 12638230081509142225ULL,
+    True = 12638248773206821812ULL,
 };
 
-enum class RoundingDirection : char {
+enum class RoundingDirection : uint64_t {
     RoundToNearest = '0',
     RoundDown = '1',
     RoundUp = '2',
 };
 
-enum class DistribPaymentMethod : int {
+enum class DistribPaymentMethod : uint64_t {
     CREST = 1,
     NSCC = 2,
     Euroclear = 3,
@@ -8345,14 +8345,14 @@ enum class DistribPaymentMethod : int {
     Other = 999,
 };
 
-enum class CancellationRights : char {
+enum class CancellationRights : uint64_t {
     Yes = 'Y',
     NoExecutionOnly = 'N',
     NoWaiverAgreement = 'M',
     NoInstitutional = 'O',
 };
 
-enum class MoneyLaunderingStatus : char {
+enum class MoneyLaunderingStatus : uint64_t {
     Passed = 'Y',
     NotChecked = 'N',
     ExemptBelowLimit = '1',
@@ -8360,7 +8360,7 @@ enum class MoneyLaunderingStatus : char {
     ExemptAuthorised = '3',
 };
 
-enum class ExecPriceType : char {
+enum class ExecPriceType : uint64_t {
     BidPrice = 'B',
     CreationPrice = 'C',
     CreationPricePlusAdjustmentPercent = 'D',
@@ -8371,7 +8371,7 @@ enum class ExecPriceType : char {
     SinglePrice = 'S',
 };
 
-enum class TradeReportTransType : int {
+enum class TradeReportTransType : uint64_t {
     New = 0,
     Cancel = 1,
     Replace = 2,
@@ -8380,7 +8380,7 @@ enum class TradeReportTransType : int {
     CancelDueToBackOutOfTrade = 5,
 };
 
-enum class PaymentMethod : int {
+enum class PaymentMethod : uint64_t {
     CREST = 1,
     NSCC = 2,
     Euroclear = 3,
@@ -8404,7 +8404,7 @@ enum class PaymentMethod : int {
     Other = 999,
 };
 
-enum class TaxAdvantageType : int {
+enum class TaxAdvantageType : uint64_t {
     None = 0,
     MaxiISA = 1,
     TESSA = 2,
@@ -8438,19 +8438,19 @@ enum class TaxAdvantageType : int {
     Other = 999,
 };
 
-enum class FundRenewWaiv : char {
+enum class FundRenewWaiv : uint64_t {
     No = 'N',
     Yes = 'Y',
 };
 
-enum class RegistStatus : char {
+enum class RegistStatus : uint64_t {
     Accepted = 'A',
     Rejected = 'R',
     Held = 'H',
     Reminder = 'N',
 };
 
-enum class RegistRejReasonCode : int {
+enum class RegistRejReasonCode : uint64_t {
     InvalidAccountType = 1,
     InvalidTaxExemptType = 2,
     InvalidOwnershipType = 3,
@@ -8472,19 +8472,19 @@ enum class RegistRejReasonCode : int {
     Other = 99,
 };
 
-enum class RegistTransType : char {
+enum class RegistTransType : uint64_t {
     New = '0',
     Cancel = '2',
     Replace = '1',
 };
 
-enum class OwnershipType : char {
+enum class OwnershipType : uint64_t {
     JointInvestors = 'J',
     TenantsInCommon = 'T',
     JointTrustees = '2',
 };
 
-enum class ContAmtType : int {
+enum class ContAmtType : uint64_t {
     CommissionAmount = 1,
     CommissionPercent = 2,
     InitialChargeAmount = 3,
@@ -8502,7 +8502,7 @@ enum class ContAmtType : int {
     NetSettlementAmount = 15,
 };
 
-enum class OwnerType : int {
+enum class OwnerType : uint64_t {
     IndividualInvestor = 1,
     PublicCompany = 2,
     PrivateCompany = 3,
@@ -8527,7 +8527,7 @@ enum class OwnerType : int {
     FirmAgencyAveragePriceAccount = 22,
 };
 
-enum class OrderCapacity : char {
+enum class OrderCapacity : uint64_t {
     Agency = 'A',
     Proprietary = 'G',
     Individual = 'I',
@@ -8537,7 +8537,7 @@ enum class OrderCapacity : char {
     MixedCapacity = 'M',
 };
 
-enum class OrderRestrictions : int {
+enum class OrderRestrictions : uint64_t {
     ProgramTrade = 1,
     IndexArbitrage = 2,
     NonIndexArbitrage = 3,
@@ -8547,18 +8547,18 @@ enum class OrderRestrictions : int {
     ForeignEntity = 7,
     ExternalMarketParticipant = 8,
     ExternalInterConnectedMarketLinkage = 9,
-    RisklessArbitrage = A,
-    IssuerHolding = B,
-    IssuePriceStabilization = C,
-    NonAlgorithmic = D,
-    Algorithmic = E,
-    Cross = F,
-    InsiderAccount = G,
-    SignificantShareholder = H,
-    NormalCourseIssuerBid = I,
+    RisklessArbitrage = 12638222384927744748ULL,
+    IssuerHolding = 12638225683462629381ULL,
+    IssuePriceStabilization = 12638224583951001170ULL,
+    NonAlgorithmic = 12638219086392860115ULL,
+    Algorithmic = 12638217986881231904ULL,
+    Cross = 12638221285416116537ULL,
+    InsiderAccount = 12638220185904488326ULL,
+    SignificantShareholder = 12638232280532398647ULL,
+    NormalCourseIssuerBid = 12638231181020770436ULL,
 };
 
-enum class MassCancelRequestType : char {
+enum class MassCancelRequestType : uint64_t {
     CancelOrdersForASecurity = '1',
     CancelOrdersForAnUnderlyingSecurity = '2',
     CancelOrdersForAProduct = '3',
@@ -8573,7 +8573,7 @@ enum class MassCancelRequestType : char {
     CancelForIssuerOfUnderlyingSecurity = 'C',
 };
 
-enum class MassCancelResponse : char {
+enum class MassCancelResponse : uint64_t {
     CancelRequestRejected = '0',
     CancelOrdersForASecurity = '1',
     CancelOrdersForAnUnderlyingSecurity = '2',
@@ -8589,7 +8589,7 @@ enum class MassCancelResponse : char {
     CancelOrdersForIssuerOfUnderlyingSecurity = 'C',
 };
 
-enum class MassCancelRejectReason : int {
+enum class MassCancelRejectReason : uint64_t {
     MassCancelNotSupported = 0,
     InvalidOrUnknownSecurity = 1,
     InvalidOrUnknownUnderlyingSecurity = 2,
@@ -8605,7 +8605,7 @@ enum class MassCancelRejectReason : int {
     Other = 99,
 };
 
-enum class QuoteType : int {
+enum class QuoteType : uint64_t {
     Indicative = 0,
     Tradeable = 1,
     RestrictedTradeable = 2,
@@ -8613,24 +8613,24 @@ enum class QuoteType : int {
     InitiallyTradeable = 4,
 };
 
-enum class CashMargin : char {
+enum class CashMargin : uint64_t {
     Cash = '1',
     MarginOpen = '2',
     MarginClose = '3',
 };
 
-enum class Scope : int {
+enum class Scope : uint64_t {
     LocalMarket = 1,
     National = 2,
     Global = 3,
 };
 
-enum class MDImplicitDelete : int {
-    No = N,
-    Yes = Y,
+enum class MDImplicitDelete : uint64_t {
+    No = 12638230081509142225ULL,
+    Yes = 12638248773206821812ULL,
 };
 
-enum class CrossType : int {
+enum class CrossType : uint64_t {
     CrossAON = 1,
     CrossIOC = 2,
     CrossOneSide = 3,
@@ -8642,18 +8642,18 @@ enum class CrossType : int {
     CustomerToCustomer = 9,
 };
 
-enum class CrossPrioritization : int {
+enum class CrossPrioritization : uint64_t {
     None = 0,
     BuySideIsPrioritized = 1,
     SellSideIsPrioritized = 2,
 };
 
-enum class NoSides : int {
+enum class NoSides : uint64_t {
     OneSide = 1,
     BothSides = 2,
 };
 
-enum class SecurityListRequestType : int {
+enum class SecurityListRequestType : uint64_t {
     Symbol = 0,
     SecurityTypeAnd = 1,
     Product = 2,
@@ -8662,7 +8662,7 @@ enum class SecurityListRequestType : int {
     MarketIDOrMarketID = 5,
 };
 
-enum class SecurityRequestResult : int {
+enum class SecurityRequestResult : uint64_t {
     ValidRequest = 0,
     InvalidOrUnsupportedRequest = 1,
     NoInstrumentsFound = 2,
@@ -8671,18 +8671,18 @@ enum class SecurityRequestResult : int {
     RequestForInstrumentDataNotSupported = 5,
 };
 
-enum class MultiLegRptTypeReq : int {
+enum class MultiLegRptTypeReq : uint64_t {
     ReportByMulitlegSecurityOnly = 0,
     ReportByMultilegSecurityAndInstrumentLegs = 1,
     ReportByInstrumentLegsOnly = 2,
 };
 
-enum class TradSesStatusRejReason : int {
+enum class TradSesStatusRejReason : uint64_t {
     UnknownOrInvalidTradingSessionID = 1,
     Other = 99,
 };
 
-enum class TradeRequestType : int {
+enum class TradeRequestType : uint64_t {
     AllTrades = 0,
     MatchedTradesMatchingCriteria = 1,
     UnmatchedTradesThatMatchCriteria = 2,
@@ -8690,19 +8690,19 @@ enum class TradeRequestType : int {
     AdvisoriesThatMatchCriteria = 4,
 };
 
-enum class PreviouslyReported : int {
-    NotReportedToCounterparty = N,
-    PreviouslyReportedToCounterparty = Y,
+enum class PreviouslyReported : uint64_t {
+    NotReportedToCounterparty = 12638230081509142225ULL,
+    PreviouslyReportedToCounterparty = 12638248773206821812ULL,
 };
 
-enum class MatchStatus : char {
+enum class MatchStatus : uint64_t {
     Compared = '0',
     Uncompared = '1',
     AdvisoryOrAlert = '2',
     Mismatched = '3',
 };
 
-enum class MatchType : int {
+enum class MatchType : uint64_t {
     OnePartyTradeReport = 1,
     TwoPartyTradeReport = 2,
     ConfirmedTradeReport = 3,
@@ -8714,32 +8714,32 @@ enum class MatchType : int {
     SystematicInternaliser = 9,
     AutoMatchLastLook = 10,
     CrossAuctionLastLook = 11,
-    ACTAcceptedTrade = M3,
-    ACTDefaultTrade = M4,
-    ACTDefaultAfterM2 = M5,
-    ACTM6Match = M6,
-    ExactMatchPlus4BadgesExecTime = A1,
-    ExactMatchPlus4Badges = A2,
-    ExactMatchPlus2BadgesExecTime = A3,
-    ExactMatchPlus2Badges = A4,
-    ExactMatchPlusExecTime = A5,
-    StampedAdvisoriesOrSpecialistAccepts = AQ,
-    A1ExactMatchSummarizedQuantity = S1,
-    A2ExactMatchSummarizedQuantity = S2,
-    A3ExactMatchSummarizedQuantity = S3,
-    A4ExactMatchSummarizedQuantity = S4,
-    A5ExactMatchSummarizedQuantity = S5,
-    ExactMatchMinusBadgesTimes = M1,
-    SummarizedMatchMinusBadgesTimes = M2,
-    OCSLockedIn = MT,
+    ACTAcceptedTrade = 654725122592905009ULL,
+    ACTDefaultTrade = 654726222104533220ULL,
+    ACTDefaultAfterM2 = 654727321616161431ULL,
+    ACTM6Match = 654728421127789642ULL,
+    ExactMatchPlus4BadgesExecTime = 650931807476333959ULL,
+    ExactMatchPlus4Badges = 650932906987962170ULL,
+    ExactMatchPlus2BadgesExecTime = 650934006499590381ULL,
+    ExactMatchPlus2Badges = 650926309918192904ULL,
+    ExactMatchPlusExecTime = 650927409429821115ULL,
+    StampedAdvisoriesOrSpecialistAccepts = 650896623104231207ULL,
+    A1ExactMatchSummarizedQuantity = 668220528314917673ULL,
+    A2ExactMatchSummarizedQuantity = 668217229780033040ULL,
+    A3ExactMatchSummarizedQuantity = 668218329291661251ULL,
+    A4ExactMatchSummarizedQuantity = 668223826849802306ULL,
+    A5ExactMatchSummarizedQuantity = 668224926361430517ULL,
+    ExactMatchMinusBadgesTimes = 654722923569648587ULL,
+    SummarizedMatchMinusBadgesTimes = 654724023081276798ULL,
+    OCSLockedIn = 654831775220841476ULL,
 };
 
-enum class OddLot : int {
-    TreatAsRoundLot = N,
-    TreatAsOddLot = Y,
+enum class OddLot : uint64_t {
+    TreatAsRoundLot = 12638230081509142225ULL,
+    TreatAsOddLot = 12638248773206821812ULL,
 };
 
-enum class ClearingInstruction : int {
+enum class ClearingInstruction : uint64_t {
     ProcessNormally = 0,
     ExcludeFromAllNetting = 1,
     BilateralNettingOnly = 2,
@@ -8757,7 +8757,7 @@ enum class ClearingInstruction : int {
     BuyIn = 14,
 };
 
-enum class AccountType : int {
+enum class AccountType : uint64_t {
     CarriedCustomerSide = 1,
     CarriedNonCustomerSide = 2,
     HouseTrader = 3,
@@ -8772,7 +8772,7 @@ enum class AccountType : int {
     AccountOrdersMultipleCustomers = 13,
 };
 
-enum class CustOrderCapacity : int {
+enum class CustOrderCapacity : uint64_t {
     MemberTradingForTheirOwnAccount = 1,
     ClearingFirmTradingForItsProprietaryAccount = 2,
     MemberTradingForAnotherMember = 3,
@@ -8780,7 +8780,7 @@ enum class CustOrderCapacity : int {
     RetailCustomer = 5,
 };
 
-enum class MassStatusReqType : int {
+enum class MassStatusReqType : uint64_t {
     StatusForOrdersForASecurity = 1,
     StatusForOrdersForAnUnderlyingSecurity = 2,
     StatusForOrdersForAProduct = 3,
@@ -8793,24 +8793,24 @@ enum class MassStatusReqType : int {
     StatusForIssuerOfUnderlyingSecurity = 10,
 };
 
-enum class DayBookingInst : char {
+enum class DayBookingInst : uint64_t {
     Auto = '0',
     SpeakWithOrderInitiatorBeforeBooking = '1',
     Accumulate = '2',
 };
 
-enum class BookingUnit : char {
+enum class BookingUnit : uint64_t {
     EachPartialExecutionIsABookableUnit = '0',
     AggregatePartialExecutionsOnThisOrder = '1',
     AggregateExecutionsForThisSymbol = '2',
 };
 
-enum class PreallocMethod : char {
+enum class PreallocMethod : uint64_t {
     ProRata = '0',
     DoNotProRata = '1',
 };
 
-enum class TradingSessionSubID : int {
+enum class TradingSessionSubID : uint64_t {
     PreTrading = 1,
     OpeningOrOpeningAuction = 2,
     Continuous = 3,
@@ -8828,7 +8828,7 @@ enum class TradingSessionSubID : int {
     Other = 99,
 };
 
-enum class AllocType : int {
+enum class AllocType : uint64_t {
     Calculated = 1,
     Preliminary = 2,
     ReadyToBook = 5,
@@ -8854,39 +8854,39 @@ enum class AllocType : int {
     NotionalValueAveragePxGroupAlloc = 26,
 };
 
-enum class ClearingFeeIndicator : int {
+enum class ClearingFeeIndicator : uint64_t {
     FirstYearDelegate = 1,
     SecondYearDelegate = 2,
     ThirdYearDelegate = 3,
     FourthYearDelegate = 4,
     FifthYearDelegate = 5,
     SixthYearDelegate = 9,
-    CBOEMember = B,
-    NonMemberAndCustomer = C,
-    EquityMemberAndClearingMember = E,
-    FullAndAssociateMember = F,
-    Firms106HAnd106J = H,
-    GIM = I,
-    Lessee106FEmployees = L,
-    AllOtherOwnershipTypes = M,
+    CBOEMember = 12638225683462629381ULL,
+    NonMemberAndCustomer = 12638224583951001170ULL,
+    EquityMemberAndClearingMember = 12638217986881231904ULL,
+    FullAndAssociateMember = 12638221285416116537ULL,
+    Firms106HAnd106J = 12638232280532398647ULL,
+    GIM = 12638231181020770436ULL,
+    Lessee106FEmployees = 12638227882485885803ULL,
+    AllOtherOwnershipTypes = 12638226782974257592ULL,
 };
 
-enum class WorkingIndicator : int {
-    NotWorking = N,
-    Working = Y,
+enum class WorkingIndicator : uint64_t {
+    NotWorking = 12638230081509142225ULL,
+    Working = 12638248773206821812ULL,
 };
 
-enum class PriorityIndicator : int {
+enum class PriorityIndicator : uint64_t {
     PriorityUnchanged = 0,
     LostPriorityAsResultOfOrderChange = 1,
 };
 
-enum class LegalConfirm : int {
-    DoesNotConsituteALegalConfirm = N,
-    LegalConfirm = Y,
+enum class LegalConfirm : uint64_t {
+    DoesNotConsituteALegalConfirm = 12638230081509142225ULL,
+    LegalConfirm = 12638248773206821812ULL,
 };
 
-enum class QuoteRequestRejectReason : int {
+enum class QuoteRequestRejectReason : uint64_t {
     UnknownSymbol = 1,
     Exchange = 2,
     QuoteRequestExceedsLimit = 3,
@@ -8909,7 +8909,7 @@ enum class QuoteRequestRejectReason : int {
     Other = 99,
 };
 
-enum class AcctIDSource : int {
+enum class AcctIDSource : uint64_t {
     BIC = 1,
     SIDCode = 2,
     TFM = 3,
@@ -8919,7 +8919,7 @@ enum class AcctIDSource : int {
     Other = 99,
 };
 
-enum class ConfirmStatus : int {
+enum class ConfirmStatus : uint64_t {
     Received = 1,
     MismatchedAccount = 2,
     MissingSettlementInstructions = 3,
@@ -8927,25 +8927,25 @@ enum class ConfirmStatus : int {
     RequestRejected = 5,
 };
 
-enum class ConfirmTransType : int {
+enum class ConfirmTransType : uint64_t {
     New = 0,
     Replace = 1,
     Cancel = 2,
 };
 
-enum class DeliveryForm : int {
+enum class DeliveryForm : uint64_t {
     BookEntry = 1,
     Bearer = 2,
 };
 
-enum class LegSwapType : int {
+enum class LegSwapType : uint64_t {
     ParForPar = 1,
     ModifiedDuration = 2,
     Risk = 4,
     Proceeds = 5,
 };
 
-enum class QuotePriceType : int {
+enum class QuotePriceType : uint64_t {
     Percent = 1,
     PerShare = 2,
     FixedAmount = 3,
@@ -8972,7 +8972,7 @@ enum class QuotePriceType : int {
     PercentageOfNotional = 25,
 };
 
-enum class QuoteRespType : int {
+enum class QuoteRespType : uint64_t {
     Hit = 1,
     Counter = 2,
     Expired = 3,
@@ -8987,91 +8987,91 @@ enum class QuoteRespType : int {
     TerminateContract = 12,
 };
 
-enum class PosType : int {
-    AllocationTradeQty = ALC,
-    OptionAssignment = AS,
-    AsOfTradeQty = ASF,
-    DeliveryQty = DLV,
-    ElectronicTradeQty = ETR,
-    OptionExerciseQty = EX,
-    EndOfDayQty = FIN,
-    IntraSpreadQty = IAS,
-    InterSpreadQty = IES,
-    AdjustmentQty = PA,
-    PitTradeQty = PIT,
-    StartOfDayQty = SOD,
-    IntegralSplit = SPL,
-    TransactionFromAssignment = TA,
-    TotalTransactionQty = TOT,
-    TransactionQuantity = TQ,
-    TransferTradeQty = TRF,
-    TransactionFromExercise = TX,
-    CrossMarginQty = XM,
-    ReceiveQuantity = RCV,
-    CorporateActionAdjustment = CAA,
-    DeliveryNoticeQty = DN,
-    ExchangeForPhysicalQty = EP,
-    PrivatelyNegotiatedTradeQty = PNTN,
-    NetDeltaQty = DLT,
-    CreditEventAdjustment = CEA,
-    SuccessionEventAdjustment = SEA,
-    NetQty = NET,
-    GrossQty = GRS,
-    IntradayQty = ITD,
-    GrossLongNonDeltaAdjustedSwaptionPosition = NDAS,
-    LongDeltaAdjustedPairedSwaptionPosition = DAS,
-    ExpiringQuantity = EXP,
-    QuantityNotExercised = UNEX,
-    RequestedExerciseQuantity = REQ,
-    CashFuturesEquivalentQuantity = CFE,
-    LoanOrBorrowedQuantity = SECLN,
+enum class PosType : uint64_t {
+    AllocationTradeQty = 18014348042010559481ULL,
+    OptionAssignment = 650898822127487629ULL,
+    AsOfTradeQty = 18044137110547814129ULL,
+    DeliveryQty = 16164962886779224065ULL,
+    ElectronicTradeQty = 15670861052897771402ULL,
+    OptionExerciseQty = 647218756708622312ULL,
+    EndOfDayQty = 17515506213500835322ULL,
+    IntraSpreadQty = 4695919714979990276ULL,
+    InterSpreadQty = 4691952677026161888ULL,
+    AdjustmentQty = 667138608872947274ULL,
+    PitTradeQty = 10181407415924971218ULL,
+    StartOfDayQty = 10947013855130082633ULL,
+    IntegralSplit = 10951805526804880046ULL,
+    TransactionFromAssignment = 663453045895940902ULL,
+    TotalTransactionQty = 7824432717671567952ULL,
+    TransactionQuantity = 663470638081992278ULL,
+    TransferTradeQty = 7829204598137057567ULL,
+    TransactionFromExercise = 663480533686646177ULL,
+    CrossMarginQty = 674795607850294878ULL,
+    ReceiveQuantity = 11561778294090824508ULL,
+    CorporateActionAdjustment = 828365573527208856ULL,
+    DeliveryNoticeQty = 648019201173770695ULL,
+    ExchangeForPhysicalQty = 647209960615596624ULL,
+    PrivatelyNegotiatedTradeQty = 12144164310553199729ULL,
+    NetDeltaQty = 16164960687755967643ULL,
+    CreditEventAdjustment = 832332611481037244ULL,
+    SuccessionEventAdjustment = 10941418440455252204ULL,
+    NetQty = 3951084149939249912ULL,
+    GrossQty = 16913453228471380893ULL,
+    IntradayQty = 4706326592538925916ULL,
+    GrossLongNonDeltaAdjustedSwaptionPosition = 346097424195225435ULL,
+    LongDeltaAdjustedPairedSwaptionPosition = 16152493325406143039ULL,
+    ExpiringQuantity = 15674579601223624104ULL,
+    QuantityNotExercised = 8769525453650310383ULL,
+    RequestedExerciseQuantity = 11555861822020556467ULL,
+    CashFuturesEquivalentQuantity = 829319949620306779ULL,
+    LoanOrBorrowedQuantity = 4105536334361883612ULL,
 };
 
-enum class PosQtyStatus : int {
+enum class PosQtyStatus : uint64_t {
     Submitted = 0,
     Accepted = 1,
     Rejected = 2,
 };
 
-enum class PosAmtType : int {
-    CashAmount = CASH,
-    CashResidualAmount = CRES,
-    FinalMarkToMarketAmount = FMTM,
-    IncrementalMarkToMarketAmount = IMTM,
-    PremiumAmount = PREM,
-    StartOfDayMarkToMarketAmount = SMTM,
-    TradeVariationAmount = TVAR,
-    ValueAdjustedAmount = VADJ,
-    SettlementValue = SETL,
-    InitialTradeCouponAmount = ICPN,
-    AccruedCouponAmount = ACPN,
-    CouponAmount = CPN,
-    IncrementalAccruedCoupon = IACPN,
-    CollateralizedMarkToMarket = CMTM,
-    IncrementalCollateralizedMarkToMarket = ICMTM,
-    CompensationAmount = DLV,
-    TotalBankedAmount = BANK,
-    TotalCollateralizedAmount = COLAT,
-    LongPairedSwapNotionalValue = LSNV,
-    ShortPairedSwapNotionalValue = SSNV,
-    StartOfDayAccruedCoupon = SACPN,
-    NetPresentValue = NPV,
-    StartOfDayNetPresentValue = SNPV,
-    NetCashFlow = NCF,
-    PresentValueOfFees = PVFEES,
-    PresentValueOneBasisPoints = PV01,
-    FiveYearEquivalentNotional = 5YREN,
-    UndiscountedMarkToMarket = UMTM,
-    MarkToModel = MTD,
-    MarkToMarketVariance = VMTM,
-    MarkToModelVariance = VMTD,
-    UpfrontPayment = UPFRNT,
-    EndVale = ENDV,
-    OutstandingMarginLoan = MGNLN,
-    LoanValue = LNVL,
+enum class PosAmtType : uint64_t {
+    CashAmount = 14516893374743835474ULL,
+    CashResidualAmount = 2768703989392009348ULL,
+    FinalMarkToMarketAmount = 828590337596852655ULL,
+    IncrementalMarkToMarketAmount = 177468670806526688ULL,
+    PremiumAmount = 11058160185406236049ULL,
+    StartOfDayMarkToMarketAmount = 9729225607171337490ULL,
+    TradeVariationAmount = 10447602345655564520ULL,
+    ValueAdjustedAmount = 15542353359701296474ULL,
+    SettlementValue = 4766673333040337725ULL,
+    InitialTradeCouponAmount = 17372054817778925363ULL,
+    AccruedCouponAmount = 11124981295461515323ULL,
+    CouponAmount = 812107095084069624ULL,
+    IncrementalAccruedCoupon = 1794723763169334342ULL,
+    CollateralizedMarkToMarket = 3677794499441397026ULL,
+    IncrementalCollateralizedMarkToMarket = 10152385496396924171ULL,
+    CompensationAmount = 16164962886779224065ULL,
+    TotalBankedAmount = 12552342119523336375ULL,
+    TotalCollateralizedAmount = 17823938803074308172ULL,
+    LongPairedSwapNotionalValue = 1353909711343119820ULL,
+    ShortPairedSwapNotionalValue = 11006375433212806611ULL,
+    StartOfDayAccruedCoupon = 7355138398471923388ULL,
+    NetPresentValue = 3933056557286697631ULL,
+    StartOfDayNetPresentValue = 7891292965057177150ULL,
+    NetCashFlow = 3949327130357747184ULL,
+    PresentValueOfFees = 6568799030662304510ULL,
+    PresentValueOneBasisPoints = 8581598204445744704ULL,
+    FiveYearEquivalentNotional = 14360397251105183324ULL,
+    UndiscountedMarkToMarket = 8151901184945159372ULL,
+    MarkToModel = 2186839677621592256ULL,
+    MarkToMarketVariance = 13175772228354105951ULL,
+    MarkToModelVariance = 13175779924935503428ULL,
+    UpfrontPayment = 8711482186717688474ULL,
+    EndVale = 14898752460325875508ULL,
+    OutstandingMarginLoan = 1501253687873972499ULL,
+    LoanValue = 7799951658727490661ULL,
 };
 
-enum class PosTransType : int {
+enum class PosTransType : uint64_t {
     Exercise = 1,
     DoNotExercise = 2,
     PositionAdjustment = 3,
@@ -9090,21 +9090,21 @@ enum class PosTransType : int {
     Reopen = 16,
 };
 
-enum class PosMaintAction : int {
+enum class PosMaintAction : uint64_t {
     New = 1,
     Replace = 2,
     Cancel = 3,
     Reverse = 4,
 };
 
-enum class SettlSessID : int {
-    Intraday = ITD,
-    RegularTradingHours = RTH,
-    ElectronicTradingHours = ETH,
-    EndOfDay = EOD,
+enum class SettlSessID : uint64_t {
+    Intraday = 4706326592538925916ULL,
+    RegularTradingHours = 11541538484042690145ULL,
+    ElectronicTradingHours = 15670867649967540668ULL,
+    EndOfDay = 15666089172432281787ULL,
 };
 
-enum class AdjustmentType : int {
+enum class AdjustmentType : uint64_t {
     ProcessRequestAsMarginDisposition = 0,
     DeltaPlus = 1,
     DeltaMinus = 2,
@@ -9112,7 +9112,7 @@ enum class AdjustmentType : int {
     CustomerSpecificPosition = 4,
 };
 
-enum class PosMaintStatus : int {
+enum class PosMaintStatus : uint64_t {
     Accepted = 0,
     AcceptedWithWarnings = 1,
     Rejected = 2,
@@ -9120,13 +9120,13 @@ enum class PosMaintStatus : int {
     CompletedWithWarnings = 4,
 };
 
-enum class PosMaintResult : int {
+enum class PosMaintResult : uint64_t {
     SuccessfulCompletion = 0,
     Rejected = 1,
     Other = 99,
 };
 
-enum class PosReqType : int {
+enum class PosReqType : uint64_t {
     Positions = 0,
     Trades = 1,
     Exercises = 2,
@@ -9140,12 +9140,12 @@ enum class PosReqType : int {
     PositionLimitReportingSubmissing = 10,
 };
 
-enum class ResponseTransportType : int {
+enum class ResponseTransportType : uint64_t {
     Inband = 0,
     OutOfBand = 1,
 };
 
-enum class PosReqResult : int {
+enum class PosReqResult : uint64_t {
     ValidRequest = 0,
     InvalidOrUnsupportedRequest = 1,
     NoPositionsFoundThatMatchCriteria = 2,
@@ -9154,28 +9154,28 @@ enum class PosReqResult : int {
     Other = 99,
 };
 
-enum class PosReqStatus : int {
+enum class PosReqStatus : uint64_t {
     Completed = 0,
     CompletedWithWarnings = 1,
     Rejected = 2,
 };
 
-enum class SettlPriceType : int {
+enum class SettlPriceType : uint64_t {
     Final = 1,
     Theoretical = 2,
 };
 
-enum class AssignmentMethod : char {
+enum class AssignmentMethod : uint64_t {
     ProRata = 'P',
     Random = 'R',
 };
 
-enum class ExerciseMethod : char {
+enum class ExerciseMethod : uint64_t {
     Automatic = 'A',
     Manual = 'M',
 };
 
-enum class TradeRequestResult : int {
+enum class TradeRequestResult : uint64_t {
     Successful = 0,
     InvalidOrUnknownInstrument = 1,
     InvalidTypeOfTradeRequested = 2,
@@ -9187,13 +9187,13 @@ enum class TradeRequestResult : int {
     Other = 99,
 };
 
-enum class TradeRequestStatus : int {
+enum class TradeRequestStatus : uint64_t {
     Accepted = 0,
     Completed = 1,
     Rejected = 2,
 };
 
-enum class TradeReportRejectReason : int {
+enum class TradeReportRejectReason : uint64_t {
     Successful = 0,
     InvalidPartyInformation = 1,
     UnknownInstrument = 2,
@@ -9205,13 +9205,13 @@ enum class TradeReportRejectReason : int {
     Other = 99,
 };
 
-enum class SideMultiLegReportingType : int {
+enum class SideMultiLegReportingType : uint64_t {
     SingleSecurity = 1,
     IndividualLegOfAMultilegSecurity = 2,
     MultilegSecurity = 3,
 };
 
-enum class TrdRegTimestampType : int {
+enum class TrdRegTimestampType : uint64_t {
     ExecutionTime = 1,
     TimeIn = 2,
     TimeOut = 3,
@@ -9250,13 +9250,13 @@ enum class TrdRegTimestampType : int {
     UpdateTime = 36,
 };
 
-enum class ConfirmType : int {
+enum class ConfirmType : uint64_t {
     Status = 1,
     Confirmation = 2,
     ConfirmationRequestRejected = 3,
 };
 
-enum class ConfirmRejReason : int {
+enum class ConfirmRejReason : uint64_t {
     MismatchedAccount = 1,
     MissingSettlementInstructions = 2,
     UnknownOrMissingIndividualAllocId = 3,
@@ -9279,13 +9279,13 @@ enum class ConfirmRejReason : int {
     Other = 99,
 };
 
-enum class BookingType : int {
+enum class BookingType : uint64_t {
     RegularBooking = 0,
     CFD = 1,
     TotalReturnSwap = 2,
 };
 
-enum class AllocSettlInstType : int {
+enum class AllocSettlInstType : uint64_t {
     UseDefaultInstructions = 0,
     DeriveFromParametersProvided = 1,
     FullDetailsProvided = 2,
@@ -9293,26 +9293,26 @@ enum class AllocSettlInstType : int {
     PhoneForInstructions = 4,
 };
 
-enum class DlvyInstType : char {
+enum class DlvyInstType : uint64_t {
     Cash = 'C',
     Securities = 'S',
 };
 
-enum class TerminationType : int {
+enum class TerminationType : uint64_t {
     Overnight = 1,
     Term = 2,
     Flexible = 3,
     Open = 4,
 };
 
-enum class SettlInstReqRejCode : int {
+enum class SettlInstReqRejCode : uint64_t {
     UnableToProcessRequest = 0,
     UnknownAccount = 1,
     NoMatchingSettlementInstructionsFound = 2,
     Other = 99,
 };
 
-enum class AllocReportType : int {
+enum class AllocReportType : uint64_t {
     PreliminaryRequestToIntermediary = 2,
     SellsideCalculatedUsingPreliminary = 3,
     SellsideCalculatedWithoutPreliminary = 4,
@@ -9330,14 +9330,14 @@ enum class AllocReportType : int {
     SubAllocationGiveup = 19,
 };
 
-enum class AllocCancReplaceReason : int {
+enum class AllocCancReplaceReason : uint64_t {
     OriginalDetailsIncomplete = 1,
     ChangeInUnderlyingOrderDetails = 2,
     CancelledByGiveupFirm = 3,
     Other = 99,
 };
 
-enum class AllocAccountType : int {
+enum class AllocAccountType : uint64_t {
     CarriedCustomerSide = 1,
     CarriedNonCustomerSide = 2,
     HouseTrader = 3,
@@ -9347,7 +9347,7 @@ enum class AllocAccountType : int {
     JointBackOfficeAccount = 8,
 };
 
-enum class PartySubIDType : int {
+enum class PartySubIDType : uint64_t {
     Firm = 1,
     Person = 2,
     System = 3,
@@ -9437,7 +9437,7 @@ enum class PartySubIDType : int {
     LegalRegistrationCountry = 87,
 };
 
-enum class AllocIntermedReqType : int {
+enum class AllocIntermedReqType : uint64_t {
     PendingAccept = 1,
     PendingRelease = 2,
     PendingReversal = 3,
@@ -9446,21 +9446,21 @@ enum class AllocIntermedReqType : int {
     AccountLevelReject = 6,
 };
 
-enum class ApplQueueResolution : int {
+enum class ApplQueueResolution : uint64_t {
     NoActionTaken = 0,
     QueueFlushed = 1,
     OverlayLast = 2,
     EndSession = 3,
 };
 
-enum class ApplQueueAction : int {
+enum class ApplQueueAction : uint64_t {
     NoActionTaken = 0,
     QueueFlushed = 1,
     OverlayLast = 2,
     EndSession = 3,
 };
 
-enum class AvgPxIndicator : int {
+enum class AvgPxIndicator : uint64_t {
     NoAveragePricing = 0,
     Trade = 1,
     LastTrade = 2,
@@ -9468,7 +9468,7 @@ enum class AvgPxIndicator : int {
     AveragePricedTrade = 4,
 };
 
-enum class TradeAllocIndicator : int {
+enum class TradeAllocIndicator : uint64_t {
     AllocationNotRequired = 0,
     AllocationRequired = 1,
     UseAllocationProvidedWithTheTrade = 2,
@@ -9478,13 +9478,13 @@ enum class TradeAllocIndicator : int {
     TradeSplit = 6,
 };
 
-enum class ExpirationCycle : int {
+enum class ExpirationCycle : uint64_t {
     ExpireOnTradingSessionClose = 0,
     ExpireOnTradingSessionOpen = 1,
     SpecifiedExpiration = 2,
 };
 
-enum class TrdType : int {
+enum class TrdType : uint64_t {
     RegularTrade = 0,
     BlockTrade = 1,
     EFP = 2,
@@ -9556,7 +9556,7 @@ enum class TrdType : int {
     FinancingTransaction = 47,
 };
 
-enum class TrdSubType : int {
+enum class TrdSubType : uint64_t {
     CMTA = 0,
     InternalTransferOrAdjustment = 1,
     ExternalTransferOrTransferOfAccount = 2,
@@ -9611,12 +9611,12 @@ enum class TrdSubType : int {
     LargeInScale = 39,
 };
 
-enum class PegMoveType : int {
+enum class PegMoveType : uint64_t {
     Floating = 0,
     Fixed = 1,
 };
 
-enum class PegOffsetType : int {
+enum class PegOffsetType : uint64_t {
     Price = 0,
     BasisPoints = 1,
     Ticks = 2,
@@ -9624,61 +9624,61 @@ enum class PegOffsetType : int {
     Percentage = 4,
 };
 
-enum class PegLimitType : int {
+enum class PegLimitType : uint64_t {
     OrBetter = 0,
     Strict = 1,
     OrWorse = 2,
 };
 
-enum class PegRoundDirection : int {
+enum class PegRoundDirection : uint64_t {
     MoreAggressive = 1,
     MorePassive = 2,
 };
 
-enum class PegScope : int {
+enum class PegScope : uint64_t {
     Local = 1,
     National = 2,
     Global = 3,
     NationalExcludingLocal = 4,
 };
 
-enum class DiscretionMoveType : int {
+enum class DiscretionMoveType : uint64_t {
     Floating = 0,
     Fixed = 1,
 };
 
-enum class DiscretionOffsetType : int {
+enum class DiscretionOffsetType : uint64_t {
     Price = 0,
     BasisPoints = 1,
     Ticks = 2,
     PriceTier = 3,
 };
 
-enum class DiscretionLimitType : int {
+enum class DiscretionLimitType : uint64_t {
     OrBetter = 0,
     Strict = 1,
     OrWorse = 2,
 };
 
-enum class DiscretionRoundDirection : int {
+enum class DiscretionRoundDirection : uint64_t {
     MoreAggressive = 1,
     MorePassive = 2,
 };
 
-enum class DiscretionScope : int {
+enum class DiscretionScope : uint64_t {
     Local = 1,
     National = 2,
     Global = 3,
     NationalExcludingLocal = 4,
 };
 
-enum class TargetStrategy : int {
+enum class TargetStrategy : uint64_t {
     VWAP = 1,
     Participate = 2,
     MininizeMarketImpact = 3,
 };
 
-enum class LastLiquidityInd : int {
+enum class LastLiquidityInd : uint64_t {
     NeitherAddedNorRemovedLiquidity = 0,
     AddedLiquidity = 1,
     RemovedLiquidity = 2,
@@ -9693,12 +9693,12 @@ enum class LastLiquidityInd : int {
     Other = 11,
 };
 
-enum class PublishTrdIndicator : int {
-    DoNotReportTrade = N,
-    ReportTrade = Y,
+enum class PublishTrdIndicator : uint64_t {
+    DoNotReportTrade = 12638230081509142225ULL,
+    ReportTrade = 12638248773206821812ULL,
 };
 
-enum class ShortSaleReason : int {
+enum class ShortSaleReason : uint64_t {
     DealerSoldShort = 0,
     DealerSoldShortExempt = 1,
     SellingCustomerSoldShort = 2,
@@ -9707,13 +9707,13 @@ enum class ShortSaleReason : int {
     QSROrAGUContraSideSoldShortExempt = 5,
 };
 
-enum class QtyType : int {
+enum class QtyType : uint64_t {
     Units = 0,
     Contracts = 1,
     UnitsOfMeasurePerTimeUnit = 2,
 };
 
-enum class TradeReportType : int {
+enum class TradeReportType : uint64_t {
     Submit = 0,
     Alleged = 1,
     Accept = 2,
@@ -9735,12 +9735,12 @@ enum class TradeReportType : int {
     NonMaterialUpdate = 18,
 };
 
-enum class AllocNoOrdersType : int {
+enum class AllocNoOrdersType : uint64_t {
     NotSpecified = 0,
     ExplicitListProvided = 1,
 };
 
-enum class EventType : int {
+enum class EventType : uint64_t {
     Put = 1,
     Call = 2,
     Tender = 3,
@@ -9771,7 +9771,7 @@ enum class EventType : int {
     Other = 99,
 };
 
-enum class InstrAttribType : int {
+enum class InstrAttribType : uint64_t {
     Flat = 1,
     ZeroCoupon = 2,
     InterestBearing = 3,
@@ -9816,7 +9816,7 @@ enum class InstrAttribType : int {
     Text = 99,
 };
 
-enum class CPProgram : int {
+enum class CPProgram : uint64_t {
     Program3a3 = 1,
     Program42 = 2,
     Program3a2 = 3,
@@ -9828,18 +9828,18 @@ enum class CPProgram : int {
     Other = 99,
 };
 
-enum class MiscFeeBasis : int {
+enum class MiscFeeBasis : uint64_t {
     Absolute = 0,
     PerUnit = 1,
     Percentage = 2,
 };
 
-enum class LastFragment : int {
-    NotLastMessage = N,
-    LastMessage = Y,
+enum class LastFragment : uint64_t {
+    NotLastMessage = 12638230081509142225ULL,
+    LastMessage = 12638248773206821812ULL,
 };
 
-enum class CollAsgnReason : int {
+enum class CollAsgnReason : uint64_t {
     Initial = 0,
     Scheduled = 1,
     TimeWarning = 2,
@@ -9853,7 +9853,7 @@ enum class CollAsgnReason : int {
     Pledge = 10,
 };
 
-enum class CollInquiryQualifier : int {
+enum class CollInquiryQualifier : uint64_t {
     TradeDate = 0,
     GCInstrument = 1,
     CollateralInstrument = 2,
@@ -9864,7 +9864,7 @@ enum class CollInquiryQualifier : int {
     OutstandingTrades = 7,
 };
 
-enum class CollAsgnTransType : int {
+enum class CollAsgnTransType : uint64_t {
     New = 0,
     Replace = 1,
     Cancel = 2,
@@ -9872,7 +9872,7 @@ enum class CollAsgnTransType : int {
     Reverse = 4,
 };
 
-enum class CollAsgnRespType : int {
+enum class CollAsgnRespType : uint64_t {
     Received = 0,
     Accepted = 1,
     Declined = 2,
@@ -9881,7 +9881,7 @@ enum class CollAsgnRespType : int {
     TransactionCompletedWithWarning = 5,
 };
 
-enum class CollAsgnRejectReason : int {
+enum class CollAsgnRejectReason : uint64_t {
     UnknownDeal = 0,
     UnknownOrInvalidInstrument = 1,
     UnauthorizedTransaction = 2,
@@ -9891,7 +9891,7 @@ enum class CollAsgnRejectReason : int {
     Other = 99,
 };
 
-enum class CollStatus : int {
+enum class CollStatus : uint64_t {
     Unassigned = 0,
     PartiallyAssigned = 1,
     AssignmentProposed = 2,
@@ -9900,12 +9900,12 @@ enum class CollStatus : int {
     Reused = 5,
 };
 
-enum class LastRptRequested : int {
-    NotLastMessage = N,
-    LastMessage = Y,
+enum class LastRptRequested : uint64_t {
+    NotLastMessage = 12638230081509142225ULL,
+    LastMessage = 12638248773206821812ULL,
 };
 
-enum class DeliveryType : int {
+enum class DeliveryType : uint64_t {
     VersusPayment = 0,
     Free = 1,
     TriParty = 2,
@@ -9913,7 +9913,7 @@ enum class DeliveryType : int {
     DeliverByValue = 4,
 };
 
-enum class UserRequestType : int {
+enum class UserRequestType : uint64_t {
     LogOnUser = 1,
     LogOffUser = 2,
     ChangePasswordForUser = 3,
@@ -9921,7 +9921,7 @@ enum class UserRequestType : int {
     RequestThrottleLimit = 5,
 };
 
-enum class UserStatus : int {
+enum class UserStatus : uint64_t {
     LoggedIn = 1,
     NotLoggedIn = 2,
     UserNotRecognised = 3,
@@ -9933,26 +9933,26 @@ enum class UserStatus : int {
     ThrottleParametersChanged = 9,
 };
 
-enum class StatusValue : int {
+enum class StatusValue : uint64_t {
     Connected = 1,
     NotConnectedUnexpected = 2,
     NotConnectedExpected = 3,
     InProcess = 4,
 };
 
-enum class NetworkRequestType : int {
+enum class NetworkRequestType : uint64_t {
     Snapshot = 1,
     Subscribe = 2,
     StopSubscribing = 4,
     LevelOfDetail = 8,
 };
 
-enum class NetworkStatusResponseType : int {
+enum class NetworkStatusResponseType : uint64_t {
     Full = 1,
     IncrementalUpdate = 2,
 };
 
-enum class TrdRptStatus : int {
+enum class TrdRptStatus : uint64_t {
     Accepted = 0,
     Rejected = 1,
     Cancelled = 2,
@@ -9967,19 +9967,19 @@ enum class TrdRptStatus : int {
     Disputed = 11,
 };
 
-enum class AffirmStatus : int {
+enum class AffirmStatus : uint64_t {
     Received = 1,
     ConfirmRejected = 2,
     Affirmed = 3,
 };
 
-enum class CollAction : int {
+enum class CollAction : uint64_t {
     Retain = 0,
     Add = 1,
     Remove = 2,
 };
 
-enum class CollInquiryStatus : int {
+enum class CollInquiryStatus : uint64_t {
     Accepted = 0,
     AcceptedWithWarnings = 1,
     Completed = 2,
@@ -9987,7 +9987,7 @@ enum class CollInquiryStatus : int {
     Rejected = 4,
 };
 
-enum class CollInquiryResult : int {
+enum class CollInquiryResult : uint64_t {
     Successful = 0,
     InvalidOrUnknownInstrument = 1,
     InvalidOrUnknownCollateralType = 2,
@@ -10001,7 +10001,7 @@ enum class CollInquiryResult : int {
     Other = 99,
 };
 
-enum class StrategyParameterType : int {
+enum class StrategyParameterType : uint64_t {
     Int = 1,
     Length = 2,
     NumInGroup = 3,
@@ -10033,7 +10033,7 @@ enum class StrategyParameterType : int {
     Tenor = 29,
 };
 
-enum class SecurityStatus : int {
+enum class SecurityStatus : uint64_t {
     Active = 1,
     Inactive = 2,
     ActiveClosingOrdersOnly = 3,
@@ -10047,24 +10047,24 @@ enum class SecurityStatus : int {
     PendingDeletion = 11,
 };
 
-enum class UnderlyingCashType : int {
-    FIXED = FIXED,
-    DIFF = DIFF,
+enum class UnderlyingCashType : uint64_t {
+    FIXED = 16659496635696099417ULL,
+    DIFF = 16063996216461393946ULL,
 };
 
-enum class UnderlyingSettlementType : int {
+enum class UnderlyingSettlementType : uint64_t {
     TPlus1 = 2,
     TPlus3 = 4,
     TPlus4 = 5,
 };
 
-enum class SecurityUpdateAction : char {
+enum class SecurityUpdateAction : uint64_t {
     Add = 'A',
     Delete = 'D',
     Modify = 'M',
 };
 
-enum class ExpirationQtyType : int {
+enum class ExpirationQtyType : uint64_t {
     AutoExercise = 1,
     NonAutoExercise = 2,
     FinalWillBeExercised = 3,
@@ -10072,126 +10072,126 @@ enum class ExpirationQtyType : int {
     Difference = 5,
 };
 
-enum class IndividualAllocType : int {
+enum class IndividualAllocType : uint64_t {
     SubAllocate = 1,
     ThirdPartyAllocation = 2,
 };
 
-enum class UnitOfMeasure : int {
-    BillionCubicFeet = Bcf,
-    CubicMeters = CBM,
-    Gigajoules = GJ,
-    HeatRate = kHR,
-    KilowattHours = kWh,
-    MegaHeatRate = MHR,
-    OneMillionBTU = MMBtu,
-    MegawattHours = MWh,
-    Therms = thm,
-    TonsOfCarbonDioxide = tnCO2,
-    MillionBarrels = MMbbl,
-    Allowances = Alw,
-    Barrels = Bbl,
-    BoardFeet = BDFT,
-    Bushels = Bu,
-    Currency = Ccy,
-    CoolingDegreeDay = CDD,
-    CertifiedEmissionsReduction = CER,
-    CriticalPrecipDay = CPD,
-    ClimateReserveTonnes = CRT,
-    Hundredweight = cwt,
-    Day = day,
-    DryMetricTons = dt,
-    EnvAllwncCert = EnvAllwnc,
-    EnvironmentalCredit = EnvCrd,
-    EnvironmentalOffset = EnvOfst,
-    Grams = g,
-    Gallons = Gal,
-    GrossTons = GT,
-    HeatingDegreeDay = HDD,
-    IndexPoint = IPNT,
-    Kilograms = kg,
-    Kiloliters = kL,
-    KilowattYear = kW-a,
-    KilowattDay = kW-d,
-    KilowattHour = kW-h,
-    KilowattMonth = kW-M,
-    KilowattMinute = kW-min,
-    Liters = L,
-    Pounds = lbs,
-    MegawattYear = MW-a,
-    MegawattDay = MW-d,
-    MegawattHour = MW-h,
-    MegawattMonth = MW-M,
-    MegawattMinute = MW-min,
-    TroyOunces = oz_tr,
-    PrincipalWithRelationToDebtInstrument = PRINC,
-    MetricTons = t,
-    Tons = tn,
-    Are = a,
-    Acre = ac,
-    Centiliter = cL,
-    Centimeter = cM,
-    DieselGallonEquivalent = DGE,
-    Foot = ft,
-    GBGallon = Gal_gb,
-    GasolineGallonEquivalent = GGE,
-    Hectare = ha,
-    Inch = in,
-    Kilometer = kM,
-    Meter = M,
-    Mile = mi,
-    Milliliter = mL,
-    Millimeter = mM,
-    USOunce = oz,
-    Piece = pc,
-    USPint = pt,
-    GBPint = pt_gb,
-    USQuart = qt,
-    GBQuart = qt_gb,
-    SquareCentimeter = SqcM,
-    SquareFoot = Sqft,
-    SquareInch = Sqin,
-    SquareKilometer = SqkM,
-    SquareMeter = SqM,
-    SquareMile = Sqmi,
-    SquareMillimeter = SqmM,
-    SquareYard = Sqyd,
-    Yard = yd,
-    USDollars = USD,
+enum class UnitOfMeasure : uint64_t {
+    BillionCubicFeet = 1605621338430945116ULL,
+    CubicMeters = 825651978829351783ULL,
+    Gigajoules = 649112115732023204ULL,
+    HeatRate = 4409132995124473500ULL,
+    KilowattHours = 4434989110568374301ULL,
+    MegaHeatRate = 2190514245482316518ULL,
+    OneMillionBTU = 1913298611518478372ULL,
+    MegawattHours = 2189740189296245199ULL,
+    Therms = 6266144363007566612ULL,
+    TonsOfCarbonDioxide = 907545159105289441ULL,
+    MillionBarrels = 3273399995236616537ULL,
+    Allowances = 17983935550380298421ULL,
+    Barrels = 1606720850058966891ULL,
+    BoardFeet = 10568889113444212385ULL,
+    Bushels = 653935673244038736ULL,
+    Currency = 857124399669019022ULL,
+    CoolingDegreeDay = 831240796434412946ULL,
+    CertifiedEmissionsReduction = 832318317829870501ULL,
+    CriticalPrecipDay = 812100498014300358ULL,
+    ClimateReserveTonnes = 810354473549079740ULL,
+    Hundredweight = 17704506762339255857ULL,
+    Day = 14595384746719022877ULL,
+    DryMetricTons = 617349423822508261ULL,
+    EnvAllwncCert = 714434497009972419ULL,
+    EnvironmentalCredit = 8661542559626364403ULL,
+    EnvironmentalOffset = 1009350961329983490ULL,
+    Grams = 12638185001532385574ULL,
+    Gallons = 16931682031751895787ULL,
+    GrossTons = 649118712801792470ULL,
+    HeatingDegreeDay = 5315186654057310071ULL,
+    IndexPoint = 7014722355403500294ULL,
+    Kilograms = 630012499242154423ULL,
+    Kiloliters = 629969618288654194ULL,
+    KilowattYear = 13525637715013776013ULL,
+    KilowattDay = 13525632217455634958ULL,
+    KilowattHour = 13525627819409122114ULL,
+    KilowattMonth = 13525589336502134729ULL,
+    KilowattMinute = 12955347648939358634ULL,
+    Liters = 12638227882485885803ULL,
+    Pounds = 1324479511273528264ULL,
+    MegawattYear = 606539745017570691ULL,
+    MegawattDay = 606543043552455324ULL,
+    MegawattHour = 606547441598968168ULL,
+    MegawattMonth = 606517754785006471ULL,
+    MegawattMinute = 15810321966532354348ULL,
+    TroyOunces = 16316031485487266223ULL,
+    PrincipalWithRelationToDebtInstrument = 12520903608827124477ULL,
+    MetricTons = 12638201494206808739ULL,
+    Tons = 632819552428409431ULL,
+    Are = 12638187200555641996ULL,
+    Acre = 620446748078610973ULL,
+    Centiliter = 622193872055459802ULL,
+    Centimeter = 622194971567088013ULL,
+    DieselGallonEquivalent = 16154281131313235675ULL,
+    Foot = 619332942799422455ULL,
+    GBGallon = 15497012173042316025ULL,
+    GasolineGallonEquivalent = 16895155155958288706ULL,
+    Hectare = 628910788590876226ULL,
+    Inch = 628032278800124862ULL,
+    Kilometer = 629970717800282405ULL,
+    Meter = 12638226782974257592ULL,
+    Mile = 624121315939335235ULL,
+    Milliliter = 624089430102117116ULL,
+    Millimeter = 624090529613745327ULL,
+    USOunce = 626083944195313420ULL,
+    Piece = 636490821754249060ULL,
+    USPint = 636507314428672225ULL,
+    GBPint = 10932545354576601663ULL,
+    USQuart = 635656292428626136ULL,
+    GBQuart = 17989441831644902604ULL,
+    SquareCentimeter = 13619460476900694953ULL,
+    SquareFoot = 13624198272505710027ULL,
+    SquareInch = 13610098135388370538ULL,
+    SquareKilometer = 13611825468155911569ULL,
+    SquareMeter = 10983362610039919532ULL,
+    SquareMile = 13613760608621184479ULL,
+    SquareMillimeter = 13613721026202568883ULL,
+    SquareYard = 13625321973389552444ULL,
+    Yard = 643256116801306768ULL,
+    USDollars = 7056772390745336839ULL,
 };
 
-enum class TimeUnit : int {
-    Hour = H,
-    Minute = Min,
-    Second = S,
-    Day = D,
-    Week = Wk,
-    Month = Mo,
-    Year = Yr,
-    Quarter = Q,
-    EndOfMonth = EOM,
-    Flexible = F,
+enum class TimeUnit : uint64_t {
+    Hour = 12638232280532398647ULL,
+    Minute = 2160992358270717143ULL,
+    Second = 12638242176137052546ULL,
+    Day = 12638219086392860115ULL,
+    Week = 664383232733218183ULL,
+    Month = 654808685476649045ULL,
+    Year = 673925894152569202ULL,
+    Quarter = 12638239977113796124ULL,
+    EndOfMonth = 15666079276827627888ULL,
+    Flexible = 12638221285416116537ULL,
 };
 
-enum class AllocMethod : int {
+enum class AllocMethod : uint64_t {
     Automatic = 1,
     Guarantor = 2,
     Manual = 3,
     BrokerAssigned = 4,
 };
 
-enum class AsOfIndicator : char {
+enum class AsOfIndicator : uint64_t {
     False = '0',
     True = '1',
 };
 
-enum class MDBookType : int {
+enum class MDBookType : uint64_t {
     TopOfBook = 1,
     PriceDepth = 2,
     OrderDepth = 3,
 };
 
-enum class MDOriginType : int {
+enum class MDOriginType : uint64_t {
     Book = 0,
     OffBook = 1,
     Cross = 2,
@@ -10204,158 +10204,158 @@ enum class MDOriginType : int {
     OtherMarket = 9,
 };
 
-enum class CustOrderHandlingInst : int {
-    PhoneSimple = A,
-    PhoneComplex = B,
-    FCMProvidedScreen = C,
-    OtherProvidedScreen = D,
-    ClientProvidedPlatformControlledByFCM = E,
-    ClientProvidedPlatformDirectToExchange = F,
-    AlgoEngine = H,
-    PriceAtExecution = J,
-    DeskElectronic = W,
-    DeskPit = X,
-    ClientElectronic = Y,
-    ClientPit = Z,
-    AddOnOrder = ADD,
-    AllOrNone = AON,
-    ConditionalOrder = CND,
-    CashNotHeld = CNH,
-    DeliveryInstructionsCash = CSH,
-    DirectedOrder = DIR,
-    DiscretionaryLimitOrder = DLO,
-    ExchangeForPhysicalTransaction = E.W,
-    FillOrKill = FOK,
-    IntraDayCross = IDX,
-    ImbalanceOnly = IO,
-    ImmediateOrCancel = IOC,
-    IntermarketSweepOrder = ISO,
-    LimitOnOpen = LOO,
-    LimitOnClose = LOC,
-    MarketAtOpen = MAO,
-    MarketAtClose = MAC,
-    MarketOnOpen = MOO,
-    MarketOnClose = MOC,
-    MergerRelatedTransferPosition = MPT,
-    MinimumQuantity = MQT,
-    MarketToLimit = MTL,
-    DeliveryInstructionsNextDay = ND,
-    NotHeld = NH,
-    OptionsRelatedTransaction = OPT,
-    OverTheDay = OVD,
-    Pegged = PEG,
-    ReserveSizeOrder = RSV,
-    StopStockTransaction = S.W,
-    Scale = SCL,
-    DeliveryInstructionsSellersOption = SLR,
-    TimeOrder = TMO,
-    TrailingStop = TS,
-    Work = WRK,
-    StayOnOfferside = F0,
-    GoAlong = F3,
-    ParticipateDoNotInitiate = F6,
-    StrictScale = F7,
-    TryToScale = F8,
-    StayOnBidside = F9,
-    NoCross = FA,
-    OKToCross = FB,
-    CallFirst = FC,
-    PercentOfVolume = FD,
-    ReinstateOnSystemFailure = FH,
-    InstitutionOnly = FI,
-    ReinstateOnTradingHalt = FJ,
-    CancelOnTradingHalf = FK,
-    LastPeg = FL,
-    MidPricePeg = FM,
-    NonNegotiable = FN,
-    OpeningPeg = FO,
-    MarketPeg = FP,
-    CancelOnSystemFailure = FQ,
-    PrimaryPeg = FR,
-    Suspend = FS,
-    FixedPegToLocalBBO = FT,
-    PegToVWAP = FW,
-    TradeAlong = FX,
-    TryToStop = FY,
-    CancelIfNotBest = FZ,
-    StrictLimit = Fb,
-    IgnorePriceValidityChecks = Fc,
-    PegToLimitPrice = Fd,
-    WorkToTargetStrategy = Fe,
-    GOrderAndFCMAPIorFIX = G,
+enum class CustOrderHandlingInst : uint64_t {
+    PhoneSimple = 12638222384927744748ULL,
+    PhoneComplex = 12638225683462629381ULL,
+    FCMProvidedScreen = 12638224583951001170ULL,
+    OtherProvidedScreen = 12638219086392860115ULL,
+    ClientProvidedPlatformControlledByFCM = 12638217986881231904ULL,
+    ClientProvidedPlatformDirectToExchange = 12638221285416116537ULL,
+    AlgoEngine = 12638232280532398647ULL,
+    PriceAtExecution = 12638234479555655069ULL,
+    DeskElectronic = 12638237778090539702ULL,
+    DeskPit = 12638249872718450023ULL,
+    ClientElectronic = 12638248773206821812ULL,
+    ClientPit = 12638252071741706445ULL,
+    AddOnOrder = 18022001742453022452ULL,
+    AllOrNone = 18017212269801481461ULL,
+    ConditionalOrder = 837112188527924336ULL,
+    CashNotHeld = 837125382667462868ULL,
+    DeliveryInstructionsCash = 811297854525895553ULL,
+    DirectedOrder = 16160180011197452340ULL,
+    DiscretionaryLimitOrder = 16164935398988518790ULL,
+    ExchangeForPhysicalTransaction = 15573185937424948167ULL,
+    FillOrKill = 17521378705105974923ULL,
+    IntraDayCross = 4691043380909820616ULL,
+    ImbalanceOnly = 658678966407194865ULL,
+    ImmediateOrCancel = 4701540418422269558ULL,
+    IntermarketSweepOrder = 4713023717865034542ULL,
+    LimitOnOpen = 2693340704131920441ULL,
+    LimitOnClose = 2693353898271458973ULL,
+    MarketAtOpen = 2199271855599314108ULL,
+    MarketAtClose = 2199276253645826952ULL,
+    MarketOnOpen = 2197371899506143950ULL,
+    MarketOnClose = 2197367501459631106ULL,
+    MergerRelatedTransferPosition = 2183004581063149188ULL,
+    MinimumQuantity = 2183855603063195277ULL,
+    MarketToLimit = 2186848473714617944ULL,
+    DeliveryInstructionsNextDay = 657578355267544879ULL,
+    NotHeld = 657582753314057723ULL,
+    OptionsRelatedTransaction = 3431370292195359290ULL,
+    OverTheDay = 3425472511822770836ULL,
+    Pegged = 10185100675483375067ULL,
+    ReserveSizeOrder = 11546297170368641228ULL,
+    StopStockTransaction = 10915467767011325257ULL,
+    Scale = 10935552545919881869ULL,
+    DeliveryInstructionsSellersOption = 10948130958944155784ULL,
+    TimeOrder = 7826327176206597055ULL,
+    TrailingStop = 663468439058735856ULL,
+    Work = 8422611023723963717ULL,
+    StayOnOfferside = 649938948476248651ULL,
+    GoAlong = 649940047987876862ULL,
+    ParticipateDoNotInitiate = 649945545546017917ULL,
+    StrictScale = 649944446034389706ULL,
+    TryToScale = 649930152383222963ULL,
+    StayOnBidside = 649929052871594752ULL,
+    NoCross = 650060994266980072ULL,
+    OKToCross = 650064292801864705ULL,
+    CallFirst = 650063193290236494ULL,
+    PercentOfVolume = 650066491825121127ULL,
+    ReinstateOnSystemFailure = 650053297685582595ULL,
+    InstitutionOnly = 650052198173954384ULL,
+    ReinstateOnTradingHalt = 650055496708839017ULL,
+    CancelOnTradingHalf = 650054397197210806ULL,
+    LastPeg = 650057695732095439ULL,
+    MidPricePeg = 650056596220467228ULL,
+    NonNegotiable = 650059894755351861ULL,
+    OpeningPeg = 650058795243723650ULL,
+    MarketPeg = 650044501592556907ULL,
+    CancelOnSystemFailure = 650043402080928696ULL,
+    PrimaryPeg = 650046700615813329ULL,
+    Suspend = 650045601104185118ULL,
+    FixedPegToLocalBBO = 650048899639069751ULL,
+    PegToVWAP = 650049999150697962ULL,
+    TradeAlong = 650035705499531219ULL,
+    TryToStop = 650034605987903008ULL,
+    CancelIfNotBest = 650037904522787641ULL,
+    StrictLimit = 650029108429761953ULL,
+    IgnorePriceValidityChecks = 650028008918133742ULL,
+    PegToLimitPrice = 650031307453018375ULL,
+    WorkToTargetStrategy = 650030207941390164ULL,
+    GOrderAndFCMAPIorFIX = 12638220185904488326ULL,
 };
 
-enum class OrderHandlingInstSource : int {
+enum class OrderHandlingInstSource : uint64_t {
     FINRAOATS = 1,
     FIAExecutionSourceCode = 2,
 };
 
-enum class DeskType : int {
-    Agency = A,
-    Arbitrage = AR,
-    BlockTrading = B,
-    ConvertibleDesk = C,
-    CentralRiskBooks = CR,
-    Derivatives = D,
-    EquityCapitalMarkets = EC,
-    International = IN,
-    Institutional = IS,
-    Other = O,
-    PreferredTrading = PF,
-    Proprietary = PR,
-    ProgramTrading = PT,
-    Sales = S,
-    Swaps = SW,
-    TradingDeskSystem = T,
-    Treasury = TR,
-    FloorBroker = FB,
+enum class DeskType : uint64_t {
+    Agency = 12638222384927744748ULL,
+    Arbitrage = 650897722615859418ULL,
+    BlockTrading = 12638225683462629381ULL,
+    ConvertibleDesk = 12638224583951001170ULL,
+    CentralRiskBooks = 652771290429952512ULL,
+    Derivatives = 12638219086392860115ULL,
+    EquityCapitalMarkets = 647195666964429881ULL,
+    International = 658677866895566654ULL,
+    Institutional = 658692160546733397ULL,
+    Other = 12638228981997514014ULL,
+    PreferredTrading = 667133111314806219ULL,
+    Proprietary = 667155101547370439ULL,
+    ProgramTrading = 667152902524114017ULL,
+    Sales = 12638242176137052546ULL,
+    Swaps = 668257911710276847ULL,
+    TradingDeskSystem = 12638236678578911491ULL,
+    Treasury = 663469538570364067ULL,
+    FloorBroker = 650064292801864705ULL,
 };
 
-enum class DeskTypeSource : int {
+enum class DeskTypeSource : uint64_t {
     FINRAOATS = 1,
 };
 
-enum class ExecAckStatus : char {
+enum class ExecAckStatus : uint64_t {
     Received = '0',
     Accepted = '1',
     DontKnow = '2',
 };
 
-enum class CollApplType : int {
+enum class CollApplType : uint64_t {
     SpecificDeposit = 0,
     General = 1,
 };
 
-enum class UnderlyingFXRateCalc : char {
+enum class UnderlyingFXRateCalc : uint64_t {
     Divide = 'D',
     Multiply = 'M',
 };
 
-enum class AllocPositionEffect : char {
+enum class AllocPositionEffect : uint64_t {
     Open = 'O',
     Close = 'C',
     Rolled = 'R',
     FIFO = 'F',
 };
 
-enum class DealingCapacity : char {
+enum class DealingCapacity : uint64_t {
     Agent = 'A',
     Principal = 'P',
     RisklessPrincipal = 'R',
     CrossAsPrincipal = 'X',
 };
 
-enum class InstrmtAssignmentMethod : char {
+enum class InstrmtAssignmentMethod : uint64_t {
     ProRata = 'P',
     Random = 'R',
 };
 
-enum class AggressorIndicator : int {
-    OrderInitiatorIsAggressor = Y,
-    OrderInitiatorIsPassive = N,
+enum class AggressorIndicator : uint64_t {
+    OrderInitiatorIsAggressor = 12638248773206821812ULL,
+    OrderInitiatorIsPassive = 12638230081509142225ULL,
 };
 
-enum class RefOrderIDSource : char {
+enum class RefOrderIDSource : uint64_t {
     SecondaryOrderID = '0',
     OrderID = '1',
     MDEntryID = '2',
@@ -10369,33 +10369,33 @@ enum class RefOrderIDSource : char {
     ManualOrderIdentifier = 'A',
 };
 
-enum class DisplayWhen : char {
+enum class DisplayWhen : uint64_t {
     Immediate = '1',
     Exhaust = '2',
 };
 
-enum class DisplayMethod : char {
+enum class DisplayMethod : uint64_t {
     Initial = '1',
     New = '2',
     Random = '3',
     Undisclosed = '4',
 };
 
-enum class PriceProtectionScope : char {
+enum class PriceProtectionScope : uint64_t {
     None = '0',
     Local = '1',
     National = '2',
     Global = '3',
 };
 
-enum class LotType : char {
+enum class LotType : uint64_t {
     OddLot = '1',
     RoundLot = '2',
     BlockLot = '3',
     RoundLotBasedUpon = '4',
 };
 
-enum class PegPriceType : int {
+enum class PegPriceType : uint64_t {
     LastPeg = 1,
     MidPricePeg = 2,
     OpeningPeg = 3,
@@ -10407,7 +10407,7 @@ enum class PegPriceType : int {
     ShortSaleMinPricePeg = 10,
 };
 
-enum class TriggerType : char {
+enum class TriggerType : uint64_t {
     PartialExecution = '1',
     SpecifiedTradingSession = '2',
     NextAuction = '3',
@@ -10415,13 +10415,13 @@ enum class TriggerType : char {
     OnOrderEntryOrModification = '5',
 };
 
-enum class TriggerAction : char {
+enum class TriggerAction : uint64_t {
     Activate = '1',
     Modify = '2',
     Cancel = '3',
 };
 
-enum class TriggerPriceType : char {
+enum class TriggerPriceType : uint64_t {
     BestOffer = '1',
     LastTrade = '2',
     BestBid = '3',
@@ -10430,24 +10430,24 @@ enum class TriggerPriceType : char {
     BestMid = '6',
 };
 
-enum class TriggerPriceTypeScope : char {
+enum class TriggerPriceTypeScope : uint64_t {
     None = '0',
     Local = '1',
     National = '2',
     Global = '3',
 };
 
-enum class TriggerPriceDirection : char {
+enum class TriggerPriceDirection : uint64_t {
     Up = 'U',
     Down = 'D',
 };
 
-enum class TriggerOrderType : char {
+enum class TriggerOrderType : uint64_t {
     Market = '1',
     Limit = '2',
 };
 
-enum class OrderCategory : char {
+enum class OrderCategory : uint64_t {
     Order = '1',
     Quote = '2',
     PrivatelyNegotiatedTrade = '3',
@@ -10460,7 +10460,7 @@ enum class OrderCategory : char {
     InternalCrossOrder = 'A',
 };
 
-enum class TradeHandlingInstr : char {
+enum class TradeHandlingInstr : uint64_t {
     TradeConfirmation = '0',
     TwoPartyReport = '1',
     OnePartyReportForMatching = '2',
@@ -10472,7 +10472,7 @@ enum class TradeHandlingInstr : char {
     OnePartyReportAutoMatch = '8',
 };
 
-enum class ApplVerID : int {
+enum class ApplVerID : uint64_t {
     FIX27 = 0,
     FIX30 = 1,
     FIX40 = 2,
@@ -10486,7 +10486,7 @@ enum class ApplVerID : int {
     FIXLatest = 10,
 };
 
-enum class ExDestinationIDSource : char {
+enum class ExDestinationIDSource : uint64_t {
     BIC = 'B',
     GeneralIdentifier = 'C',
     Proprietary = 'D',
@@ -10494,26 +10494,26 @@ enum class ExDestinationIDSource : char {
     MIC = 'G',
 };
 
-enum class ImpliedMarketIndicator : int {
+enum class ImpliedMarketIndicator : uint64_t {
     NotImplied = 0,
     ImpliedIn = 1,
     ImpliedOut = 2,
     BothImpliedInAndImpliedOut = 3,
 };
 
-enum class SettlObligMode : int {
+enum class SettlObligMode : uint64_t {
     Preliminary = 1,
     Final = 2,
 };
 
-enum class SettlObligTransType : char {
+enum class SettlObligTransType : uint64_t {
     Cancel = 'C',
     New = 'N',
     Replace = 'R',
     Restate = 'T',
 };
 
-enum class SettlObligSource : char {
+enum class SettlObligSource : uint64_t {
     InstructionsOfBroker = '1',
     InstructionsForInstitution = '2',
     Investor = '3',
@@ -10521,7 +10521,7 @@ enum class SettlObligSource : char {
     SellersSettlementInstructions = '5',
 };
 
-enum class QuoteEntryStatus : int {
+enum class QuoteEntryStatus : uint64_t {
     Accepted = 0,
     Rejected = 5,
     RemovedFromMarket = 6,
@@ -10533,19 +10533,19 @@ enum class QuoteEntryStatus : int {
     Active = 16,
 };
 
-enum class PrivateQuote : int {
-    PrivateQuote = Y,
-    PublicQuote = N,
+enum class PrivateQuote : uint64_t {
+    PrivateQuote = 12638248773206821812ULL,
+    PublicQuote = 12638230081509142225ULL,
 };
 
-enum class RespondentType : int {
+enum class RespondentType : uint64_t {
     AllMarketParticipants = 1,
     SpecifiedMarketParticipants = 2,
     AllMarketMakers = 3,
     PrimaryMarketMaker = 4,
 };
 
-enum class SecurityTradingEvent : int {
+enum class SecurityTradingEvent : uint64_t {
     OrderImbalance = 1,
     TradingResumes = 2,
     PriceVolatilityInterruption = 3,
@@ -10557,53 +10557,53 @@ enum class SecurityTradingEvent : int {
     CorporateAction = 9,
 };
 
-enum class StatsType : int {
+enum class StatsType : uint64_t {
     ExchangeLast = 1,
     High = 2,
     AveragePrice = 3,
     Turnover = 4,
 };
 
-enum class MDSecSizeType : int {
+enum class MDSecSizeType : uint64_t {
     Customer = 1,
     CustomerProfessional = 2,
     DoNotTradeThrough = 3,
 };
 
-enum class SettlMethod : int {
-    CashSettlementRequired = C,
-    PhysicalSettlementRequired = P,
-    Election = E,
+enum class SettlMethod : uint64_t {
+    CashSettlementRequired = 12638224583951001170ULL,
+    PhysicalSettlementRequired = 12638241076625424335ULL,
+    Election = 12638217986881231904ULL,
 };
 
-enum class ExerciseStyle : int {
+enum class ExerciseStyle : uint64_t {
     European = 0,
     American = 1,
     Bermuda = 2,
     Other = 99,
 };
 
-enum class PriceQuoteMethod : int {
-    Standard = STD,
-    Index = INX,
-    InterestRateIndex = INT,
-    PercentOfPar = PCTPAR,
+enum class PriceQuoteMethod : uint64_t {
+    Standard = 10955772564758708434ULL,
+    Index = 4700697093003620946ULL,
+    InterestRateIndex = 4700701491050133790ULL,
+    PercentOfPar = 10747008271169774803ULL,
 };
 
-enum class ValuationMethod : int {
-    PremiumStyle = EQTY,
-    FuturesStyleMarkToMarket = FUT,
-    FuturesStyleWithAnAttachedCashAdjustment = FUTDA,
-    CDSStyleCollateralization = CDS,
-    CDSInDeliveryUseRecoveryRateToCalculate = CDSD,
+enum class ValuationMethod : uint64_t {
+    PremiumStyle = 16908824642918689508ULL,
+    FuturesStyleMarkToMarket = 17511818451500572528ULL,
+    FuturesStyleWithAnAttachedCashAdjustment = 7461328572818272327ULL,
+    CDSStyleCollateralization = 831252891062323267ULL,
+    CDSInDeliveryUseRecoveryRateToCalculate = 16387348471302415333ULL,
 };
 
-enum class ListMethod : int {
+enum class ListMethod : uint64_t {
     PreListedOnly = 0,
     UserRequested = 1,
 };
 
-enum class TickRuleType : int {
+enum class TickRuleType : uint64_t {
     RegularTrading = 0,
     VariableCabinet = 1,
     FixedCabinet = 2,
@@ -10612,33 +10612,33 @@ enum class TickRuleType : int {
     TradedAsSpread = 5,
 };
 
-enum class MaturityMonthYearIncrementUnits : int {
+enum class MaturityMonthYearIncrementUnits : uint64_t {
     Months = 0,
     Days = 1,
     Weeks = 2,
     Years = 3,
 };
 
-enum class MaturityMonthYearFormat : int {
+enum class MaturityMonthYearFormat : uint64_t {
     YearMonthOnly = 0,
     YearMonthDay = 1,
     YearMonthWeek = 2,
 };
 
-enum class PriceLimitType : int {
+enum class PriceLimitType : uint64_t {
     Price = 0,
     Ticks = 1,
     Percentage = 2,
 };
 
-enum class ListUpdateAction : char {
+enum class ListUpdateAction : uint64_t {
     Add = 'A',
     Delete = 'D',
     Modify = 'M',
     Snapshot = 'S',
 };
 
-enum class ApplReqType : int {
+enum class ApplReqType : uint64_t {
     Retransmission = 0,
     Subscription = 1,
     RequestLastSeqNum = 2,
@@ -10648,32 +10648,32 @@ enum class ApplReqType : int {
     CancelRetransmissionUnsubscribe = 6,
 };
 
-enum class ApplResponseType : int {
+enum class ApplResponseType : uint64_t {
     RequestSuccessfullyProcessed = 0,
     ApplicationDoesNotExist = 1,
     MessagesNotAvailable = 2,
 };
 
-enum class ApplResponseError : int {
+enum class ApplResponseError : uint64_t {
     ApplicationDoesNotExist = 0,
     MessagesRequestedAreNotAvailable = 1,
     UserNotAuthorizedForApplication = 2,
 };
 
-enum class TradSesEvent : int {
+enum class TradSesEvent : uint64_t {
     TradingResumes = 0,
     ChangeOfTradingSession = 1,
     ChangeOfTradingSubsession = 2,
     ChangeOfTradingStatus = 3,
 };
 
-enum class MassActionType : int {
+enum class MassActionType : uint64_t {
     SuspendOrders = 1,
     ReleaseOrdersFromSuspension = 2,
     CancelOrders = 3,
 };
 
-enum class MassActionScope : int {
+enum class MassActionScope : uint64_t {
     AllOrdersForASecurity = 1,
     AllOrdersForAnUnderlyingSecurity = 2,
     AllOrdersForAProduct = 3,
@@ -10688,13 +10688,13 @@ enum class MassActionScope : int {
     CancelForIssuerOfUnderlyingSecurity = 12,
 };
 
-enum class MassActionResponse : int {
+enum class MassActionResponse : uint64_t {
     Rejected = 0,
     Accepted = 1,
     Completed = 2,
 };
 
-enum class MassActionRejectReason : int {
+enum class MassActionRejectReason : uint64_t {
     MassActionNotSupported = 0,
     InvalidOrUnknownSecurity = 1,
     InvalidOrUnknownUnderlyingSecurity = 2,
@@ -10710,13 +10710,13 @@ enum class MassActionRejectReason : int {
     Other = 99,
 };
 
-enum class MultilegModel : int {
+enum class MultilegModel : uint64_t {
     PredefinedMultilegSecurity = 0,
     UserDefinedMultilegSecurity = 1,
     UserDefined = 2,
 };
 
-enum class MultilegPriceMethod : int {
+enum class MultilegPriceMethod : uint64_t {
     NetPrice = 0,
     ReversedNetPrice = 1,
     YieldDifference = 2,
@@ -10725,7 +10725,7 @@ enum class MultilegPriceMethod : int {
     MultipliedPrice = 5,
 };
 
-enum class ContingencyType : int {
+enum class ContingencyType : uint64_t {
     OneCancelsTheOther = 1,
     OneTriggersTheOther = 2,
     OneUpdatesTheOtherAbsolute = 3,
@@ -10734,7 +10734,7 @@ enum class ContingencyType : int {
     BidAndOfferOCO = 6,
 };
 
-enum class ListRejectReason : int {
+enum class ListRejectReason : uint64_t {
     BrokerCredit = 0,
     ExchangeClosed = 2,
     TooLateToEnter = 4,
@@ -10744,14 +10744,14 @@ enum class ListRejectReason : int {
     Other = 99,
 };
 
-enum class TradePublishIndicator : int {
+enum class TradePublishIndicator : uint64_t {
     DoNotPublishTrade = 0,
     PublishTrade = 1,
     DeferredPublication = 2,
     Published = 3,
 };
 
-enum class SessionStatus : int {
+enum class SessionStatus : uint64_t {
     SessionActive = 0,
     SessionPasswordChanged = 1,
     SessionPasswordDueToExpire = 2,
@@ -10765,14 +10765,14 @@ enum class SessionStatus : int {
     ReceivedNextExpectedMsgSeqNumTooHigh = 10,
 };
 
-enum class ApplReportType : int {
+enum class ApplReportType : uint64_t {
     ApplSeqNumReset = 0,
     LastMessageSent = 1,
     ApplicationAlive = 2,
     ResendComplete = 3,
 };
 
-enum class OrderDelayUnit : int {
+enum class OrderDelayUnit : uint64_t {
     Seconds = 0,
     TenthsOfASecond = 1,
     HundredthsOfASecond = 2,
@@ -10787,7 +10787,7 @@ enum class OrderDelayUnit : int {
     Years = 15,
 };
 
-enum class VenueType : char {
+enum class VenueType : uint64_t {
     Electronic = 'E',
     Pit = 'P',
     ExPit = 'X',
@@ -10804,31 +10804,31 @@ enum class VenueType : char {
     OtherMarket = 'z',
 };
 
-enum class RefOrdIDReason : int {
+enum class RefOrdIDReason : uint64_t {
     GTCFromPreviousDay = 0,
     PartialFillRemaining = 1,
     OrderChanged = 2,
 };
 
-enum class OrigCustOrderCapacity : int {
+enum class OrigCustOrderCapacity : uint64_t {
     MemberTradingForTheirOwnAccount = 1,
     ClearingFirmTradingForItsProprietaryAccount = 2,
     MemberTradingForAnotherMember = 3,
     AllOther = 4,
 };
 
-enum class ModelType : int {
+enum class ModelType : uint64_t {
     UtilityProvidedStandardModel = 0,
     ProprietaryModel = 1,
 };
 
-enum class ContractMultiplierUnit : int {
+enum class ContractMultiplierUnit : uint64_t {
     Shares = 0,
     Hours = 1,
     Days = 2,
 };
 
-enum class FlowScheduleType : int {
+enum class FlowScheduleType : uint64_t {
     NERCEasternOffPeak = 0,
     NERCWesternOffPeak = 1,
     NERCCalendarAllDaysInMonth = 2,
@@ -10842,7 +10842,7 @@ enum class FlowScheduleType : int {
     Other = 99,
 };
 
-enum class RateSource : int {
+enum class RateSource : uint64_t {
     Bloomberg = 0,
     Reuters = 1,
     Telerate = 2,
@@ -10850,41 +10850,41 @@ enum class RateSource : int {
     Other = 99,
 };
 
-enum class RateSourceType : int {
+enum class RateSourceType : uint64_t {
     Primary = 0,
     Secondary = 1,
 };
 
-enum class RestructuringType : int {
-    FullRestructuring = FR,
-    ModifiedRestructuring = MR,
-    ModifiedModRestructuring = MM,
-    NoRestructuringSpecified = XR,
+enum class RestructuringType : uint64_t {
+    FullRestructuring = 650046700615813329ULL,
+    ModifiedRestructuring = 654829576197585054ULL,
+    ModifiedModRestructuring = 654841670825495375ULL,
+    NoRestructuringSpecified = 674807702478205199ULL,
 };
 
-enum class Seniority : int {
-    SeniorSecured = SD,
-    Senior = SR,
-    Subordinated = SB,
-    Junior = JR,
-    Mezzanine = MZ,
-    SeniorNonPreferred = SN,
+enum class Seniority : uint64_t {
+    SeniorSecured = 668241419035853682ULL,
+    Senior = 668252414152135792ULL,
+    Subordinated = 668234821966084416ULL,
+    Junior = 661525602012065469ULL,
+    Mezzanine = 654820780104559366ULL,
+    SeniorNonPreferred = 668248016105622948ULL,
 };
 
-enum class SecurityListType : int {
+enum class SecurityListType : uint64_t {
     IndustryClassification = 1,
     TradingList = 2,
     Market = 3,
     NewspaperList = 4,
 };
 
-enum class SecurityListTypeSource : int {
+enum class SecurityListTypeSource : uint64_t {
     ICB = 1,
     NAICS = 2,
     GICS = 3,
 };
 
-enum class NewsCategory : int {
+enum class NewsCategory : uint64_t {
     CompanyNews = 0,
     MarketplaceNews = 1,
     FinancialMarketNews = 2,
@@ -10892,21 +10892,21 @@ enum class NewsCategory : int {
     OtherNews = 99,
 };
 
-enum class NewsRefType : int {
+enum class NewsRefType : uint64_t {
     Replacement = 0,
     OtherLanguage = 1,
     Complimentary = 2,
     Withdrawal = 3,
 };
 
-enum class StrikePriceDeterminationMethod : int {
+enum class StrikePriceDeterminationMethod : uint64_t {
     FixedStrike = 1,
     StrikeSetAtExpiration = 2,
     StrikeSetToAverageAcrossLife = 3,
     StrikeSetToOptimalValue = 4,
 };
 
-enum class StrikePriceBoundaryMethod : int {
+enum class StrikePriceBoundaryMethod : uint64_t {
     LessThan = 1,
     LessThanOrEqual = 2,
     Equal = 3,
@@ -10914,14 +10914,14 @@ enum class StrikePriceBoundaryMethod : int {
     GreaterThan = 5,
 };
 
-enum class UnderlyingPriceDeterminationMethod : int {
+enum class UnderlyingPriceDeterminationMethod : uint64_t {
     Regular = 1,
     SpecialReference = 2,
     OptimalValue = 3,
     AverageValue = 4,
 };
 
-enum class OptPayoutType : int {
+enum class OptPayoutType : uint64_t {
     Vanilla = 1,
     Capped = 2,
     Binary = 3,
@@ -10933,7 +10933,7 @@ enum class OptPayoutType : int {
     Other = 99,
 };
 
-enum class ComplexEventType : int {
+enum class ComplexEventType : uint64_t {
     Capped = 1,
     Trigger = 2,
     KnockInUp = 3,
@@ -10959,7 +10959,7 @@ enum class ComplexEventType : int {
     DividendValuation = 23,
 };
 
-enum class ComplexEventPriceBoundaryMethod : int {
+enum class ComplexEventPriceBoundaryMethod : uint64_t {
     LessThanComplexEventPrice = 1,
     LessThanOrEqualToComplexEventPrice = 2,
     EqualToComplexEventPrice = 3,
@@ -10967,7 +10967,7 @@ enum class ComplexEventPriceBoundaryMethod : int {
     GreaterThanComplexEventPrice = 5,
 };
 
-enum class ComplexEventPriceTimeType : int {
+enum class ComplexEventPriceTimeType : uint64_t {
     Expiration = 1,
     Immediate = 2,
     SpecifiedDate = 3,
@@ -10978,17 +10978,17 @@ enum class ComplexEventPriceTimeType : int {
     AsSpecifiedMasterConfirmation = 8,
 };
 
-enum class ComplexEventCondition : int {
+enum class ComplexEventCondition : uint64_t {
     And = 1,
     Or = 2,
 };
 
-enum class StreamAsgnReqType : int {
+enum class StreamAsgnReqType : uint64_t {
     StreamAssignmentForNewCustomer = 1,
     StreamAssignmentForExistingCustomer = 2,
 };
 
-enum class StreamAsgnRejReason : int {
+enum class StreamAsgnRejReason : uint64_t {
     UnknownClient = 0,
     ExceedsMaximumSize = 1,
     UnknownOrInvalidCurrencyPair = 2,
@@ -10996,12 +10996,12 @@ enum class StreamAsgnRejReason : int {
     Other = 99,
 };
 
-enum class StreamAsgnAckType : int {
+enum class StreamAsgnAckType : uint64_t {
     AssignmentAccepted = 0,
     AssignmentRejected = 1,
 };
 
-enum class RequestResult : int {
+enum class RequestResult : uint64_t {
     ValidRequest = 0,
     InvalidOrUnsupportedRequest = 1,
     NoDataFound = 2,
@@ -11011,7 +11011,7 @@ enum class RequestResult : int {
     Other = 99,
 };
 
-enum class PartyRelationship : int {
+enum class PartyRelationship : uint64_t {
     IsAlso = 0,
     ClearsFor = 1,
     ClearsThrough = 2,
@@ -11053,13 +11053,13 @@ enum class PartyRelationship : int {
     SettlesThrough = 38,
 };
 
-enum class TrdAckStatus : int {
+enum class TrdAckStatus : uint64_t {
     Accepted = 0,
     Rejected = 1,
     Received = 2,
 };
 
-enum class RiskLimitType : int {
+enum class RiskLimitType : uint64_t {
     CreditLimit = 0,
     GrossLimit = 1,
     NetLimit = 2,
@@ -11080,20 +11080,20 @@ enum class RiskLimitType : int {
     TransactionExecutionLimitPerTimePeriod = 17,
 };
 
-enum class InstrumentScopeOperator : int {
+enum class InstrumentScopeOperator : uint64_t {
     Include = 1,
     Exclude = 2,
 };
 
-enum class SwapSubClass : int {
-    Amortizing = AMTZ,
-    Compounding = COMP,
-    ConstantNotionalSchedule = CNST,
-    AccretingNotionalSchedule = ACRT,
-    CustomNotionalSchedule = CUST,
+enum class SwapSubClass : uint64_t {
+    Amortizing = 2512961911778614477ULL,
+    Compounding = 2298260349624423082ULL,
+    ConstantNotionalSchedule = 1781403023090056963ULL,
+    AccretingNotionalSchedule = 11126729518949992363ULL,
+    CustomNotionalSchedule = 7026800263020370274ULL,
 };
 
-enum class SecurityClassificationReason : int {
+enum class SecurityClassificationReason : uint64_t {
     Fee = 0,
     CreditControls = 1,
     Margin = 2,
@@ -11104,7 +11104,7 @@ enum class SecurityClassificationReason : int {
     Sector = 7,
 };
 
-enum class PosAmtReason : int {
+enum class PosAmtReason : uint64_t {
     OptionsSettlement = 0,
     PendingErosionAdjustment = 1,
     FinalErosionAdjustment = 2,
@@ -11114,12 +11114,12 @@ enum class PosAmtReason : int {
     DeliveryStorageCharges = 6,
 };
 
-enum class SideClearingTradePriceType : int {
+enum class SideClearingTradePriceType : uint64_t {
     TradeClearingAtExecutionPrice = 0,
     TradeClearingAtAlternateClearingPrice = 1,
 };
 
-enum class SecurityRejectReason : int {
+enum class SecurityRejectReason : uint64_t {
     InvalidInstrumentRequested = 1,
     InstrumentAlreadyExists = 2,
     RequestTypeNotSupported = 3,
@@ -11133,12 +11133,12 @@ enum class SecurityRejectReason : int {
     InvalidInstrumentStructureSpecified = 12,
 };
 
-enum class ThrottleStatus : int {
+enum class ThrottleStatus : uint64_t {
     ThrottleLimitNotExceededNotQueued = 0,
     QueuedDueToThrottleLimitExceeded = 1,
 };
 
-enum class ThrottleAction : int {
+enum class ThrottleAction : uint64_t {
     QueueInbound = 0,
     QueueOutbound = 1,
     Reject = 2,
@@ -11146,23 +11146,23 @@ enum class ThrottleAction : int {
     Warning = 4,
 };
 
-enum class ThrottleType : int {
+enum class ThrottleType : uint64_t {
     InboundRate = 0,
     OutstandingRequests = 1,
 };
 
-enum class StreamAsgnType : int {
+enum class StreamAsgnType : uint64_t {
     Assignment = 1,
     Rejected = 2,
     Terminate = 3,
 };
 
-enum class MatchInst : int {
+enum class MatchInst : uint64_t {
     Match = 1,
     DoNotMatch = 2,
 };
 
-enum class TriggerScope : int {
+enum class TriggerScope : uint64_t {
     ThisOrder = 0,
     OtherOrder = 1,
     AllOtherOrdersForGivenSecurity = 2,
@@ -11171,7 +11171,7 @@ enum class TriggerScope : int {
     AllOtherOrdersForGivenSecurityPriceAndSide = 5,
 };
 
-enum class LimitAmtType : int {
+enum class LimitAmtType : uint64_t {
     CreditLimit = 0,
     GrossPositionLimit = 1,
     NetPositionLimit = 2,
@@ -11180,20 +11180,20 @@ enum class LimitAmtType : int {
     ShortPositionLimit = 5,
 };
 
-enum class MarginReqmtInqQualifier : int {
+enum class MarginReqmtInqQualifier : uint64_t {
     Summary = 0,
     Detail = 1,
     ExcessDeficit = 2,
     NetPosition = 3,
 };
 
-enum class MarginReqmtRptType : int {
+enum class MarginReqmtRptType : uint64_t {
     Summary = 0,
     Detail = 1,
     ExcessDeficit = 2,
 };
 
-enum class MarginReqmtInqResult : int {
+enum class MarginReqmtInqResult : uint64_t {
     Successful = 0,
     InvalidOrUnknownInstrument = 1,
     InvalidOrUnknownMarginClass = 2,
@@ -11206,7 +11206,7 @@ enum class MarginReqmtInqResult : int {
     Other = 99,
 };
 
-enum class MarginAmtType : int {
+enum class MarginAmtType : uint64_t {
     AdditionalMargin = 1,
     AdjustedMargin = 2,
     UnadjustedMargin = 3,
@@ -11244,7 +11244,7 @@ enum class MarginAmtType : int {
     OtherRiskMargin = 35,
 };
 
-enum class RelatedInstrumentType : int {
+enum class RelatedInstrumentType : uint64_t {
     HedgesForInstrument = 1,
     Underlier = 2,
     EquityEquivalent = 3,
@@ -11253,20 +11253,20 @@ enum class RelatedInstrumentType : int {
     Leg = 6,
 };
 
-enum class MarketMakerActivity : int {
+enum class MarketMakerActivity : uint64_t {
     NoParticipation = 0,
     BuyParticipation = 1,
     SellParticipation = 2,
     BothBuyAndSellParticipation = 3,
 };
 
-enum class PartyDetailStatus : int {
+enum class PartyDetailStatus : uint64_t {
     Active = 0,
     Suspended = 1,
     Halted = 2,
 };
 
-enum class PartyDetailRoleQualifier : int {
+enum class PartyDetailRoleQualifier : uint64_t {
     FirmOrLegalEntity = 23,
     Current = 18,
     New = 19,
@@ -11300,24 +11300,24 @@ enum class PartyDetailRoleQualifier : int {
     ExemptFromTradeReporting = 17,
 };
 
-enum class ThrottleInst : int {
+enum class ThrottleInst : uint64_t {
     RejectIfThrottleLimitExceeded = 0,
     QueueIfThrottleLimitExceeded = 1,
 };
 
-enum class ThrottleCountIndicator : int {
+enum class ThrottleCountIndicator : uint64_t {
     OutstandingRequestsUnchanged = 0,
     OutstandingRequestsDecreased = 1,
 };
 
-enum class ShortSaleRestriction : int {
+enum class ShortSaleRestriction : uint64_t {
     NoRestrictions = 0,
     SecurityNotShortable = 1,
     SecurityNotShortableAtOrBelowBestBid = 2,
     SecurityNotShortableWithoutPreBorrow = 3,
 };
 
-enum class ShortSaleExemptionReason : int {
+enum class ShortSaleExemptionReason : uint64_t {
     ExemptionReasonUnknown = 0,
     IncomingSSE = 1,
     AboveNationalBestBid = 2,
@@ -11330,7 +11330,7 @@ enum class ShortSaleExemptionReason : int {
     VWAP = 9,
 };
 
-enum class OrderOrigination : int {
+enum class OrderOrigination : uint64_t {
     OrderReceivedFromCustomer = 1,
     OrderReceivedFromWithinFirm = 2,
     OrderReceivedFromAnotherBrokerDealer = 3,
@@ -11340,25 +11340,25 @@ enum class OrderOrigination : int {
     OrderReceivedFromExecutionOnlyService = 7,
 };
 
-enum class AllocationRollupInstruction : int {
+enum class AllocationRollupInstruction : uint64_t {
     Rollup = 0,
     DoNotRollUp = 1,
 };
 
-enum class AllocReversalStatus : int {
+enum class AllocReversalStatus : uint64_t {
     Completed = 0,
     Refused = 1,
     Cancelled = 2,
 };
 
-enum class ObligationType : int {
+enum class ObligationType : uint64_t {
     Bond = 0,
     ConvertBond = 1,
     Mortgage = 2,
     Loan = 3,
 };
 
-enum class TradePriceNegotiationMethod : int {
+enum class TradePriceNegotiationMethod : uint64_t {
     PercentPar = 0,
     DealSpread = 1,
     UpfrontPnts = 2,
@@ -11368,23 +11368,23 @@ enum class TradePriceNegotiationMethod : int {
     UpfrontPntsAmt = 6,
 };
 
-enum class UpfrontPriceType : int {
+enum class UpfrontPriceType : uint64_t {
     Percentage = 1,
     FixedAmount = 3,
 };
 
-enum class ApplLevelRecoveryIndicator : int {
+enum class ApplLevelRecoveryIndicator : uint64_t {
     NoApplRecoveryNeeded = 0,
     ApplRecoveryNeeded = 1,
 };
 
-enum class RiskLimitRequestType : int {
+enum class RiskLimitRequestType : uint64_t {
     Definitions = 1,
     Utilization = 2,
     DefinitionsAndUtilizations = 3,
 };
 
-enum class RiskLimitRequestResult : int {
+enum class RiskLimitRequestResult : uint64_t {
     Successful = 0,
     InvalidParty = 1,
     InvalidRelatedParty = 2,
@@ -11404,7 +11404,7 @@ enum class RiskLimitRequestResult : int {
     Other = 99,
 };
 
-enum class RiskLimitAction : int {
+enum class RiskLimitAction : uint64_t {
     QueueInbound = 0,
     QueueOutbound = 1,
     Reject = 2,
@@ -11418,7 +11418,7 @@ enum class RiskLimitAction : int {
     HaltTrading = 10,
 };
 
-enum class EntitlementType : int {
+enum class EntitlementType : uint64_t {
     Trade = 0,
     MakeMarkets = 1,
     HoldPositions = 2,
@@ -11430,7 +11430,7 @@ enum class EntitlementType : int {
     RespondToQuoteRequests = 8,
 };
 
-enum class EntitlementAttribDatatype : int {
+enum class EntitlementAttribDatatype : uint64_t {
     Tenor = 29,
     Pattern = 32,
     Reserved100Plus = 33,
@@ -11468,17 +11468,17 @@ enum class EntitlementAttribDatatype : int {
     DayOfMonth = 30,
 };
 
-enum class TradSesControl : int {
+enum class TradSesControl : uint64_t {
     Automatic = 0,
     Manual = 1,
 };
 
-enum class TradeVolType : int {
+enum class TradeVolType : uint64_t {
     NumberOfUnits = 0,
     NumberOfRoundLots = 1,
 };
 
-enum class OrderEventType : int {
+enum class OrderEventType : uint64_t {
     Added = 1,
     Modified = 2,
     Deleted = 3,
@@ -11492,7 +11492,7 @@ enum class OrderEventType : int {
     Activated = 11,
 };
 
-enum class OrderEventReason : int {
+enum class OrderEventReason : uint64_t {
     AddOrderRequest = 1,
     ModifyOrderRequest = 2,
     DeleteOrderRequest = 3,
@@ -11508,7 +11508,7 @@ enum class OrderEventReason : int {
     EndOfDay = 13,
 };
 
-enum class AuctionType : int {
+enum class AuctionType : uint64_t {
     None = 0,
     BlockOrderAuction = 1,
     DirectedOrderAuction = 2,
@@ -11520,12 +11520,12 @@ enum class AuctionType : int {
     DirectedOrderPriceImprovementMechanism = 8,
 };
 
-enum class AuctionInstruction : int {
+enum class AuctionInstruction : uint64_t {
     AutomatedAuctionPermitted = 0,
     AutomatedAuctionNotPermitted = 1,
 };
 
-enum class LockType : int {
+enum class LockType : uint64_t {
     NotLocked = 0,
     AwayMarketNetter = 1,
     ThreeTickLocked = 2,
@@ -11536,12 +11536,12 @@ enum class LockType : int {
     PreAssignmentLock = 7,
 };
 
-enum class ReleaseInstruction : int {
+enum class ReleaseInstruction : uint64_t {
     ISO = 1,
     NoAwayMarketBetterCheck = 2,
 };
 
-enum class DisclosureType : int {
+enum class DisclosureType : uint64_t {
     Volume = 1,
     Price = 2,
     Side = 3,
@@ -11551,13 +11551,13 @@ enum class DisclosureType : int {
     CMTAAccount = 7,
 };
 
-enum class DisclosureInstruction : int {
+enum class DisclosureInstruction : uint64_t {
     No = 0,
     Yes = 1,
     UseDefaultSetting = 2,
 };
 
-enum class TradingCapacity : int {
+enum class TradingCapacity : uint64_t {
     Customer = 1,
     CustomerProfessional = 2,
     BrokerDealer = 3,
@@ -11568,23 +11568,23 @@ enum class TradingCapacity : int {
     SystematicInternaliser = 8,
 };
 
-enum class ClearingAccountType : int {
+enum class ClearingAccountType : uint64_t {
     Customer = 1,
     Firm = 2,
     MarketMaker = 3,
 };
 
-enum class RelatedPriceSource : int {
+enum class RelatedPriceSource : uint64_t {
     NBBid = 1,
     NBOffer = 2,
 };
 
-enum class MinQtyMethod : int {
+enum class MinQtyMethod : uint64_t {
     Once = 1,
     Multiple = 2,
 };
 
-enum class Triggered : int {
+enum class Triggered : uint64_t {
     NotTriggered = 0,
     Triggered = 1,
     StopOrderTriggered = 2,
@@ -11593,38 +11593,38 @@ enum class Triggered : int {
     OUOOrderTriggered = 5,
 };
 
-enum class EventTimeUnit : int {
-    Hour = H,
-    Minute = Min,
-    Second = S,
-    Day = D,
-    Week = Wk,
-    Month = Mo,
-    Year = Yr,
+enum class EventTimeUnit : uint64_t {
+    Hour = 12638232280532398647ULL,
+    Minute = 2160992358270717143ULL,
+    Second = 12638242176137052546ULL,
+    Day = 12638219086392860115ULL,
+    Week = 664383232733218183ULL,
+    Month = 654808685476649045ULL,
+    Year = 673925894152569202ULL,
 };
 
-enum class ClearedIndicator : int {
+enum class ClearedIndicator : uint64_t {
     NotCleared = 0,
     Cleared = 1,
     Submitted = 2,
     Rejected = 3,
 };
 
-enum class ContractRefPosType : int {
+enum class ContractRefPosType : uint64_t {
     TwoComponentIntercommoditySpread = 0,
     IndexOrBasket = 1,
     TwoComponentLocationBasis = 2,
     Other = 99,
 };
 
-enum class PositionCapacity : int {
+enum class PositionCapacity : uint64_t {
     Principal = 0,
     Agent = 1,
     Customer = 2,
     Counterparty = 3,
 };
 
-enum class TradePriceCondition : int {
+enum class TradePriceCondition : uint64_t {
     SpecialCumDividend = 0,
     SpecialCumRights = 1,
     SpecialExDividend = 2,
@@ -11646,14 +11646,14 @@ enum class TradePriceCondition : int {
     PriceNotApplicable = 18,
 };
 
-enum class TradeAllocStatus : int {
+enum class TradeAllocStatus : uint64_t {
     PendingClear = 0,
     Claimed = 1,
     Cleared = 2,
     Rejected = 3,
 };
 
-enum class TradeQtyType : int {
+enum class TradeQtyType : uint64_t {
     ClearedQuantity = 0,
     LongSideClaimedQuantity = 1,
     ShortSideClaimedQuantity = 2,
@@ -11665,17 +11665,17 @@ enum class TradeQtyType : int {
     PreviousRemainingQuantity = 8,
 };
 
-enum class TradeAllocGroupInstruction : int {
+enum class TradeAllocGroupInstruction : uint64_t {
     Add = 0,
     DoNotAdd = 1,
 };
 
-enum class OffsetInstruction : int {
+enum class OffsetInstruction : uint64_t {
     Offset = 0,
     Onset = 1,
 };
 
-enum class RelatedTradeIDSource : int {
+enum class RelatedTradeIDSource : uint64_t {
     NonFIXSource = 0,
     TradeID = 1,
     SecondaryTradeID = 2,
@@ -11685,31 +11685,31 @@ enum class RelatedTradeIDSource : int {
     RegulatoryTradeID = 6,
 };
 
-enum class RelatedPositionIDSource : int {
+enum class RelatedPositionIDSource : uint64_t {
     PosMaintRptID = 1,
     TransferID = 2,
     PositionEntityID = 3,
 };
 
-enum class QuoteAckStatus : int {
+enum class QuoteAckStatus : uint64_t {
     ReceivedNotYetProcessed = 0,
     Accepted = 1,
     Rejected = 2,
 };
 
-enum class ValueCheckType : int {
+enum class ValueCheckType : uint64_t {
     PriceCheck = 1,
     NotionalValueCheck = 2,
     QuantityCheck = 3,
 };
 
-enum class ValueCheckAction : int {
+enum class ValueCheckAction : uint64_t {
     DoNotCheck = 0,
     Check = 1,
     BestEffort = 2,
 };
 
-enum class PartyDetailRequestResult : int {
+enum class PartyDetailRequestResult : uint64_t {
     Successful = 0,
     InvalidParty = 1,
     InvalidRelatedParty = 2,
@@ -11718,20 +11718,20 @@ enum class PartyDetailRequestResult : int {
     Other = 99,
 };
 
-enum class PartyDetailRequestStatus : int {
+enum class PartyDetailRequestStatus : uint64_t {
     Accepted = 0,
     AcceptedWithChanges = 1,
     Rejected = 2,
     AcceptancePending = 3,
 };
 
-enum class PartyDetailDefinitionStatus : int {
+enum class PartyDetailDefinitionStatus : uint64_t {
     Accepted = 0,
     AcceptedWithChanges = 1,
     Rejected = 2,
 };
 
-enum class EntitlementRequestResult : int {
+enum class EntitlementRequestResult : uint64_t {
     Successful = 0,
     InvalidParty = 1,
     InvalidRelatedParty = 2,
@@ -11751,7 +11751,7 @@ enum class EntitlementRequestResult : int {
     Other = 99,
 };
 
-enum class EntitlementStatus : int {
+enum class EntitlementStatus : uint64_t {
     Accepted = 0,
     AcceptedWithChanges = 1,
     Rejected = 2,
@@ -11760,13 +11760,13 @@ enum class EntitlementStatus : int {
     Deferred = 5,
 };
 
-enum class TradeMatchAckStatus : int {
+enum class TradeMatchAckStatus : uint64_t {
     ReceivedNotProcessed = 0,
     Accepted = 1,
     Rejected = 2,
 };
 
-enum class TradeMatchRejectReason : int {
+enum class TradeMatchRejectReason : uint64_t {
     Successful = 0,
     InvalidPartyInformation = 1,
     UnknownInstrument = 2,
@@ -11775,7 +11775,7 @@ enum class TradeMatchRejectReason : int {
     Other = 99,
 };
 
-enum class RegulatoryTradeIDEvent : int {
+enum class RegulatoryTradeIDEvent : uint64_t {
     InitialBlockTrade = 0,
     Allocation = 1,
     Clearing = 2,
@@ -11785,11 +11785,11 @@ enum class RegulatoryTradeIDEvent : int {
     PostTrdVal = 6,
 };
 
-enum class RegulatoryTradeIDSource : int {
+enum class RegulatoryTradeIDSource : uint64_t {
     UniqueTransactionIdentifier = 1,
 };
 
-enum class RegulatoryTradeIDType : int {
+enum class RegulatoryTradeIDType : uint64_t {
     Current = 0,
     Previous = 1,
     Block = 2,
@@ -11799,28 +11799,28 @@ enum class RegulatoryTradeIDType : int {
     ReportTrackingNumber = 6,
 };
 
-enum class PriceMovementType : int {
+enum class PriceMovementType : uint64_t {
     Amount = 0,
     Percentage = 1,
 };
 
-enum class ClearingIntention : int {
+enum class ClearingIntention : uint64_t {
     DoNotIntendToClear = 0,
     IntendToClear = 1,
 };
 
-enum class ConfirmationMethod : int {
+enum class ConfirmationMethod : uint64_t {
     NonElectronic = 0,
     Electronic = 1,
     Unconfirmed = 2,
 };
 
-enum class VerificationMethod : int {
+enum class VerificationMethod : uint64_t {
     NonElectronic = 0,
     Electronic = 1,
 };
 
-enum class ClearingRequirementException : int {
+enum class ClearingRequirementException : uint64_t {
     NoException = 0,
     Exception = 1,
     EndUserException = 2,
@@ -11829,13 +11829,13 @@ enum class ClearingRequirementException : int {
     CooperativeException = 5,
 };
 
-enum class IRSDirection : int {
-    Pay = PAY,
-    Rcv = RCV,
-    NA = NA,
+enum class IRSDirection : uint64_t {
+    Pay = 10188942369111587401ULL,
+    Rcv = 11561778294090824508ULL,
+    NA = 657572857709403824ULL,
 };
 
-enum class RegulatoryReportType : int {
+enum class RegulatoryReportType : uint64_t {
     RT = 0,
     PET = 1,
     Snapshot = 2,
@@ -11873,7 +11873,7 @@ enum class RegulatoryReportType : int {
     TerminationEarlyTermination = 34,
 };
 
-enum class TradeCollateralization : int {
+enum class TradeCollateralization : uint64_t {
     Uncollateralized = 0,
     PartiallyCollateralized = 1,
     OneWayCollaterallization = 2,
@@ -11881,7 +11881,7 @@ enum class TradeCollateralization : int {
     NetExposure = 4,
 };
 
-enum class TradeContinuation : int {
+enum class TradeContinuation : uint64_t {
     Novation = 0,
     PartialNovation = 1,
     TradeUnwind = 2,
@@ -11918,7 +11918,7 @@ enum class TradeContinuation : int {
     Other = 99,
 };
 
-enum class AssetClass : int {
+enum class AssetClass : uint64_t {
     InterestRate = 1,
     Currency = 2,
     Credit = 3,
@@ -11932,7 +11932,7 @@ enum class AssetClass : int {
     Index = 11,
 };
 
-enum class AssetSubClass : int {
+enum class AssetSubClass : uint64_t {
     Metals = 13,
     Bullion = 14,
     Energy = 15,
@@ -11983,32 +11983,32 @@ enum class AssetSubClass : int {
     Other = 48,
 };
 
-enum class SwapClass : int {
-    BasisSwap = BS,
-    IndexSwap = IX,
-    BroadBasedSecuritySwap = BB,
-    BasketSwap = SK,
+enum class SwapClass : uint64_t {
+    BasisSwap = 653907085941705250ULL,
+    IndexSwap = 658697658104874452ULL,
+    BroadBasedSecuritySwap = 653890593267282085ULL,
+    BasketSwap = 668244717570738315ULL,
 };
 
-enum class CouponType : int {
+enum class CouponType : uint64_t {
     Zero = 0,
     FixedRate = 1,
     FloatingRate = 2,
     Structured = 3,
 };
 
-enum class CouponFrequencyUnit : int {
-    Day = D,
-    Week = Wk,
-    Month = Mo,
-    Year = Yr,
-    Hour = H,
-    Minute = Min,
-    Second = S,
-    Term = T,
+enum class CouponFrequencyUnit : uint64_t {
+    Day = 12638219086392860115ULL,
+    Week = 664383232733218183ULL,
+    Month = 654808685476649045ULL,
+    Year = 673925894152569202ULL,
+    Hour = 12638232280532398647ULL,
+    Minute = 2160992358270717143ULL,
+    Second = 12638242176137052546ULL,
+    Term = 12638236678578911491ULL,
 };
 
-enum class CouponDayCount : int {
+enum class CouponDayCount : uint64_t {
     OneOne = 0,
     ThirtyThreeSixtyUS = 1,
     ThirtyThreeSixtySIA = 2,
@@ -12035,14 +12035,14 @@ enum class CouponDayCount : int {
     Other = 99,
 };
 
-enum class LienSeniority : int {
+enum class LienSeniority : uint64_t {
     Unknown = 0,
     FirstLien = 1,
     SecondLien = 2,
     ThirdLien = 3,
 };
 
-enum class LoanFacility : int {
+enum class LoanFacility : uint64_t {
     BridgeLoan = 0,
     LetterOfCredit = 1,
     RevolvingLoan = 2,
@@ -12051,7 +12051,7 @@ enum class LoanFacility : int {
     TradeClaim = 5,
 };
 
-enum class ReferenceEntityType : int {
+enum class ReferenceEntityType : uint64_t {
     Asian = 1,
     AustralianNewZealand = 2,
     EuropeanEmergingMarkets = 3,
@@ -12064,31 +12064,31 @@ enum class ReferenceEntityType : int {
     WesternEuropeanInsurance = 10,
 };
 
-enum class BlockTrdAllocIndicator : int {
+enum class BlockTrdAllocIndicator : uint64_t {
     BlockToBeAllocated = 0,
     BlockNotToBeAllocated = 1,
     AllocatedTrade = 2,
 };
 
-enum class UnderlyingObligationType : int {
+enum class UnderlyingObligationType : uint64_t {
     Bond = 0,
     ConvertibleBond = 1,
     Mortgage = 2,
     Loan = 3,
 };
 
-enum class AttachmentEncodingType : int {
+enum class AttachmentEncodingType : uint64_t {
     Base64 = 0,
     RawBinary = 1,
 };
 
-enum class NegotiationMethod : int {
+enum class NegotiationMethod : uint64_t {
     AutoSpot = 0,
     NegotiatedSpot = 1,
     PhoneSpot = 2,
 };
 
-enum class ComplexOptPayoutTime : int {
+enum class ComplexOptPayoutTime : uint64_t {
     Close = 0,
     Open = 1,
     OfficialSettl = 2,
@@ -12098,65 +12098,65 @@ enum class ComplexOptPayoutTime : int {
     AsSpecified = 6,
 };
 
-enum class ComplexEventQuoteBasis : int {
+enum class ComplexEventQuoteBasis : uint64_t {
     Currency1PerCurrency2 = 0,
     Currency2PerCurrency1 = 1,
 };
 
-enum class ComplexEventCreditEventNotifyingParty : int {
+enum class ComplexEventCreditEventNotifyingParty : uint64_t {
     SellerNotifies = 0,
     BuyerNotifies = 1,
     SellerOrBuyerNotifies = 2,
 };
 
-enum class StrategyType : int {
-    Straddle = STD,
-    Strangle = STG,
-    Butterfly = BF,
-    Condor = CNDR,
-    CallableInversibleSnowball = CISN,
-    Other = OTHER,
+enum class StrategyType : uint64_t {
+    Straddle = 10955772564758708434ULL,
+    Strangle = 10955771465247080223ULL,
+    Butterfly = 653886195220769241ULL,
+    Condor = 1789842874346501574ULL,
+    CallableInversibleSnowball = 1063341665702584360ULL,
+    Other = 13038716679093713333ULL,
 };
 
-enum class SettlDisruptionProvision : int {
+enum class SettlDisruptionProvision : uint64_t {
     Negotiation = 1,
     Cancellation = 2,
 };
 
-enum class AssetGroup : int {
+enum class AssetGroup : uint64_t {
     Financials = 1,
     Commodities = 2,
     AlternativeInvestments = 3,
 };
 
-enum class RiskLimitReportStatus : int {
+enum class RiskLimitReportStatus : uint64_t {
     Accepted = 0,
     Rejected = 1,
 };
 
-enum class RiskLimitReportRejectReason : int {
+enum class RiskLimitReportRejectReason : uint64_t {
     UnkRiskLmtRprtID = 0,
     UnkPty = 1,
     Other = 99,
 };
 
-enum class RiskLimitCheckTransType : int {
+enum class RiskLimitCheckTransType : uint64_t {
     New = 0,
     Cancel = 1,
     Replace = 2,
 };
 
-enum class RiskLimitCheckType : int {
+enum class RiskLimitCheckType : uint64_t {
     Submit = 0,
     LimitConsumed = 1,
 };
 
-enum class RiskLimitCheckRequestType : int {
+enum class RiskLimitCheckRequestType : uint64_t {
     AllOrNone = 0,
     Partial = 1,
 };
 
-enum class RiskLimitCheckRequestStatus : int {
+enum class RiskLimitCheckRequestStatus : uint64_t {
     Approved = 0,
     PartiallyApproved = 1,
     Rejected = 2,
@@ -12164,7 +12164,7 @@ enum class RiskLimitCheckRequestStatus : int {
     Cancelled = 4,
 };
 
-enum class RiskLimitCheckRequestResult : int {
+enum class RiskLimitCheckRequestResult : uint64_t {
     Successful = 0,
     InvalidParty = 1,
     ReqExceedsCreditLimit = 2,
@@ -12173,39 +12173,39 @@ enum class RiskLimitCheckRequestResult : int {
     Other = 99,
 };
 
-enum class PartyActionType : int {
+enum class PartyActionType : uint64_t {
     Suspend = 0,
     HaltTrading = 1,
     Reinstate = 2,
 };
 
-enum class PartyActionResponse : int {
+enum class PartyActionResponse : uint64_t {
     Accepted = 0,
     Completed = 1,
     Rejected = 2,
 };
 
-enum class PartyActionRejectReason : int {
+enum class PartyActionRejectReason : uint64_t {
     InvalidParty = 0,
     UnkReqParty = 1,
     NotAuthorized = 98,
     Other = 99,
 };
 
-enum class RefRiskLimitCheckIDType : int {
+enum class RefRiskLimitCheckIDType : uint64_t {
     RiskLimitRequestID = 0,
     RiskLimitCheckID = 1,
     OutOfBandID = 3,
 };
 
-enum class RiskLimitCheckModelType : int {
+enum class RiskLimitCheckModelType : uint64_t {
     None = 0,
     PlusOneModel = 1,
     PingModel = 2,
     PushModel = 3,
 };
 
-enum class RiskLimitCheckStatus : int {
+enum class RiskLimitCheckStatus : uint64_t {
     Accepted = 0,
     Rejected = 1,
     ClaimRequired = 2,
@@ -12223,39 +12223,39 @@ enum class RiskLimitCheckStatus : int {
     RejectedByExecVenue = 14,
 };
 
-enum class RegulatoryTransactionType : int {
+enum class RegulatoryTransactionType : uint64_t {
     None = 0,
     SEFRequiredTransaction = 1,
     SEFPermittedTransaction = 2,
 };
 
-enum class PartyRiskLimitStatus : int {
+enum class PartyRiskLimitStatus : uint64_t {
     Disabled = 0,
     Enabled = 1,
 };
 
-enum class RemunerationIndicator : int {
+enum class RemunerationIndicator : uint64_t {
     NoRemunerationPaid = 0,
     RemunerationPaid = 1,
 };
 
-enum class TaxonomyType : char {
+enum class TaxonomyType : uint64_t {
     ISINOrAltInstrmtID = 'I',
     InterimTaxonomy = 'E',
 };
 
-enum class TradeContingency : int {
+enum class TradeContingency : uint64_t {
     DoesNotApply = 0,
     ContingentTrade = 1,
     NonContingentTrade = 2,
 };
 
-enum class RegulatoryTradeIDScope : int {
+enum class RegulatoryTradeIDScope : uint64_t {
     ClearingMember = 1,
     Client = 2,
 };
 
-enum class EntitlementSubType : int {
+enum class EntitlementSubType : uint64_t {
     OrderEntry = 1,
     HItLift = 2,
     ViewIndicativePx = 3,
@@ -12266,25 +12266,25 @@ enum class EntitlementSubType : int {
     MultiBrokers = 8,
 };
 
-enum class QuoteModelType : int {
+enum class QuoteModelType : uint64_t {
     QuoteEntry = 1,
     QuoteModification = 2,
 };
 
-enum class ExecMethod : int {
+enum class ExecMethod : uint64_t {
     Unspecified = 0,
     Manual = 1,
     Automated = 2,
     VoiceBrokered = 3,
 };
 
-enum class MassOrderRequestStatus : int {
+enum class MassOrderRequestStatus : uint64_t {
     Accepted = 1,
     AcceptedWithAdditionalEvents = 2,
     Rejected = 3,
 };
 
-enum class MassOrderRequestResult : int {
+enum class MassOrderRequestResult : uint64_t {
     Successful = 0,
     ResponseLevelNotSupported = 1,
     InvalidMarket = 2,
@@ -12292,14 +12292,14 @@ enum class MassOrderRequestResult : int {
     Other = 99,
 };
 
-enum class OrderResponseLevel : int {
+enum class OrderResponseLevel : uint64_t {
     NoAck = 0,
     MinimumAck = 1,
     AckEach = 2,
     SummaryAck = 3,
 };
 
-enum class OrderEntryAction : char {
+enum class OrderEntryAction : uint64_t {
     Add = '1',
     Modify = '2',
     Delete = '3',
@@ -12307,7 +12307,7 @@ enum class OrderEntryAction : char {
     Release = '5',
 };
 
-enum class ExecTypeReason : int {
+enum class ExecTypeReason : uint64_t {
     OrdAddedOnRequest = 1,
     OrdReplacedOnRequest = 2,
     OrdCxldOnRequest = 3,
@@ -12325,25 +12325,25 @@ enum class ExecTypeReason : int {
     OrdExpired = 15,
 };
 
-enum class TransferTransType : int {
+enum class TransferTransType : uint64_t {
     New = 0,
     Replace = 1,
     Cancel = 2,
 };
 
-enum class TransferType : int {
+enum class TransferType : uint64_t {
     RequestTransfer = 0,
     AcceptTransfer = 1,
     DeclineTransfer = 2,
 };
 
-enum class TransferScope : int {
+enum class TransferScope : uint64_t {
     InterFirmTransfer = 0,
     IntraFirmTransfer = 1,
     CMTA = 2,
 };
 
-enum class TransferStatus : int {
+enum class TransferStatus : uint64_t {
     Received = 0,
     RejectedByIntermediary = 1,
     AcceptPending = 2,
@@ -12352,7 +12352,7 @@ enum class TransferStatus : int {
     Cancelled = 5,
 };
 
-enum class TransferRejectReason : int {
+enum class TransferRejectReason : uint64_t {
     Success = 0,
     InvalidParty = 1,
     UnknownInstrument = 2,
@@ -12361,12 +12361,12 @@ enum class TransferRejectReason : int {
     Other = 99,
 };
 
-enum class TransferReportType : int {
+enum class TransferReportType : uint64_t {
     Submit = 0,
     Alleged = 1,
 };
 
-enum class SettlPriceDeterminationMethod : int {
+enum class SettlPriceDeterminationMethod : uint64_t {
     Unknown = 0,
     LastTradePrice = 1,
     LastBidPrice = 2,
@@ -12379,7 +12379,7 @@ enum class SettlPriceDeterminationMethod : int {
     ManualPrice = 9,
 };
 
-enum class MDStatisticType : int {
+enum class MDStatisticType : uint64_t {
     Count = 1,
     AverageVolume = 2,
     TotalVolume = 3,
@@ -12412,7 +12412,7 @@ enum class MDStatisticType : int {
     MedianDuration = 30,
 };
 
-enum class MDStatisticScope : int {
+enum class MDStatisticScope : uint64_t {
     BidPrices = 1,
     OfferPrices = 2,
     BidDepth = 3,
@@ -12451,7 +12451,7 @@ enum class MDStatisticScope : int {
     TradeVolume = 36,
 };
 
-enum class MDStatisticSubScope : int {
+enum class MDStatisticSubScope : uint64_t {
     Visible = 1,
     Hidden = 2,
     Indicative = 3,
@@ -12487,7 +12487,7 @@ enum class MDStatisticSubScope : int {
     Directed = 33,
 };
 
-enum class MDStatisticScopeType : int {
+enum class MDStatisticScopeType : uint64_t {
     EntryRate = 1,
     ModificationRate = 2,
     CancelRate = 3,
@@ -12495,7 +12495,7 @@ enum class MDStatisticScopeType : int {
     UpwardMove = 5,
 };
 
-enum class MDStatisticIntervalType : int {
+enum class MDStatisticIntervalType : uint64_t {
     SlidingWindow = 1,
     SlidingWindowPeak = 2,
     FixedDateRange = 3,
@@ -12506,7 +12506,7 @@ enum class MDStatisticIntervalType : int {
     MaximumRangeUpToPreviousTimeUnit = 8,
 };
 
-enum class MDStatisticRatioType : int {
+enum class MDStatisticRatioType : uint64_t {
     BuyersToSellers = 1,
     UpticksToDownticks = 2,
     MarketMakerToNonMarketMaker = 3,
@@ -12521,7 +12521,7 @@ enum class MDStatisticRatioType : int {
     OrdersToTotalNumberOrders = 12,
 };
 
-enum class MDStatisticRequestResult : int {
+enum class MDStatisticRequestResult : uint64_t {
     Successful = 0,
     InvalidOrUnknownMarket = 1,
     InvalidOrUnknownMarketSegment = 2,
@@ -12544,17 +12544,17 @@ enum class MDStatisticRequestResult : int {
     Other = 99,
 };
 
-enum class MDStatisticStatus : int {
+enum class MDStatisticStatus : uint64_t {
     Active = 1,
     Inactive = 2,
 };
 
-enum class MDStatisticValueType : int {
+enum class MDStatisticValueType : uint64_t {
     Absolute = 1,
     Percentage = 2,
 };
 
-enum class CollRptRejectReason : int {
+enum class CollRptRejectReason : uint64_t {
     UnknownTrade = 0,
     UnknownInstrument = 1,
     UnknownCounterparty = 2,
@@ -12563,19 +12563,19 @@ enum class CollRptRejectReason : int {
     Other = 99,
 };
 
-enum class CollRptStatus : int {
+enum class CollRptStatus : uint64_t {
     Accepted = 0,
     Received = 1,
     Rejected = 2,
 };
 
-enum class CrossedIndicator : int {
+enum class CrossedIndicator : uint64_t {
     NoCross = 0,
     CrossRejected = 1,
     CrossAccepted = 2,
 };
 
-enum class TradeReportingIndicator : int {
+enum class TradeReportingIndicator : uint64_t {
     NotReported = 0,
     OnBook = 1,
     SISeller = 2,
@@ -12588,7 +12588,7 @@ enum class TradeReportingIndicator : int {
     NotReportable = 9,
 };
 
-enum class RelativeValueType : int {
+enum class RelativeValueType : uint64_t {
     ASWSpread = 1,
     OIS = 2,
     ZSpread = 3,
@@ -12603,13 +12603,13 @@ enum class RelativeValueType : int {
     CS01 = 12,
 };
 
-enum class RelativeValueSide : int {
+enum class RelativeValueSide : uint64_t {
     Bid = 1,
     Mid = 2,
     Offer = 3,
 };
 
-enum class MDReportEvent : int {
+enum class MDReportEvent : uint64_t {
     StartInstrumentRefData = 1,
     EndInstrumentRefData = 2,
     StartOffMarketTrades = 3,
@@ -12626,39 +12626,39 @@ enum class MDReportEvent : int {
     EndStatistics = 14,
 };
 
-enum class MarketSegmentStatus : int {
+enum class MarketSegmentStatus : uint64_t {
     Active = 1,
     Inactive = 2,
     Published = 3,
 };
 
-enum class MarketSegmentType : int {
+enum class MarketSegmentType : uint64_t {
     Pool = 1,
     Retail = 2,
     Wholesale = 3,
 };
 
-enum class MarketSegmentSubType : int {
+enum class MarketSegmentSubType : uint64_t {
     InterProductSpread = 1,
 };
 
-enum class MarketSegmentRelationship : int {
+enum class MarketSegmentRelationship : uint64_t {
     MarketSegmentPoolMember = 1,
     RetailSegment = 2,
     WholesaleSegment = 3,
 };
 
-enum class QuoteSideIndicator : int {
-    No = N,
-    Yes = Y,
+enum class QuoteSideIndicator : uint64_t {
+    No = 12638230081509142225ULL,
+    Yes = 12638248773206821812ULL,
 };
 
-enum class CustomerPriority : int {
+enum class CustomerPriority : uint64_t {
     NoPriority = 0,
     UnconditionalPriority = 1,
 };
 
-enum class SettlSubMethod : int {
+enum class SettlSubMethod : uint64_t {
     Shares = 1,
     Derivatives = 2,
     PaymentVsPayment = 3,
@@ -12668,12 +12668,12 @@ enum class SettlSubMethod : int {
     Other = 99,
 };
 
-enum class CalculationMethod : int {
+enum class CalculationMethod : uint64_t {
     Automatic = 0,
     Manual = 1,
 };
 
-enum class OrderAttributeType : int {
+enum class OrderAttributeType : uint64_t {
     AggregatedOrder = 0,
     PendingAllocation = 1,
     LiquidityProvisionActivityOrder = 2,
@@ -12691,29 +12691,29 @@ enum class OrderAttributeType : int {
     ExemptFromSTO = 14,
 };
 
-enum class ComplexEventPVFinalPriceElectionFallback : int {
+enum class ComplexEventPVFinalPriceElectionFallback : uint64_t {
     Close = 0,
     HedgeElection = 1,
 };
 
-enum class StrikeIndexQuote : int {
+enum class StrikeIndexQuote : uint64_t {
     Bid = 0,
     Mid = 1,
     Offer = 2,
 };
 
-enum class ExtraordinaryEventAdjustmentMethod : int {
+enum class ExtraordinaryEventAdjustmentMethod : uint64_t {
     CalculationAgent = 0,
     OptionsExchange = 1,
 };
 
-enum class UnderlyingNotionalAdjustments : int {
+enum class UnderlyingNotionalAdjustments : uint64_t {
     Execution = 0,
     PortfolioRebalancing = 1,
     Standard = 2,
 };
 
-enum class CollateralAmountType : int {
+enum class CollateralAmountType : uint64_t {
     MarketValuation = 0,
     PortfolioValue = 1,
     ValueConfirmed = 2,
@@ -12722,7 +12722,7 @@ enum class CollateralAmountType : int {
     EstimatedMarketValuation = 5,
 };
 
-enum class CommissionAmountType : int {
+enum class CommissionAmountType : uint64_t {
     Unspecified = 0,
     Acceptance = 1,
     Broker = 2,
@@ -12733,12 +12733,12 @@ enum class CommissionAmountType : int {
     ResearchPayment = 7,
 };
 
-enum class AlgorithmicTradeIndicator : int {
+enum class AlgorithmicTradeIndicator : uint64_t {
     NonAlgorithmicTrade = 0,
     AlgorithmicTrade = 1,
 };
 
-enum class TrdRegPublicationType : int {
+enum class TrdRegPublicationType : uint64_t {
     PreTradeTransparencyWaiver = 0,
     PostTradeDeferral = 1,
     ExemptFromPublication = 2,
@@ -12748,7 +12748,7 @@ enum class TrdRegPublicationType : int {
     PublicationInternalToExecutionVenue = 6,
 };
 
-enum class TrdRegPublicationReason : int {
+enum class TrdRegPublicationReason : uint64_t {
     NoBookOrderDueToAverageSpreadPrice = 0,
     NoBookOrderDueToRefPrice = 1,
     NoBookOrderDueToOtherConditions = 2,
@@ -12776,7 +12776,7 @@ enum class TrdRegPublicationReason : int {
     DeferralDueToAssetClass = 24,
 };
 
-enum class MassActionReason : int {
+enum class MassActionReason : uint64_t {
     None = 0,
     TradingRiskControl = 1,
     ClearingRiskControl = 2,
@@ -12792,39 +12792,39 @@ enum class MassActionReason : int {
     Other = 99,
 };
 
-enum class NotAffectedReason : int {
+enum class NotAffectedReason : uint64_t {
     OrderSuspended = 0,
     InstrumentSuspended = 1,
 };
 
-enum class OrderOwnershipIndicator : int {
+enum class OrderOwnershipIndicator : uint64_t {
     NoChange = 0,
     ExecutingPartyChange = 1,
     EnteringPartyChange = 2,
     SpecifiedPartyChange = 3,
 };
 
-enum class InTheMoneyCondition : int {
+enum class InTheMoneyCondition : uint64_t {
     StandardITM = 0,
     ATMITM = 1,
     ATMCallITM = 2,
     ATMPutITM = 3,
 };
 
-enum class ExDestinationType : int {
+enum class ExDestinationType : uint64_t {
     NoRestriction = 0,
     TradedOnlyOnTradingVenue = 1,
     TradedOnlyOnSI = 2,
     TradedOnTradingVenueOrSI = 3,
 };
 
-enum class MarketCondition : int {
+enum class MarketCondition : uint64_t {
     Normal = 0,
     Stressed = 1,
     Exceptional = 2,
 };
 
-enum class QuoteAttributeType : int {
+enum class QuoteAttributeType : uint64_t {
     QuoteAboveStandardMarketSize = 0,
     QuoteAboveSpecificInstrumentSize = 1,
     QuoteApplicableForLiquidtyProvisionActivity = 2,
@@ -12832,30 +12832,30 @@ enum class QuoteAttributeType : int {
     BidOrAskRequest = 4,
 };
 
-enum class PriceQualifier : int {
+enum class PriceQualifier : uint64_t {
     AccruedInterestIsFactored = 0,
     TaxIsFactored = 1,
     BondAmortizationIsFactored = 2,
 };
 
-enum class MDValueTier : int {
+enum class MDValueTier : uint64_t {
     Range1 = 1,
     Range2 = 2,
     Range3 = 3,
 };
 
-enum class MiscFeeQualifier : int {
+enum class MiscFeeQualifier : uint64_t {
     Contributes = 0,
     DoesNotContribute = 1,
 };
 
-enum class CommissionAmountSubType : int {
+enum class CommissionAmountSubType : uint64_t {
     ResearchPaymentAccount = 0,
     CommissionSharingAgreement = 1,
     OtherTypeResearchPayment = 2,
 };
 
-enum class CommodityFinalPriceType : int {
+enum class CommodityFinalPriceType : uint64_t {
     ArgusMcCloskey = 0,
     Baltic = 1,
     Exchange = 2,
@@ -12865,14 +12865,14 @@ enum class CommodityFinalPriceType : int {
     Other = 99,
 };
 
-enum class ReferenceDataDateType : int {
+enum class ReferenceDataDateType : uint64_t {
     AdmitToTradeRequestDate = 0,
     AdmitToTradeApprovalDate = 1,
     AdmitToTradeOrFirstTradeDate = 2,
     TerminationDate = 3,
 };
 
-enum class ReturnTrigger : int {
+enum class ReturnTrigger : uint64_t {
     Dividend = 1,
     Variance = 2,
     Volatility = 3,
@@ -12885,14 +12885,14 @@ enum class ReturnTrigger : int {
     Other = 99,
 };
 
-enum class AveragePriceType : int {
+enum class AveragePriceType : uint64_t {
     TimeWeightedAveragePrice = 0,
     VolumeWeightedAveragePrice = 1,
     PercentOfVolumeAveragePrice = 2,
     LimitOrderAveragePrice = 3,
 };
 
-enum class AllocGroupStatus : int {
+enum class AllocGroupStatus : uint64_t {
     Added = 0,
     Canceled = 1,
     Replaced = 2,
@@ -12900,12 +12900,12 @@ enum class AllocGroupStatus : int {
     Pending = 4,
 };
 
-enum class AllocRequestStatus : int {
+enum class AllocRequestStatus : uint64_t {
     Accepted = 0,
     Rejected = 1,
 };
 
-enum class MatchExceptionType : int {
+enum class MatchExceptionType : uint64_t {
     NoMatchingConfirmation = 0,
     NoMatchingAllocation = 1,
     AllocationDataElementMissing = 2,
@@ -12915,7 +12915,7 @@ enum class MatchExceptionType : int {
     Other = 99,
 };
 
-enum class MatchExceptionElementType : int {
+enum class MatchExceptionElementType : uint64_t {
     AccruedInterest = 1,
     DealPrice = 2,
     TradeDate = 3,
@@ -12936,70 +12936,70 @@ enum class MatchExceptionElementType : int {
     Tax = 18,
 };
 
-enum class MatchExceptionToleranceValueType : int {
+enum class MatchExceptionToleranceValueType : uint64_t {
     FixedAmount = 1,
     Percentage = 2,
 };
 
-enum class MatchingDataPointIndicator : int {
+enum class MatchingDataPointIndicator : uint64_t {
     Mandatory = 1,
     Optional = 2,
 };
 
-enum class TradeAggregationTransType : int {
+enum class TradeAggregationTransType : uint64_t {
     New = 0,
     Cancel = 1,
     Replace = 2,
 };
 
-enum class TradeAggregationRequestStatus : int {
+enum class TradeAggregationRequestStatus : uint64_t {
     Accepted = 0,
     Rejected = 1,
 };
 
-enum class TradeAggregationRejectReason : int {
+enum class TradeAggregationRejectReason : uint64_t {
     UnknownOrders = 0,
     UnknownExecutionFills = 1,
     Other = 99,
 };
 
-enum class OffshoreIndicator : int {
+enum class OffshoreIndicator : uint64_t {
     Regular = 0,
     Offshore = 1,
     Onshore = 2,
 };
 
-enum class PayReportTransType : int {
+enum class PayReportTransType : uint64_t {
     New = 0,
     Replace = 1,
     Status = 2,
 };
 
-enum class PayReportStatus : int {
+enum class PayReportStatus : uint64_t {
     Received = 0,
     Accepted = 1,
     Rejected = 2,
     Disputed = 3,
 };
 
-enum class PayRequestTransType : int {
+enum class PayRequestTransType : uint64_t {
     New = 0,
     Cancel = 1,
 };
 
-enum class PayRequestStatus : int {
+enum class PayRequestStatus : uint64_t {
     Received = 0,
     Accepted = 1,
     Rejected = 2,
     Disputed = 3,
 };
 
-enum class PostTradePaymentDebitOrCredit : int {
+enum class PostTradePaymentDebitOrCredit : uint64_t {
     DebitPay = 0,
     CreditReceive = 1,
 };
 
-enum class PostTradePaymentStatus : int {
+enum class PostTradePaymentStatus : uint64_t {
     New = 0,
     Initiated = 1,
     Pending = 2,
@@ -13007,41 +13007,41 @@ enum class PostTradePaymentStatus : int {
     Rejected = 4,
 };
 
-enum class DuplicateClOrdIDIndicator : int {
-    UniqueClOrdID = N,
-    DuplicateClOrdID = Y,
+enum class DuplicateClOrdIDIndicator : uint64_t {
+    UniqueClOrdID = 12638230081509142225ULL,
+    DuplicateClOrdID = 12638248773206821812ULL,
 };
 
-enum class EventInitiatorType : char {
+enum class EventInitiatorType : uint64_t {
     CustomerOrClient = 'C',
     ExchangeOrExecutionVenue = 'E',
     FirmOrBroker = 'F',
 };
 
-enum class NBBOEntryType : int {
+enum class NBBOEntryType : uint64_t {
     Bid = 0,
     Offer = 1,
     MidPrice = 2,
 };
 
-enum class NBBOSource : int {
+enum class NBBOSource : uint64_t {
     NotApplicable = 0,
     Direct = 1,
     SIP = 2,
     Hybrid = 3,
 };
 
-enum class SingleQuoteIndicator : int {
-    MultipleQuotesAllowed = N,
-    OnlyOneQuoteAllowed = Y,
+enum class SingleQuoteIndicator : uint64_t {
+    MultipleQuotesAllowed = 12638230081509142225ULL,
+    OnlyOneQuoteAllowed = 12638248773206821812ULL,
 };
 
-enum class TrdRegTimestampManualIndicator : int {
-    NotManuallyCaptured = N,
-    ManuallyCaptured = Y,
+enum class TrdRegTimestampManualIndicator : uint64_t {
+    NotManuallyCaptured = 12638230081509142225ULL,
+    ManuallyCaptured = 12638248773206821812ULL,
 };
 
-enum class CollateralReinvestmentType : int {
+enum class CollateralReinvestmentType : uint64_t {
     MoneyMarketFund = 0,
     OtherComingledPool = 1,
     RepoMarket = 2,
@@ -13049,7 +13049,7 @@ enum class CollateralReinvestmentType : int {
     OtherInvestments = 4,
 };
 
-enum class FundingSource : int {
+enum class FundingSource : uint64_t {
     Repo = 0,
     Cash = 1,
     FreeCedits = 2,
@@ -13059,23 +13059,23 @@ enum class FundingSource : int {
     Other = 99,
 };
 
-enum class MarginDirection : int {
+enum class MarginDirection : uint64_t {
     Posted = 0,
     Received = 1,
 };
 
-enum class TransactionAttributeType : int {
+enum class TransactionAttributeType : uint64_t {
     ExclusiveArrangement = 0,
     CollateralReuse = 1,
     CollateralArrangementType = 2,
 };
 
-enum class RoutingArrangementIndicator : int {
+enum class RoutingArrangementIndicator : uint64_t {
     NoRoutingArrangementInPlace = 0,
     RoutingArrangementInPlace = 1,
 };
 
-enum class RelatedOrderIDSource : int {
+enum class RelatedOrderIDSource : uint64_t {
     NonFIXSource = 0,
     SystemOrderIdentifier = 1,
     ClientOrderIdentifier = 2,
@@ -13083,56 +13083,56 @@ enum class RelatedOrderIDSource : int {
     SecondaryClientOrderIdentifier = 4,
 };
 
-enum class OrderRelationship : int {
+enum class OrderRelationship : uint64_t {
     NotSpecified = 0,
     OrderAggregation = 1,
     OrderSplit = 2,
 };
 
-enum class CurrencyCodeSource : int {
+enum class CurrencyCodeSource : uint64_t {
     CUSIP = 1,
     SEDOL = 2,
     ISINNumber = 4,
     ISOCurrencyCode = 6,
-    FinancialInstrumentGlobalIdentifier = S,
-    DigitalTokenIdentifier = Y,
+    FinancialInstrumentGlobalIdentifier = 12638242176137052546ULL,
+    DigitalTokenIdentifier = 12638248773206821812ULL,
 };
 
-enum class MultiJurisdictionReportingIndicator : int {
+enum class MultiJurisdictionReportingIndicator : uint64_t {
     NotMultiJrsdctnEligible = 0,
     MultiJrsdctnEligible = 1,
 };
 
-enum class SelfMatchPreventionInstruction : int {
+enum class SelfMatchPreventionInstruction : uint64_t {
     CancelAggressive = 1,
     CancelPassive = 2,
     CancelAggressivePassive = 3,
 };
 
-enum class SettlStatusRequestStatus : int {
+enum class SettlStatusRequestStatus : uint64_t {
     Received = 0,
     Accepted = 1,
     Rejected = 2,
 };
 
-enum class SettlStatusReportStatus : int {
+enum class SettlStatusReportStatus : uint64_t {
     Received = 0,
     Accepted = 1,
     Rejected = 2,
 };
 
-enum class AllocGroupSubQtyType : int {
+enum class AllocGroupSubQtyType : uint64_t {
     TradeType = 1,
     TradePublicationIndicator = 2,
     OrderHandlingInstruction = 3,
 };
 
-enum class MetricsCalculationPriceSource : int {
+enum class MetricsCalculationPriceSource : uint64_t {
     Realtime = 1,
     EndOfDay = 2,
 };
 
-enum class AssetValuationModel : int {
+enum class AssetValuationModel : uint64_t {
     BlackScholes = 1,
     Whaley = 2,
     Bachelier = 3,
@@ -13143,80 +13143,80 @@ enum class AssetValuationModel : int {
     OtherModel = 99,
 };
 
-enum class AlgoCertificateRequestTransType : int {
+enum class AlgoCertificateRequestTransType : uint64_t {
     New = 0,
     Cancel = 1,
     Replace = 2,
 };
 
-enum class AlgoCertificateRequestStatus : int {
+enum class AlgoCertificateRequestStatus : uint64_t {
     Received = 0,
     Accepted = 1,
     Rejected = 2,
 };
 
-enum class AlgoCertificateReportTransType : int {
+enum class AlgoCertificateReportTransType : uint64_t {
     New = 0,
     Cancel = 1,
     Replace = 2,
 };
 
-enum class AlgoCertificateReportStatus : int {
+enum class AlgoCertificateReportStatus : uint64_t {
     Received = 0,
     Accepted = 1,
     Rejected = 2,
 };
 
-enum class AlgoCertificateStatus : int {
+enum class AlgoCertificateStatus : uint64_t {
     Draft = 0,
     Approved = 1,
     Submitted = 2,
     Registered = 3,
 };
 
-enum class TestThresholdType : int {
+enum class TestThresholdType : uint64_t {
     Under = 0,
     Over = 1,
 };
 
-enum class TestSuiteRequestTransType : int {
+enum class TestSuiteRequestTransType : uint64_t {
     New = 0,
     Cancel = 1,
 };
 
-enum class TestSuiteRequestStatus : int {
+enum class TestSuiteRequestStatus : uint64_t {
     Received = 0,
     Accepted = 1,
     Rejected = 2,
 };
 
-enum class TestActionType : int {
+enum class TestActionType : uint64_t {
     Start = 0,
     Stop = 1,
     State = 2,
 };
 
-enum class TestActionRequestStatus : int {
+enum class TestActionRequestStatus : uint64_t {
     Received = 0,
     Accepted = 1,
     Rejected = 2,
 };
 
-enum class TestSuiteActivityState : int {
+enum class TestSuiteActivityState : uint64_t {
     Scheduled = 0,
     Running = 1,
     Completed = 2,
     Cancelled = 3,
 };
 
-enum class TestSuiteStatus : int {
+enum class TestSuiteStatus : uint64_t {
     Undefined = 0,
     Pass = 1,
     Fail = 2,
     Warning = 3,
 };
 
-enum class FXBenchmark : int {
+enum class FXBenchmark : uint64_t {
     Bloomberg = 1,
     CentralBank = 2,
     WMR = 3,
@@ -13226,19 +13226,19 @@ enum class FXBenchmark : int {
     Other = 99,
 };
 
-enum class AlgoCertificateRequestType : int {
+enum class AlgoCertificateRequestType : uint64_t {
     CertificateInformation = 0,
     GenerateCertificate = 1,
     ChangeCertificateStatus = 2,
     ForwardCertificate = 3,
 };
 
-enum class AlgoCertificateReportType : int {
+enum class AlgoCertificateReportType : uint64_t {
     CertificateInformation = 0,
     CertificateStateChanged = 1,
 };
 
-enum class TestGatewayDetailType : int {
+enum class TestGatewayDetailType : uint64_t {
     MarketDataGatewayIPAddress = 0,
     MarketDataGatewayPortNumber = 1,
     MarketDataGatewayDataFormat = 2,
@@ -13251,31 +13251,31 @@ enum class TestGatewayDetailType : int {
     OrderEntryGatewayRoutingIPAddress = 9,
 };
 
-enum class MDQualityIndicator : int {
+enum class MDQualityIndicator : uint64_t {
     NoQualityIssue = 0,
     QualityIssue = 1,
 };
 
-enum class MDEntryStatus : int {
+enum class MDEntryStatus : uint64_t {
     Accepted = 0,
     AcceptedWithErrors = 1,
     Rejected = 2,
 };
 
-enum class ReportStatus : int {
+enum class ReportStatus : uint64_t {
     ReceivedNotYetProcessed = 0,
     Accepted = 1,
     Rejected = 2,
     AcceptedWithErrors = 3,
 };
 
-enum class CashSettlQuoteMethod : int {
+enum class CashSettlQuoteMethod : uint64_t {
     Bid = 0,
     Mid = 1,
     Offer = 2,
 };
 
-enum class CashSettlValuationMethod : int {
+enum class CashSettlValuationMethod : uint64_t {
     Market = 0,
     Highest = 1,
     AverageMarket = 2,
@@ -13286,12 +13286,12 @@ enum class CashSettlValuationMethod : int {
     AverageBlendedHighest = 7,
 };
 
-enum class StreamType : int {
+enum class StreamType : uint64_t {
     PaymentCashSettlement = 0,
     PhysicalDelivery = 1,
 };
 
-enum class ProvisionType : int {
+enum class ProvisionType : uint64_t {
     MandatoryEarlyTermination = 0,
     OptionalEarlyTermination = 1,
     Cancelable = 2,
@@ -13302,26 +13302,26 @@ enum class ProvisionType : int {
     Puttable = 7,
 };
 
-enum class ProvisionDateTenorUnit : int {
-    Day = D,
-    Week = Wk,
-    Month = Mo,
-    Year = Yr,
+enum class ProvisionDateTenorUnit : uint64_t {
+    Day = 12638219086392860115ULL,
+    Week = 664383232733218183ULL,
+    Month = 654808685476649045ULL,
+    Year = 673925894152569202ULL,
 };
 
-enum class ProvisionCalculationAgent : int {
+enum class ProvisionCalculationAgent : uint64_t {
     ExercisingParty = 0,
     NonExercisingParty = 1,
     MasterAgreeent = 2,
     Supplement = 3,
 };
 
-enum class ProvisionOptionSinglePartyBuyerSide : int {
+enum class ProvisionOptionSinglePartyBuyerSide : uint64_t {
     Buy = 1,
     Sell = 2,
 };
 
-enum class ProvisionCashSettlMethod : int {
+enum class ProvisionCashSettlMethod : uint64_t {
     CashPrice = 0,
     CashPriceAlternate = 1,
     ParYieldCurveAdjusted = 2,
@@ -13331,38 +13331,38 @@ enum class ProvisionCashSettlMethod : int {
     CollateralizedPrice = 6,
 };
 
-enum class ProvisionCashSettlQuoteType : int {
+enum class ProvisionCashSettlQuoteType : uint64_t {
     Bid = 0,
     Mid = 1,
     Offer = 2,
     ExercisingPartyPays = 3,
 };
 
-enum class ProvisionOptionExerciseEarliestDateOffsetUnit : int {
-    Day = D,
-    Week = Wk,
-    Month = Mo,
-    Year = Yr,
+enum class ProvisionOptionExerciseEarliestDateOffsetUnit : uint64_t {
+    Day = 12638219086392860115ULL,
+    Week = 664383232733218183ULL,
+    Month = 654808685476649045ULL,
+    Year = 673925894152569202ULL,
 };
 
-enum class ProvisionOptionExerciseFixedDateType : int {
+enum class ProvisionOptionExerciseFixedDateType : uint64_t {
     Unadjusted = 0,
     Adjusted = 1,
 };
 
-enum class ProvisionCashSettlPaymentDateType : int {
+enum class ProvisionCashSettlPaymentDateType : uint64_t {
     Unadjusted = 0,
     Adjusted = 1,
 };
 
-enum class ProtectionTermEventUnit : int {
-    Day = D,
-    Week = Wk,
-    Month = Mo,
-    Year = Yr,
+enum class ProtectionTermEventUnit : uint64_t {
+    Day = 12638219086392860115ULL,
+    Week = 664383232733218183ULL,
+    Month = 654808685476649045ULL,
+    Year = 673925894152569202ULL,
 };
 
-enum class ProtectionTermEventDayType : int {
+enum class ProtectionTermEventDayType : uint64_t {
     Business = 0,
     Calendar = 1,
     CommodityBusiness = 2,
@@ -13371,13 +13371,13 @@ enum class ProtectionTermEventDayType : int {
     ScheduledTradingDay = 5,
 };
 
-enum class ProtectionTermEventQualifier : char {
+enum class ProtectionTermEventQualifier : uint64_t {
     RestructuringMultipleHoldingObligations = 'H',
     RestructuringMultipleCreditEventNotices = 'E',
     FloatingRateInterestShortfall = 'C',
 };
 
-enum class PaymentType : int {
+enum class PaymentType : uint64_t {
     Brokerage = 0,
     UpfrontFee = 1,
     IndependentAmountCollateral = 2,
@@ -13396,18 +13396,18 @@ enum class PaymentType : int {
     Other = 99,
 };
 
-enum class PaymentPaySide : int {
+enum class PaymentPaySide : uint64_t {
     Buy = 1,
     Sell = 2,
 };
 
-enum class PaymentSettlStyle : int {
+enum class PaymentSettlStyle : uint64_t {
     Standard = 0,
     Net = 1,
     StandardfNet = 2,
 };
 
-enum class PaymentStreamType : int {
+enum class PaymentStreamType : uint64_t {
     Periodic = 0,
     Initial = 1,
     Single = 2,
@@ -13420,95 +13420,95 @@ enum class PaymentStreamType : int {
     Correlation = 9,
 };
 
-enum class PaymentStreamDiscountType : int {
+enum class PaymentStreamDiscountType : uint64_t {
     Standard = 0,
     FRA = 1,
 };
 
-enum class PaymentStreamCompoundingMethod : int {
+enum class PaymentStreamCompoundingMethod : uint64_t {
     None = 0,
     Flat = 1,
     Straight = 2,
     SpreadExclusive = 3,
 };
 
-enum class PaymentStreamPaymentFrequencyUnit : int {
-    Day = D,
-    Week = Wk,
-    Month = Mo,
-    Year = Yr,
-    Term = T,
+enum class PaymentStreamPaymentFrequencyUnit : uint64_t {
+    Day = 12638219086392860115ULL,
+    Week = 664383232733218183ULL,
+    Month = 654808685476649045ULL,
+    Year = 673925894152569202ULL,
+    Term = 12638236678578911491ULL,
 };
 
-enum class PaymentStreamPaymentDateOffsetUnit : int {
-    Day = D,
-    Week = Wk,
-    Month = Mo,
-    Year = Yr,
+enum class PaymentStreamPaymentDateOffsetUnit : uint64_t {
+    Day = 12638219086392860115ULL,
+    Week = 664383232733218183ULL,
+    Month = 654808685476649045ULL,
+    Year = 673925894152569202ULL,
 };
 
-enum class PaymentStreamResetWeeklyRollConvention : int {
-    Monday = MON,
-    Tuesday = TUE,
-    Wednesday = WED,
-    Thursday = THU,
-    Friday = FRI,
-    Saturday = SAT,
-    Sunday = SUN,
+enum class PaymentStreamResetWeeklyRollConvention : uint64_t {
+    Monday = 2197372999017772161ULL,
+    Tuesday = 7833990772253713925ULL,
+    Wednesday = 8436969546073932791ULL,
+    Thursday = 7823307917276097324ULL,
+    Friday = 17510715641337666120ULL,
+    Saturday = 10937439307873513495ULL,
+    Sunday = 10956590601409908193ULL,
 };
 
-enum class PaymentStreamRateIndexSource : int {
+enum class PaymentStreamRateIndexSource : uint64_t {
     Bloomberg = 0,
     Reuters = 1,
     Telerate = 2,
     Other = 99,
 };
 
-enum class PaymentStreamRateIndexCurveUnit : int {
-    Day = D,
-    Week = Wk,
-    Month = Mo,
-    Year = Yr,
+enum class PaymentStreamRateIndexCurveUnit : uint64_t {
+    Day = 12638219086392860115ULL,
+    Week = 664383232733218183ULL,
+    Month = 654808685476649045ULL,
+    Year = 673925894152569202ULL,
 };
 
-enum class PaymentStreamRateSpreadPositionType : int {
+enum class PaymentStreamRateSpreadPositionType : uint64_t {
     Short = 0,
     Long = 1,
 };
 
-enum class PaymentStreamRateTreatment : int {
+enum class PaymentStreamRateTreatment : uint64_t {
     BondEquivalentYield = 0,
     MoneyMarketYield = 1,
 };
 
-enum class PaymentStreamCapRateBuySide : int {
+enum class PaymentStreamCapRateBuySide : uint64_t {
     Buyer = 1,
     Seller = 2,
 };
 
-enum class PaymentStreamFloorRateBuySide : int {
+enum class PaymentStreamFloorRateBuySide : uint64_t {
     Buyer = 1,
     Seller = 2,
 };
 
-enum class PaymentStreamAveragingMethod : int {
+enum class PaymentStreamAveragingMethod : uint64_t {
     Unweighted = 0,
     Weighted = 1,
 };
 
-enum class PaymentStreamNegativeRateTreatment : int {
+enum class PaymentStreamNegativeRateTreatment : uint64_t {
     ZeroInterestRateMethod = 0,
     NegativeInterestRateMethod = 1,
 };
 
-enum class PaymentStreamInflationLagUnit : int {
-    Day = D,
-    Week = Wk,
-    Month = Mo,
-    Year = Yr,
+enum class PaymentStreamInflationLagUnit : uint64_t {
+    Day = 12638219086392860115ULL,
+    Week = 664383232733218183ULL,
+    Month = 654808685476649045ULL,
+    Year = 673925894152569202ULL,
 };
 
-enum class PaymentStreamInflationLagDayType : int {
+enum class PaymentStreamInflationLagDayType : uint64_t {
     Business = 0,
     Calendar = 1,
     CommodityBusiness = 2,
@@ -13517,23 +13517,23 @@ enum class PaymentStreamInflationLagDayType : int {
     ScheduledTradingDay = 5,
 };
 
-enum class PaymentStreamInflationInterpolationMethod : int {
+enum class PaymentStreamInflationInterpolationMethod : uint64_t {
     None = 0,
     LinearZeroYield = 1,
 };
 
-enum class PaymentStreamFRADiscounting : int {
+enum class PaymentStreamFRADiscounting : uint64_t {
     None = 0,
     ISDA = 1,
     AFMA = 2,
 };
 
-enum class NonDeliverableFixingDateType : int {
+enum class NonDeliverableFixingDateType : uint64_t {
     Unadjusted = 0,
     Adjusted = 1,
 };
 
-enum class PaymentScheduleType : int {
+enum class PaymentScheduleType : uint64_t {
     Notional = 0,
     CashFlow = 1,
     FXLinkedNotional = 2,
@@ -13560,24 +13560,24 @@ enum class PaymentScheduleType : int {
     CompoundingFloorRate = 23,
 };
 
-enum class PaymentScheduleStepRelativeTo : int {
+enum class PaymentScheduleStepRelativeTo : uint64_t {
     Initial = 0,
     Previous = 1,
 };
 
-enum class PaymentStubType : int {
+enum class PaymentStubType : uint64_t {
     Initial = 0,
     Final = 1,
     CompoundingInitial = 2,
     CompoundingFinal = 3,
 };
 
-enum class PaymentStubLength : int {
+enum class PaymentStubLength : uint64_t {
     Short = 0,
     Long = 1,
 };
 
-enum class PaymentStreamPaymentDateOffsetDayType : int {
+enum class PaymentStreamPaymentDateOffsetDayType : uint64_t {
     Business = 0,
     Calendar = 1,
     CommodityBusiness = 2,
@@ -13586,7 +13586,7 @@ enum class PaymentStreamPaymentDateOffsetDayType : int {
     ScheduledTradingDay = 5,
 };
 
-enum class BusinessDayConvention : int {
+enum class BusinessDayConvention : uint64_t {
     NotApplicable = 0,
     None = 1,
     FollowingDay = 2,
@@ -13597,7 +13597,7 @@ enum class BusinessDayConvention : int {
     NearestDay = 7,
 };
 
-enum class DateRollConvention : int {
+enum class DateRollConvention : uint64_t {
     FirstDay = 1,
     SecondDay = 2,
     ThirdDay = 3,
@@ -13628,25 +13628,25 @@ enum class DateRollConvention : int {
     TwentyEigthDa28y = 28,
     TwentyNinthDay = 29,
     ThirtiethDay = 30,
-    EOM = EOM,
-    FRN = FRN,
-    IMM = IMM,
-    IMMCAD = IMMCAD,
-    IMMAUD = IMMAUD,
-    IMMNZD = IMMNZD,
-    SFE = SFE,
-    NONE = NONE,
-    TBILL = TBILL,
-    MON = MON,
-    TUE = TUE,
-    WED = WED,
-    THU = THU,
-    FRI = FRI,
-    SAT = SAT,
-    SUN = SUN,
+    EOM = 15666079276827627888ULL,
+    FRN = 17510723337919063597ULL,
+    IMM = 4699761408608202610ULL,
+    IMMCAD = 1990101170870403782ULL,
+    IMMAUD = 3380145552339365200ULL,
+    IMMNZD = 8851285726050659178ULL,
+    SFE = 10938546516082932747ULL,
+    NONE = 5836340512931272827ULL,
+    TBILL = 8814111243820469662ULL,
+    MON = 2197372999017772161ULL,
+    TUE = 7833990772253713925ULL,
+    WED = 8436969546073932791ULL,
+    THU = 7823307917276097324ULL,
+    FRI = 17510715641337666120ULL,
+    SAT = 10937439307873513495ULL,
+    SUN = 10956590601409908193ULL,
 };
 
-enum class PaymentSubType : int {
+enum class PaymentSubType : uint64_t {
     Initial = 0,
     Intermediate = 1,
     Final = 2,
@@ -13660,7 +13660,7 @@ enum class PaymentSubType : int {
     FloatingRate = 10,
 };
 
-enum class ComplexEventPeriodType : int {
+enum class ComplexEventPeriodType : uint64_t {
     AsianOut = 0,
     AsianIn = 1,
     BarrierCap = 2,
@@ -13669,7 +13669,7 @@ enum class ComplexEventPeriodType : int {
     KnockIn = 5,
 };
 
-enum class ComplexEventDateOffsetDayType : int {
+enum class ComplexEventDateOffsetDayType : uint64_t {
     Business = 0,
     Calendar = 1,
     CommodityBusiness = 2,
@@ -13678,18 +13678,18 @@ enum class ComplexEventDateOffsetDayType : int {
     ScheduledTradingDay = 5,
 };
 
-enum class DeliveryScheduleType : int {
+enum class DeliveryScheduleType : uint64_t {
     Notional = 0,
     Delivery = 1,
     PhysicalSettlPeriods = 2,
 };
 
-enum class DeliveryScheduleToleranceType : int {
+enum class DeliveryScheduleToleranceType : uint64_t {
     Absolute = 0,
     Percentage = 1,
 };
 
-enum class DeliveryScheduleSettlFlowType : int {
+enum class DeliveryScheduleSettlFlowType : uint64_t {
     AllTimes = 0,
     OnPeak = 1,
     OffPeak = 2,
@@ -13698,12 +13698,12 @@ enum class DeliveryScheduleSettlFlowType : int {
     Other = 5,
 };
 
-enum class DeliveryScheduleSettlHolidaysProcessingInstruction : int {
+enum class DeliveryScheduleSettlHolidaysProcessingInstruction : uint64_t {
     DoNotIncludeHolidays = 0,
     IncludeHolidays = 1,
 };
 
-enum class DeliveryScheduleSettlDay : int {
+enum class DeliveryScheduleSettlDay : uint64_t {
     Monday = 1,
     Tuesday = 2,
     Wednesday = 3,
@@ -13716,18 +13716,18 @@ enum class DeliveryScheduleSettlDay : int {
     AllWeekends = 10,
 };
 
-enum class DeliveryScheduleSettlTimeType : int {
+enum class DeliveryScheduleSettlTimeType : uint64_t {
     Hour = 0,
     Timestamp = 1,
 };
 
-enum class DeliveryStreamType : int {
+enum class DeliveryStreamType : uint64_t {
     Periodic = 0,
     Initial = 1,
     Single = 2,
 };
 
-enum class DeliveryStreamDeliveryRestriction : int {
+enum class DeliveryStreamDeliveryRestriction : uint64_t {
     Firm = 1,
     NonFirm = 2,
     ForceMajeure = 3,
@@ -13735,34 +13735,34 @@ enum class DeliveryStreamDeliveryRestriction : int {
     UnitFirm = 5,
 };
 
-enum class DeliveryStreamTitleTransferCondition : int {
+enum class DeliveryStreamTitleTransferCondition : uint64_t {
     Transfers = 0,
     DoesNotTransfer = 1,
 };
 
-enum class DeliveryStreamToleranceOptionSide : int {
+enum class DeliveryStreamToleranceOptionSide : uint64_t {
     Buyer = 1,
     Seller = 2,
 };
 
-enum class DeliveryStreamElectingPartySide : int {
+enum class DeliveryStreamElectingPartySide : uint64_t {
     Buyer = 0,
     Seller = 1,
 };
 
-enum class MarketDisruptionProvision : int {
+enum class MarketDisruptionProvision : uint64_t {
     NotApplicable = 0,
     Applicable = 1,
     AsInMasterAgreement = 2,
     AsInConfirmation = 3,
 };
 
-enum class MarketDisruptionFallbackProvision : int {
+enum class MarketDisruptionFallbackProvision : uint64_t {
     MasterAgreement = 0,
     Confirmation = 1,
 };
 
-enum class MarketDisruptionFallbackUnderlierType : int {
+enum class MarketDisruptionFallbackUnderlierType : uint64_t {
     Basket = 0,
     Bond = 1,
     Cash = 2,
@@ -13777,19 +13777,19 @@ enum class MarketDisruptionFallbackUnderlierType : int {
     MutualFund = 11,
 };
 
-enum class ExerciseConfirmationMethod : int {
+enum class ExerciseConfirmationMethod : uint64_t {
     NotRequired = 0,
     NonElectronic = 1,
     Electronic = 2,
     Unknown = 3,
 };
 
-enum class OptionExerciseDateType : int {
+enum class OptionExerciseDateType : uint64_t {
     Unadjusted = 0,
     Adjusted = 1,
 };
 
-enum class PaymentDateOffsetDayType : int {
+enum class PaymentDateOffsetDayType : uint64_t {
     Business = 0,
     Calendar = 1,
     Commodity = 2,
@@ -13798,33 +13798,33 @@ enum class PaymentDateOffsetDayType : int {
     Scheduled = 5,
 };
 
-enum class PaymentForwardStartType : int {
+enum class PaymentForwardStartType : uint64_t {
     Prepaid = 0,
     Postpaid = 1,
     Variable = 2,
     Fixed = 3,
 };
 
-enum class PaymentStreamSettlLevel : int {
+enum class PaymentStreamSettlLevel : uint64_t {
     Average = 0,
     Maximum = 1,
     Minimum = 2,
     Cumulative = 3,
 };
 
-enum class PaymentStreamRateSpreadType : int {
+enum class PaymentStreamRateSpreadType : uint64_t {
     Absolute = 0,
     Percentage = 1,
 };
 
-enum class PaymentStreamPricingDayDistribution : int {
+enum class PaymentStreamPricingDayDistribution : uint64_t {
     All = 0,
     First = 1,
     Last = 2,
     Penultimate = 3,
 };
 
-enum class PaymentStreamPricingDayOfWeek : int {
+enum class PaymentStreamPricingDayOfWeek : uint64_t {
     EveryDay = 0,
     Monday = 1,
     Tuesday = 2,
@@ -13835,23 +13835,23 @@ enum class PaymentStreamPricingDayOfWeek : int {
     Sunday = 7,
 };
 
-enum class StreamCommodityNearbySettlDayUnit : int {
-    Week = Wk,
-    Month = Mo,
+enum class StreamCommodityNearbySettlDayUnit : uint64_t {
+    Week = 664383232733218183ULL,
+    Month = 654808685476649045ULL,
 };
 
-enum class StreamCommoditySettlDateRollUnit : int {
-    Day = D,
+enum class StreamCommoditySettlDateRollUnit : uint64_t {
+    Day = 12638219086392860115ULL,
 };
 
-enum class StreamCommodityDataSourceIDType : int {
+enum class StreamCommodityDataSourceIDType : uint64_t {
     City = 0,
     Airport = 1,
     WeatherStation = 2,
     WeatherIndex = 3,
 };
 
-enum class StreamNotionalCommodityFrequency : int {
+enum class StreamNotionalCommodityFrequency : uint64_t {
     Term = 0,
     PerBusinessDay = 1,
     PerCalculationPeriod = 2,
@@ -13861,57 +13861,57 @@ enum class StreamNotionalCommodityFrequency : int {
     PerMonth = 6,
 };
 
-enum class DeliveryStreamDeliveryPointSource : int {
+enum class DeliveryStreamDeliveryPointSource : uint64_t {
     Proprietary = 0,
     EIC = 1,
 };
 
-enum class CashSettlPriceDefault : int {
+enum class CashSettlPriceDefault : uint64_t {
     Close = 0,
     Hedge = 1,
 };
 
-enum class DividendEntitlementEvent : int {
+enum class DividendEntitlementEvent : uint64_t {
     ExDate = 0,
     RecordDate = 1,
 };
 
-enum class DividendAmountType : int {
+enum class DividendAmountType : uint64_t {
     RecordAmount = 0,
     ExAmount = 1,
     PaidAmount = 2,
     PerMasterConfirm = 3,
 };
 
-enum class NonCashDividendTreatment : int {
+enum class NonCashDividendTreatment : uint64_t {
     PotentialAdjustment = 0,
     CashEquivalent = 1,
 };
 
-enum class DividendComposition : int {
+enum class DividendComposition : uint64_t {
     EquityAmountReceiver = 0,
     CalculationAgent = 1,
 };
 
-enum class PaymentStreamInterpolationPeriod : int {
+enum class PaymentStreamInterpolationPeriod : uint64_t {
     Initial = 0,
     InitialAndFinal = 1,
     Final = 2,
     AnyPeriod = 3,
 };
 
-enum class PaymentStreamLinkStrikePriceType : int {
+enum class PaymentStreamLinkStrikePriceType : uint64_t {
     Volatility = 0,
     Variance = 1,
 };
 
-enum class PaymentStreamRealizedVarianceMethod : int {
+enum class PaymentStreamRealizedVarianceMethod : uint64_t {
     Previous = 0,
     Last = 1,
     Both = 2,
 };
 
-enum class ProvisionBreakFeeElection : int {
+enum class ProvisionBreakFeeElection : uint64_t {
     FlatFee = 0,
     AmortizedFee = 1,
     FundingFee = 2,
@@ -13919,18 +13919,18 @@ enum class ProvisionBreakFeeElection : int {
     AmortizedAndFundingFee = 4,
 };
 
-enum class ReturnRateDateMode : int {
+enum class ReturnRateDateMode : uint64_t {
     PriceValuation = 0,
     DividendValuation = 1,
 };
 
-enum class ReturnRatePriceSequence : int {
+enum class ReturnRatePriceSequence : uint64_t {
     Initial = 0,
     Interim = 1,
     Final = 2,
 };
 
-enum class ReturnRateQuoteTimeType : int {
+enum class ReturnRateQuoteTimeType : uint64_t {
     Open = 0,
     OfficialSettlPx = 1,
     Xetra = 2,
@@ -13941,31 +13941,31 @@ enum class ReturnRateQuoteTimeType : int {
     AsSpecifiedInMasterConfirmation = 7,
 };
 
-enum class ReturnRateValuationPriceOption : int {
+enum class ReturnRateValuationPriceOption : uint64_t {
     None = 0,
     FuturesPrice = 1,
     OptionsPrice = 2,
 };
 
-enum class ReturnRatePriceBasis : int {
+enum class ReturnRatePriceBasis : uint64_t {
     Gross = 0,
     Net = 1,
     Accrued = 2,
     CleanNet = 3,
 };
 
-enum class ReturnRatePriceType : int {
+enum class ReturnRatePriceType : uint64_t {
     AbsoluteTerms = 0,
     PercentageOfNotional = 1,
 };
 
-enum class StreamNotionalAdjustments : int {
+enum class StreamNotionalAdjustments : uint64_t {
     Execution = 0,
     PortfolioRebalancing = 1,
     Standard = 2,
 };
 
-enum class BatchProcessMode : int {
+enum class BatchProcessMode : uint64_t {
     Update = 0,
     Snapshot = 1,
 };

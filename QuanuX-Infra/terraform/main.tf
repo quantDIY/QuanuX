@@ -8,7 +8,13 @@ terraform {
 }
 
 provider "digitalocean" {
-  token = var.do_token
+  token = var.do_token_droplets
+}
+
+provider "digitalocean" {
+  alias = "spaces"
+  spaces_access_id  = var.spaces_access_id
+  spaces_secret_key = var.spaces_secret_key
 }
 
 # The Isolated Matrix VPC (No public subnet cross-talk)
@@ -197,6 +203,7 @@ resource "digitalocean_firewall" "paranoia" {
 # The Cold Storage (Zarr Array Spaces Vault)
 # ---------------------------------------------------------
 resource "digitalocean_spaces_bucket" "quanux_zarr_vault" {
+  provider      = digitalocean.spaces
   name          = "quanux-deep-lake"
   region        = var.region
   force_destroy = true

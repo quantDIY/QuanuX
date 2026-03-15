@@ -1,5 +1,17 @@
-variable "do_token" {
-  description = "DigitalOcean API Token (Injected by quanuxctl infra auth-shell)"
+variable "do_token_droplets" {
+  description = "DigitalOcean API Token for Droplets/VPC (Injected via Python Keyring)"
+  type        = string
+  sensitive   = true
+}
+
+variable "spaces_access_id" {
+  description = "DigitalOcean Spaces Access Key ID"
+  type        = string
+  sensitive   = true
+}
+
+variable "spaces_secret_key" {
+  description = "DigitalOcean Spaces Secret Key"
   type        = string
   sensitive   = true
 }
