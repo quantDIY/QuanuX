@@ -6,6 +6,7 @@
 #include "quanux/omega/omega_vocab/order_side.hpp"
 #include "quanux/omega/omega_vocab/order_type.hpp"
 #include "quanux/omega/omega_vocab/time_in_force.hpp"
+#include "quanux/omega/omega_types/omega_numeric.hpp"
 
 namespace quanux {
 namespace omega {
@@ -20,16 +21,13 @@ struct OmegaEventSemantics {
     vocab::OrderType order_type{vocab::OrderType::Unknown};
     vocab::TimeInForce time_in_force{vocab::TimeInForce::Unknown};
 
-    // TODO: Replace 'double' with an appropriate precise numeric type 
-    // (e.g., fixed-point / decimal-oriented type) to avoid floating-point 
-    // ambiguity in post-trade accounting and reconstruction contexts.
-    // Double is temporarily used strictly as a placeholder.
-    double quantity{0.0};
-    double cum_qty{0.0};
-    double leaves_qty{0.0};
-    double price{0.0};
-    double last_px{0.0};
-    double last_qty{0.0};
+    // Utilizing provisional type aliases to avoid entrenching naked double semantics.
+    types::Quantity quantity{0.0};
+    types::Quantity cum_qty{0.0};
+    types::Quantity leaves_qty{0.0};
+    types::Price price{0.0};
+    types::Price last_px{0.0};
+    types::Quantity last_qty{0.0};
 };
 
 } // namespace core
