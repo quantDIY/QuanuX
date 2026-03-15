@@ -29,7 +29,7 @@
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "lucide-react-native": "^0.577.0",
-        "nativewind": "^4.2.2",
+        "nativewind": "^4.2.3",
         "react-native-reanimated": "~3.19.5",
         "react-native-screens": "^3.37.0",
         "tailwind-merge": "^2.6.1",
