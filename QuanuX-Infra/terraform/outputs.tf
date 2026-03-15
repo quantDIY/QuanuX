@@ -75,3 +75,11 @@ output "quanux_annex_node_public_ip" {
 output "quanux_annex_node_internal_ip" {
   value = digitalocean_droplet.quanux_annex_node.ipv4_address_private
 }
+
+output "quanux_zarr_vault_name" {
+  value = digitalocean_spaces_bucket.quanux_zarr_vault.name
+}
+
+output "quanux_zarr_vault_endpoint" {
+  value = digitalocean_spaces_bucket.quanux_zarr_vault.bucket_domain_name
+}

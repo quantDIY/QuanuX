@@ -21,6 +21,7 @@ public:
     // IStorageResolver Implementation
     void broadcast_live_markdown(const std::string& markdown) override;
     std::string get_historical_analytics(const std::string& query) override;
+    bool stream_historical_analytics(const std::string& query, std::function<bool(const std::string& chunk)> sink_cb) override;
 
     // Initializes the internal sub-components (Subscriber & Flusher)
     void start_ingestion();
@@ -29,6 +30,8 @@ public:
 private:
     std::string m_space_name;
     std::string m_space_region;
+    std::string m_access_key;
+    std::string m_secret_key;
     
     std::unique_ptr<do_impl::NatsSubscriber> m_subscriber;
     std::unique_ptr<do_impl::ZarrRamFlusher> m_flusher;

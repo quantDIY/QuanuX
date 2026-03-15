@@ -35,13 +35,20 @@
           - "--exclude=data"
 
     - name: Configure Sovereign Annex via CMake (Max Optimization)
-      command: cmake -S "{{ quanux_src_dir }}" -B "{{ quanux_build_dir }}" -DCMAKE_BUILD_TYPE=Release -DCLOUD_TARGET=DO -DCMAKE_CXX_FLAGS="-O3 -march=native"
+      shell: |
+        cmake -S "{{ quanux_src_dir }}" -B "{{ quanux_build_dir }}" \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DCLOUD_TARGET=DO \
+              -DCMAKE_CXX_FLAGS="-O3 -march=native" > {{ quanux_log_dir }}/cmake_config.log 2>&1
+      args:
+        creates: "{{ quanux_build_dir }}/Makefile"
       environment:
         CC: clang
         CXX: clang++
 
     - name: Compile Annex Binary natively
-      command: make -C "{{ quanux_build_dir }}" -j{{ ansible_processor_vcpus | default(2) }} quanux_annex
+      shell: |
+        make -C "{{ quanux_build_dir }}" -j{{ ansible_processor_vcpus | default(2) }} quanux_annex > {{ quanux_log_dir }}/make_build.log 2>&1
       
     - name: Install Annex Binary
       copy:

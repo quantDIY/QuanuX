@@ -1,0 +1,27 @@
+# QuanuX-Annex Data Lake Engine
+
+The `QuanuX-Annex` is a Tier-1 high-frequency data ingestion and retrieval engine. It operates natively in C++ to achieve zero-allocation processing of NATS JetStream telemetry directly into DigitalOcean Spaces (Zarr Cloud Drop). It concurrently mounts a GraphQL HTTP Webhook listener (`cpp-httplib`) seamlessly hooking into the Hasura Federation to stream historical market analytics back to the centralized execution matrix.
+
+## Core Capabilities
+- **Zero-Allocation NATS Subscriber**: Binds natively to `QUANUX.MARKET.TICK`, mapping binary payloads straight into aligned C-structs in RAM.
+- **AWS SigV4 Cloud Drops**: Custom cryptographic authentication streams compressed Blosc2 arrays directly into DO Spaces via `curl_multi` without executing expensive SHA256 payload hashing (`UNSIGNED-PAYLOAD`).
+- **Federated Egress Matrix**: Streams historical market ticks direct from the DO Spaces blob boundary into compliant JSON arrays for Hasura Remote Schemas. Egress threads natively leverage chunked S3 streaming over `snprintf` to prevent OOM RAM inflation on massive wide-time-window queries.
+
+## Zero-to-Production Deployments
+Deployments to the DigitalOcean Edge Nodes are heavily automated via `quanuxctl`. Ephemeral authentication directly extracts from the native MacOS OS Keychain, circumventing `.env` text file hazards.
+
+Follow the complete operations guide at:
+[`docs/Zero-to-Production.md`](docs/Zero-to-Production.md)
+
+### Edge Node Command Interfaces
+The `quanuxctl` CLI provides infrastructure control over the QuanuX nodes:
+```bash
+# Verify active deployment droplets:
+quanuxctl infra do-droplets
+
+# Verify active Data Lake boundaries:
+quanuxctl infra do-spaces
+```
+
+## Agent Tools & Autonomous Systems
+Agent AI architecture contexts have been directly injected into every module via `SKILL.md` documents. Ensure parsing of `src/resolvers/SKILL.md` and `src/federation/SKILL.md` before initiating memory operations.

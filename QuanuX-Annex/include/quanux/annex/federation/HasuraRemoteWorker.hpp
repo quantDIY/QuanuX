@@ -4,6 +4,10 @@
 #include <memory>
 #include <string>
 
+// Header-only libs dropped into the Federation directory
+#include "quanux/annex/federation/httplib.h"
+#include "quanux/annex/federation/json.hpp"
+
 namespace quanux {
 namespace annex {
 namespace federation {
@@ -41,6 +45,9 @@ private:
     // Internal mechanics to bind GraphQL routes and NATS subscriptions
     void bind_query_routes();
     void bind_subscription_routes();
+
+    // The single-header embedded HTTP Server
+    httplib::Server m_server;
 };
 
 } // namespace federation

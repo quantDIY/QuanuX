@@ -192,3 +192,11 @@ resource "digitalocean_firewall" "paranoia" {
     destination_addresses = ["0.0.0.0/0", "::/0"]
   }
 }
+
+# ---------------------------------------------------------
+# The Cold Storage (Zarr Array Spaces Vault)
+# ---------------------------------------------------------
+resource "digitalocean_spaces_bucket" "quanux_zarr_vault" {
+  name   = "quanux-deep-lake"
+  region = var.region
+}

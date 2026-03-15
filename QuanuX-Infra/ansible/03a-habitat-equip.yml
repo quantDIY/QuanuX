@@ -37,6 +37,7 @@
           - clang
           - git
           - libssl-dev          # Fixes CMake missing OpenSSL for NATS
+          - libcurl4-openssl-dev # DigitalOcean Spaces native Zarr drop
           - flatbuffers-compiler
           - libflatbuffers-dev
           - unzip

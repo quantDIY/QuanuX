@@ -3,6 +3,11 @@
 #include <vector>
 #include <mutex>
 #include <cstdint>
+#include <string>
+#include <queue>
+#include <thread>
+#include <atomic>
+#include <condition_variable>
 #include "quanux/annex/TelemetryExhaust.hpp"
 
 namespace quanux {
@@ -15,7 +20,7 @@ namespace do_impl {
  */
 class ZarrRamFlusher {
 public:
-    explicit ZarrRamFlusher(size_t chunk_size_elements);
+    ZarrRamFlusher(size_t chunk_size_elements, const std::string& bucket, const std::string& region, const std::string& access_key, const std::string& secret_key);
     ~ZarrRamFlusher();
 
     // Ingest events into columnar RAM arrays
@@ -31,6 +36,11 @@ public:
 
 private:
     size_t m_chunk_size;
+    std::string m_bucket;
+    std::string m_region;
+    std::string m_access_key;
+    std::string m_secret_key;
+
     std::mutex m_mutex;
 
     // Pre-allocated contiguous vectors to avoid reallocation during ingestion
@@ -38,7 +48,20 @@ private:
     std::vector<ExecutionLog> m_exec_buffer;
     std::vector<SchemaDriftEvent> m_drift_buffer;
 
+    // Curl Multi Async Thread Mechanics
+    struct UploadJob {
+        std::vector<uint8_t> payload;
+        std::string object_key;
+    };
+
+    std::queue<UploadJob> m_upload_queue;
+    std::mutex m_queue_mutex;
+    std::condition_variable m_cv;
+    std::atomic<bool> m_running;
+    std::thread m_network_thread;
+
     void flush_internal();
+    void network_worker();
 };
 
 } // namespace do_impl

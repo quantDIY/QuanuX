@@ -4,7 +4,8 @@
 #include <chrono>
 #include <stdexcept>
 #include <cstring>
-#include <nats/nats.h>
+#include "nats.h"
+#include "quanux/annex/TelemetryExhaust.hpp"
 
 namespace quanux {
 namespace annex {
@@ -16,9 +17,15 @@ namespace do_impl {
 
 NatsSubscriber::NatsSubscriber(const std::string& nats_url, const std::string& stream_name)
     : m_nats_url(nats_url), m_stream_name(stream_name), m_running(false), m_connection(nullptr), m_jetstream(nullptr) {
-    
+    natsOptions* opts = nullptr;
+    natsOptions_Create(&opts);
+    natsOptions_SetURL(opts, m_nats_url.c_str());
+
     natsConnection* nc = nullptr;
-    natsStatus s = natsConnection_ConnectTo(&nc, nats_url.c_str());
+    std::cout << "[NatsSubscriber] Firing Dynamic C-API connection to " << m_nats_url << "..." << std::endl;
+    natsStatus s = natsConnection_Connect(&nc, opts);
+    natsOptions_Destroy(opts);
+
     if (s != NATS_OK) {
         throw std::runtime_error(std::string("Failed to connect to NATS: ") + natsStatus_GetText(s));
     }

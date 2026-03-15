@@ -6,24 +6,9 @@ Unified Developer CLI.
 import typer
 from rich.console import Console
 
-import os
-import sys
-
-# Dynamically link the decoupled QuanuX-Infra CLI tools and QuanuX root
-infra_cli_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../QuanuX-Infra/cli"))
-quanux_root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../.."))
-
-if infra_cli_path not in sys.path:
-    sys.path.insert(0, infra_cli_path)
-if quanux_root_path not in sys.path:
-    sys.path.insert(0, quanux_root_path)
-
 from .commands import secrets, bridge, skills, extensions, integrate, node, storage, indicators, module, vcs, dashboard, topstepx, geminicli, foundry, crucible, spreader, probe, telemetry, deploy, orchestra
+from .commands import habitat_commands, nest_commands, infra_commands
 from . import __version__
-
-import habitat_commands
-import nest_commands
-import infra_commands
 
 app = typer.Typer(
     name="quanuxctl",

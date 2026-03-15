@@ -2,6 +2,7 @@
 #include <memory>
 #include <thread>
 #include <csignal>
+#include "nats.h"
 
 // Cloud target conditionality driven by CMake -DCLOUD_TARGET=DO
 #ifdef CLOUD_TARGET_DO
@@ -22,6 +23,9 @@ void signal_handler(int signum) {
 int main() {
     std::cout << "[main] Booting QuanuX-Annex Node...\n";
     std::cout << "[main] Hardware Topology Verified: Dedicated Silicon. Aleph Protocol / Spreader isolation confirmed.\n";
+
+    // ----------------------------
+    // Dynamic IP resolved in ZarrResolver_DO
 
     // Bind OS signals for graceful teardown
     std::signal(SIGINT, signal_handler);

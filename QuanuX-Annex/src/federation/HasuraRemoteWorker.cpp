@@ -22,51 +22,58 @@ void HasuraRemoteWorker::start_server() {
 
     std::cout << "[HasuraRemoteWorker] Remote Schema Active. Awaiting queries from master Aleph API Gateway.\n";
     
-    // Simulate non-blocking async execution (e.g., an io_context.run() loop)
-    // In a real framework (like drogon or cpp-httplib), this blocks the thread, 
-    // which is why main.cpp launched this on a dedicated Core.
+    // RED TEAM MANDATE: Eradicate Synchronous Blocking -> Expand ThreadPool to 128 to match concurrent async limits
+    m_server.new_task_queue = [] { return new httplib::ThreadPool(128); };
+    
+    // Blocks the current thread, accepting Hasura webhooks
+    m_server.listen("0.0.0.0", m_port);
 }
 
 void HasuraRemoteWorker::stop_server() {
     std::cout << "[HasuraRemoteWorker] Shutting down Hasura Remote Schema.\n";
+    m_server.stop();
 }
 
 void HasuraRemoteWorker::bind_query_routes() {
     std::cout << "  -> Binding POST /graphql endpoint -> Executing Mandate 4: Deep Storage Retrieval.\n";
     
-    // Theoretical routing physics inside the C++ web server:
-    /*
-    app().registerHandler("/graphql", [this](const HttpRequestPtr& req, std::function<void(const HttpResponsePtr&)>&& callback) {
-        
-        std::string graphql_ast = parse_graphql(req->body());
-        
-        // Fire the heavy I/O into a background thread
-        std::thread([this, graphql_ast, callback = std::move(callback)]() {
-            // Resolve storage (Takes time)
-            std::string markdown_payload = m_resolver->get_historical_analytics(graphql_ast);
+    m_server.Post("/graphql", [this](const httplib::Request& req, httplib::Response& res) {
+        try {
+            // Parse the incoming JSON webhook from Hasura
+            nlohmann::json hasura_payload = nlohmann::json::parse(req.body);
+            std::string query = hasura_payload.value("query", "");
             
-            // Construct response
-            auto resp = HttpResponse::newHttpResponse();
-            resp->setBody(wrap_json(markdown_payload));
-            
-            // Execute the HTTP callback asynchronously 
-            callback(resp);
-        }).detach(); 
-
-    }, {Post});
-    */
+            // Execute streaming non-blocking retrieval matrix
+            res.set_chunked_content_provider("application/json", 
+                [this, query](size_t offset, httplib::DataSink &sink) {
+                    bool finished = false;
+                    
+                    // We call the resolver which now takes a lambda callback to ingest chunks of JSON!
+                    // It returns true on success, false on failure.
+                    bool success = m_resolver->stream_historical_analytics(query, [&sink](const std::string& json_chunk) {
+                        sink.write(json_chunk.c_str(), json_chunk.size());
+                        return true;
+                    });
+                    
+                    if (!success) {
+                        std::string err = "{\"errors\": [{\"message\": \"Stream Failure\"}]}";
+                        sink.write(err.c_str(), err.size());
+                    }
+                    
+                    sink.done();
+                    return true; 
+                });
+        } catch (const std::exception& e) {
+            std::cerr << "[HasuraRemoteWorker] Error parsing webhook: " << e.what() << "\n";
+            res.status = 400;
+            res.set_content("{\"errors\": [{\"message\": \"Malformed GraphQL Payload\"}]}", "application/json");
+        }
+    });
 }
 
 void HasuraRemoteWorker::bind_subscription_routes() {
     std::cout << "  -> Binding WebSocket /graphql/ws -> Executing Mandates 1, 2 & 3 (Live Exhaust).\n";
-    
-    // Theoretical Subscription wiring mapping directly to the NATS/Redpanda buffers
-    /*
-    app().registerWebSocketController("/graphql/ws", [this](const WebSocketConnectionPtr& wsReq, ...) {
-        // Taps NatsSubscriber -> Streams binary structs -> Converts to JSON -> Pushes to Aleph over WS
-        stream_live_market_data(wsReq);
-    });
-    */
+    // Placeholders for WS routes, ignoring for Phase 14
 }
 
 } // namespace federation
