@@ -89,11 +89,25 @@ def auth_shell():
     except Exception as e:
         console.print(f"echo '[FATAL] Keyring retrieval failed: {e}'", err=True)
 def get_terraform_cwd():
+    current_dir = os.path.abspath(os.path.dirname(__file__))
+    repo_root = os.path.abspath(os.path.join(current_dir, "../../../../../"))
+    
     possible_paths = [
-        "QuanuX-Infra/terraform",
-        "../QuanuX-Infra/terraform",
-        "../../QuanuX-Infra/terraform",
+        os.path.join(repo_root, "QuanuX-Infra/terraform"),
         os.path.expanduser("~/Antigravity/QuanuX/QuanuX/QuanuX-Infra/terraform")
+    ]
+    for p in possible_paths:
+        if os.path.exists(p) and os.path.isdir(p):
+            return os.path.abspath(p)
+    return None
+
+def get_annex_dir():
+    current_dir = os.path.abspath(os.path.dirname(__file__))
+    repo_root = os.path.abspath(os.path.join(current_dir, "../../../../../"))
+    
+    possible_paths = [
+        os.path.join(repo_root, "QuanuX-Annex"),
+        os.path.expanduser("~/Antigravity/QuanuX/QuanuX/QuanuX-Annex")
     ]
     for p in possible_paths:
         if os.path.exists(p) and os.path.isdir(p):
@@ -159,10 +173,15 @@ def ingest_start(
     check_provider(provider)
     if provider.lower() == "gcp":
         console.print(f"[bold cyan]GCP Ingestion:[/bold cyan] Initiating pipeline with {memory_limit_mb}MB limit.")
-        pipeline_script = os.path.expanduser("~/Antigravity/QuanuX/QuanuX/QuanuX-Annex/gcp_ingestion_pipeline.py")
+        annex_dir = get_annex_dir()
+        if not annex_dir:
+            console.print("[red]Error: Could not dynamically resolve QuanuX-Annex path.[/red]")
+            raise typer.Exit(code=1)
+            
+        pipeline_script = os.path.join(annex_dir, "gcp_ingestion_pipeline.py")
         if os.path.exists(pipeline_script):
             console.print(f"Running: python {pipeline_script}")
-            # subprocess.run(["python", pipeline_script])
+            subprocess.run(["python", pipeline_script])
         else:
             console.print(f"[red]Error: Pipeline script not found at {pipeline_script}[/red]")
             raise typer.Exit(code=1)
@@ -179,7 +198,12 @@ def table_register(
     check_provider(provider)
     if provider.lower() == "gcp":
         console.print(f"[bold cyan]GCP BigQuery:[/bold cyan] Registering external table for {uri} in project {project}.")
-        setup_script = os.path.expanduser("~/Antigravity/QuanuX/QuanuX/QuanuX-Annex/gcp_bigquery_setup.py")
+        annex_dir = get_annex_dir()
+        if not annex_dir:
+            console.print("[red]Error: Could not dynamically resolve QuanuX-Annex path.[/red]")
+            raise typer.Exit(code=1)
+            
+        setup_script = os.path.join(annex_dir, "gcp_bigquery_setup.py")
         if os.path.exists(setup_script):
             subprocess.run(["python", setup_script, "--project", project, "--uri", uri])
         else:

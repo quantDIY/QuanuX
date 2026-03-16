@@ -14,31 +14,49 @@ from gcp_ingestion_pipeline import GCPIngestionPipeline
 async def test_ingestion_memory_bounding():
     """
     Validates that the GCPIngestionPipeline strictly flushes when the
-    Arrow batch size exceeds the explicitly defined memory limit.
+    true PyArrow table footprint exceeds the explicitly defined memory limit,
+    processing canonically packed C-struct MarketTick events.
     """
-    # Create pipeline with an artificially small memory limit representing 10 rows
-    pipeline = GCPIngestionPipeline(memory_limit_mb=0)
-    pipeline.memory_limit_bytes = 480 # 48 bytes per tick * 10 
+    import struct
+    import time
+    
+    # Create pipeline with ~1 MB limit (1048576 bytes)
+    pipeline = GCPIngestionPipeline(memory_limit_mb=1)
     
     with patch.object(pipeline, '_flush_and_upload', new_callable=MagicMock) as mock_flush:
-        # Simulate an AsyncMock for _flush_and_upload
-        async def async_flush():
-            mock_flush()
+        async def async_flush(table):
+            mock_flush(table)
             pipeline.current_batch = []
             pipeline.current_batch_size = 0
             
         pipeline._flush_and_upload = async_flush
         
-        # Inject 12 rows
-        for _ in range(12):
-             await pipeline._on_message(None)  # dummy message
-             
-        # The flush should have been called exactly once when the 10th row was added
-        assert mock_flush.call_count == 1
+        # Inject realistic canonical payloads (37 bytes packed)
+        # We need to inject enough rows to exceed 1MB of Arrow Table footprint.
+        # PyArrow overhead for 7 columns over N rows is roughly ~40-50 bytes per row.
+        # To hit 1MB, we likely need roughly >25000 rows.
+        # Since the pipeline checks every 5000 rows, we'll inject exactly 35,000 to guarantee a trigger.
+        class MockMsg:
+            def __init__(self, data):
+                self.data = data
+                
+        # Generate dummy structurally sound payload
+        dummy_data = struct.pack("<QIddIIB", time.time_ns(), 101, 150.25, 150.30, 100, 200, 2)
+        mock_msg = MockMsg(dummy_data)
         
-        # Re-verify bounds on the remaining batch
-        assert pipeline.current_batch_size == 48 * 2 # 2 left over
-        assert len(pipeline.current_batch) == 2
+        # Inject up to the threshold
+        for _ in range(35000):
+            await pipeline._on_message(mock_msg)
+             
+        # The flush should have been called depending on the PyArrow footprint
+        assert mock_flush.call_count > 0
+        
+        # The table passed to flush MUST have been larger than the 1MB limit when called
+        flushed_table = mock_flush.call_args[0][0]
+        assert flushed_table.nbytes >= 1048576
+        
+        # We also assert that the remaining un-flushed batch is strictly bounded
+        assert len(pipeline.current_batch) < 35000 # Proof it was flushed
 
 @patch('gcp_bigquery_setup.bigquery')
 def test_external_table_registration(mock_bq):

@@ -7,10 +7,9 @@ from google.cloud import storage
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-# QuanuX Internal Imports (Simulated/Mocks for now as we establish the skeleton)
-# We will use the standard pattern for JetStream ingestion.
-# from quanux.annex import nats_client
-# from quanux.schema import MarketTick
+import struct
+from nats.aio.client import Client as NATS
+from nats.js.errors import NotFoundError
 
 # Set up logging matching QuanuX-Annex patterns
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -26,12 +25,12 @@ class GCPIngestionPipeline:
         # We define a PyArrow schema that matches the quanux.schema.MarketTick FlatBuffer
         self.schema = pa.schema([
             ('timestamp_ns', pa.int64()),
-            ('symbol', pa.string()),
-            ('bid', pa.float64()),
-            ('ask', pa.float64()),
-            ('bid_size', pa.int32()),
-            ('ask_size', pa.int32()),
-            ('venue_id', pa.int8())
+            ('instrument_id', pa.uint32()),
+            ('bid_price', pa.float64()),
+            ('ask_price', pa.float64()),
+            ('bid_size', pa.uint32()),
+            ('ask_size', pa.uint32()),
+            ('level', pa.uint8())
         ])
         
         try:
@@ -46,59 +45,66 @@ class GCPIngestionPipeline:
         """Starts the NATS JetStream listener and begins batching."""
         logger.info(f"Starting GCP Ingestion Pipeline. Memory limit: {self.memory_limit_bytes / (1024*1024)} MB")
         
-        # Simulated NATS Subscription setup
-        # nc = await nats_client.connect()
-        # js = nc.jetstream()
-        # sub = await js.subscribe("PQS.TICK.>", cb=self._on_message)
+        self.nc = NATS()
+        nats_url = os.environ.get("QUANUX_NATS_URL", "nats://127.0.0.1:4222")
+        await self.nc.connect(nats_url)
+        self.js = self.nc.jetstream()
         
-        logger.info("Listening on JetStream subject PQS.TICK.>")
+        try:
+            self.sub = await self.js.subscribe("QUANUX.MARKET.TICK", cb=self._on_message)
+            logger.info("Listening on JetStream subject QUANUX.MARKET.TICK")
+        except Exception as e:
+            logger.error(f"Failed to subscribe to JetStream: {e}")
+            raise
         
         # Keep alive
         while True:
             await asyncio.sleep(5)
-            # Periodic flush check could go here if elapsed time exceeds a threshold
             
     async def _on_message(self, msg):
         """Callback for incoming JetStream messages."""
-        # raw_data = msg.data
-        # tick = MarketTick.GetRootAsMarketTick(raw_data, 0)
-        
-        # Simulated extraction
-        data_row = {
-            'timestamp_ns': time.time_ns(),
-            'symbol': 'ESM4', # tick.Symbol().decode('utf-8')
-            'bid': 5000.25,   # tick.Bid()
-            'ask': 5000.50,   # tick.Ask()
-            'bid_size': 10,   # tick.BidSize()
-            'ask_size': 15,   # tick.AskSize()
-            'venue_id': 1     # tick.VenueId()
-        }
-        
-        # Approximate size: 8 + 8 + 8 + 8 + 4 + 4 + 1 ~= 41 bytes per tick in raw format
-        row_size = 48 
-        
-        self.current_batch.append(data_row)
-        self.current_batch_size += row_size
-        
-        if self.current_batch_size >= self.memory_limit_bytes:
-            logger.info("Memory ceiling reached. Triggering backpressure & flush.")
-            # Trigger backpressure (pause subscription)
-            # msg.in_progress() # Signal working
-            await self._flush_and_upload()
+        try:
+            # Struct format: < Q I d d I I B  (37 bytes)
+            # uint64_t timestamp_ns, uint32_t instrument_id, double bid_price, double ask_price, uint32_t bid_size, uint32_t ask_size, uint8_t level
+            unpacked = struct.unpack("<QIddIIB", msg.data)
+            
+            data_row = {
+                'timestamp_ns': unpacked[0],
+                'instrument_id': unpacked[1],
+                'bid_price': unpacked[2],
+                'ask_price': unpacked[3],
+                'bid_size': unpacked[4],
+                'ask_size': unpacked[5],
+                'level': unpacked[6]
+            }
+            self.current_batch.append(data_row)
+            
+            # Periodically check True Arrow Table size (e.g., every 5000 rows)
+            if len(self.current_batch) % 5000 == 0:
+                arrays = [pa.array([row[col_name] for row in self.current_batch]) for col_name in self.schema.names]
+                temp_table = pa.Table.from_arrays(arrays, schema=self.schema)
+                
+                # Use real PyArrow exact memory footprint
+                self.current_batch_size = temp_table.nbytes
+                
+                if self.current_batch_size >= self.memory_limit_bytes:
+                    logger.info(f"Memory ceiling reached ({self.current_batch_size} >= {self.memory_limit_bytes}). Triggering backpressure & flush.")
+                    await self._flush_and_upload(temp_table)
+            
+        except struct.error:
+            logger.error("Failed to unpack MarketTick struct - invalid payload size.")
+        except Exception as e:
+            logger.error(f"Error processing message: {e}")
 
-    async def _flush_and_upload(self):
+    async def _flush_and_upload(self, table=None):
         """Flushes the current batch to Arrow/Parquet and uploads to GCS."""
         if not self.current_batch:
             return
             
-        logger.info(f"Building Arrow Table with {len(self.current_batch)} rows...")
-        
-        # Convert to arrays
-        arrays = []
-        for col_name in self.schema.names:
-            arrays.append(pa.array([row[col_name] for row in self.current_batch]))
-            
-        table = pa.Table.from_arrays(arrays, schema=self.schema)
+        if table is None:
+            logger.info(f"Building Arrow Table with {len(self.current_batch)} rows...")
+            arrays = [pa.array([row[col_name] for row in self.current_batch]) for col_name in self.schema.names]
+            table = pa.Table.from_arrays(arrays, schema=self.schema)
         
         # Write to temporary parquet file
         timestamp = int(time.time())
