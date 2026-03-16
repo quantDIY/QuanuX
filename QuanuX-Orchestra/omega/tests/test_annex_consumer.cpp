@@ -85,14 +85,22 @@ void test_consumer_validation_blocks() {
     assert(!reject.consumed);
     assert(reject.diagnostics.find("must present an event_id") != std::string::npos);
 
-    // Bad Schema Version
+    // Mismatched Schema version check (Downgraded/Rejected Legacy)
     malformed_payload.event_id = "12345";
-    malformed_payload.schema_version = "v0.5.0";
+    malformed_payload.schema_version = "v0.5.0"; // Unacceptable schema 
+    malformed_payload.event_type = vocab::EventType::ExecutionFull;
+
     auto old_reject = AnnexConsumer::consume_projection("omega.events.lifecycle.v1.CME_iLink3", malformed_payload);
     assert(!old_reject.consumed);
     assert(old_reject.diagnostics.find("rejected outright") != std::string::npos);
+    
+    // Acceptable Deprecation Schema Bounds check
+    // (We treat 1.0.0 as deprecated due to numerics, but still parseable)
+    malformed_payload.schema_version = "v1.0.0";
+    auto valid_deprecated = AnnexConsumer::consume_projection("omega.events.lifecycle.v1.CME_iLink3", malformed_payload);
+    assert(valid_deprecated.consumed);
 
-    std::cout << "Consumer Validation Rejection Rules asserted." << std::endl;
+    std::cout << "Consumer Validation Schema Mismatches asserted." << std::endl;
 }
 
 // 4. Capability Announcements

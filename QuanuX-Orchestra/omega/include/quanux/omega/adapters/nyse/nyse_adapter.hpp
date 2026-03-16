@@ -57,7 +57,8 @@ public:
         size_t sym_len = 0;
         while (sym_len < 11 && msg->symbol[sym_len] != ' ' && msg->symbol[sym_len] != '\0') sym_len++;
         if (sym_len > 0) {
-            out_envelope.identity.instrument_id = std::string_view(msg->symbol, sym_len);
+            out_envelope.identity._backing_instrument_id = std::string(msg->symbol, sym_len);
+            out_envelope.identity.instrument_id = out_envelope.identity._backing_instrument_id;
         }
 
         // 2. Lifecycle Mapping
@@ -117,15 +118,15 @@ public:
         out_envelope.provenance.adapter_name = "NYSE_PILLAR_MOCK";
         out_envelope.provenance.adapter_version = "v1.0.0";
         
-        static char msg_code[5] = {0};
+        char msg_code[5] = {0};
         snprintf(msg_code, sizeof(msg_code), "%04X", msg->msg_type);
-        out_envelope.extensions.venue_native_event_code = std::string_view(msg_code);
+        out_envelope.extensions._backing_native_event_code = std::string(msg_code);
+        out_envelope.extensions.venue_native_event_code = out_envelope.extensions._backing_native_event_code;
 
         // Keep raw error descriptions mapped for post-trade survival
         if (msg->execution_status == '8') {
-             static char reason_mapped[5] = {0};
-             std::memcpy(reason_mapped, msg->reason_code, 4);
-             out_envelope.extensions.venue_native_reason_code = std::string_view(reason_mapped);
+             out_envelope.extensions._backing_native_reason_code = std::string(msg->reason_code, 4);
+             out_envelope.extensions.venue_native_reason_code = out_envelope.extensions._backing_native_reason_code;
         }
 
         return true;

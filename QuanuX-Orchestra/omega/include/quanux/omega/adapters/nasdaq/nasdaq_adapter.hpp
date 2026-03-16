@@ -56,12 +56,11 @@ public:
         
         out_envelope.identity.event_id = ids::EventId(msg->order_reference_number);
         
-        // Emulate zero-copy boundaries over the fixed arrays
         size_t sym_len = 0;
         while (sym_len < 8 && msg->stock_symbol[sym_len] != ' ' && msg->stock_symbol[sym_len] != '\0') sym_len++;
         if (sym_len > 0) {
-            // Unsafe string_view for real life unless backed, but sufficient for the map boundary mock
-            out_envelope.identity.instrument_id = std::string_view(msg->stock_symbol, sym_len);
+            out_envelope.identity._backing_instrument_id = std::string(msg->stock_symbol, sym_len);
+            out_envelope.identity.instrument_id = out_envelope.identity._backing_instrument_id;
         }
 
         // 2. Semantics and Lifecycle State Translation
@@ -112,16 +111,12 @@ public:
         out_envelope.provenance.adapter_version = "v1.0.0";
         
         // Raw Ext Preservation: Push the pure message type into string-based survival
-        static char type_str[2] = {0};
-        type_str[0] = msg->message_type;
-        out_envelope.extensions.venue_native_event_code = std::string_view(type_str, 1);
+        out_envelope.extensions._backing_native_event_code = std::string(1, msg->message_type);
+        out_envelope.extensions.venue_native_event_code = out_envelope.extensions._backing_native_event_code;
 
         // System MPID identity survival
         if (msg->mpid[0] != ' ' && msg->mpid[0] != '\0') {
-            static char mpid_str[5] = {0};
-            std::memcpy(mpid_str, msg->mpid, 4);
-            static survival::TagValue mpid_tag{1000, std::string_view(mpid_str)};
-            out_envelope.extensions.tags = std::span<const survival::TagValue>(&mpid_tag, 1);
+            out_envelope.extensions.emplace_inline_tag(survival::TagValue{1000, std::string_view(msg->mpid, 4)});
         }
 
         return true;
