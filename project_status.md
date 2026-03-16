@@ -88,6 +88,7 @@ The platform operates as a multi-language colossus spanning institutional tradin
 
 ### 5. The QuanuX-Annex Ingestion Engine
 - **HA Zero-Allocation NATS Core (`QuanuX-Annex/`)**: A sovereign C++ telemetry ingestion daemon deployed via Ansible to the outer Habitats. It maps high-velocity NATS JetStream data directly into byte-aligned C++ structs (e.g. `MarketTick`, `ExecutionLog`) using `<nats/nats.h>`, bypassing JVM and Python garbage collection completely.
+- **Tract 1 GCP Historical Lake Integration**: A python pipeline (`gcp_ingestion_pipeline.py`) dynamically extracts JetStream events, bounds the batch through mathematically exact 37-byte PyArrow primitives, and strictly flushes into BigQuery External tables via `.parquet` at exactly 99% of a configured memory ceiling. This pipeline explicitly fails-closed (Apoptosis) if the materialized footprint deviates from structural alignment.
 - **The Sentinel Protocol Pivot**: Incorporates rigorous Red Team mitigations for observability. Telegraf is deployed via direct static `.deb` injection into the outer droplets, avoiding hypervisor APT repository corruptions, with its telemetry interval dynamically orchestrated via `quanuxctl`.
 - **Phase 12 Pipeline Proving Ground (`tests/nats_injector.py`)**: Real-time NATS mocking tools written in Python that map native `struct` byte-alignments to validate the C++ QuanuX-Annex core without requiring a live colocation feed.
 
