@@ -95,30 +95,94 @@ def test_semantic_parity_fixture(transpiler):
     assert local_result.schema == remote_result_mock.schema
     assert local_result.column('total_ask')[0].as_py() == remote_result_mock.column('total_ask')[0].as_py()
 
-@pytest.mark.skipif("GOOGLE_APPLICATION_CREDENTIALS" not in os.environ, reason="Requires real GCP credentials to prove Tract 2 BQ execution")
+def get_gcp_credentials():
+    """Helper to load secrets from OS keyring explicitly before execution if missing from environ."""
+    from server.security.secrets import KeyringBackend
+    kb = KeyringBackend()
+    
+    # Try environment first, then keyring
+    project = os.environ.get("GCP_PROJECT_ID") or kb.get("QUANUX_GCP_PROJECT_ID")
+    creds = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS") or kb.get("QUANUX_GOOGLE_APPLICATION_CREDENTIALS")
+    
+    if project:
+        os.environ["GCP_PROJECT_ID"] = project
+    if creds:
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = creds
+        
+    return project is not None and creds is not None
+
 def test_real_bq_semantic_parity(transpiler):
     """
-    The Red Team core graduation test: runs parity fixture against ACTUAL BigQuery results.
+    The Red Team core graduation test: runs parity fixture against ACTUAL BigQuery results
+    mirroring the approved Tract 1 surface.
     """
+    if not get_gcp_credentials():
+        pytest.skip("Requires real GCP credentials (GCP_PROJECT_ID and GOOGLE_APPLICATION_CREDENTIALS) in OS Env or via `quanuxctl secrets`.")
+        
     from google.cloud import bigquery
-    client = bigquery.Client()
+    project_id = os.environ["GCP_PROJECT_ID"]
+    client = bigquery.Client(project=project_id)
     
-    # Create the test pipeline in BigQuery. Assuming Tract 1 setup test-project
-    # Actually, we will query a public dataset or a simple generated query to prove execution.
-    # Let's use BigQuery's inherent ability to select literals without tables for a mock test
-    # that proves the Transpiler output works flawlessly in the BQ engine.
+    dataset_id = f"{project_id}.quanux_historical_test"
+    table_id = f"{dataset_id}.market_ticks_test"
     
-    q = "SELECT 101 AS instrument_id, SUM(20) AS total_ask GROUP BY instrument_id"
-    # Wait, BQ allows: SELECT instrument_id, SUM(ask_size) FROM UNNEST([STRUCT(101 as instrument_id, 20 as ask_size)])
-    # For transpiler, it checks the local schema 'MarketTick', so let's mock the local DuckDB table 
-    # and have it correspond strictly to the BQ struct.
+    # 1. Setup exact BQ test surface mirroring Tract 1
+    dataset = bigquery.Dataset(dataset_id)
+    dataset.location = "US"
+    try:
+        client.get_dataset(dataset_id)
+    except:
+        client.create_dataset(dataset, timeout=30)
+        
+    schema = [
+        bigquery.SchemaField("timestamp_ns", "INTEGER"),
+        bigquery.SchemaField("instrument_id", "INTEGER"),
+        bigquery.SchemaField("bid_price", "FLOAT"),
+        bigquery.SchemaField("ask_price", "FLOAT"),
+        bigquery.SchemaField("bid_size", "INTEGER"),
+        bigquery.SchemaField("ask_size", "INTEGER"),
+        bigquery.SchemaField("level", "INTEGER"),
+    ]
+    table = bigquery.Table(table_id, schema=schema)
+    try:
+        client.get_table(table_id)
+        client.delete_table(table_id)
+    except:
+        pass
+    table = client.create_table(table)
     
-    # This proves the bounded memory functionality and execution bridge
-    # For actual exact BQ dataset parity, one must target the BQ historical lake table.
+    # Insert rows into BOTH DuckDB and BigQuery
+    rows_to_insert = [
+        {"timestamp_ns": 1, "instrument_id": 999, "bid_price": 100.5, "ask_price": 101.0, "bid_size": 10, "ask_size": 20, "level": 1},
+        {"timestamp_ns": 2, "instrument_id": 999, "bid_price": 100.6, "ask_price": 101.1, "bid_size": 15, "ask_size": 25, "level": 2},
+        {"timestamp_ns": 3, "instrument_id": 888, "bid_price": 50.0, "ask_price": 50.5, "bid_size": 100, "ask_size": 200, "level": 1},
+    ]
     
-    # Due to project setup, we will just prove execute_bounded works without crashing
-    sql = "SELECT 1 as num"
-    table = transpiler.execute_bounded(client, sql)
+    transpiler.conn.execute("DELETE FROM MarketTick")  # Clear prior test state
+    for r in rows_to_insert:
+        transpiler.conn.execute(
+            f"INSERT INTO MarketTick VALUES ({r['timestamp_ns']}, {r['instrument_id']}, {r['bid_price']}, {r['ask_price']}, {r['bid_size']}, {r['ask_size']}, {r['level']})"
+        )
+    client.insert_rows_json(table, rows_to_insert)
     
-    assert table is not None
-    assert len(table) == 1
+    import time
+    time.sleep(3) # Wait for BQ streaming buffer
+    
+    # 2. Transpile
+    local_query = "SELECT instrument_id, SUM(ask_size) as total_ask FROM MarketTick WHERE bid_price > 90.0 GROUP BY instrument_id ORDER BY instrument_id"
+    local_result = transpiler.conn.execute(local_query).fetch_arrow_table()
+    
+    bq_sql = transpiler.transpile(local_query)
+    # Dialect routing: DuckDB's local 'MarketTick' table name must be mapped to the actual BQ environment path
+    bq_sql = bq_sql.replace("MarketTick", f"`{table_id}`")
+    
+    # 3. Execute bounded and assert parity
+    remote_result = transpiler.execute_bounded(client, bq_sql)
+    
+    # Clean up test table
+    client.delete_table(table_id, not_found_ok=True)
+    
+    assert remote_result is not None
+    assert len(local_result) == len(remote_result)
+    assert local_result.column('instrument_id')[0].as_py() == remote_result.column('instrument_id')[0].as_py()
+    assert local_result.column('total_ask')[0].as_py() == remote_result.column('total_ask')[0].as_py()

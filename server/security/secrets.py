@@ -14,6 +14,10 @@ KNOWN_INTEGRATIONS = [
     ("OPENAI_API_KEY", "OpenAI API Key (sk-...)"),
     ("QUANUX_GEMINI_API_KEY", "Google Gemini API Key (AIza...)"),
     
+    # GCP / Google Cloud
+    ("GCP_PROJECT_ID", "Google Cloud Project ID"),
+    ("GOOGLE_APPLICATION_CREDENTIALS", "GCP Service Account JSON Absolute Path"),
+    
     # Native Integrations / Bolt-ons (QXP)
     ("QUANUX_N8N_KEY", "n8n Bridge Key"),
     
