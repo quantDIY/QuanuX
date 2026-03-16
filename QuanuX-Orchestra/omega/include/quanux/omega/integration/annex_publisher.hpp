@@ -5,6 +5,7 @@
 #include <vector>
 #include "quanux/omega/omega_core/omega_event_envelope.hpp"
 #include "quanux/omega/omega_capability/source_capability.hpp"
+#include "quanux/omega/integration/annex_consumer_router.hpp"
 
 namespace quanux {
 namespace omega {
@@ -85,10 +86,13 @@ public:
         // 1. Evaluate Routing Subject based on parse validity
         //    Invalid envelopes are dead-lettered and explicitly kept out of the unified stream.
         if (env.provenance.parse_status == vocab::ParseStatus::Error) {
-            route.subject = "omega.events.invalid." + std::string(profile.adapter_name);
+            route.subject = AnnexConsumerRouter::build_invalid_subject(profile.adapter_name);
+        } else if (AnnexConsumerRouter::is_correction_event(env.linkage.correction_type)) {
+            // Divert explicit corrections to their own processing workflow
+            route.subject = AnnexConsumerRouter::build_correction_subject(profile.adapter_name);
         } else {
-            // Coarse subject-level version routing
-            route.subject = "omega.events.normalized.v1." + std::string(profile.adapter_name);
+            // Coarse subject-level version routing for clean lifecycle progression
+            route.subject = AnnexConsumerRouter::build_lifecycle_subject(profile.adapter_name);
         }
 
         // 2. Build the Payload-Level Projection
