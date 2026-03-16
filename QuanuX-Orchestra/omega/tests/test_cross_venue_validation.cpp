@@ -12,6 +12,7 @@
 #include "quanux/omega/adapters/nasdaq/nasdaq_adapter.hpp"
 #include "quanux/omega/adapters/nyse/nyse_adapter.hpp"
 #include "quanux/omega/adapters/cme/cme_adapter.hpp"
+#include "quanux/omega/adapters/cboe/cboe_adapter.hpp"
 
 using namespace quanux::omega;
 using namespace quanux::omega::integration;
@@ -26,7 +27,8 @@ void assert_cross_venue_genericity() {
         adapters::lme::LmeAdapter::get_capability_profile(),
         adapters::nasdaq::NasdaqAdapter::get_capability_profile(),
         adapters::nyse::NyseAdapter::get_capability_profile(),
-        adapters::cme::CmeAdapter::get_capability_profile()
+        adapters::cme::CmeAdapter::get_capability_profile(),
+        adapters::cboe::CboeAdapter::get_capability_profile()
     };
 
     // Prove all 8 profiles can map into valid Schema bindings and parse identically
