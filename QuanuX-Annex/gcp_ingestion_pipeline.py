@@ -104,6 +104,13 @@ class GCPIngestionPipeline:
             logger.info(f"Building Arrow Table with {len(self.current_batch)} rows...")
             arrays = [pa.array([row[col_name] for row in self.current_batch]) for col_name in self.schema.names]
             table = pa.Table.from_arrays(arrays, schema=self.schema)
+            
+        # Runtime Arrow Footprint Validation
+        # We mathematically fail closed if the materialized schema overhead ever deviates from the 37-byte invariant per row.
+        expected_bytes = table.num_rows * 37
+        if table.nbytes != expected_bytes:
+            logger.critical(f"Arrow structural invariant violated! Expected exact {expected_bytes} bytes, observed {table.nbytes} bytes.")
+            raise RuntimeError(f"Arrow memory footprint invariant breached. Halting pipeline to protect boundaries.")
         
         # Write to temporary parquet file
         timestamp = int(time.time())
