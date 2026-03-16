@@ -1,45 +1,48 @@
-# QuanuX GCP Integration Implementation Plan (Revised)
-
-This document outlines the execution mandate for the initial Tract 1 rollout of the QuanuX GCP Integration, adhering strictly to the `$QUANUX_HOME/gcp_architecture_approved.md` limits and incorporating Red Team structural review feedback.
+# QuanuX GCP Integration: Tract 2 Prototype Implementation Plan
 
 ## Goal Description
-Implement the primary asynchronous data ingestion pipeline for the QuanuX 5-Tier topology into Google Cloud Platform (GCP). The scope is strictly bounded to the historical data lake, the Python-first modeling tier, and telemetry storage, explicitly avoiding any interaction with the Tier 4 deterministic execution path.
+Develop the DuckDB SQL to BigQuery Standard SQL transpilation prototype for the Research Tier. This pipeline acts as a convenience layer, allowing standard local quantitative queries on the `MarketTick` schema to be seamlessly routed to the BigQuery external tables established in Tract 1.
+
+## User Review Required
+> [!IMPORTANT]
+> Awaiting Red Team sign-off on this revised **Tract 2 Implementation Plan** before beginning execution. All 6 constraints from the Control Specification review have been functionally mapped to the proposed Python architecture below.
 
 ## Proposed Changes
 
-### Data Ingestion Backbone (Python)
-The pure Python async ingestion module serving as the bridge to GCP. To align with the existing `QuanuX-Annex` layout, we will place the new ingestion scripts at the root level of Annex alongside `quanux_critic.py` and `quanux_vault.py`.
+### Core Transpiler Architect (`QuanuX-Annex/gcp_transpiler.py`)
+This module provides the deterministic bridge from local research DuckDB syntax to remote BigQuery execution.
 
-#### [NEW] `QuanuX-Annex/gcp_ingestion_pipeline.py`
-- Implements a NATS JetStream subscriber extracting the canonical `quanux.schema.MarketTick` definition.
-- Uses `pyarrow` to build columnar batches strictly up to a configurable memory ceiling.
-- Handles backpressure dynamically when the memory ceiling is reached by temporarily pausing JetStream consumption.
-- Flushes the batched Arrow tables into Parquet format and triggers an asynchronous upload to Google Cloud Storage (GCS).
+#### [NEW] gcp_transpiler.py
 
-#### [NEW] `QuanuX-Annex/gcp_bigquery_setup.py`
-- Registers BigQuery External Tables against the GCS Parquet bucket paths to expose the historical query surface to the modeling tier.
+*   **`TranspilationError(Exception)`**:
+    *   A custom exception class serving as the Fail-Closed mechanism.
+    *   **Fallback Behavior**: When raised, the error message will deterministically output: 
+        1. The specific unsupported AST node/token (e.g., `Unsupported construct: WindowFunction`).
+        2. The rejection reason (`Window functions are explicitly banned under the Tract 2 Control Spec`).
+        3. The required operator fallback path (`Fallback required: Please execute complex aggregations natively via the BigQuery client`).
 
----
+*   **Translation Boundary (DuckDB Substrait)**:
+    *   The transpiler will consume raw DuckDB SQL strings.
+    *   Instead of writing custom regex or a fragile string parser, it will lean on DuckDB's native parser by executing `conn.get_substrait(query)` to extract the canonical Intermediate Representation (IR).
+    *   *Note on Overclaiming:* Validation of the Substrait IR against BigQuery Standard SQL is strictly experimental for this prototype. Promotion to Tract 1 relies entirely on passing the semantic parity test sweeps.
 
-### Operator Symmetry (quanuxctl CLI)
-Extending the existing `infra` command group into a provider-aware operator surface so GCP workflows follow the same operator pattern as DigitalOcean while isolating provider-specific implementation beneath the abstraction.
+*   **`QuanuXDuckToBQTranspiler` Class**:
+    *   **Read-Only Matrix Enforcement**: Before any AST/Substrait parsing begins, the input string will be strictly scanned to ban non-`SELECT` operations (`DROP`, `ALTER`, `UPDATE`, `INSERT`).
+    *   **Whitelist Enforcement**: The class will traverse the Substrait relational algebra nodes. It will implement a strictly allowed list (`SELECT`, `ProjectRel`, `AggregateRel`, `FilterRel`). If an unrecognized Relational Node, mathematical operation, or unapproved function (like Windowing or recursive CTE mapping) is detected, it instantly fires `TranspilationError`.
+    *   **Result Set Bounding**: The class will output not just the SQL string, but a controlled BigQuery execution block utilizing `query_job.result().to_arrow_iterable()` to guarantee chunked, memory-safe data retrieval back to the Python tier.
 
-#### [MODIFY] `server/cli/src/quanuxctl/commands/infra_commands.py`
-- Extend the `infra` Typer command group to support provider discrimination via `--provider` for GCP.
-- Add `quanuxctl infra ingest-start --provider gcp --memory-limit-mb 500`
-- Add `quanuxctl infra table-register --provider gcp`
-- Add `quanuxctl infra nodes --provider gcp` (or modify existing nodes listing logic to accept provider discriminators).
+### Pytest Coverage (`tests/test_gcp_transpiler.py`)
+The testing methodology abandons the Tract 1 ingestion shape in favor of strict parser and semantic parity assertions.
+
+#### [NEW] test_gcp_transpiler.py
+
+*   **Whitelist Acceptance Tests**: Asserts that `SELECT`, `FROM`, `WHERE`, `GROUP BY`, and standard aggregations (`SUM`, `AVG`, `MIN`, `MAX`, `COUNT`) map perfectly to BigQuery strings without raising exceptions.
+*   **Unsupported Construct Rejection Tests**: Explicitly injects Window Functions, dialect-specific macros, and CTEs to verify that `TranspilationError` is thrown deterministically.
+*   **Fallback Message Determinism**: Asserts that the exception `__str__` exactly matches the required 3-part fallback structure demanded by the Control Spec.
+*   **Semantic Parity Fixtures**: (Core Graduation Requirement) Executes the transpiled approved queries against a mocked/simulated layout and asserts exact row-count, grouping cardinality, explicit null-handling, and numeric precision against local DuckDB results.
+*   **State-Mutation Bans**: Asserts that sending an `UPDATE` or `DROP TABLE` text to the transpiler triggers an immediate, unrecoverable exception prior to any parsing attempt.
 
 ## Verification Plan
-
-### Automated Tests
-- Create `tests/test_gcp_ingestion.py` in the repository root test suite.
-- Mock the NATS JetStream layer with high-throughput dummy `MarketTick` events.
-- Assert that the `pyarrow` batch sizes never exceed the tested memory parameters (verifying the Bounding Doctrine).
-- Mock GCS and BigQuery APIs to validate the asynchronous upload and external table registration mechanisms.
-
-### Manual Verification
-- Start a local JetStream container (`./scripts/start_stack.sh`).
-- Run `quanuxctl infra ingest-start --provider gcp --memory-limit-mb 500`.
-- Inject mock traffic.
-- Use `top` or a memory profiler to visually confirm the Python process heap usage remains cleanly bounded under the 500MB specified limit over prolonged execution.
+1.  **Red Team Review**: Awaiting code-level approval on the transpiler architecture and test shape outlined above.
+2.  **Implementation Execution**: Code `gcp_transpiler.py` and `test_gcp_transpiler.py` strictly against this class structure.
+3.  **Audit PyTest Runner**: Output testing evidence to `tract2_test_run.log` and push for final promotion evaluation.
