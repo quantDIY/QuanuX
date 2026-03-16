@@ -21,11 +21,15 @@ struct OmegaEventIdentity {
     std::string_view strategy_id;
     std::string_view instrument_id;
     std::string_view firm_order_id;
+    std::string_view route_id;
+    std::string_view counterparty_id;
     
     // Backing blocks for safely holding mapped strings when pure
     // zero-copy references to a persistent buffer are not possible.
     std::string _backing_instrument_id;
     std::string _backing_client_order_id;
+    std::string _backing_route_id;
+    std::string _backing_counterparty_id;
 
     [[nodiscard]] constexpr bool has_event_id() const noexcept {
         return event_id.is_valid();

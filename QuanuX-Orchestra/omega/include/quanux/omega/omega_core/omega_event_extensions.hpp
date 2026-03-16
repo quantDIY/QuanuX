@@ -21,6 +21,7 @@ struct OmegaEventExtensions {
     // reside in the zero-copy ingress buffer.
     std::string _backing_native_event_code;
     std::string _backing_native_reason_code;
+    std::string _backing_opaque_extension_blob;
     
     // The tags collection for preserving venue-specific mapping nuance.
     // Lifetime: The backing array for this span must be managed by parsing buffers

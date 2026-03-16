@@ -13,6 +13,8 @@
 #include "quanux/omega/adapters/nyse/nyse_adapter.hpp"
 #include "quanux/omega/adapters/cme/cme_adapter.hpp"
 #include "quanux/omega/adapters/cboe/cboe_adapter.hpp"
+#include "quanux/omega/counterparties/goldman_sachs/goldman_sachs_adapter.hpp"
+#include "quanux/omega/counterparties/jpmorgan/jpmorgan_adapter.hpp"
 
 using namespace quanux::omega;
 using namespace quanux::omega::integration;
@@ -28,10 +30,12 @@ void assert_cross_venue_genericity() {
         adapters::nasdaq::NasdaqAdapter::get_capability_profile(),
         adapters::nyse::NyseAdapter::get_capability_profile(),
         adapters::cme::CmeAdapter::get_capability_profile(),
-        adapters::cboe::CboeAdapter::get_capability_profile()
+        adapters::cboe::CboeAdapter::get_capability_profile(),
+        counterparties::goldman_sachs::GoldmanSachsAdapter::get_capability_profile(),
+        counterparties::jpmorgan::JPMorganAdapter::get_capability_profile()
     };
 
-    // Prove all 8 profiles can map into valid Schema bindings and parse identically
+    // Prove all 11 profiles can map into valid Schema bindings and parse identically
     for (const auto& profile : profiles) {
         // Assert Schema is mapped
         assert(profile.schema_compliance.version_string == "v1.0.0");
@@ -62,6 +66,6 @@ void assert_cross_venue_genericity() {
 
 int main() {
     assert_cross_venue_genericity();
-    std::cout << "[ORCHESTRATOR] Cross-Venue validation proves Annex bounds accept all 8 standard profiles generically without branches." << std::endl;
+    std::cout << "[ORCHESTRATOR] Cross-Path validation proves Annex bounds accept all 11 standard profiles (Venues + Counterparties) generically without branches." << std::endl;
     return 0;
 }

@@ -124,6 +124,8 @@ type OmegaEventIdentity {
     instrumentId: String
     accountId: String
     strategyId: String
+    routeId: String
+    counterpartyId: String
 }
 
 """
