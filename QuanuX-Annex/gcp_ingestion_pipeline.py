@@ -77,21 +77,18 @@ class GCPIngestionPipeline:
                 'ask_size': unpacked[5],
                 'level': unpacked[6]
             }
-            self.current_batch.append(data_row)
-            
             # Strict incremental byte model: each canonical struct adds exactly 37 primitive bytes.
-            self.current_batch_size += 37
+            # Because our columns are pure primitives, PyArrow Table.nbytes scales exactly at 37 bytes per row.
+            next_batch_size = self.current_batch_size + 37
             
-            # Predictive memory bounding checks payload accumulation against a 99% safety ceiling.
-            # This eliminates arbitrary row-count checkpoints (e.g. 5000) and guarantees strict enforcement.
-            if self.current_batch_size >= (self.memory_limit_bytes * 0.99):
-                arrays = [pa.array([row[col_name] for row in self.current_batch]) for col_name in self.schema.names]
-                temp_table = pa.Table.from_arrays(arrays, schema=self.schema)
-                
-                real_nbytes = temp_table.nbytes
-                
-                logger.info(f"Strict memory ceiling predicted. True PyArrow Bytes: {real_nbytes} / Ceiling: {self.memory_limit_bytes}. Triggering predictive flush.")
-                await self._flush_and_upload(temp_table)
+            # Mathematical boundary check: if the NEXT row would breach the exact limit, flush the current batch first.
+            # This mathematically guarantees the materialized table will be <= self.memory_limit_bytes, zero overshoot.
+            if next_batch_size > self.memory_limit_bytes:
+                logger.info(f"Strict memory ceiling reached. PyArrow Bytes: {self.current_batch_size} / Ceiling: {self.memory_limit_bytes}. Triggering zero-overshoot flush.")
+                await self._flush_and_upload()
+            
+            self.current_batch.append(data_row)
+            self.current_batch_size += 37
             
         except struct.error:
             logger.error("Failed to unpack MarketTick struct - invalid payload size.")

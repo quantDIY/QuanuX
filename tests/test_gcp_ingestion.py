@@ -24,7 +24,12 @@ async def test_ingestion_memory_bounding():
     pipeline = GCPIngestionPipeline(memory_limit_mb=1)
     
     with patch.object(pipeline, '_flush_and_upload', new_callable=MagicMock) as mock_flush:
-        async def async_flush(table):
+        async def async_flush(table=None):
+            # If no table is passed, we must build it here to measure it for the assertion
+            if table is None:
+                arrays = [pa.array([row[col_name] for row in pipeline.current_batch]) for col_name in pipeline.schema.names]
+                table = pa.Table.from_arrays(arrays, schema=pipeline.schema)
+            
             mock_flush(table)
             pipeline.current_batch = []
             pipeline.current_batch_size = 0
@@ -48,14 +53,15 @@ async def test_ingestion_memory_bounding():
         for _ in range(35000):
             await pipeline._on_message(mock_msg)
              
-        # The flush should have been called depending on the predictive PyArrow footprint
+        # The flush should have been called depending on the strict memory limit PyArrow footprint
         assert mock_flush.call_count > 0
         
-        # The table passed to flush MUST be strictly bounded near the predicted 1MB limit.
+        # The table passed to flush MUST strictly obey the exact byte limit (<= 1MB). Zero overshoot.
         flushed_table = mock_flush.call_args[0][0]
-        # We enforce it flushed near the cap without wild 5000-row overshoots
-        assert flushed_table.nbytes > (1048576 * 0.90) 
-        assert flushed_table.nbytes < (1048576 * 1.05)
+        
+        # 1MB = 1048576. The closest multiple of 37 beneath that limit is exactly 1048543 bytes.
+        assert flushed_table.nbytes <= 1048576
+        assert flushed_table.nbytes == 1048543
         
         # We also assert that the remaining un-flushed batch is strictly bounded
         assert len(pipeline.current_batch) < 35000 # Proof it was flushed
