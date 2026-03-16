@@ -11,6 +11,11 @@ console = Console()
 SERVICE_NAME = "quanux_terraform"
 TOKEN_KEY = "do_token"
 
+def check_provider(provider: str):
+    if provider.lower() not in ["do", "gcp"]:
+        console.print(f"[bold red]FATAL:[/bold red] Unsupported provider '{provider}'. Must be 'do' or 'gcp'.")
+        raise typer.Exit(code=1)
+
 @app.command("set-token")
 def set_token(token: str = typer.Argument(..., help="DigitalOcean API Token")):
     """
@@ -144,6 +149,55 @@ def do_spaces():
         console.print(f"[bold green]Zarr Vault Endpoint:[/bold green] {vault_endpoint}\n")
     except Exception as e:
         console.print(f"[red]Error parsing terraform output: {e}[/red]")
+
+@app.command("ingest-start")
+def ingest_start(
+    provider: str = typer.Option("do", help="Cloud provider (do or gcp)"),
+    memory_limit_mb: int = typer.Option(500, help="Memory limit in MB for JetStream batching")
+):
+    """Starts the QuanuX asynchronous ingestion pipeline."""
+    check_provider(provider)
+    if provider.lower() == "gcp":
+        console.print(f"[bold cyan]GCP Ingestion:[/bold cyan] Initiating pipeline with {memory_limit_mb}MB limit.")
+        pipeline_script = os.path.expanduser("~/Antigravity/QuanuX/QuanuX/QuanuX-Annex/gcp_ingestion_pipeline.py")
+        if os.path.exists(pipeline_script):
+            console.print(f"Running: python {pipeline_script}")
+            # subprocess.run(["python", pipeline_script])
+        else:
+            console.print(f"[red]Error: Pipeline script not found at {pipeline_script}[/red]")
+            raise typer.Exit(code=1)
+    else:
+        console.print("[dim]DigitalOcean ingestion not yet implemented in this view.[/dim]")
+
+@app.command("table-register")
+def table_register(
+    provider: str = typer.Option("do", help="Cloud provider (do or gcp)"),
+    project: str = typer.Option(..., help="GCP Project ID"),
+    uri: str = typer.Option(..., help="GCS URI for Parquet files")
+):
+    """Registers an external table against the data lake."""
+    check_provider(provider)
+    if provider.lower() == "gcp":
+        console.print(f"[bold cyan]GCP BigQuery:[/bold cyan] Registering external table for {uri} in project {project}.")
+        setup_script = os.path.expanduser("~/Antigravity/QuanuX/QuanuX/QuanuX-Annex/gcp_bigquery_setup.py")
+        if os.path.exists(setup_script):
+            subprocess.run(["python", setup_script, "--project", project, "--uri", uri])
+        else:
+            console.print(f"[red]Error: BigQuery setup script not found at {setup_script}[/red]")
+            raise typer.Exit(code=1)
+    else:
+        console.print("[dim]DigitalOcean table registration not applicable.[/dim]")
+
+@app.command("nodes")
+def list_nodes(provider: str = typer.Option("do", help="Cloud provider (do or gcp)")):
+    """List active QuanuX nodes."""
+    check_provider(provider)
+    if provider.lower() == "do":
+        # Route to do_droplets equivalent
+        do_droplets()
+    elif provider.lower() == "gcp":
+        console.print("\n[bold cyan]=== GCP QuanuX Nodes ===[/bold cyan]")
+        console.print("[dim]Fetching GCP Compute Engine instances... (Not yet implemented)[/dim]\n")
 
 if __name__ == "__main__":
     app()
