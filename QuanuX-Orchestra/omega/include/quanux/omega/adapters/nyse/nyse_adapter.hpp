@@ -16,7 +16,7 @@ public:
             .adapter_name = "NYSE_PILLAR_MOCK",
             .schema_compliance = {
                 .version_string = "v1.0.0",
-                .compatibility_note = "Provisional precision mapping active. NYSE expects 8-decimal integer pricing.",
+                .compatibility_note = "Provisional precision mapping active.",
                 .holds_deprecations = true
             },
             .time_proofs = {
@@ -45,7 +45,10 @@ public:
 
         const auto* msg = reinterpret_cast<const NysePillarMock*>(buffer);
 
-        // 1. Identity Translation (Semantic checks first)
+        out_envelope.identity._backing_venue_id = "NYSE";
+        out_envelope.identity.venue_id = out_envelope.identity._backing_venue_id;
+        
+        // Identity Translation (Semantic checks first)
         if (msg->me_order_id == 0 && msg->client_order_id == 0) {
             out_envelope.provenance.parse_status = vocab::ParseStatus::Error;
             // Semantic Failure: Impossible identity ambiguity

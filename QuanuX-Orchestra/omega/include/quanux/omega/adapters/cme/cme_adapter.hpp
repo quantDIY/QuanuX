@@ -32,13 +32,25 @@ namespace cme {
 
 class CmeAdapter {
 public:
-    // Expose the formal capability proof for this adapter
     static capability::SourceCapabilityProfile get_capability_profile() noexcept {
         return capability::SourceCapabilityProfile{
             .adapter_name = "CME_iLink3",
-            .schema_compliance = {"v1.0.0", "Provisional precision mapping active.", false},
-            .time_proofs = {true, false, false}, // Proves source time only typically
-            .linkage_proofs = {true, true, false, true} // Proves busts, price corrects, and deterministic replay
+            .schema_compliance = {
+                .version_string = "v1.0.0",
+                .compatibility_note = "Provisional precision mapping active.",
+                .holds_deprecations = true
+            },
+            .time_proofs = {
+                .proves_source_native = true,
+                .proves_venue_gateway = false,
+                .proves_receive_nic = false
+            },
+            .linkage_proofs = {
+                .proves_busts = true,
+                .proves_price_corrections = true,
+                .proves_quantity_corrections = false,
+                .maintains_deterministic_replay_state = true
+            }
         };
     }
 

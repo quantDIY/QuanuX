@@ -35,8 +35,12 @@ public:
         
         // Zero-copy string spanning
         identity.client_order_id = std::string_view(msg->execId);
-        identity.instrument_id = std::string_view(msg->exchange);
+        identity._backing_instrument_id = msg->exchange;
+        identity.instrument_id = identity._backing_instrument_id;
         identity.account_id = std::string_view(msg->acctNumber);
+        
+        identity._backing_route_id = "IBKR";
+        identity.route_id = identity._backing_route_id;
     }
 };
 

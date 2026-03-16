@@ -16,7 +16,7 @@ public:
             .adapter_name = "LME_MOCK",
             .schema_compliance = {
                 .version_string = "v1.0.0",
-                .compatibility_note = "LME uses native double pricing temporarily.",
+                .compatibility_note = "Provisional precision mapping active.",
                 .holds_deprecations = true
             },
             .time_proofs = {
@@ -40,6 +40,8 @@ public:
     {
         out_envelope.provenance.adapter_name = "LME_MOCK";
         out_envelope.provenance.adapter_version = "v1.0.0";
+        out_envelope.identity._backing_venue_id = "LME";
+        out_envelope.identity.venue_id = out_envelope.identity._backing_venue_id;
 
         if (length < sizeof(LmeExecutionMock)) {
             out_envelope.provenance.parse_status = vocab::ParseStatus::Error;

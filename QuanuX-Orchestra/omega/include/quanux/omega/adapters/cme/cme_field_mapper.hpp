@@ -20,6 +20,9 @@ public:
         // Zero-copy string references
         identity.client_order_id = std::string_view(msg->cl_ord_id, strnlen(msg->cl_ord_id, sizeof(msg->cl_ord_id)));
         
+        identity._backing_venue_id = "CME";
+        identity.venue_id = identity._backing_venue_id;
+        
         // Mapped directly from the placeholder struct to semantics
         // Assumes later SBE structures will have pricing and quantity fields
         semantics.quantity = msg->order_qty_placeholder; 

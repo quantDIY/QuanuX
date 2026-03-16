@@ -13,6 +13,7 @@
 #include "quanux/omega/adapters/nyse/nyse_adapter.hpp"
 #include "quanux/omega/adapters/cme/cme_adapter.hpp"
 #include "quanux/omega/adapters/cboe/cboe_adapter.hpp"
+#include "quanux/omega/adapters/ibkr/ibkr_adapter.hpp"
 #include "quanux/omega/counterparties/goldman_sachs/goldman_sachs_adapter.hpp"
 #include "quanux/omega/counterparties/jpmorgan/jpmorgan_adapter.hpp"
 
@@ -20,8 +21,9 @@ using namespace quanux::omega;
 using namespace quanux::omega::integration;
 using namespace quanux::omega::capability;
 
-void assert_cross_venue_genericity() {
+void assert_cross_path_genericity() {
     std::vector<SourceCapabilityProfile> profiles = {
+        adapters::ibkr::IbkrAdapter::get_capability_profile(),
         adapters::cbot::CbotAdapter::get_capability_profile(),
         adapters::comex::ComexAdapter::get_capability_profile(),
         adapters::nymex::NymexAdapter::get_capability_profile(),
@@ -35,37 +37,54 @@ void assert_cross_venue_genericity() {
         counterparties::jpmorgan::JPMorganAdapter::get_capability_profile()
     };
 
-    // Prove all 11 profiles can map into valid Schema bindings and parse identically
+    // Prove all 12 profiles can map into valid Schema bindings and parse identically
     for (const auto& profile : profiles) {
-        // Assert Schema is mapped
+        // Assert Schema is structurally valid
         assert(profile.schema_compliance.version_string == "v1.0.0");
         
-        // Emulate a generic validation route via Annex bounds
-        AnnexTransportProjection dummy;
-        dummy.adapter_name = std::string(profile.adapter_name);
-        dummy.schema_version = profile.schema_compliance.version_string;
-        dummy.parse_status = vocab::ParseStatus::Success;
-        dummy.payload_hash = "mock_hash";
-        dummy.event_id = "12345";
+        // --- 1. Valid Lifecycle Routing Validation ---
+        AnnexTransportProjection valid_dummy;
+        valid_dummy.adapter_name = std::string(profile.adapter_name);
+        valid_dummy.schema_version = profile.schema_compliance.version_string;
+        valid_dummy.parse_status = vocab::ParseStatus::Success; // VALID
+        valid_dummy.payload_hash = "mock_hash_valid";
+        valid_dummy.event_id = "12345";
         
-        auto val = AnnexConsumerValidator::validate_payload(dummy);
+        auto val = AnnexConsumerValidator::validate_payload(valid_dummy);
         assert(val.is_valid);
-        // Deprecation flag not uniformly active on older Phase 4 adapters yet, skipping tight assert
         
-        // Assert Annex bounds the routing correctly 
+        // Assert Annex bounds the valid routing correctly 
         std::string subject = "omega.events.lifecycle.v1." + std::string(profile.adapter_name);
         auto category = AnnexConsumerRouter::identify_category(subject);
         assert(category == AnnexConsumerRouter::SubjectCategory::LIFECYCLE);
         
-        auto res = AnnexConsumer::consume_projection(subject, dummy);
+        auto res = AnnexConsumer::consume_projection(subject, valid_dummy);
         assert(res.consumed == true);
+
+        // --- 2. Invalid Dead-Letter Routing Validation ---
+        AnnexTransportProjection invalid_dummy;
+        invalid_dummy.adapter_name = std::string(profile.adapter_name);
+        invalid_dummy.schema_version = profile.schema_compliance.version_string;
+        invalid_dummy.parse_status = vocab::ParseStatus::Error; // INVALID
+        invalid_dummy.payload_hash = "mock_hash_invalid";
+        invalid_dummy.event_id = "99999"; // Though not required for Error bounds 
         
-        std::cout << "Successfully proved Schema + Generic Validation for: " << profile.adapter_name << std::endl;
+        auto val_inv = AnnexConsumerValidator::validate_payload(invalid_dummy);
+        assert(val_inv.is_valid); // The validation is structurally sound enough to be processed...
+        
+        std::string err_subject = "omega.events.invalid.v1." + std::string(profile.adapter_name);
+        auto err_category = AnnexConsumerRouter::identify_category(err_subject);
+        assert(err_category == AnnexConsumerRouter::SubjectCategory::INVALID); // ... but it is sorted immediately to dead letters
+        
+        auto err_res = AnnexConsumer::consume_projection(err_subject, invalid_dummy);
+        assert(err_res.consumed == true);
+        
+        std::cout << "Successfully proved Schema + Lifecycle + Dead-Letter Routing Generics for: " << profile.adapter_name << std::endl;
     }
 }
 
 int main() {
-    assert_cross_venue_genericity();
-    std::cout << "[ORCHESTRATOR] Cross-Path validation proves Annex bounds accept all 11 standard profiles (Venues + Counterparties) generically without branches." << std::endl;
+    assert_cross_path_genericity();
+    std::cout << "[ORCHESTRATOR] Cross-Path validation proves Annex bounds uniformly accept valid and invalid events for all 12 standard profiles (Venues + Counterparties) without branches." << std::endl;
     return 0;
 }

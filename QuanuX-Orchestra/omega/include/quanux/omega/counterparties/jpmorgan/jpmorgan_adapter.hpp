@@ -18,7 +18,7 @@ public:
             .adapter_name = "JPMORGAN_PATH",
             .schema_compliance = {
                 .version_string = "v1.0.0",
-                .compatibility_note = "JPM Counterparty passes execution venue MIC generically.",
+                .compatibility_note = "Provisional precision mapping active.",
                 .holds_deprecations = true
             },
             .time_proofs = {

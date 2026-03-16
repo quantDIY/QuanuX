@@ -16,7 +16,7 @@ public:
             .adapter_name = "CBOT_MOCK",
             .schema_compliance = {
                 .version_string = "v1.0.0",
-                .compatibility_note = "CBOT 8-decimal native mapped to provisional float.",
+                .compatibility_note = "Provisional precision mapping active.",
                 .holds_deprecations = true
             },
             .time_proofs = {
@@ -38,7 +38,10 @@ public:
         size_t length, 
         core::OmegaEventEnvelope& out_envelope) noexcept 
     {
-        // Must bind identity regardless of parse outcome so dead letter maps properly
+        out_envelope.identity._backing_venue_id = "CBOT";
+        out_envelope.identity.venue_id = out_envelope.identity._backing_venue_id;
+
+        // Map Sidend identity regardless of parse outcome so dead letter maps properly
         out_envelope.provenance.adapter_name = "CBOT_MOCK";
         out_envelope.provenance.adapter_version = "v1.0.0";
 

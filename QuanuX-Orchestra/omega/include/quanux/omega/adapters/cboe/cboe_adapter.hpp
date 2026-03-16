@@ -18,7 +18,7 @@ public:
             .adapter_name = "CBOE_FAMILY_MOCK",
             .schema_compliance = {
                 .version_string = "v1.0.0",
-                .compatibility_note = "CBOE Family mock uses native double pricing temporarily.",
+                .compatibility_note = "Provisional precision mapping active.",
                 .holds_deprecations = true
             },
             .time_proofs = {
@@ -42,6 +42,8 @@ public:
     {
         out_envelope.provenance.adapter_name = "CBOE_FAMILY_MOCK";
         out_envelope.provenance.adapter_version = "v1.0.0";
+        out_envelope.identity._backing_venue_id = "CBOE";
+        out_envelope.identity.venue_id = out_envelope.identity._backing_venue_id;
 
         if (length < sizeof(CboeExecutionMock)) {
             out_envelope.provenance.parse_status = vocab::ParseStatus::Error;

@@ -32,13 +32,25 @@ public:
     static std::string_view get_adapter_name() noexcept { return "IBKR_TWS_API"; }
     static std::string_view get_adapter_version() noexcept { return "v1.0"; }
 
-    // Expose the formal capability proof for this adapter
     static capability::SourceCapabilityProfile get_capability_profile() noexcept {
         return capability::SourceCapabilityProfile{
             .adapter_name = "IBKR_TWS_API",
-            .schema_compliance = {"v1.0.0", "Provisional precision mapping active.", false},
-            .time_proofs = {false, false, false}, // Text API often makes source times unpredictable vs gateway times
-            .linkage_proofs = {true, true, false, false} // Cannot guarantee deterministic replay from disconnected gaps
+            .schema_compliance = {
+                .version_string = "v1.0.0",
+                .compatibility_note = "Provisional precision mapping active.",
+                .holds_deprecations = true
+            },
+            .time_proofs = {
+                .proves_source_native = false,
+                .proves_venue_gateway = false,
+                .proves_receive_nic = false
+            },
+            .linkage_proofs = {
+                .proves_busts = true,
+                .proves_price_corrections = true,
+                .proves_quantity_corrections = false,
+                .maintains_deterministic_replay_state = false
+            }
         };
     }
 

@@ -16,7 +16,7 @@ public:
             .adapter_name = "NASDAQ_ITCH_OUCH_MOCK",
             .schema_compliance = {
                 .version_string = "v1.0.0",
-                .compatibility_note = "Provisional precision mapping active for shares and price.",
+                .compatibility_note = "Provisional precision mapping active.",
                 .holds_deprecations = true
             },
             .time_proofs = {
@@ -47,7 +47,10 @@ public:
 
         const auto* msg = reinterpret_cast<const NasdaqIngressMock*>(buffer);
 
-        // 1. Identity Translation
+        out_envelope.identity._backing_venue_id = "NASDAQ";
+        out_envelope.identity.venue_id = out_envelope.identity._backing_venue_id;
+
+        // Map Sidentity Translation
         if (msg->order_reference_number == 0) {
             out_envelope.provenance.parse_status = vocab::ParseStatus::Error;
             // Semantic Failure: Missing required venue identity

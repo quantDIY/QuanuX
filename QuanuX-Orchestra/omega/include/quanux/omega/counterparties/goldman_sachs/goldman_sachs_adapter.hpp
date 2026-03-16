@@ -18,7 +18,7 @@ public:
             .adapter_name = "GOLDMAN_SACHS_PATH",
             .schema_compliance = {
                 .version_string = "v1.0.0",
-                .compatibility_note = "GS Counterparty route models route_id cleanly over generic numeric mock.",
+                .compatibility_note = "Provisional precision mapping active.",
                 .holds_deprecations = true
             },
             .time_proofs = {

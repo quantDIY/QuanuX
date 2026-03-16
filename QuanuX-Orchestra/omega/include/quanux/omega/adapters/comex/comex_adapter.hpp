@@ -16,7 +16,7 @@ public:
             .adapter_name = "COMEX_MOCK",
             .schema_compliance = {
                 .version_string = "v1.0.0",
-                .compatibility_note = "COMEX 8-decimal native mapped to provisional float.",
+                .compatibility_note = "Provisional precision mapping active.",
                 .holds_deprecations = true
             },
             .time_proofs = {
@@ -41,6 +41,8 @@ public:
         // Bind identity regardless of outcome for Dead-Letter routing safety
         out_envelope.provenance.adapter_name = "COMEX_MOCK";
         out_envelope.provenance.adapter_version = "v1.0.0";
+        out_envelope.identity._backing_venue_id = "COMEX";
+        out_envelope.identity.venue_id = out_envelope.identity._backing_venue_id;
 
         if (length < sizeof(ComexMatchReport)) {
             out_envelope.provenance.parse_status = vocab::ParseStatus::Error;
