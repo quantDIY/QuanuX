@@ -17,6 +17,8 @@ public:
             linkage.correction_type = core::CorrectionType::Bust;
         } else if (msg->ord_status == 6) {
             linkage.correction_type = core::CorrectionType::PriceCorrection;
+        } else {
+            linkage.correction_type = core::CorrectionType::None;
         }
     }
 };

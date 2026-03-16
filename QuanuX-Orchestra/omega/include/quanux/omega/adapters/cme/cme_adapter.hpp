@@ -11,11 +11,19 @@
 #include "quanux/omega/adapters/cme/cme_timestamp_mapper.hpp"
 #include "quanux/omega/adapters/cme/cme_correction_mapper.hpp"
 #include "quanux/omega/adapters/cme/cme_survival_mapper.hpp"
+#include "quanux/omega/omega_capability/source_capability.hpp"
 
 namespace quanux {
 namespace omega {
 namespace adapters {
 namespace cme {
+
+// WARNING: NUMERIC LIMITATIONS
+// This adapter utilizes quanux::omega::types::Price and Quantity aliases 
+// for extracting numeric values. These are currently provisional 'double' 
+// types and explicitly DO NOT provide accounting-grade or reconciliation-grade 
+// precision guarantees.
+// Downstream consumers must not canonize these abstractions as the final model.
 
 // A mock struct mimicking CME MDP3 SBE Execution Report layout for the bridge
 #pragma pack(push, 1)
@@ -24,6 +32,16 @@ namespace cme {
 
 class CmeAdapter {
 public:
+    // Expose the formal capability proof for this adapter
+    static capability::SourceCapabilityProfile get_capability_profile() noexcept {
+        return capability::SourceCapabilityProfile{
+            .adapter_name = "CME_iLink3",
+            .schema_compliance = {"v1.0.0", "Provisional precision mapping active.", false},
+            .time_proofs = {true, false, false}, // Proves source time only typically
+            .linkage_proofs = {true, true, false, true} // Proves busts, price corrects, and deterministic replay
+        };
+    }
+
     // Zero-copy ingestion bridge. Parses a raw byte buffer and fills an OmegaEventEnvelope.
     static bool parse_execution_report(
         const uint8_t* raw_buffer, 
@@ -32,6 +50,8 @@ public:
         survival::TagValue& out_survival_tag) noexcept 
     {
         if (buffer_len < sizeof(CmeExecutionReportSbe)) {
+            out_envelope.provenance.parse_status = vocab::ParseStatus::Error;
+            out_envelope.provenance.adapter_name = "CME_iLink3";
             return false;
         }
 

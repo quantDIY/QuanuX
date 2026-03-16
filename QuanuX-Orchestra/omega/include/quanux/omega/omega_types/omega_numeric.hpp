@@ -7,13 +7,17 @@ namespace types {
 // ============================================================================
 // TEMPORARY PLACEHOLDER TYPES
 // ============================================================================
-// WARNING: 
-// These double aliases are strictly provisional for Phase 2 contract hardening.
-// They must NOT be treated as the final Omega standard. 
-// Floating-point ambiguity becomes dangerous in post-trade/reconciliation.
-// These will be replaced by a project-local decimal/fixed-point type wrapper.
-// Do not encode double semantics deeply into fixture assumptions.
-
+// WARNING: PROVISIONAL NUMERIC TYPES
+// These aliases encapsulate the current usage of 'double' for numeric fields 
+// across QuanuX-Omega to prevent naked primitive sprawl, but solving 
+// the underlying numeric representation is an active hardening item.
+//
+// These types MUST NOT be treated as implying accounting-grade or 
+// reconciliation-grade precision. They are placeholders.
+//
+// Future contract hardening will likely replace the underlying type
+// (e.g., precise decimal structs, int64 mantissa bounds) without breaking 
+// Omega semantics or the adapter mappers utilizing these aliases.
 using Price = double;
 using Quantity = double;
 

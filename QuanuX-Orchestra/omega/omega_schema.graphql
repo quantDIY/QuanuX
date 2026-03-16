@@ -1,0 +1,231 @@
+"""
+QuanuX-Omega Canonical Semantic Contract
+
+This schema defines the governed outward boundary of the Omega Event Envelope.
+It exposes pure semantic alignment, identity, time, and verifiable provenance 
+without leaking venue-native structural nuances to downstream components.
+"""
+
+"""
+PROVISIONAL SCALARS
+The `Price` and `Quantity` types are currently serialized as Floats on the wire,
+but they DO NOT IMPLY accounting-grade or reconciliation-grade precision. 
+They are provisional abstractions that will be hardened in future phases 
+(e.g., into precise decimal string representations or int64 mantissas).
+Do not construct precision-critical arithmetic purely off these values.
+"""
+scalar ProvisionalPrice
+scalar ProvisionalQuantity
+
+"""
+Globally Unique Timestamps
+Precise nanosecond epochs capturing the flow of data through the architecture.
+"""
+scalar UnixEpochNanos
+
+# -----------------------------------------------------------------------------
+# 1. ENUMS (Canonical Vocabulary)
+# -----------------------------------------------------------------------------
+
+enum EventType {
+    UNKNOWN
+    ORDER_ACKNOWLEDGED
+    ORDER_REJECTED
+    EXECUTION_PARTIAL
+    EXECUTION_FULL
+    EXECUTION_BUST
+    EXECUTION_CORRECTION
+    CANCEL_REPLACED
+    CANCEL_REJECTED
+    SESSION_GAP
+    REPLAY_RECOVERY
+    ALLOCATION_MUTATED
+}
+
+enum NormalizedState {
+    UNKNOWN
+    NEW
+    PARTIALLY_FILLED
+    FILLED
+    CANCELED
+    REJECTED
+}
+
+enum NormalizedReasonCode {
+    NONE
+    UNKNOWN_VENUE_REASON
+    INVALID_PRICE
+    INVALID_SYMBOL
+    RISK_LIMIT_EXCEEDED
+    MARKET_CLOSED
+    INSUFFICIENT_LIQUIDITY
+    DUPLICATE_ORDER
+    CANCEL_TOO_LATE
+    SESSION_DISCONNECTED
+}
+
+enum OrderSide {
+    UNKNOWN
+    BUY
+    SELL
+}
+
+enum OrderType {
+    UNKNOWN
+    MARKET
+    LIMIT
+    STOP
+    STOP_LIMIT
+}
+
+enum TimeInForce {
+    UNKNOWN
+    DAY
+    GOOD_TILL_CANCEL
+    IMMEDIATE_OR_CANCEL
+    FILL_OR_KILL
+}
+
+enum CorrectionType {
+    NONE
+    BUST
+    PRICE_CORRECTION
+    QUANTITY_CORRECTION
+    ACCOUNT_CORRECTION
+}
+
+enum ParseStatus {
+    UNKNOWN
+    SUCCESS
+    WARNING
+    ERROR
+}
+
+enum TimestampPrecedence {
+    UNKNOWN
+    SOURCE_NATIVE
+    VENUE_GATEWAY
+    RECEIVE_NIC
+    ADAPTER_PROCESS
+    NORMALIZATION_COMPLETE
+}
+
+# -----------------------------------------------------------------------------
+# 2. CORE STRUCTURES
+# -----------------------------------------------------------------------------
+
+"""
+Identity captures the deterministic tracing roots for the payload.
+"""
+type OmegaEventIdentity {
+    eventId: String!
+    clientOrderId: String
+    firmOrderId: String
+    instrumentId: String
+    accountId: String
+    strategyId: String
+}
+
+"""
+Semantics translates all disjoint source inputs into a single manageable paradigm.
+"""
+type OmegaEventSemantics {
+    eventType: EventType!
+    normalizedState: NormalizedState!
+    reasonCode: NormalizedReasonCode!
+    
+    side: OrderSide!
+    orderType: OrderType!
+    timeInForce: TimeInForce!
+    
+    quantity: ProvisionalQuantity
+    cumQty: ProvisionalQuantity
+    leavesQty: ProvisionalQuantity
+    
+    price: ProvisionalPrice
+    lastPx: ProvisionalPrice
+    lastQty: ProvisionalQuantity
+}
+
+"""
+Time precedence isolates when events actually occurred vs when they were processed.
+"""
+type TimestampNode {
+    epochNanos: UnixEpochNanos!
+    precedence: TimestampPrecedence!
+}
+
+type OmegaEventTime {
+    sourceTime: TimestampNode
+    venueTime: TimestampNode
+    receiveTime: TimestampNode
+    adapterTime: TimestampNode
+    normalizationTime: TimestampNode
+}
+
+"""
+Linkage manages the correction/replacement tree for out-of-order execution trails.
+"""
+type OmegaEventLinkage {
+    correctionType: CorrectionType!
+    priorEventId: String
+    rootEventId: String
+}
+
+"""
+Provenance maintains an undeniable chain of custody for the normalization event.
+"""
+type OmegaEventProvenance {
+    """
+    Cryptographic hash of the strictly unbroken ingress payload. 
+    Use this to look up exactly what hit the wire inside the historical storage lake.
+    """
+    payloadHash: String!
+    
+    sourceProtocol: String
+    adapterName: String!
+    adapterVersion: String!
+    parseStatus: ParseStatus!
+    parseWarnings: [String!]!
+}
+
+"""
+Generic K/V pair structure to carry unmapped or proprietary values out of the envelope safely.
+"""
+type TagValue {
+    tagId: Int!
+    value: String!
+}
+
+"""
+Extensions carry the opaque, un-normalized survival artifacts.
+"""
+type OmegaEventExtensions {
+    venueNativeEventCode: String
+    venueNativeReasonCode: String
+    tags: [TagValue!]!
+}
+
+# -----------------------------------------------------------------------------
+# 3. ROOT ENVELOPE
+# -----------------------------------------------------------------------------
+
+"""
+The unified output wrapper for any QuanuX ingress adapter.
+"""
+type OmegaEventEnvelope {
+    identity: OmegaEventIdentity!
+    semantics: OmegaEventSemantics!
+    time: OmegaEventTime!
+    linkage: OmegaEventLinkage!
+    provenance: OmegaEventProvenance!
+    extensions: OmegaEventExtensions!
+}
+
+type Query {
+    """
+    A placeholder read surface to ensure schema compilation. 
+    Actual deployment will inject this into a Federation Supergraph.
+    """
+    pingOmega: Boolean!
+}

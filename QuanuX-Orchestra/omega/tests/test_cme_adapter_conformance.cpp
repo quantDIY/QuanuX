@@ -175,6 +175,23 @@ void test_cme_extension_heavy() {
     std::cout << "Extension-heavy test passed." << std::endl;
 }
 
+// 6. Negative Path: Buffer underruns yield explicit ParseStatus::Error
+void test_cme_negative_path() {
+    uint8_t short_buffer[10] = {0}; // Way too short for CmeExecutionReportSbe
+    core::OmegaEventEnvelope env_short;
+    survival::TagValue tag_short;
+    
+    bool parsed = adapters::cme::CmeAdapter::parse_execution_report(
+        short_buffer, sizeof(short_buffer), env_short, tag_short
+    );
+
+    assert(!parsed);
+    assert(env_short.provenance.parse_status == vocab::ParseStatus::Error);
+    assert(env_short.provenance.adapter_name == "CME_iLink3"); 
+
+    std::cout << "Negative Path Parse error mapping test passed." << std::endl;
+}
+
 int main() {
     std::cout << "WARNING: tests checking env.semantics.quantity and price do so fully aware "
               << "that the current 'double' types are temporary abstractions to be hardened later." << std::endl;
@@ -185,6 +202,7 @@ int main() {
     test_cme_cancel_replace();
     test_cme_replay_recovery();
     test_cme_extension_heavy();
+    test_cme_negative_path();
     
     std::cout << "All Agent 3 Conformance tests passed." << std::endl;
     return 0;
