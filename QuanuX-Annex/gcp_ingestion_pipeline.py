@@ -79,17 +79,19 @@ class GCPIngestionPipeline:
             }
             self.current_batch.append(data_row)
             
-            # Periodically check True Arrow Table size (e.g., every 5000 rows)
-            if len(self.current_batch) % 5000 == 0:
+            # Strict incremental byte model: each canonical struct adds exactly 37 primitive bytes.
+            self.current_batch_size += 37
+            
+            # Predictive memory bounding checks payload accumulation against a 99% safety ceiling.
+            # This eliminates arbitrary row-count checkpoints (e.g. 5000) and guarantees strict enforcement.
+            if self.current_batch_size >= (self.memory_limit_bytes * 0.99):
                 arrays = [pa.array([row[col_name] for row in self.current_batch]) for col_name in self.schema.names]
                 temp_table = pa.Table.from_arrays(arrays, schema=self.schema)
                 
-                # Use real PyArrow exact memory footprint
-                self.current_batch_size = temp_table.nbytes
+                real_nbytes = temp_table.nbytes
                 
-                if self.current_batch_size >= self.memory_limit_bytes:
-                    logger.info(f"Memory ceiling reached ({self.current_batch_size} >= {self.memory_limit_bytes}). Triggering backpressure & flush.")
-                    await self._flush_and_upload(temp_table)
+                logger.info(f"Strict memory ceiling predicted. True PyArrow Bytes: {real_nbytes} / Ceiling: {self.memory_limit_bytes}. Triggering predictive flush.")
+                await self._flush_and_upload(temp_table)
             
         except struct.error:
             logger.error("Failed to unpack MarketTick struct - invalid payload size.")

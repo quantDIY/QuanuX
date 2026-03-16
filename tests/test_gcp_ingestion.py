@@ -48,12 +48,14 @@ async def test_ingestion_memory_bounding():
         for _ in range(35000):
             await pipeline._on_message(mock_msg)
              
-        # The flush should have been called depending on the PyArrow footprint
+        # The flush should have been called depending on the predictive PyArrow footprint
         assert mock_flush.call_count > 0
         
-        # The table passed to flush MUST have been larger than the 1MB limit when called
+        # The table passed to flush MUST be strictly bounded near the predicted 1MB limit.
         flushed_table = mock_flush.call_args[0][0]
-        assert flushed_table.nbytes >= 1048576
+        # We enforce it flushed near the cap without wild 5000-row overshoots
+        assert flushed_table.nbytes > (1048576 * 0.90) 
+        assert flushed_table.nbytes < (1048576 * 1.05)
         
         # We also assert that the remaining un-flushed batch is strictly bounded
         assert len(pipeline.current_batch) < 35000 # Proof it was flushed
