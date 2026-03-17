@@ -54,11 +54,11 @@ def test_unsupported_construct_rejection(transpiler):
     assert "WindowFunction" in str(excinfo.value)
     assert "Window functions are explicitly banned under the Tract 2 Control Spec" in str(excinfo.value)
     
-    # 2. Joins
-    query_join = "SELECT a.instrument_id FROM MarketTick a JOIN MarketTick b ON a.instrument_id = b.instrument_id"
+    # 2. Joins (Phase 3B allows INNER JOIN, so we assert against Banned Outer Joins)
+    query_join = "SELECT a.instrument_id FROM MarketTick a LEFT JOIN MarketTick b ON a.instrument_id = b.instrument_id"
     with pytest.raises(TranspilationError) as excinfo_join:
         transpiler.transpile(query_join)
-    assert "Joins are explicitly banned" in str(excinfo_join.value)
+    assert "Outer, Cross, and Natural joins are strictly banned" in str(excinfo_join.value)
     
     # 3. CTEs or unsupported IR
     query_cte = "WITH CTE AS (SELECT instrument_id FROM MarketTick) SELECT * FROM CTE"
@@ -92,7 +92,7 @@ def test_phase1_surface_contract_frozen(transpiler):
     
     # 2. Assert exactly the banned surface explicitly fails
     banned_queries = {
-        "JOIN": "SELECT a.level FROM MarketTick a JOIN MarketTick b ON a.level = b.level",
+        "OUTER_JOIN": "SELECT a.level FROM MarketTick a LEFT JOIN MarketTick b ON a.level = b.level",
         "WINDOW": "SELECT AVG(bid_price) OVER(PARTITION BY level) FROM MarketTick",
         "CTE": "WITH c AS (SELECT level FROM MarketTick) SELECT * FROM c",
         "UPDATE": "UPDATE MarketTick SET bid_price = 0",
@@ -134,15 +134,15 @@ def test_internal_subquery_artifacts_explicit(transpiler):
         transpiler.transpile("SELECT FIRST(bid_price) FROM MarketTick")
     assert "Aggregate function 'FIRST' is not in the whitelist" in str(exc_info.value)
     
-    # 2. User-level CROSS JOIN is strictly rejected (verifying CROSS_PRODUCT limits)
+    # 2. User-level CROSS JOIN is strictly rejected (verifying string blocks override CROSS_PRODUCT IR limits)
     with pytest.raises(TranspilationError) as exc_info:
         transpiler.transpile("SELECT t1.bid_price FROM MarketTick t1 CROSS JOIN MarketTick t2")
-    assert "CROSS_PRODUCT IR is only authorized for exact scalar subqueries" in str(exc_info.value)
+    assert "Outer, Cross, and Natural joins are strictly banned under Phase 3B" in str(exc_info.value)
     
-    # 3. User-level INNER JOIN is strictly rejected (verifying subquery HASH_JOIN hasn't bled)
+    # 3. User-level OUTER JOIN is strictly rejected (verifying limits explicitly)
     with pytest.raises(TranspilationError) as exc_info:
-        transpiler.transpile("SELECT t1.bid_price FROM MarketTick t1 JOIN MarketTick t2 ON t1.instrument_id = t2.instrument_id")
-    assert "Joins are explicitly banned under the Tract 2 Control Spec" in str(exc_info.value)
+        transpiler.transpile("SELECT t1.bid_price FROM MarketTick t1 LEFT JOIN MarketTick t2 ON t1.instrument_id = t2.instrument_id")
+    assert "Outer, Cross, and Natural joins are strictly banned" in str(exc_info.value)
     
     # 4. Allowed Internal artifacts successfully transpile without triggering surface blocks
     bq_sql = transpiler.transpile("SELECT instrument_id, (SELECT MAX(bid_price) FROM MarketTick) as max_bid FROM MarketTick LIMIT 1")
@@ -376,6 +376,27 @@ def test_real_bq_semantic_parity(transpiler):
     assert remote_result_6 is not None
     assert len(local_result_6) == len(remote_result_6)
     assert local_result_6.column('total_depth')[0].as_py() == remote_result_6.column('total_depth')[0].as_py()
+
+    # 9. Phase 3B Controlled Joins Matrix Test: Single Inner Equality Join
+    local_query_7 = '''
+        SELECT 
+            t1.instrument_id, t1.bid_price, t2.ask_price
+        FROM MarketTick t1
+        JOIN MarketTick t2 ON t1.instrument_id = t2.instrument_id
+        WHERE t1.level = 1
+        ORDER BY t1.instrument_id DESC
+    '''
+    local_result_7 = transpiler.conn.execute(local_query_7).fetch_arrow_table()
+    
+    bq_sql_7 = transpiler.transpile(local_query_7).replace("MarketTick", f"`{table_id}`")
+    remote_result_7 = transpiler.execute_bounded(client, bq_sql_7)
+    
+    assert remote_result_7 is not None
+    assert len(local_result_7) == len(remote_result_7)
+    
+    if len(local_result_7) > 0:
+        assert local_result_7.column('instrument_id')[0].as_py() == remote_result_7.column('instrument_id')[0].as_py()
+        assert local_result_7.column('ask_price')[0].as_py() == remote_result_7.column('ask_price')[0].as_py()
 
     # Clean up test table
     client.delete_table(table_id, not_found_ok=True)

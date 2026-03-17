@@ -11,10 +11,10 @@ def test_cli_validate_success():
     assert "SUCCESS" in result.stdout
 
 def test_cli_validate_banned():
-    result = runner.invoke(gcp_sql_app, ["validate", "SELECT a.level FROM MarketTick a JOIN MarketTick b ON a.level = b.level"])
+    result = runner.invoke(gcp_sql_app, ["validate", "SELECT a.level FROM MarketTick a LEFT JOIN MarketTick b ON a.level = b.level"])
     assert result.exit_code == 1
     assert "FATAL: Prototype Matrix Boundary Violation" in result.stdout
-    assert "Joins are explicitly banned" in result.stdout
+    assert "Outer, Cross, and Natural joins are strictly banned" in result.stdout
     assert "Fallback required" in result.stdout
 
 def test_cli_transpile_top_n():
@@ -40,13 +40,13 @@ def test_cli_validate_json_success():
     assert "query_fingerprint" in data
 
 def test_cli_validate_json_banned():
-    result = runner.invoke(gcp_sql_app, ["validate", "SELECT a.level FROM MarketTick a JOIN MarketTick b ON a.level = b.level", "--json"])
+    result = runner.invoke(gcp_sql_app, ["validate", "SELECT a.level FROM MarketTick a LEFT JOIN MarketTick b ON a.level = b.level", "--json"])
     assert result.exit_code == 1
     import json
     data = json.loads(result.stdout)
     assert data["status"] == "error"
     assert data["error_type"] == "TranspilationError"
-    assert "JOIN" in data["rejected_construct"]
+    assert "BannedJoinType" in data["rejected_construct"]
     assert "Fallback required" in data["fallback_instruction"]
 
 def test_cli_execute_invalid_bounds():

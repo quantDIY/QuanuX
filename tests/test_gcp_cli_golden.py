@@ -41,7 +41,7 @@ def test_golden_rejection_window_human():
 
 def test_golden_rejection_join_json():
     """Validates the exact machine-readable JSON structure of a banned construct."""
-    query = "SELECT a.level FROM MarketTick a JOIN MarketTick b ON a.level = b.level"
+    query = "SELECT a.level FROM MarketTick a LEFT JOIN MarketTick b ON a.level = b.level"
     result = runner.invoke(gcp_sql_app, ["validate", query, "--json"])
     assert result.exit_code == 1
     
@@ -49,8 +49,8 @@ def test_golden_rejection_join_json():
     assert set(data.keys()) == {"mode", "status", "error_type", "rejected_construct", "violated_rule", "fallback_instruction", "query_fingerprint"}
     assert data["status"] == "error"
     assert data["error_type"] == "TranspilationError"
-    assert "JOIN" in data["rejected_construct"]
-    assert "Joins are explicitly banned" in data["violated_rule"]
+    assert "BannedJoinType" in data["rejected_construct"]
+    assert "Outer, Cross, and Natural joins are strictly banned" in data["violated_rule"]
     assert "Fallback required" in data["fallback_instruction"]
 
 def test_golden_execute_dry_run_json():

@@ -73,6 +73,32 @@ class QuanuXDuckToBQTranspiler:
         if re.search(r'\bFIRST\s*\(', q_upper):
             raise TranspilationError("FIRST", "Aggregate function 'FIRST' is not in the whitelist")
 
+    def _enforce_join_rules(self, query: str) -> bool:
+        """Phase 3B: Strictly confines explicit joins to a single INNER equality bridge."""
+        q_upper = query.upper()
+        import re
+        joins = re.findall(r'\bJOIN\b', q_upper)
+        if not joins:
+            return False
+            
+        if len(joins) > 1:
+            raise TranspilationError("MultipleJoins", "A query may contain at most one JOIN operation under Phase 3B constraints.")
+            
+        if re.search(r'\b(LEFT|RIGHT|FULL|OUTER|CROSS|NATURAL)\s+(OUTER\s+)?JOIN\b', q_upper):
+            raise TranspilationError("BannedJoinType", "Outer, Cross, and Natural joins are strictly banned under Phase 3B.")
+            
+        if re.search(r'\bUSING\s*\(', q_upper):
+            raise TranspilationError("UsingClause", "USING clauses are explicitly banned. Use explicit ON equality predicates.")
+            
+        # 4. No mixed combinations with subqueries or aggregations on the first cross
+        if re.search(r'\(\s*SELECT\b', q_upper):
+            raise TranspilationError("MixedComplexity", "Joins combined with derived tables or subqueries are banned until independently proven.")
+            
+        if re.search(r'\b(GROUP\s+BY|SUM|AVG|MIN|MAX|COUNT)\b', q_upper):
+            raise TranspilationError("MixedComplexity", "Joins combined with aggregations are banned pending Phase 3C.")
+            
+        return True
+
     def _traverse_relational_node(self, node):
         """Recursive parse of DuckDB relational nodes (AST-equivalent) from EXPLAIN FORMAT JSON."""
         name = node.get("name", "")
@@ -95,15 +121,22 @@ class QuanuXDuckToBQTranspiler:
             join_type = extra_info.get("Join Type", "INNER")
             
             # Subqueries explicitly resolve to SEMI, MARK, or ANTI joins.
-            # We explicitly ban INNER, LEFT, RIGHT, OUTER joins to maintain Phase 1 bans on relational bridging.
             if join_type in ("SEMI", "MARK", "ANTI"):
                 pass
             # DuckDB's optimizer translates some ORDER BY ... LIMIT queries into a TOP_N followed by a 
             # HASH_JOIN SEMI on rowid = rowid. We must allow this internal AST artifact.
             elif join_type == "SEMI" and "rowid = rowid" in extra_info.get("Conditions", ""):
                 pass
+            elif join_type == "INNER":
+                # Phase 3B explicit Inner Join Constraints
+                conditions = str(extra_info.get("Conditions", ""))
+                if ">" in conditions or "<" in conditions or "!=" in conditions:
+                    raise TranspilationError("NonEqualityJoin", "Only exact equality predicates are authorized for INNER JOINs")
+                # Ensure nested loops have explicit equality (safeguard against comma cross joins dodging parser string nets)
+                if name == "NESTED_LOOP_JOIN" and "=" not in conditions:
+                     raise TranspilationError("NonEqualityJoin", "Only exact equality predicates are authorized for INNER JOINs")
             else:
-                raise TranspilationError(name, "Joins are explicitly banned under the Tract 2 Control Spec Phase 1 Matrix")
+                raise TranspilationError(name, "Joins outside the bounded Phase 3B inner equality matrix are banned.")
             
         if name and name not in allowed_nodes and name != "RESULT_COLLECTOR":
             raise TranspilationError(name, f"Relational IR '{name}' is explicitly banned under the Tract 2 Control Spec")
@@ -131,6 +164,7 @@ class QuanuXDuckToBQTranspiler:
     def transpile(self, query: str) -> str:
         self._enforce_read_only(query)
         self._enforce_subquery_rules(query)
+        self._enforce_join_rules(query)
         
         # 1. Ask duckdb for the IR schema (verifying parse exactness)
         try:
