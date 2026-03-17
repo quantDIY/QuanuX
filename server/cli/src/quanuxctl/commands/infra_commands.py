@@ -230,109 +230,215 @@ def _get_transpiler():
     import sys
     annex_dir = get_annex_dir()
     if not annex_dir:
-        console.print("[red]Error: Could not dynamically resolve QuanuX-Annex path.[/red]")
-        raise typer.Exit(code=1)
+        return None, None
     if annex_dir not in sys.path:
         sys.path.insert(0, annex_dir)
     try:
         from gcp_transpiler import QuanuXDuckToBQTranspiler, TranspilationError
         return QuanuXDuckToBQTranspiler(), TranspilationError
-    except ImportError as e:
-        console.print(f"[red]Error importing Transpiler modules: {e}[/red]")
-        raise typer.Exit(code=1)
+    except ImportError:
+        return None, None
 
-def _handle_transpilation_error(e):
-    console.print("\n[bold red]FATAL: Prototype Matrix Boundary Violation[/bold red]")
-    console.print(f"[bold yellow]Rejected Construct:[/bold yellow] {e.construct}")
-    console.print(f"[bold yellow]Violated Rule:[/bold yellow] {e.reason}")
-    console.print(f"\n[dim]{e.fallback}[/dim]\n")
-    raise typer.Exit(code=1)
+def _fingerprint_query(query: str) -> str:
+    import hashlib
+    # Normalize query: uppercase, strip extra spaces
+    normalized = " ".join(query.strip().upper().split())
+    return hashlib.sha256(normalized.encode()).hexdigest()
+
+def _emit_json(payload: dict, exit_code: int = 0):
+    print(json.dumps(payload))
+    raise typer.Exit(code=exit_code)
+
+def _emit_human_error(error_type: str, construct: str, reason: str, fallback: str, exit_code: int = 1):
+    console.print(f"\n[bold red]FATAL: {error_type}[/bold red]")
+    if construct:
+        console.print(f"[bold yellow]Rejected Construct:[/bold yellow] {construct}")
+    console.print(f"[bold yellow]Violated Rule:[/bold yellow] {reason}")
+    if fallback:
+        console.print(f"\n[dim]{fallback}[/dim]\n")
+    raise typer.Exit(code=exit_code)
+
+def _resolve_gcp_runtime(output_json: bool, fingerprint: str):
+    import sys
+    project_id = None
+    cred_path = None
+    
+    # Canonical Resolution Order: 1. OS Keyring (via SecretsInterface), 2. Environment Variables
+    current_dir = os.path.abspath(os.path.dirname(__file__))
+    repo_root = os.path.abspath(os.path.join(current_dir, "../../../../../"))
+    if repo_root not in sys.path:
+        sys.path.insert(0, repo_root)
+        
+    try:
+        from server.security.secrets import SecretsInterface
+        secrets = SecretsInterface()
+        project_id = secrets.get_secret("GCP_PROJECT_ID")
+        cred_path = secrets.get_secret("GOOGLE_APPLICATION_CREDENTIALS")
+    except Exception:
+        pass
+        
+    # Fallback to pure ENV
+    if not project_id:
+        project_id = os.environ.get("GCP_PROJECT_ID")
+    if not cred_path:
+        cred_path = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+        
+    if cred_path:
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = cred_path
+
+    if not project_id:
+        msg = "Missing GCP_PROJECT_ID. Missing target project context."
+        if output_json:
+            _emit_json({"mode": "execute", "status": "error", "error_type": "ConfigError", "rejected_construct": "GCP_PROJECT_ID", "violated_rule": msg, "fallback_instruction": "Use `quanuxctl secrets set GCP_PROJECT_ID` or set ENV var.", "query_fingerprint": fingerprint}, exit_code=2)
+        else:
+            _emit_human_error("ConfigError", "GCP_PROJECT_ID", msg, "Use `quanuxctl secrets set GCP_PROJECT_ID` or set ENV var.", exit_code=2)
+
+    try:
+        from google.cloud import bigquery
+        from google.auth.exceptions import DefaultCredentialsError
+        # Provide explicit explicit project to test auth at init
+        client = bigquery.Client(project=project_id)
+        return client, project_id
+    except Exception as e:
+        msg = f"Failed to authenticate BigQuery client: {e}"
+        if output_json:
+            _emit_json({"mode": "execute", "status": "error", "error_type": "AuthError", "rejected_construct": "GOOGLE_APPLICATION_CREDENTIALS", "violated_rule": msg, "fallback_instruction": "Use `quanuxctl secrets set GOOGLE_APPLICATION_CREDENTIALS` or set ENV var correctly.", "query_fingerprint": fingerprint}, exit_code=2)
+        else:
+            _emit_human_error("AuthError", "GOOGLE_APPLICATION_CREDENTIALS", msg, "Use `quanuxctl secrets set GOOGLE_APPLICATION_CREDENTIALS` or set ENV var correctly.", exit_code=2)
 
 @gcp_sql_app.command("validate")
-def gcp_validate(query: str = typer.Argument(..., help="DuckDB SQL Query to validate")):
+def gcp_validate(
+    query: str = typer.Argument(..., help="DuckDB SQL Query to validate"),
+    output_json: bool = typer.Option(False, "--json", help="Emit purely JSON payload for machine execution")
+):
     """Validates if the query is within the approved Phase 1 matrix."""
-    transpiler, TranspilationError = _get_transpiler()
+    fingerprint = _fingerprint_query(query)
+    transpiler, TranspilationErrorCls = _get_transpiler()
+    if not transpiler:
+        if output_json: _emit_json({"mode": "validate", "status": "error", "error_type": "InternalError", "violated_rule": "Missing transpiler", "query_fingerprint": fingerprint}, 1)
+        raise typer.Exit(1)
+        
     try:
         transpiler.transpile(query)
-        console.print("[bold green]SUCCESS:[/bold green] Query is within the approved Phase 1 bounded matrix.")
-    except TranspilationError as e:
-        _handle_transpilation_error(e)
+        if output_json:
+            _emit_json({
+                "mode": "validate", "status": "success", "query_fingerprint": fingerprint,
+                "rule_surface_version": "tract2_phase1"
+            })
+        else:
+            console.print("[bold green]SUCCESS:[/bold green] Query is within the approved Phase 1 bounded matrix.")
+            
+    except TranspilationErrorCls as e:
+        if output_json:
+            _emit_json({"mode": "validate", "status": "error", "error_type": "TranspilationError", "rejected_construct": e.construct, "violated_rule": e.reason, "fallback_instruction": e.fallback, "query_fingerprint": fingerprint}, exit_code=1)
+        else:
+            _emit_human_error("Prototype Matrix Boundary Violation", e.construct, e.reason, e.fallback, exit_code=1)
 
 @gcp_sql_app.command("transpile")
-def gcp_transpile(query: str = typer.Argument(..., help="DuckDB SQL Query to transpile")):
+def gcp_transpile(
+    query: str = typer.Argument(..., help="DuckDB SQL Query to transpile"),
+    output_json: bool = typer.Option(False, "--json", help="Emit purely JSON payload for machine execution")
+):
     """Emits translated BigQuery SQL if within the approved Phase 1 matrix."""
-    transpiler, TranspilationError = _get_transpiler()
+    fingerprint = _fingerprint_query(query)
+    transpiler, TranspilationErrorCls = _get_transpiler()
+    
     try:
         bq_sql = transpiler.transpile(query)
-        console.print("[bold cyan]BigQuery Standard SQL (Translated):[/bold cyan]")
-        console.print(f"{bq_sql}")
-    except TranspilationError as e:
-        _handle_transpilation_error(e)
+        if output_json:
+            _emit_json({
+                "mode": "transpile", "status": "success", "query_fingerprint": fingerprint,
+                "rule_surface_version": "tract2_phase1", "sql": bq_sql
+            })
+        else:
+            console.print("[bold cyan]BigQuery Standard SQL (Translated):[/bold cyan]")
+            console.print(f"{bq_sql}")
+            
+    except TranspilationErrorCls as e:
+        if output_json:
+            _emit_json({"mode": "transpile", "status": "error", "error_type": "TranspilationError", "rejected_construct": e.construct, "violated_rule": e.reason, "fallback_instruction": e.fallback, "query_fingerprint": fingerprint}, exit_code=1)
+        else:
+            _emit_human_error("Prototype Matrix Boundary Violation", e.construct, e.reason, e.fallback, exit_code=1)
 
 @gcp_sql_app.command("execute")
 def gcp_execute(
     query: str = typer.Argument(..., help="DuckDB SQL Query to execute"),
     max_rows: int = typer.Option(100, help="Maximum rows to fetch remotely"),
     dry_run: bool = typer.Option(False, help="Validate and transpile only, do not send to GCP"),
-    timeout: int = typer.Option(30, help="Timeout in seconds for remote execution")
+    timeout: int = typer.Option(30, help="Timeout in seconds for remote execution"),
+    output_json: bool = typer.Option(False, "--json", help="Emit purely JSON payload for machine execution")
 ):
     """Validates, transpiles, and executes bounded SQL against BigQuery."""
-    transpiler, TranspilationError = _get_transpiler()
+    fingerprint = _fingerprint_query(query)
+    
+    if max_rows <= 0 or timeout <= 0:
+        msg = f"Invalid bounds. Max rows ({max_rows}) and timeout ({timeout}) must be positive integers."
+        if output_json:
+            _emit_json({"mode": "execute", "status": "error", "error_type": "RuntimeError", "rejected_construct": "BOUNDS", "violated_rule": msg, "fallback_instruction": "Provide positive bounds.", "query_fingerprint": fingerprint}, exit_code=3)
+        else:
+            _emit_human_error("RuntimeError", "BOUNDS", msg, "Provide positive bounds.", exit_code=3)
+
+    transpiler, TranspilationErrorCls = _get_transpiler()
+    
     try:
         bq_sql = transpiler.transpile(query)
         if dry_run:
-            console.print("[bold yellow]DRY-RUN:[/bold yellow] Validation successful. Query would execute as:")
-            console.print(f"{bq_sql}")
+            if output_json:
+                _emit_json({
+                    "mode": "execute_dry_run", "status": "success", "query_fingerprint": fingerprint,
+                    "rule_surface_version": "tract2_phase1", "bounds": {"max_rows": max_rows, "timeout": timeout},
+                    "row_count": 0, "sql": bq_sql
+                })
+            else:
+                console.print(f"[bold yellow]DRY-RUN:[/bold yellow] Validation successful. Query would execute as (Max Rows: {max_rows}, Timeout: {timeout}s):")
+                console.print(f"{bq_sql}")
             return
-
-        console.print(f"[dim]Executing bounded query (Max Rows: {max_rows}, Timeout: {timeout}s)...[/dim]")
-        
-        from google.cloud import bigquery
-        
-        project_id = os.environ.get("GCP_PROJECT_ID")
-        if not project_id:
-            import sys
-            current_dir = os.path.abspath(os.path.dirname(__file__))
-            repo_root = os.path.abspath(os.path.join(current_dir, "../../../../../"))
-            if repo_root not in sys.path:
-                sys.path.insert(0, repo_root)
-            from server.security.secrets import SecretsInterface
-            secrets = SecretsInterface()
-            project_id = secrets.get_secret("GCP_PROJECT_ID")
-            credentials_path = secrets.get_secret("GOOGLE_APPLICATION_CREDENTIALS")
-            if credentials_path:
-                os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credentials_path
             
-        if not project_id:
-            console.print("[bold red]FATAL:[/bold red] Missing GCP_PROJECT_ID. Use `quanuxctl secrets set GCP_PROJECT_ID`")
-            raise typer.Exit(code=1)
-            
-        client = bigquery.Client(project=project_id)
-        table = transpiler.execute_bounded(client, bq_sql, timeout=timeout, max_results=max_rows)
+        # Stop execution cleanly and immediately securely without Python tracebacks bleeding.
+        client, project_id = _resolve_gcp_runtime(output_json, fingerprint)
         
-        if table is None:
-            console.print("[bold yellow]SUCCESS:[/bold yellow] Query executed but returned no rows.")
+        if not output_json:
+            console.print(f"[dim]Executing bounded query (Max Rows: {max_rows}, Timeout: {timeout}s)...[/dim]")
+            
+        try:
+            table = transpiler.execute_bounded(client, bq_sql, timeout=timeout, max_results=max_rows)
+        except Exception as exec_e:
+            msg = f"Remote BigQuery error: {exec_e}"
+            if output_json:
+                _emit_json({"mode": "execute", "status": "error", "error_type": "ExecutionError", "rejected_construct": "REMOTE", "violated_rule": msg, "fallback_instruction": "Check GCP syntax parity manually.", "query_fingerprint": fingerprint}, exit_code=4)
+            else:
+                _emit_human_error("ExecutionError", "REMOTE", msg, "Check GCP syntax parity manually.", exit_code=4)
+            
+        row_count = table.num_rows if table else 0
+        
+        if output_json:
+            _emit_json({
+                "mode": "execute", "status": "success", "query_fingerprint": fingerprint,
+                "rule_surface_version": "tract2_phase1", "bounds": {"max_rows": max_rows, "timeout": timeout},
+                "row_count": row_count, "sql": bq_sql
+            })
             return
             
         console.print("[bold green]SUCCESS:[/bold green] Bounded execution complete.")
-        console.print(f"[bold cyan]Retrieved {table.num_rows} rows.[/bold cyan]")
+        console.print(f"[bold cyan]Retrieved {row_count} rows.[/bold cyan]")
         
-        from rich.table import Table
-        rich_table = Table(show_header=True, header_style="bold magenta")
-        for name in table.column_names:
-            rich_table.add_column(name)
-            
-        for i in range(table.num_rows):
-            row_data = [str(table.column(c)[i].as_py()) for c in table.column_names]
-            rich_table.add_row(*row_data)
-            
-        console.print(rich_table)
+        if row_count > 0:
+            from rich.table import Table
+            rich_table = Table(show_header=True, header_style="bold magenta")
+            for name in table.column_names:
+                rich_table.add_column(name)
+                
+            for i in range(table.num_rows):
+                row_data = [str(table.column(c)[i].as_py()) for c in table.column_names]
+                rich_table.add_row(*row_data)
+                
+            console.print(rich_table)
         
-    except TranspilationError as e:
-        _handle_transpilation_error(e)
-    except Exception as e:
-        console.print(f"[bold red]FATAL EXECUTION ERROR:[/bold red] {e}")
-        raise typer.Exit(code=1)
+    except TranspilationErrorCls as e:
+        if output_json:
+            _emit_json({"mode": "execute", "status": "error", "error_type": "TranspilationError", "rejected_construct": e.construct, "violated_rule": e.reason, "fallback_instruction": e.fallback, "query_fingerprint": fingerprint}, exit_code=1)
+        else:
+            _emit_human_error("Prototype Matrix Boundary Violation", e.construct, e.reason, e.fallback, exit_code=1)
 
 if __name__ == "__main__":
     app()

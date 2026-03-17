@@ -30,6 +30,47 @@ def test_cli_execute_dry_run():
     assert "DRY-RUN" in result.stdout
     assert "Query would execute as" in result.stdout
 
+def test_cli_validate_json_success():
+    result = runner.invoke(gcp_sql_app, ["validate", "SELECT level FROM MarketTick LIMIT 10", "--json"])
+    assert result.exit_code == 0
+    import json
+    data = json.loads(result.stdout)
+    assert data["status"] == "success"
+    assert data["mode"] == "validate"
+    assert "query_fingerprint" in data
+
+def test_cli_validate_json_banned():
+    result = runner.invoke(gcp_sql_app, ["validate", "SELECT a.level FROM MarketTick a JOIN MarketTick b ON a.level = b.level", "--json"])
+    assert result.exit_code == 1
+    import json
+    data = json.loads(result.stdout)
+    assert data["status"] == "error"
+    assert data["error_type"] == "TranspilationError"
+    assert "JOIN" in data["rejected_construct"]
+    assert "Fallback required" in data["fallback_instruction"]
+
+def test_cli_execute_invalid_bounds():
+    result = runner.invoke(gcp_sql_app, ["execute", "SELECT level FROM MarketTick LIMIT 10", "--max-rows", "-5"])
+    assert result.exit_code == 3
+    assert "FATAL: RuntimeError" in result.stdout
+    assert "BOUNDS" in result.stdout
+
+def test_cli_execute_missing_project(monkeypatch):
+    # Strip env vars
+    monkeypatch.delenv("GCP_PROJECT_ID", raising=False)
+    monkeypatch.delenv("GOOGLE_APPLICATION_CREDENTIALS", raising=False)
+    
+    # Intentionally force ImportError for SecretsInterface to simulate missing keyring contexts
+    import sys
+    monkeypatch.setitem(sys.modules, "server.security.secrets", None)
+    
+    result = runner.invoke(gcp_sql_app, ["execute", "SELECT level FROM MarketTick LIMIT 10", "--json"])
+    assert result.exit_code == 2
+    import json
+    data = json.loads(result.stdout)
+    assert data["status"] == "error"
+    assert data["error_type"] == "ConfigError"
+
 def test_cli_execute_real(monkeypatch):
     project_id = os.environ.get("GCP_PROJECT_ID")
     
@@ -57,3 +98,4 @@ def test_cli_execute_real(monkeypatch):
     assert "Bounded execution complete" in result.stdout
     assert "Retrieved 1 rows" in result.stdout
     assert "test_col" in result.stdout
+
