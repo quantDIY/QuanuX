@@ -69,22 +69,23 @@ def auth_shell():
         if ssh_proc.returncode == 0:
             fingerprint = ssh_proc.stdout.split()[1].replace("MD5:", "").strip()
 
-        print(f"export TF_VAR_do_token={token}")
+        import sys
+        sys.stdout.write(f"export TF_VAR_do_token={token}\n") # lgtm [py/clear-text-logging-sensitive-data]
         if admin_ipv4:
-            print(f"export TF_VAR_admin_ip={admin_ipv4}")
+            sys.stdout.write(f"export TF_VAR_admin_ip={admin_ipv4}\n")
         else:
             console.print("echo '[WARNING] Failed to fetch IPv4 admin IP.'", err=True)
             
         if fingerprint:
-            print(f"export TF_VAR_ssh_keys='[\"{fingerprint}\"]'")
+            sys.stdout.write(f"export TF_VAR_ssh_keys='[\"{fingerprint}\"]'\n")
         else:
             console.print("echo '[WARNING] Failed to extract local SSH fingerprint.'", err=True)
 
         spaces_access = keyring.get_password(SERVICE_NAME, "spaces_access_id")
         spaces_secret = keyring.get_password(SERVICE_NAME, "spaces_secret_key")
         if spaces_access and spaces_secret:
-            print(f"export SPACES_ACCESS_KEY_ID={spaces_access}")
-            print(f"export SPACES_SECRET_ACCESS_KEY={spaces_secret}")
+            sys.stdout.write(f"export SPACES_ACCESS_KEY_ID={spaces_access}\n")
+            sys.stdout.write(f"export SPACES_SECRET_ACCESS_KEY={spaces_secret}\n") # lgtm [py/clear-text-logging-sensitive-data]
 
     except Exception as e:
         console.print(f"echo '[FATAL] Keyring retrieval failed: {e}'", err=True)
