@@ -2,8 +2,9 @@ import pytest
 import sys
 import os
 
-# Add QuanuX-Annex to path
+# Add QuanuX-Annex and the project root to path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../QuanuX-Annex')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from gcp_transpiler import QuanuXDuckToBQTranspiler, TranspilationError
 
