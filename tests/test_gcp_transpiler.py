@@ -66,6 +66,47 @@ def test_unsupported_construct_rejection(transpiler):
         transpiler.transpile(query_cte)
     assert "Only SELECT statements are authorized" in str(excinfo_cte.value)
 
+def test_phase1_surface_contract_frozen(transpiler):
+    """
+    Explicitly freezes the Phase 1 Matrix. This single contract test must
+    never be changed without a formal Red Team promotion to a new Phase (e.g. Phase 2).
+    """
+    # 1. Assert exactly the approved surface (SELECT, FROM, WHERE, GROUP BY, ORDER BY, LIMIT)
+    #    and approved aggregates (COUNT, SUM, AVG, MIN, MAX).
+    approved_query = '''
+        SELECT 
+            level,
+            COUNT(instrument_id) as c,
+            SUM(bid_size) as s,
+            AVG(bid_price) as a,
+            MIN(ask_price) as min_p,
+            MAX(ask_price) as max_p
+        FROM MarketTick
+        WHERE bid_price > 100 AND ask_size < 50
+        GROUP BY level
+        ORDER BY level DESC
+        LIMIT 10
+    '''
+    # Must pass without raising TranspilationError
+    assert "SELECT" in transpiler.transpile(approved_query).upper()
+    
+    # 2. Assert exactly the banned surface explicitly fails
+    banned_queries = {
+        "JOIN": "SELECT a.level FROM MarketTick a JOIN MarketTick b ON a.level = b.level",
+        "WINDOW": "SELECT AVG(bid_price) OVER(PARTITION BY level) FROM MarketTick",
+        "CTE": "WITH c AS (SELECT level FROM MarketTick) SELECT * FROM c",
+        "UPDATE": "UPDATE MarketTick SET bid_price = 0",
+        "DROP": "DROP TABLE MarketTick",
+        "INSERT": "INSERT INTO MarketTick VALUES(1,1,1.0,1.0,1,1,1)",
+        "DELETE": "DELETE FROM MarketTick"
+    }
+    
+    for construct_name, q in banned_queries.items():
+        with pytest.raises(TranspilationError) as excinfo:
+            transpiler.transpile(q)
+        # Verify the fail-close occurred
+        assert "Fallback required" in str(excinfo.value)
+
 def test_dialects_and_builtins(transpiler):
     """
     Tests specific dialect macros not allowed, like DuckDB unique things
@@ -213,6 +254,19 @@ def test_real_bq_semantic_parity(transpiler):
     assert local_result_2.column('total_ticks')[0].as_py() == remote_result_2.column('total_ticks')[0].as_py()
     assert local_result_2.column('max_ask')[0].as_py() == remote_result_2.column('max_ask')[0].as_py()
     assert local_result_2.column('level')[0].as_py() == remote_result_2.column('level')[0].as_py()
+
+    # 5. Tertiary Query Matrix Test: Plain WHERE, Multiple Booleans, No Aggregations
+    local_query_3 = "SELECT instrument_id, bid_price FROM MarketTick WHERE bid_price > 50.0 AND ask_size < 200 ORDER BY bid_price DESC LIMIT 2"
+    local_result_3 = transpiler.conn.execute(local_query_3).fetch_arrow_table()
+    
+    bq_sql_3 = transpiler.transpile(local_query_3).replace("MarketTick", f"`{table_id}`")
+    remote_result_3 = transpiler.execute_bounded(client, bq_sql_3)
+    
+    assert remote_result_3 is not None
+    assert len(local_result_3) == len(remote_result_3)
+    assert local_result_3.column('instrument_id')[0].as_py() == remote_result_3.column('instrument_id')[0].as_py()
+    # Float exactness can vary slightly on direct fetches if not aggregated, but we check 1e-9 tolerance anyway for safety
+    assert math.isclose(local_result_3.column('bid_price')[0].as_py(), remote_result_3.column('bid_price')[0].as_py(), rel_tol=1e-9)
 
     # Clean up test table
     client.delete_table(table_id, not_found_ok=True)

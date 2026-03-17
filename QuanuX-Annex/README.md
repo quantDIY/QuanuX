@@ -40,5 +40,20 @@ The transpiler enforces physical read-only limits by strictly blocking state-mut
 
 Any query exceeding this whitelist will natively raise a `TranspilationError` and halt immediately before querying GCP. Operators must execute unauthorized complex logic natively against BigQuery if bypassing this prototype boundary.
 
+### Operator Rejection Examples
+When researchers attempt queries outside the bounded Phase 1 surface, expect explicit, deterministic `TranspilationError` stack traces indicating the exact failure reason:
+
+**Example 1: Banned Window Functions**
+```sql
+SELECT AVG(bid_price) OVER(PARTITION BY level) FROM MarketTick
+```
+> `gcp_transpiler.TranspilationError: Unsupported construct: WindowFunction. Window functions are explicitly banned under the Tract 2 Control Spec. Fallback required: Please execute complex aggregations natively via the BigQuery client.`
+
+**Example 2: Banned Joins**
+```sql
+SELECT a.level FROM MarketTick a JOIN MarketTick b ON a.level = b.level
+```
+> `gcp_transpiler.TranspilationError: Unsupported construct: HASH_JOIN. Joins are explicitly banned under the Tract 2 Control Spec Phase 1 Matrix. Fallback required: Please execute complex aggregations natively via the BigQuery client.`
+
 ## Agent Tools & Autonomous Systems
 Agent AI architecture contexts have been directly injected into every module via `SKILL.md` documents. Ensure parsing of `src/resolvers/SKILL.md` and `src/federation/SKILL.md` before initiating memory operations.

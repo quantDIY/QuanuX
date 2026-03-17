@@ -44,13 +44,18 @@ class QuanuXDuckToBQTranspiler:
         extra_info = node.get("extra_info", {})
         
         # Verify whitelist nodes
-        allowed_nodes = {"PROJECTION", "SEQ_SCAN ", "SEQ_SCAN", "FILTER", "HASH_GROUP_BY", "PERFECT_HASH_GROUP_BY", "UNGROUPED_AGGREGATE", "ORDER_BY", "LIMIT", "TOP_N"}
+        allowed_nodes = {"PROJECTION", "SEQ_SCAN ", "SEQ_SCAN", "FILTER", "HASH_GROUP_BY", "PERFECT_HASH_GROUP_BY", "UNGROUPED_AGGREGATE", "ORDER_BY", "LIMIT", "TOP_N", "HASH_JOIN"}
         
         if name == "WINDOW":
             raise TranspilationError("WindowFunction", "Window functions are explicitly banned under the Tract 2 Control Spec")
             
         if "JOIN" in name:
-            raise TranspilationError(name, "Joins are explicitly banned under the Tract 2 Control Spec Phase 1 Matrix")
+            # DuckDB's optimizer translates some ORDER BY ... LIMIT queries into a TOP_N followed by a 
+            # HASH_JOIN SEMI on rowid = rowid. We must allow this internal AST artifact.
+            if name == "HASH_JOIN" and extra_info.get("Join Type") == "SEMI" and "rowid = rowid" in extra_info.get("Conditions", ""):
+                pass
+            else:
+                raise TranspilationError(name, "Joins are explicitly banned under the Tract 2 Control Spec Phase 1 Matrix")
             
         if name and name not in allowed_nodes and name != "RESULT_COLLECTOR":
             raise TranspilationError(name, f"Relational IR '{name}' is explicitly banned under the Tract 2 Control Spec")
