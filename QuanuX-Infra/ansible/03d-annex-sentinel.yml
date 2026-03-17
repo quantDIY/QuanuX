@@ -5,7 +5,7 @@
   vars:
     # Target the OpenSearch / Loki ledger IP
     ledger_ip: "{{ hostvars['panopticon-ledger']['internal_ip'] | default('10.10.10.2') }}"
-  
+
   tasks:
     - name: Ensure gnupg and curl are installed
       apt:
@@ -30,7 +30,7 @@
         content: |
           [global_tags]
             node_type = "annex_ingestion"
-            
+
           [agent]
             interval = "{{ telemetry_interval }}"
             round_interval = true

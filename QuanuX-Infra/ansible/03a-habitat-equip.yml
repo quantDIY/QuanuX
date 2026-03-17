@@ -2,7 +2,7 @@
 - name: Operation Control Plane - Equip Edge Habitats
   hosts: all
   become: true
-  
+
   vars:
     # Strict VPC Routing boundary
     vpc_subnet: "10.10.10.0/24"
@@ -37,7 +37,7 @@
           - clang
           - git
           - libssl-dev          # Fixes CMake missing OpenSSL for NATS
-          - libcurl4-openssl-dev # DigitalOcean Spaces native Zarr drop
+          - libcurl4-openssl-dev  # DigitalOcean Spaces native Zarr drop
           - flatbuffers-compiler
           - libflatbuffers-dev
           - unzip
