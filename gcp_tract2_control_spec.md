@@ -9,26 +9,39 @@ Tract 2 focuses on bridging the analytical query layers. The objective is to bui
 
 **Mandate:** This layer exists strictly as a research convenience prototype. It must explicitly quarantine the AST transpiler from the foundational Tract 1 ingestion pipeline and any Tier 4 paths.
 
-## 2. Approved Query Surface
+## 2. Approved Query Surface (Phase 1 Locked Matrix)
 The transpiler is approved to handle a narrow, explicitly whitelisted subset of SQL essential for quantitative research against the `MarketTick` schema. Any function or clause not on this exact whitelist will trigger a fail-closed rejection.
 
-**Authorized Clauses:**
-*   `SELECT`, `FROM`, `WHERE`
-*   `GROUP BY`, `ORDER BY`, `LIMIT`
-*   Simple `JOIN` conditions assuming standard `MarketTick` schemas.
+**Approved SQL surface**
+* `SELECT`
+* `FROM`
+* `WHERE`
+* `GROUP BY`
+* `ORDER BY`
+* `LIMIT`
 
-**Authorized Functions & Aggregations:**
-*   `SUM`, `AVG`, `MIN`, `MAX`, `COUNT`
-*   Basic time-series unaliased bucket/truncation mappings (e.g., standard explicit date/time truncations).
+**Approved aggregates**
+* `COUNT`
+* `SUM`
+* `AVG` (Note: Semantic parity tests for averages must define an explicit floating-point tolerance boundary; all other aggregates require exact matches).
+* `MIN`
+* `MAX`
 
-**Boundary Enforcement:** Direct BigQuery access must be preserved. Any query exceeding the transpiler's approved subset should be executed directly against BigQuery via the native client, bypassing the DuckDB compatibility layer entirely.
+**Allowed basics**
+* explicit column aliases
+* simple numeric and string literals
+* straightforward comparisons and boolean predicates used inside `WHERE`
+
+**Boundary Enforcement:** Direct BigQuery access must be preserved. Any query exceeding the transpiler's approved subset should be executed directly against BigQuery via the native client, bypassing the DuckDB compatibility layer entirely. Note: `TOP_N` is strictly an internal DuckDB AST node map for parsing `LIMIT` and is **not** an approved user-facing query construct.
 
 ## 3. Unsupported SQL Features
-The transpilation prototype will **not** support or attempt to translate complex or dialect-specific features to prevent dangerous or wildly inefficient remote execution:
-*   Complex recursive Common Table Expressions (CTEs).
-*   Deeply nested or complex Window Functions.
-*   DuckDB-specific extensions, pragmas, or proprietary macros.
-*   Cross-cloud joins or federated queries outside the bound GCP datasets.
+The transpilation prototype will **not** support or attempt to translate complex or dialect-specific features to prevent dangerous or wildly inefficient remote execution. The following are explicitly unauthorized:
+*   joins
+*   window functions
+*   CTEs (Common Table Expressions)
+*   subqueries beyond the exact cases already parity-tested
+*   proprietary DuckDB macros/functions
+*   mutation statements of any kind (`DROP`, `ALTER`, `UPDATE`, `INSERT`, `DELETE`)
 
 ## 4. Fallback Behavior
 The transpiler must implement a strict **Fail-Closed Fallback** policy:
