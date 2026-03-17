@@ -4,6 +4,21 @@
 The `quanuxctl infra gcp-sql` command surface allows authorized QuanuX operators to seamlessly query remote BigQuery datasets utilizing native DuckDB AST query dialects. 
 **This execution surface is Fail-Closed.** Any SQL query outside the strict Phase 1 Query Matrix will immediately fail before network execution.
 
+### Approved SQL surface
+
+*   `SELECT`, `FROM`, `WHERE`, `GROUP BY`, `ORDER BY`, `LIMIT`
+*   Allowed Aggregates: `COUNT`, `SUM`, `AVG`, `MIN`, `MAX`
+*   **Bounded Subqueries:**
+    *   Scalar Subqueries in `SELECT` (single row/column guarantee).
+    *   `WHERE` Filter Subqueries restricted strictly to explicit exact memberships:
+        *   `expr IN (SELECT single_column ...)`
+        *   Scalar comparison forms that return exactly one row and one column.
+    *   Uncorrelated Derived Tables in `FROM` clauses.
+    *   **Nesting depth is strictly capped at one level.** No correlated subqueries, no nested mutations, and no deep chains.
+
+### Unsupported constructs (Fail-Closed Matrix)
+All explicit mutations, cross joins, internal joins (`INNER`, `LEFT`, `RIGHT`), Window functions, recursive CTEs.
+
 ## 1. Prerequisites (Credentials & Runtime Setup)
 
 Tract 2 execution requires an active BigQuery Project ID and a Google Cloud Service Account JSON Key properly mapped into the host ecosystem either via the OS Keyring (Zero-Disk) or Environment variables.

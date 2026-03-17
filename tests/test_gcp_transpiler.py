@@ -123,6 +123,31 @@ def test_internal_optimizer_artifacts_explicit(transpiler):
     res2 = transpiler.transpile(streaming_limit_query)
     assert "LIMIT 10" in res2
     
+def test_internal_subquery_artifacts_explicit(transpiler):
+    """
+    Proves that internal DuckDB optimizer or planner artifacts accepted for 
+    bounded subquery execution (CROSS_PRODUCT, internal HASH_JOIN, internal first()) 
+    do not constitute user-facing join or aggregate authorization.
+    """
+    # 1. User-level FIRST() is strictly rejected
+    with pytest.raises(TranspilationError) as exc_info:
+        transpiler.transpile("SELECT FIRST(bid_price) FROM MarketTick")
+    assert "Aggregate function 'FIRST' is not in the whitelist" in str(exc_info.value)
+    
+    # 2. User-level CROSS JOIN is strictly rejected (verifying CROSS_PRODUCT limits)
+    with pytest.raises(TranspilationError) as exc_info:
+        transpiler.transpile("SELECT t1.bid_price FROM MarketTick t1 CROSS JOIN MarketTick t2")
+    assert "CROSS_PRODUCT IR is only authorized for exact scalar subqueries" in str(exc_info.value)
+    
+    # 3. User-level INNER JOIN is strictly rejected (verifying subquery HASH_JOIN hasn't bled)
+    with pytest.raises(TranspilationError) as exc_info:
+        transpiler.transpile("SELECT t1.bid_price FROM MarketTick t1 JOIN MarketTick t2 ON t1.instrument_id = t2.instrument_id")
+    assert "Joins are explicitly banned under the Tract 2 Control Spec" in str(exc_info.value)
+    
+    # 4. Allowed Internal artifacts successfully transpile without triggering surface blocks
+    bq_sql = transpiler.transpile("SELECT instrument_id, (SELECT MAX(bid_price) FROM MarketTick) as max_bid FROM MarketTick LIMIT 1")
+    assert "SELECT" in bq_sql
+
 def test_dialects_and_builtins(transpiler):
     """
     Tests specific dialect macros not allowed, like DuckDB unique things
