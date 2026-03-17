@@ -35,8 +35,43 @@ class QuanuXDuckToBQTranspiler:
         if not q.startswith("SELECT"):
             if q.startswith("DROP") or q.startswith("ALTER") or q.startswith("UPDATE") or q.startswith("INSERT") or q.startswith("DELETE"):
                 raise TranspilationError(q.split()[0], "State-mutating operations are strictly banned prior to AST translation")
-            # All other non-select
             raise TranspilationError(q.split()[0] if q else "EMPTY", "Only SELECT statements are authorized")
+
+    def _enforce_subquery_rules(self, query: str):
+        """Enforces limits on nested subqueries prior to IR mapping to prevent parser evasion."""
+        # 1. Enforce max subquery depth = 1
+        depth = 0
+        max_depth = 0
+        
+        # Tokenize by treating parentheses as explicit boundaries
+        tokens = query.replace("(", " ( ").replace(")", " ) ").split()
+        in_select_parens = []
+
+        for t in tokens:
+            if t == "(":
+                in_select_parens.append(False)
+            elif t.upper() == "SELECT" and len(in_select_parens) > 0:
+                in_select_parens[-1] = True
+                depth = sum(in_select_parens)
+                # Cap nesting depth at 1 as per Phase 3A Spec
+                if depth > 1:
+                    raise TranspilationError("NestedSubquery", "Nested Subquery Depth > 1 is strictly banned under Phase 3A Control Spec")
+            elif t == ")":
+                if len(in_select_parens) > 0:
+                    in_select_parens.pop()
+                    
+        # 2. Heuristically ban complex subqueries inside aggregates. e.g SUM( (SELECT...) )
+        q_upper = query.upper()
+        if "SUM(" in q_upper or "AVG(" in q_upper or "MIN(" in q_upper or "MAX(" in q_upper or "COUNT(" in q_upper:
+            # Check if SELECT follows directly inside the aggregate paren
+            import re
+            if re.search(r'(SUM|AVG|MIN|MAX|COUNT)\s*\(\s*\(\s*SELECT', q_upper):
+                raise TranspilationError("AggregateSubquery", "Complex subqueries inside aggregates are explicitly banned.")
+                
+        # 3. Explicitly ban User-Facing FIRST() to safely allow DuckDB's internal "first" scalar mapping
+        import re
+        if re.search(r'\bFIRST\s*\(', q_upper):
+            raise TranspilationError("FIRST", "Aggregate function 'FIRST' is not in the whitelist")
 
     def _traverse_relational_node(self, node):
         """Recursive parse of DuckDB relational nodes (AST-equivalent) from EXPLAIN FORMAT JSON."""
@@ -44,15 +79,28 @@ class QuanuXDuckToBQTranspiler:
         extra_info = node.get("extra_info", {})
         
         # Verify whitelist nodes
-        allowed_nodes = {"PROJECTION", "SEQ_SCAN ", "SEQ_SCAN", "FILTER", "HASH_GROUP_BY", "PERFECT_HASH_GROUP_BY", "UNGROUPED_AGGREGATE", "ORDER_BY", "LIMIT", "TOP_N", "HASH_JOIN", "STREAMING_LIMIT"}
+        allowed_nodes = {"PROJECTION", "SEQ_SCAN ", "SEQ_SCAN", "FILTER", "HASH_GROUP_BY", "PERFECT_HASH_GROUP_BY", "UNGROUPED_AGGREGATE", "ORDER_BY", "LIMIT", "TOP_N", "HASH_JOIN", "STREAMING_LIMIT", "CROSS_PRODUCT"}
         
         if name == "WINDOW":
             raise TranspilationError("WindowFunction", "Window functions are explicitly banned under the Tract 2 Control Spec")
             
+        if name == "CROSS_PRODUCT":
+            # ONLY allowed if it's a scalar subquery. DuckDB enforces this via a specific projection error string limit.
+            # Convert entire node tree to str to recursively check for the scalar artifact
+            node_str = str(node)
+            if "More than one row returned by a subquery" not in node_str and "scalar_subquery" not in node_str:
+                raise TranspilationError("CROSS_PRODUCT", "Explicit Cross Joins are banned. CROSS_PRODUCT IR is only authorized for exact scalar subqueries")
+
         if "JOIN" in name:
+            join_type = extra_info.get("Join Type", "INNER")
+            
+            # Subqueries explicitly resolve to SEMI, MARK, or ANTI joins.
+            # We explicitly ban INNER, LEFT, RIGHT, OUTER joins to maintain Phase 1 bans on relational bridging.
+            if join_type in ("SEMI", "MARK", "ANTI"):
+                pass
             # DuckDB's optimizer translates some ORDER BY ... LIMIT queries into a TOP_N followed by a 
             # HASH_JOIN SEMI on rowid = rowid. We must allow this internal AST artifact.
-            if name == "HASH_JOIN" and extra_info.get("Join Type") == "SEMI" and "rowid = rowid" in extra_info.get("Conditions", ""):
+            elif join_type == "SEMI" and "rowid = rowid" in extra_info.get("Conditions", ""):
                 pass
             else:
                 raise TranspilationError(name, "Joins are explicitly banned under the Tract 2 Control Spec Phase 1 Matrix")
@@ -69,9 +117,10 @@ class QuanuXDuckToBQTranspiler:
         # Check Aggregates
         if "Aggregates" in extra_info:
             aggs = str(extra_info["Aggregates"])
-            whitelist = {"sum", "avg", "min", "max", "count", "count_star"}
+            whitelist = {"sum", "avg", "min", "max", "count", "count_star", "first"}
             
             # Match formats like: "first"(#1) or sum(#1) 
+            import re
             for func_call in re.findall(r'"?([a-zA-Z_]+)"?\(', aggs):
                 if func_call.lower() not in whitelist:
                     raise TranspilationError(func_call.upper(), f"Aggregate function '{func_call.upper()}' is not in the whitelist")
@@ -81,6 +130,7 @@ class QuanuXDuckToBQTranspiler:
 
     def transpile(self, query: str) -> str:
         self._enforce_read_only(query)
+        self._enforce_subquery_rules(query)
         
         # 1. Ask duckdb for the IR schema (verifying parse exactness)
         try:

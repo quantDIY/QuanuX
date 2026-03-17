@@ -311,5 +311,46 @@ def test_real_bq_semantic_parity(transpiler):
     # Check explicit float precision boundary for AVG
     assert math.isclose(local_result_4.column('a_price')[0].as_py(), remote_result_4.column('a_price')[0].as_py(), rel_tol=1e-9)
 
+    # 7. Phase 3A Subquery Matrix Test: Scalar WHERE IN
+    local_query_5 = '''
+        SELECT instrument_id, bid_price 
+        FROM MarketTick 
+        WHERE level IN (
+            SELECT level 
+            FROM MarketTick 
+            WHERE bid_price > 100.0
+        )
+        ORDER BY instrument_id DESC
+    '''
+    local_result_5 = transpiler.conn.execute(local_query_5).fetch_arrow_table()
+    
+    bq_sql_5 = transpiler.transpile(local_query_5).replace("MarketTick", f"`{table_id}`")
+    remote_result_5 = transpiler.execute_bounded(client, bq_sql_5)
+    
+    assert remote_result_5 is not None
+    assert len(local_result_5) == len(remote_result_5)
+    assert local_result_5.column('instrument_id')[0].as_py() == remote_result_5.column('instrument_id')[0].as_py()
+
+    # 8. Phase 3A Subquery Matrix Test: Uncorrelated FROM Derived Table
+    local_query_6 = '''
+        SELECT t.instrument_id, t.total_depth 
+        FROM (
+            SELECT instrument_id, SUM(bid_size) as total_depth 
+            FROM MarketTick 
+            WHERE level = 1 
+            GROUP BY instrument_id
+        ) t 
+        WHERE t.total_depth > 5 
+        ORDER BY t.instrument_id
+    '''
+    local_result_6 = transpiler.conn.execute(local_query_6).fetch_arrow_table()
+    
+    bq_sql_6 = transpiler.transpile(local_query_6).replace("MarketTick", f"`{table_id}`")
+    remote_result_6 = transpiler.execute_bounded(client, bq_sql_6)
+    
+    assert remote_result_6 is not None
+    assert len(local_result_6) == len(remote_result_6)
+    assert local_result_6.column('total_depth')[0].as_py() == remote_result_6.column('total_depth')[0].as_py()
+
     # Clean up test table
     client.delete_table(table_id, not_found_ok=True)

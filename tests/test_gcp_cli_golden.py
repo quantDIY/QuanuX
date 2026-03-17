@@ -5,12 +5,17 @@ from server.cli.src.quanuxctl.commands.infra_commands import gcp_sql_app
 
 runner = CliRunner()
 
+import re
+def strip_ansi(text):
+    return re.sub(r'\x1b\[[0-9;]*m', '', text)
+
 def test_golden_validate_success_human():
     """Validates the exact character stream of a successful validation."""
     result = runner.invoke(gcp_sql_app, ["validate", "SELECT level FROM MarketTick LIMIT 1"])
     assert result.exit_code == 0
-    # Rich print will add color codes in TTY, but CliRunner strips or flattens them
-    assert "SUCCESS: Query is within the approved Phase 1 bounded matrix." in result.stdout
+    # Rich print will add color codes in TTY, strip them for character assertions
+    out = strip_ansi(result.stdout)
+    assert "SUCCESS: Query is within the approved Phase 1 bounded matrix." in out
 
 def test_golden_validate_success_json():
     """Validates the exact JSON structural schema for successful validation."""

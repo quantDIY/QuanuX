@@ -1,7 +1,13 @@
 import pytest
 import glob
+import sys
 import os
-from QuanuX_Annex.gcp_transpiler import QuanuXDuckToBQTranspiler, TranspilationError
+
+# Add QuanuX-Annex and the project root to path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../QuanuX-Annex')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from gcp_transpiler import QuanuXDuckToBQTranspiler, TranspilationError
 
 FIXTURE_DIR = os.path.join(os.path.dirname(__file__), "fixtures", "gcp_sql")
 ALLOWED_FIXTURES = glob.glob(os.path.join(FIXTURE_DIR, "allowed", "*.sql"))
