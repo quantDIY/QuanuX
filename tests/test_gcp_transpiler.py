@@ -4,7 +4,7 @@ import os
 import math
 
 # Add QuanuX-Annex and the project root to path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../QuanuX-Annex')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../QuanuX-Annex/transpiler')))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from gcp_transpiler import QuanuXDuckToBQTranspiler, TranspilationError
@@ -54,17 +54,39 @@ def test_unsupported_construct_rejection(transpiler):
     assert "WindowFunction" in str(excinfo.value)
     assert "Window functions are explicitly banned under the Tract 2 Control Spec" in str(excinfo.value)
     
-    # 2. Joins (Phase 3B allows INNER JOIN, so we assert against Banned Outer Joins)
-    query_join = "SELECT a.instrument_id FROM MarketTick a LEFT JOIN MarketTick b ON a.instrument_id = b.instrument_id"
+    # 2. Joins (Phase 3B allows INNER JOIN, so we assert against Banned Full Outer Joins)
+    query_join = "SELECT a.instrument_id FROM MarketTick a FULL OUTER JOIN MarketTick b ON a.instrument_id = b.instrument_id"
     with pytest.raises(TranspilationError) as excinfo_join:
         transpiler.transpile(query_join)
-    assert "Outer, Cross, and Natural joins are strictly banned" in str(excinfo_join.value)
+    assert "CROSS JOIN and unconstrained FULL OUTER JOIN patterns are strictly banned" in str(excinfo_join.value)
+    
+    # 2.1 Banned Left Join target
+    query_left_join = "SELECT a.instrument_id FROM MarketTick a LEFT JOIN MarketTick b ON a.instrument_id = b.instrument_id"
+    with pytest.raises(TranspilationError) as excinfo_left:
+        transpiler.transpile(query_left_join)
+    assert "LEFT JOIN operations must target static" in str(excinfo_left.value)
     
     # 3. CTEs or unsupported IR
     query_cte = "WITH CTE AS (SELECT instrument_id FROM MarketTick) SELECT * FROM CTE"
     with pytest.raises(TranspilationError) as excinfo_cte:
         transpiler.transpile(query_cte)
     assert "Only SELECT statements are authorized" in str(excinfo_cte.value)
+
+def test_phase1_join_extensions(transpiler):
+    """
+    Validates the expanded Phase 1 join rules: windowed INNER/ASOF joins and whitelisted LEFT joins.
+    """
+    transpiler.conn.execute("CREATE TABLE symbol_mapping(instrument_id UINTEGER, symbol VARCHAR)")
+    
+    # ASOF JOIN
+    asof_q = "SELECT a.instrument_id FROM MarketTick a ASOF JOIN MarketTick b ON a.instrument_id = b.instrument_id AND a.timestamp_ns >= b.timestamp_ns"
+    res1 = transpiler.transpile(asof_q)
+    assert "ASOF" in res1.upper()
+    
+    # LEFT JOIN on reference whitelist
+    left_q = "SELECT a.instrument_id FROM MarketTick a LEFT JOIN symbol_mapping b ON a.instrument_id = b.instrument_id"
+    res2 = transpiler.transpile(left_q)
+    assert "LEFT" in res2.upper()
 
 def test_phase1_surface_contract_frozen(transpiler):
     """
@@ -92,7 +114,7 @@ def test_phase1_surface_contract_frozen(transpiler):
     
     # 2. Assert exactly the banned surface explicitly fails
     banned_queries = {
-        "OUTER_JOIN": "SELECT a.level FROM MarketTick a LEFT JOIN MarketTick b ON a.level = b.level",
+        "FULL_OUTER_JOIN": "SELECT a.level FROM MarketTick a FULL OUTER JOIN MarketTick b ON a.level = b.level",
         "WINDOW": "SELECT AVG(bid_price) OVER(PARTITION BY level) FROM MarketTick",
         "CTE": "WITH c AS (SELECT level FROM MarketTick) SELECT * FROM c",
         "UPDATE": "UPDATE MarketTick SET bid_price = 0",
@@ -137,12 +159,12 @@ def test_internal_subquery_artifacts_explicit(transpiler):
     # 2. User-level CROSS JOIN is strictly rejected (verifying string blocks override CROSS_PRODUCT IR limits)
     with pytest.raises(TranspilationError) as exc_info:
         transpiler.transpile("SELECT t1.bid_price FROM MarketTick t1 CROSS JOIN MarketTick t2")
-    assert "Outer, Cross, and Natural joins are strictly banned under Phase 3B" in str(exc_info.value)
+    assert "ExplosiveOperation" in str(exc_info.value)
     
     # 3. User-level OUTER JOIN is strictly rejected (verifying limits explicitly)
     with pytest.raises(TranspilationError) as exc_info:
-        transpiler.transpile("SELECT t1.bid_price FROM MarketTick t1 LEFT JOIN MarketTick t2 ON t1.instrument_id = t2.instrument_id")
-    assert "Outer, Cross, and Natural joins are strictly banned" in str(exc_info.value)
+        transpiler.transpile("SELECT t1.bid_price FROM MarketTick t1 FULL OUTER JOIN MarketTick t2 ON t1.instrument_id = t2.instrument_id")
+    assert "FULL OUTER JOIN patterns are strictly banned" in str(exc_info.value)
     
     # 4. Allowed Internal artifacts successfully transpile without triggering surface blocks
     bq_sql = transpiler.transpile("SELECT instrument_id, (SELECT MAX(bid_price) FROM MarketTick) as max_bid FROM MarketTick LIMIT 1")

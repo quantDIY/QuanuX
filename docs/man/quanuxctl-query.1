@@ -1,0 +1,46 @@
+.TH QUANUXCTL-QUERY 1 "March 2026" "QuanuX" "QuanuX Control Manual"
+.SH NAME
+quanuxctl-query \- Manage Analytical Extensions (Validate & Estimate SQL)
+.SH SYNOPSIS
+.B quanuxctl query validate
+[\fB--target\fR \fIbq\fR]
+\fIsql_file\fR
+.PP
+.B quanuxctl query estimate
+[\fB--target\fR \fIbq\fR]
+\fIsql_file\fR
+
+.SH DESCRIPTION
+.B quanuxctl query
+exposes the QuanuX-Annex Transpiler for user-facing backtest validation against the warm analytical tier (e.g. Google BigQuery). It acts as an AST interceptor boundary ensuring strict SQL constraints are met prior to cluster execution.
+
+.SH COMMANDS
+.TP
+.B validate \fIsql_file\fR
+Parses the local DuckDB SQL query inside the given file against the internal Allowed/Banned matrix without hitting the network API. Checks exactly match Phase 1 structural policies.
+.br
+\fBExit Codes:\fR
+.br
+.B 0\fR - Synthesis and rules validation passed.
+.br
+.B 1\fR - Syntax verification blocked (TranspilationError). Prints explicit rejection reason.
+
+.TP
+.B estimate \fIsql_file\fR
+Transpiles the AST and hits the target BigQuery Dry-Run API. Returns exact bytes-billed output, payload formatting metrics, and expected latency tiers to the operator prior to commitment. Employs mock inference if GCP pipeline keys are unset in CI/CD limits.
+.br
+\fBExit Codes:\fR
+.br
+.B 0\fR - Dry-run completed successfully and outputs structural estimates.
+.br
+.B 1\fR - Network failure or Phase 1 synthesis bounds triggered.
+
+.SH OPTIONS
+.TP
+.B \-t, \-\-target \fIengine\fR
+Specifies the analytical engine target. Currently defaults to \fBbq\fR (BigQuery).
+
+.SH EXAMPLES
+.B quanuxctl query validate my_backtest.sql --target bq
+.PP
+.B quanuxctl query estimate my_backtest.sql

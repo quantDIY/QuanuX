@@ -7,7 +7,7 @@ import typer
 from rich.console import Console
 
 from .commands import secrets, bridge, skills, extensions, integrate, node, storage, indicators, module, vcs, dashboard, topstepx, geminicli, foundry, crucible, spreader, probe, telemetry, deploy, orchestra
-from .commands import habitat_commands, nest_commands, infra_commands
+from .commands import habitat_commands, nest_commands, infra_commands, query
 from . import __version__
 
 app = typer.Typer(
@@ -77,6 +77,9 @@ app.add_typer(probe.app, name="probe", help="Neural Tap Diagnostic & Auto-Suture
 
 app.add_typer(telemetry.app, name="telemetry", help="Manage Node Telemetry Services remotely.")
 app.add_typer(telemetry.app, name="t", help="Alias for telemetry", hidden=True)
+
+app.add_typer(query.app, name="query", help="Manage Analytical Extensions (Validate & Estimate SQL).")
+app.add_typer(query.app, name="q", help="Alias for query", hidden=True)
 
 app.add_typer(deploy.app, name="lifecycle", help="Dynamic Habitat Deployment & Telemetry Lifecycle")
 # Standard shortcut command mapping

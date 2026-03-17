@@ -74,7 +74,7 @@ class QuanuXDuckToBQTranspiler:
             raise TranspilationError("FIRST", "Aggregate function 'FIRST' is not in the whitelist")
 
     def _enforce_join_rules(self, query: str) -> bool:
-        """Phase 3B: Strictly confines explicit joins to a single INNER equality bridge."""
+        """Phase 3B Expanded: Confines explicit joins to INNER, ASOF, and bounded LEFT joins."""
         q_upper = query.upper()
         import re
         joins = re.findall(r'\bJOIN\b', q_upper)
@@ -84,8 +84,10 @@ class QuanuXDuckToBQTranspiler:
         if len(joins) > 1:
             raise TranspilationError("MultipleJoins", "A query may contain at most one JOIN operation under Phase 3B constraints.")
             
-        if re.search(r'\b(LEFT|RIGHT|FULL|OUTER|CROSS|NATURAL)\s+(OUTER\s+)?JOIN\b', q_upper):
-            raise TranspilationError("BannedJoinType", "Outer, Cross, and Natural joins are strictly banned under Phase 3B.")
+        if re.search(r'\b(RIGHT|FULL|CROSS|NATURAL)\s+(OUTER\s+)?JOIN\b|\bCROSS\s+JOIN\b', q_upper):
+            import logging
+            logging.error(f"Violation: Explosive Operation detected in query: {query}")
+            raise TranspilationError("ExplosiveOperation", "CROSS JOIN and unconstrained FULL OUTER JOIN patterns are strictly banned")
             
         if re.search(r'\bUSING\s*\(', q_upper):
             raise TranspilationError("UsingClause", "USING clauses are explicitly banned. Use explicit ON equality predicates.")
@@ -105,7 +107,7 @@ class QuanuXDuckToBQTranspiler:
         extra_info = node.get("extra_info", {})
         
         # Verify whitelist nodes
-        allowed_nodes = {"PROJECTION", "SEQ_SCAN ", "SEQ_SCAN", "FILTER", "HASH_GROUP_BY", "PERFECT_HASH_GROUP_BY", "UNGROUPED_AGGREGATE", "ORDER_BY", "LIMIT", "TOP_N", "HASH_JOIN", "STREAMING_LIMIT", "CROSS_PRODUCT"}
+        allowed_nodes = {"PROJECTION", "SEQ_SCAN ", "SEQ_SCAN", "FILTER", "HASH_GROUP_BY", "PERFECT_HASH_GROUP_BY", "UNGROUPED_AGGREGATE", "ORDER_BY", "LIMIT", "TOP_N", "HASH_JOIN", "STREAMING_LIMIT", "CROSS_PRODUCT", "ASOF_JOIN", "NESTED_LOOP_JOIN", "STREAMING_WINDOW"}
         
         if name == "WINDOW":
             raise TranspilationError("WindowFunction", "Window functions are explicitly banned under the Tract 2 Control Spec")
@@ -115,6 +117,8 @@ class QuanuXDuckToBQTranspiler:
             # Convert entire node tree to str to recursively check for the scalar artifact
             node_str = str(node)
             if "More than one row returned by a subquery" not in node_str and "scalar_subquery" not in node_str:
+                import logging
+                logging.error("Violation: Explosive Operation (CROSS_PRODUCT) detected")
                 raise TranspilationError("CROSS_PRODUCT", "Explicit Cross Joins are banned. CROSS_PRODUCT IR is only authorized for exact scalar subqueries")
 
         if "JOIN" in name:
@@ -127,18 +131,38 @@ class QuanuXDuckToBQTranspiler:
             # HASH_JOIN SEMI on rowid = rowid. We must allow this internal AST artifact.
             elif join_type == "SEMI" and "rowid = rowid" in extra_info.get("Conditions", ""):
                 pass
-            elif join_type == "INNER":
-                # Phase 3B explicit Inner Join Constraints
-                conditions = str(extra_info.get("Conditions", ""))
-                if ">" in conditions or "<" in conditions or "!=" in conditions:
-                    raise TranspilationError("NonEqualityJoin", "Only exact equality predicates are authorized for INNER JOINs")
-                # Ensure nested loops have explicit equality (safeguard against comma cross joins dodging parser string nets)
-                if name == "NESTED_LOOP_JOIN" and "=" not in conditions:
-                     raise TranspilationError("NonEqualityJoin", "Only exact equality predicates are authorized for INNER JOINs")
+            elif join_type == "INNER" or join_type == "ASOF":
+                # Phase 3B explicit Inner/ASOF Join Constraints
+                conditions = str(extra_info.get("Conditions", "")).lower()
+                
+                if join_type == "ASOF":
+                    if "timestamp_ns" not in conditions or "instrument_id" not in conditions:
+                        raise TranspilationError("InvalidAsofJoin", "ASOF JOIN operations must map exclusively on instrument_id and timestamp_ns")
+                else: # INNER
+                    # Time-Series Correlation allows windowed inner join on instrument_id and timestamp_ns
+                    is_time_series = "timestamp_ns" in conditions and "instrument_id" in conditions
+                    has_inequality = ">" in conditions or "<" in conditions or "!=" in conditions
+                    
+                    if has_inequality and not is_time_series:
+                        raise TranspilationError("NonEqualityJoin", "Only exact equality predicates or time-series correlation on instrument_id/timestamp_ns are authorized for INNER JOINs")
+                
+                # Ensure nested loops have explicit constraints
+                if name == "NESTED_LOOP_JOIN" and "=" not in conditions and not (join_type == "ASOF" or ("timestamp_ns" in conditions and "instrument_id" in conditions)):
+                     raise TranspilationError("NonEqualityJoin", "NESTED_LOOP_JOINs must have explicit equality or valid time-series constraints")
+            elif join_type == "LEFT":
+                # Ensure right side is a static reference dataset
+                right_child = node.get("children", [None, None])[1] if len(node.get("children", [])) > 1 else None
+                if right_child:
+                    right_str = str(right_child).lower()
+                    whitelist = ["symbol_mapping", "venue_dim", "reference"]
+                    if not any(w in right_str for w in whitelist):
+                        raise TranspilationError("InvalidLeftJoin", "LEFT JOIN operations must target static, whitelisted reference datasets (e.g., symbol mapping tables, venue dimension tables).")
+                else:
+                    raise TranspilationError("InvalidLeftJoin", "Could not verify RIGHT side of LEFT JOIN")
             else:
-                raise TranspilationError(name, "Joins outside the bounded Phase 3B inner equality matrix are banned.")
+                raise TranspilationError(name, f"Joins outside the bounded Phase 3B allowed matrix are banned. Found: {join_type}")
             
-        if name and name not in allowed_nodes and name != "RESULT_COLLECTOR":
+        if name and name not in allowed_nodes and name != "RESULT_COLLECTOR" and "JOIN" not in name:
             raise TranspilationError(name, f"Relational IR '{name}' is explicitly banned under the Tract 2 Control Spec")
             
         # Check window functions or recursive mappings in projections
@@ -150,7 +174,7 @@ class QuanuXDuckToBQTranspiler:
         # Check Aggregates
         if "Aggregates" in extra_info:
             aggs = str(extra_info["Aggregates"])
-            whitelist = {"sum", "avg", "min", "max", "count", "count_star", "first"}
+            whitelist = {"sum", "avg", "min", "max", "count", "count_star", "first", "arg_max_null", "arg_max", "any_value"}
             
             # Match formats like: "first"(#1) or sum(#1) 
             import re
