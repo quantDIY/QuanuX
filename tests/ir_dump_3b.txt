@@ -1,0 +1,1098 @@
+
+--- 02_group_by_aggregates.sql ---
+[
+  {
+    "name": "ORDER_BY",
+    "children": [
+      {
+        "name": "HASH_GROUP_BY",
+        "children": [
+          {
+            "name": "PROJECTION",
+            "children": [
+              {
+                "name": "SEQ_SCAN ",
+                "children": [],
+                "extra_info": {
+                  "Table": "MarketTick",
+                  "Type": "Sequential Scan",
+                  "Projections": [
+                    "level",
+                    "bid_size",
+                    "bid_price",
+                    "ask_price"
+                  ],
+                  "Filters": "level<=5",
+                  "Estimated Cardinality": "0"
+                }
+              }
+            ],
+            "extra_info": {
+              "Projections": [
+                "level",
+                "CAST(bid_size AS BIGINT)",
+                "bid_price",
+                "bid_price",
+                "ask_price"
+              ],
+              "Estimated Cardinality": "0"
+            }
+          }
+        ],
+        "extra_info": {
+          "Groups": "#0",
+          "Aggregates": [
+            "count_star()",
+            "sum(#1)",
+            "avg(#2)",
+            "min(#3)",
+            "max(#4)"
+          ],
+          "Estimated Cardinality": "0"
+        }
+      }
+    ],
+    "extra_info": {
+      "Order By": "memory.main.MarketTick.\"level\" ASC"
+    }
+  }
+]
+
+--- 04_scalar_select_subquery.sql ---
+[
+  {
+    "name": "PROJECTION",
+    "children": [
+      {
+        "name": "STREAMING_LIMIT",
+        "children": [
+          {
+            "name": "CROSS_PRODUCT",
+            "children": [
+              {
+                "name": "PROJECTION",
+                "children": [
+                  {
+                    "name": "UNGROUPED_AGGREGATE",
+                    "children": [
+                      {
+                        "name": "PROJECTION",
+                        "children": [
+                          {
+                            "name": "UNGROUPED_AGGREGATE",
+                            "children": [
+                              {
+                                "name": "PROJECTION",
+                                "children": [
+                                  {
+                                    "name": "SEQ_SCAN ",
+                                    "children": [],
+                                    "extra_info": {
+                                      "Table": "MarketTick",
+                                      "Type": "Sequential Scan",
+                                      "Projections": "bid_price",
+                                      "Estimated Cardinality": "0"
+                                    }
+                                  }
+                                ],
+                                "extra_info": {
+                                  "Projections": "bid_price",
+                                  "Estimated Cardinality": "0"
+                                }
+                              }
+                            ],
+                            "extra_info": {
+                              "Aggregates": "max(#0)"
+                            }
+                          }
+                        ],
+                        "extra_info": {
+                          "Projections": "#0",
+                          "Estimated Cardinality": "1"
+                        }
+                      }
+                    ],
+                    "extra_info": {
+                      "Aggregates": [
+                        "\"first\"(#0)",
+                        "count_star()"
+                      ]
+                    }
+                  }
+                ],
+                "extra_info": {
+                  "Projections": [
+                    "CASE  WHEN ((#1 > 1)) THEN (\"error\"('More than one row returned by a subquery used as an expression - scalar subqueries can only return a single row.",
+                    "Use \"SET scalar_subquery_error_on_multiple_rows=false\" to revert to previous behavior of returning a random row.')) ELSE #0 END"
+                  ],
+                  "Estimated Cardinality": "1"
+                }
+              },
+              {
+                "name": "SEQ_SCAN ",
+                "children": [],
+                "extra_info": {
+                  "Table": "MarketTick",
+                  "Type": "Sequential Scan",
+                  "Projections": [
+                    "instrument_id",
+                    "bid_size"
+                  ],
+                  "Estimated Cardinality": "0"
+                }
+              }
+            ],
+            "extra_info": {}
+          }
+        ],
+        "extra_info": {}
+      }
+    ],
+    "extra_info": {
+      "Projections": [
+        "instrument_id",
+        "global_max_bid",
+        "bid_size"
+      ],
+      "Estimated Cardinality": "0"
+    }
+  }
+]
+
+--- 07_single_inner_join.sql ---
+[
+  {
+    "name": "STREAMING_LIMIT",
+    "children": [
+      {
+        "name": "HASH_JOIN",
+        "children": [
+          {
+            "name": "SEQ_SCAN ",
+            "children": [],
+            "extra_info": {
+              "Table": "MarketTick",
+              "Type": "Sequential Scan",
+              "Projections": [
+                "instrument_id",
+                "bid_price"
+              ],
+              "Filters": "level=1",
+              "Estimated Cardinality": "0"
+            }
+          },
+          {
+            "name": "SEQ_SCAN ",
+            "children": [],
+            "extra_info": {
+              "Table": "MarketTick",
+              "Type": "Sequential Scan",
+              "Projections": [
+                "instrument_id",
+                "ask_price"
+              ],
+              "Filters": "level=2",
+              "Estimated Cardinality": "0"
+            }
+          }
+        ],
+        "extra_info": {
+          "Join Type": "INNER",
+          "Conditions": "instrument_id = instrument_id",
+          "Estimated Cardinality": "1"
+        }
+      }
+    ],
+    "extra_info": {}
+  }
+]
+
+--- 05_scalar_where_in_subquery.sql ---
+[
+  {
+    "name": "TOP_N",
+    "children": [
+      {
+        "name": "HASH_JOIN",
+        "children": [
+          {
+            "name": "SEQ_SCAN ",
+            "children": [],
+            "extra_info": {
+              "Table": "MarketTick",
+              "Type": "Sequential Scan",
+              "Projections": [
+                "level",
+                "instrument_id",
+                "bid_price"
+              ],
+              "Estimated Cardinality": "0"
+            }
+          },
+          {
+            "name": "SEQ_SCAN ",
+            "children": [],
+            "extra_info": {
+              "Table": "MarketTick",
+              "Type": "Sequential Scan",
+              "Projections": "level",
+              "Filters": "bid_price>100.0",
+              "Estimated Cardinality": "0"
+            }
+          }
+        ],
+        "extra_info": {
+          "Join Type": "SEMI",
+          "Conditions": "level = #0",
+          "Estimated Cardinality": "0"
+        }
+      }
+    ],
+    "extra_info": {
+      "Top": "50",
+      "Order By": "memory.main.MarketTick.bid_price DESC"
+    }
+  }
+]
+
+--- 06_uncorrelated_from_subquery.sql ---
+[
+  {
+    "name": "ORDER_BY",
+    "children": [
+      {
+        "name": "FILTER",
+        "children": [
+          {
+            "name": "HASH_GROUP_BY",
+            "children": [
+              {
+                "name": "PROJECTION",
+                "children": [
+                  {
+                    "name": "SEQ_SCAN ",
+                    "children": [],
+                    "extra_info": {
+                      "Table": "MarketTick",
+                      "Type": "Sequential Scan",
+                      "Projections": [
+                        "instrument_id",
+                        "bid_size"
+                      ],
+                      "Filters": "level=1",
+                      "Estimated Cardinality": "0"
+                    }
+                  }
+                ],
+                "extra_info": {
+                  "Projections": [
+                    "instrument_id",
+                    "CAST(bid_size AS BIGINT)"
+                  ],
+                  "Estimated Cardinality": "0"
+                }
+              }
+            ],
+            "extra_info": {
+              "Groups": "#0",
+              "Aggregates": "sum(#1)",
+              "Estimated Cardinality": "0"
+            }
+          }
+        ],
+        "extra_info": {
+          "Expression": "(total_depth > 5000)",
+          "Estimated Cardinality": "0"
+        }
+      }
+    ],
+    "extra_info": {
+      "Order By": "t.total_depth DESC"
+    }
+  }
+]
+
+--- 03_order_by_limit.sql ---
+[
+  {
+    "name": "TOP_N",
+    "children": [
+      {
+        "name": "PROJECTION",
+        "children": [
+          {
+            "name": "SEQ_SCAN ",
+            "children": [],
+            "extra_info": {
+              "Table": "MarketTick",
+              "Type": "Sequential Scan",
+              "Projections": [
+                "bid_price",
+                "timestamp_ns",
+                "instrument_id"
+              ],
+              "Filters": [
+                "bid_price>150.0",
+                "ask_price<155.0",
+                "level=1",
+                "optional: Dynamic Filter (timestamp_ns)"
+              ],
+              "Estimated Cardinality": "0"
+            }
+          }
+        ],
+        "extra_info": {
+          "Projections": [
+            "timestamp_ns",
+            "instrument_id",
+            "bid_price"
+          ],
+          "Estimated Cardinality": "0"
+        }
+      }
+    ],
+    "extra_info": {
+      "Top": "100",
+      "Order By": "memory.main.MarketTick.timestamp_ns DESC"
+    }
+  }
+]
+
+--- 01_simple_where.sql ---
+[
+  {
+    "name": "SEQ_SCAN ",
+    "children": [],
+    "extra_info": {
+      "Table": "MarketTick",
+      "Type": "Sequential Scan",
+      "Projections": [
+        "level",
+        "bid_price",
+        "ask_price"
+      ],
+      "Filters": [
+        "bid_size>1000",
+        "ask_size>1000"
+      ],
+      "Estimated Cardinality": "0"
+    }
+  }
+]
+
+--- 01_banned_join.sql ---
+[
+  {
+    "name": "HASH_JOIN",
+    "children": [
+      {
+        "name": "SEQ_SCAN ",
+        "children": [],
+        "extra_info": {
+          "Table": "MarketTick",
+          "Type": "Sequential Scan",
+          "Projections": [
+            "instrument_id",
+            "timestamp_ns",
+            "bid_price"
+          ],
+          "Filters": "level=1",
+          "Estimated Cardinality": "0"
+        }
+      },
+      {
+        "name": "SEQ_SCAN ",
+        "children": [],
+        "extra_info": {
+          "Table": "MarketTick",
+          "Type": "Sequential Scan",
+          "Projections": [
+            "instrument_id",
+            "ask_price"
+          ],
+          "Filters": "level=2",
+          "Estimated Cardinality": "0"
+        }
+      }
+    ],
+    "extra_info": {
+      "Join Type": "INNER",
+      "Conditions": "instrument_id = instrument_id",
+      "Estimated Cardinality": "1"
+    }
+  }
+]
+
+--- 10_banned_cross_join.sql ---
+[
+  {
+    "name": "CROSS_PRODUCT",
+    "children": [
+      {
+        "name": "SEQ_SCAN ",
+        "children": [],
+        "extra_info": {
+          "Table": "MarketTick",
+          "Type": "Sequential Scan",
+          "Projections": "instrument_id",
+          "Estimated Cardinality": "0"
+        }
+      },
+      {
+        "name": "SEQ_SCAN ",
+        "children": [],
+        "extra_info": {
+          "Table": "MarketTick",
+          "Type": "Sequential Scan",
+          "Projections": "bid_price",
+          "Estimated Cardinality": "0"
+        }
+      }
+    ],
+    "extra_info": {}
+  }
+]
+
+--- 05_banned_correlated_subquery.sql ---
+[
+  {
+    "name": "PROJECTION",
+    "children": [
+      {
+        "name": "PROJECTION",
+        "children": [
+          {
+            "name": "FILTER",
+            "children": [
+              {
+                "name": "HASH_JOIN",
+                "children": [
+                  {
+                    "name": "SEQ_SCAN ",
+                    "children": [],
+                    "extra_info": {
+                      "Table": "MarketTick",
+                      "Type": "Sequential Scan",
+                      "Projections": [
+                        "bid_price",
+                        "instrument_id"
+                      ],
+                      "Estimated Cardinality": "0"
+                    }
+                  },
+                  {
+                    "name": "PROJECTION",
+                    "children": [
+                      {
+                        "name": "HASH_GROUP_BY",
+                        "children": [
+                          {
+                            "name": "PROJECTION",
+                            "children": [
+                              {
+                                "name": "SEQ_SCAN ",
+                                "children": [],
+                                "extra_info": {
+                                  "Table": "MarketTick",
+                                  "Type": "Sequential Scan",
+                                  "Projections": [
+                                    "instrument_id",
+                                    "bid_price"
+                                  ],
+                                  "Estimated Cardinality": "0"
+                                }
+                              }
+                            ],
+                            "extra_info": {
+                              "Projections": [
+                                "instrument_id",
+                                "bid_price"
+                              ],
+                              "Estimated Cardinality": "0"
+                            }
+                          }
+                        ],
+                        "extra_info": {
+                          "Groups": "#0",
+                          "Aggregates": "avg(#1)",
+                          "Estimated Cardinality": "0"
+                        }
+                      }
+                    ],
+                    "extra_info": {
+                      "Projections": [
+                        "avg(bid_price)",
+                        "instrument_id"
+                      ],
+                      "Estimated Cardinality": "0"
+                    }
+                  }
+                ],
+                "extra_info": {
+                  "Join Type": "LEFT",
+                  "Conditions": "instrument_id IS NOT DISTINCT FROM instrument_id",
+                  "Estimated Cardinality": "0"
+                }
+              }
+            ],
+            "extra_info": {
+              "Expression": "(bid_price > SUBQUERY)",
+              "Estimated Cardinality": "1"
+            }
+          }
+        ],
+        "extra_info": {
+          "Projections": [
+            "#0",
+            "#1"
+          ],
+          "Estimated Cardinality": "1"
+        }
+      }
+    ],
+    "extra_info": {
+      "Projections": [
+        "instrument_id",
+        "bid_price"
+      ],
+      "Estimated Cardinality": "1"
+    }
+  }
+]
+
+--- 06_banned_nested_subquery_depth.sql ---
+[
+  {
+    "name": "HASH_JOIN",
+    "children": [
+      {
+        "name": "SEQ_SCAN ",
+        "children": [],
+        "extra_info": {
+          "Table": "MarketTick",
+          "Type": "Sequential Scan",
+          "Projections": [
+            "level",
+            "instrument_id"
+          ],
+          "Estimated Cardinality": "0"
+        }
+      },
+      {
+        "name": "HASH_JOIN",
+        "children": [
+          {
+            "name": "SEQ_SCAN ",
+            "children": [],
+            "extra_info": {
+              "Table": "MarketTick",
+              "Type": "Sequential Scan",
+              "Projections": [
+                "instrument_id",
+                "level"
+              ],
+              "Estimated Cardinality": "0"
+            }
+          },
+          {
+            "name": "SEQ_SCAN ",
+            "children": [],
+            "extra_info": {
+              "Table": "MarketTick",
+              "Type": "Sequential Scan",
+              "Projections": "instrument_id",
+              "Filters": "bid_price>100.0",
+              "Estimated Cardinality": "0"
+            }
+          }
+        ],
+        "extra_info": {
+          "Join Type": "SEMI",
+          "Conditions": "instrument_id = #0",
+          "Estimated Cardinality": "0"
+        }
+      }
+    ],
+    "extra_info": {
+      "Join Type": "SEMI",
+      "Conditions": "level = #0",
+      "Estimated Cardinality": "0"
+    }
+  }
+]
+
+--- 08_banned_multiple_joins.sql ---
+[
+  {
+    "name": "PROJECTION",
+    "children": [
+      {
+        "name": "HASH_JOIN",
+        "children": [
+          {
+            "name": "HASH_JOIN",
+            "children": [
+              {
+                "name": "SEQ_SCAN ",
+                "children": [],
+                "extra_info": {
+                  "Table": "MarketTick",
+                  "Type": "Sequential Scan",
+                  "Projections": [
+                    "instrument_id",
+                    "ask_price"
+                  ],
+                  "Estimated Cardinality": "0"
+                }
+              },
+              {
+                "name": "SEQ_SCAN ",
+                "children": [],
+                "extra_info": {
+                  "Table": "MarketTick",
+                  "Type": "Sequential Scan",
+                  "Projections": [
+                    "instrument_id",
+                    "bid_size"
+                  ],
+                  "Estimated Cardinality": "0"
+                }
+              }
+            ],
+            "extra_info": {
+              "Join Type": "INNER",
+              "Conditions": "instrument_id = instrument_id",
+              "Estimated Cardinality": "1"
+            }
+          },
+          {
+            "name": "SEQ_SCAN ",
+            "children": [],
+            "extra_info": {
+              "Table": "MarketTick",
+              "Type": "Sequential Scan",
+              "Projections": "instrument_id",
+              "Estimated Cardinality": "0"
+            }
+          }
+        ],
+        "extra_info": {
+          "Join Type": "INNER",
+          "Conditions": "instrument_id = instrument_id",
+          "Estimated Cardinality": "1"
+        }
+      }
+    ],
+    "extra_info": {
+      "Projections": [
+        "instrument_id",
+        "ask_price",
+        "bid_size"
+      ],
+      "Estimated Cardinality": "1"
+    }
+  }
+]
+
+--- 11_banned_non_equality_join.sql ---
+[
+  {
+    "name": "PROJECTION",
+    "children": [
+      {
+        "name": "NESTED_LOOP_JOIN",
+        "children": [
+          {
+            "name": "SEQ_SCAN ",
+            "children": [],
+            "extra_info": {
+              "Table": "MarketTick",
+              "Type": "Sequential Scan",
+              "Projections": [
+                "bid_price",
+                "instrument_id"
+              ],
+              "Estimated Cardinality": "0"
+            }
+          },
+          {
+            "name": "SEQ_SCAN ",
+            "children": [],
+            "extra_info": {
+              "Table": "MarketTick",
+              "Type": "Sequential Scan",
+              "Projections": "bid_price",
+              "Estimated Cardinality": "0"
+            }
+          }
+        ],
+        "extra_info": {
+          "Join Type": "INNER",
+          "Conditions": "bid_price > bid_price",
+          "Estimated Cardinality": "1"
+        }
+      }
+    ],
+    "extra_info": {
+      "Projections": [
+        "instrument_id",
+        "bid_price"
+      ],
+      "Estimated Cardinality": "1"
+    }
+  }
+]
+
+--- 12_banned_mixed_join_subquery.sql ---
+[
+  {
+    "name": "PROJECTION",
+    "children": [
+      {
+        "name": "HASH_JOIN",
+        "children": [
+          {
+            "name": "SEQ_SCAN ",
+            "children": [],
+            "extra_info": {
+              "Table": "MarketTick",
+              "Type": "Sequential Scan",
+              "Projections": "instrument_id",
+              "Estimated Cardinality": "0"
+            }
+          },
+          {
+            "name": "SEQ_SCAN ",
+            "children": [],
+            "extra_info": {
+              "Table": "MarketTick",
+              "Type": "Sequential Scan",
+              "Projections": "instrument_id",
+              "Filters": "level=1",
+              "Estimated Cardinality": "0"
+            }
+          }
+        ],
+        "extra_info": {
+          "Join Type": "INNER",
+          "Conditions": "instrument_id = instrument_id",
+          "Estimated Cardinality": "1"
+        }
+      }
+    ],
+    "extra_info": {
+      "Projections": "instrument_id",
+      "Estimated Cardinality": "1"
+    }
+  }
+]
+
+--- 03_banned_cte.sql ---
+[
+  {
+    "name": "FILTER",
+    "children": [
+      {
+        "name": "HASH_GROUP_BY",
+        "children": [
+          {
+            "name": "PROJECTION",
+            "children": [
+              {
+                "name": "SEQ_SCAN ",
+                "children": [],
+                "extra_info": {
+                  "Table": "MarketTick",
+                  "Type": "Sequential Scan",
+                  "Projections": [
+                    "level",
+                    "bid_price"
+                  ],
+                  "Estimated Cardinality": "0"
+                }
+              }
+            ],
+            "extra_info": {
+              "Projections": [
+                "level",
+                "bid_price"
+              ],
+              "Estimated Cardinality": "0"
+            }
+          }
+        ],
+        "extra_info": {
+          "Groups": "#0",
+          "Aggregates": "avg(#1)",
+          "Estimated Cardinality": "0"
+        }
+      }
+    ],
+    "extra_info": {
+      "Expression": "(avg_bid > 100.0)",
+      "Estimated Cardinality": "0"
+    }
+  }
+]
+
+--- 02_banned_window.sql ---
+[
+  {
+    "name": "PROJECTION",
+    "children": [
+      {
+        "name": "PROJECTION",
+        "children": [
+          {
+            "name": "WINDOW",
+            "children": [
+              {
+                "name": "SEQ_SCAN ",
+                "children": [],
+                "extra_info": {
+                  "Table": "MarketTick",
+                  "Type": "Sequential Scan",
+                  "Projections": [
+                    "timestamp_ns",
+                    "bid_price",
+                    "instrument_id"
+                  ],
+                  "Estimated Cardinality": "0"
+                }
+              }
+            ],
+            "extra_info": {
+              "Projections": "avg(bid_price) OVER (PARTITION BY instrument_id ORDER BY timestamp_ns ASC NULLS LAST)"
+            }
+          }
+        ],
+        "extra_info": {
+          "Projections": [
+            "#0",
+            "#1",
+            "#2",
+            "#3"
+          ],
+          "Estimated Cardinality": "0"
+        }
+      }
+    ],
+    "extra_info": {
+      "Projections": [
+        "timestamp_ns",
+        "bid_price",
+        "rolling_avg"
+      ],
+      "Estimated Cardinality": "0"
+    }
+  }
+]
+
+--- 04_banned_mutation.sql ---
+[
+  {
+    "name": "UPDATE",
+    "children": [
+      {
+        "name": "PROJECTION",
+        "children": [
+          {
+            "name": "SEQ_SCAN ",
+            "children": [],
+            "extra_info": {
+              "Table": "MarketTick",
+              "Type": "Sequential Scan",
+              "Projections": "",
+              "Filters": "timestamp_ns<1000000",
+              "Estimated Cardinality": "0"
+            }
+          }
+        ],
+        "extra_info": {
+          "Projections": [
+            "0.0",
+            "rowid"
+          ],
+          "Estimated Cardinality": "0"
+        }
+      }
+    ],
+    "extra_info": {}
+  }
+]
+
+--- 07_banned_aggregate_subquery.sql ---
+[
+  {
+    "name": "HASH_GROUP_BY",
+    "children": [
+      {
+        "name": "PROJECTION",
+        "children": [
+          {
+            "name": "CROSS_PRODUCT",
+            "children": [
+              {
+                "name": "PROJECTION",
+                "children": [
+                  {
+                    "name": "UNGROUPED_AGGREGATE",
+                    "children": [
+                      {
+                        "name": "PROJECTION",
+                        "children": [
+                          {
+                            "name": "UNGROUPED_AGGREGATE",
+                            "children": [
+                              {
+                                "name": "PROJECTION",
+                                "children": [
+                                  {
+                                    "name": "SEQ_SCAN ",
+                                    "children": [],
+                                    "extra_info": {
+                                      "Table": "MarketTick",
+                                      "Type": "Sequential Scan",
+                                      "Projections": "bid_price",
+                                      "Filters": "level=1",
+                                      "Estimated Cardinality": "0"
+                                    }
+                                  }
+                                ],
+                                "extra_info": {
+                                  "Projections": "bid_price",
+                                  "Estimated Cardinality": "0"
+                                }
+                              }
+                            ],
+                            "extra_info": {
+                              "Aggregates": "max(#0)"
+                            }
+                          }
+                        ],
+                        "extra_info": {
+                          "Projections": "#0",
+                          "Estimated Cardinality": "1"
+                        }
+                      }
+                    ],
+                    "extra_info": {
+                      "Aggregates": [
+                        "\"first\"(#0)",
+                        "count_star()"
+                      ]
+                    }
+                  }
+                ],
+                "extra_info": {
+                  "Projections": [
+                    "CASE  WHEN ((#1 > 1)) THEN (\"error\"('More than one row returned by a subquery used as an expression - scalar subqueries can only return a single row.",
+                    "Use \"SET scalar_subquery_error_on_multiple_rows=false\" to revert to previous behavior of returning a random row.')) ELSE #0 END"
+                  ],
+                  "Estimated Cardinality": "1"
+                }
+              },
+              {
+                "name": "SEQ_SCAN ",
+                "children": [],
+                "extra_info": {
+                  "Table": "MarketTick",
+                  "Type": "Sequential Scan",
+                  "Projections": "instrument_id",
+                  "Estimated Cardinality": "0"
+                }
+              }
+            ],
+            "extra_info": {}
+          }
+        ],
+        "extra_info": {
+          "Projections": [
+            "instrument_id",
+            "SUBQUERY"
+          ],
+          "Estimated Cardinality": "1"
+        }
+      }
+    ],
+    "extra_info": {
+      "Groups": "#0",
+      "Aggregates": "sum(#1)",
+      "Estimated Cardinality": "0"
+    }
+  }
+]
+
+--- 09_banned_outer_join.sql ---
+[
+  {
+    "name": "HASH_JOIN",
+    "children": [
+      {
+        "name": "SEQ_SCAN ",
+        "children": [],
+        "extra_info": {
+          "Table": "MarketTick",
+          "Type": "Sequential Scan",
+          "Projections": "instrument_id",
+          "Estimated Cardinality": "0"
+        }
+      },
+      {
+        "name": "SEQ_SCAN ",
+        "children": [],
+        "extra_info": {
+          "Table": "MarketTick",
+          "Type": "Sequential Scan",
+          "Projections": [
+            "instrument_id",
+            "bid_price"
+          ],
+          "Estimated Cardinality": "0"
+        }
+      }
+    ],
+    "extra_info": {
+      "Join Type": "LEFT",
+      "Conditions": "instrument_id = instrument_id",
+      "Estimated Cardinality": "0"
+    }
+  }
+]
+
+--- 13_banned_using_join.sql ---
+[
+  {
+    "name": "HASH_JOIN",
+    "children": [
+      {
+        "name": "SEQ_SCAN ",
+        "children": [],
+        "extra_info": {
+          "Table": "MarketTick",
+          "Type": "Sequential Scan",
+          "Projections": "instrument_id",
+          "Estimated Cardinality": "0"
+        }
+      },
+      {
+        "name": "SEQ_SCAN ",
+        "children": [],
+        "extra_info": {
+          "Table": "MarketTick",
+          "Type": "Sequential Scan",
+          "Projections": [
+            "instrument_id",
+            "bid_price"
+          ],
+          "Estimated Cardinality": "0"
+        }
+      }
+    ],
+    "extra_info": {
+      "Join Type": "INNER",
+      "Conditions": "instrument_id = instrument_id",
+      "Estimated Cardinality": "1"
+    }
+  }
+]
