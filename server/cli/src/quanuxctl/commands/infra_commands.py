@@ -223,6 +223,116 @@ def list_nodes(provider: str = typer.Option("do", help="Cloud provider (do or gc
         console.print("\n[bold cyan]=== GCP QuanuX Nodes ===[/bold cyan]")
         console.print("[dim]Fetching GCP Compute Engine instances... (Not yet implemented)[/dim]\n")
 
+gcp_sql_app = typer.Typer(help="GCP Bounded AST SQL Transpilation")
+app.add_typer(gcp_sql_app, name="gcp-sql")
+
+def _get_transpiler():
+    import sys
+    annex_dir = get_annex_dir()
+    if not annex_dir:
+        console.print("[red]Error: Could not dynamically resolve QuanuX-Annex path.[/red]")
+        raise typer.Exit(code=1)
+    if annex_dir not in sys.path:
+        sys.path.insert(0, annex_dir)
+    try:
+        from gcp_transpiler import QuanuXDuckToBQTranspiler, TranspilationError
+        return QuanuXDuckToBQTranspiler(), TranspilationError
+    except ImportError as e:
+        console.print(f"[red]Error importing Transpiler modules: {e}[/red]")
+        raise typer.Exit(code=1)
+
+def _handle_transpilation_error(e):
+    console.print("\n[bold red]FATAL: Prototype Matrix Boundary Violation[/bold red]")
+    console.print(f"[bold yellow]Rejected Construct:[/bold yellow] {e.construct}")
+    console.print(f"[bold yellow]Violated Rule:[/bold yellow] {e.reason}")
+    console.print(f"\n[dim]{e.fallback}[/dim]\n")
+    raise typer.Exit(code=1)
+
+@gcp_sql_app.command("validate")
+def gcp_validate(query: str = typer.Argument(..., help="DuckDB SQL Query to validate")):
+    """Validates if the query is within the approved Phase 1 matrix."""
+    transpiler, TranspilationError = _get_transpiler()
+    try:
+        transpiler.transpile(query)
+        console.print("[bold green]SUCCESS:[/bold green] Query is within the approved Phase 1 bounded matrix.")
+    except TranspilationError as e:
+        _handle_transpilation_error(e)
+
+@gcp_sql_app.command("transpile")
+def gcp_transpile(query: str = typer.Argument(..., help="DuckDB SQL Query to transpile")):
+    """Emits translated BigQuery SQL if within the approved Phase 1 matrix."""
+    transpiler, TranspilationError = _get_transpiler()
+    try:
+        bq_sql = transpiler.transpile(query)
+        console.print("[bold cyan]BigQuery Standard SQL (Translated):[/bold cyan]")
+        console.print(f"{bq_sql}")
+    except TranspilationError as e:
+        _handle_transpilation_error(e)
+
+@gcp_sql_app.command("execute")
+def gcp_execute(
+    query: str = typer.Argument(..., help="DuckDB SQL Query to execute"),
+    max_rows: int = typer.Option(100, help="Maximum rows to fetch remotely"),
+    dry_run: bool = typer.Option(False, help="Validate and transpile only, do not send to GCP"),
+    timeout: int = typer.Option(30, help="Timeout in seconds for remote execution")
+):
+    """Validates, transpiles, and executes bounded SQL against BigQuery."""
+    transpiler, TranspilationError = _get_transpiler()
+    try:
+        bq_sql = transpiler.transpile(query)
+        if dry_run:
+            console.print("[bold yellow]DRY-RUN:[/bold yellow] Validation successful. Query would execute as:")
+            console.print(f"{bq_sql}")
+            return
+
+        console.print(f"[dim]Executing bounded query (Max Rows: {max_rows}, Timeout: {timeout}s)...[/dim]")
+        
+        from google.cloud import bigquery
+        
+        project_id = os.environ.get("GCP_PROJECT_ID")
+        if not project_id:
+            import sys
+            current_dir = os.path.abspath(os.path.dirname(__file__))
+            repo_root = os.path.abspath(os.path.join(current_dir, "../../../../../"))
+            if repo_root not in sys.path:
+                sys.path.insert(0, repo_root)
+            from server.security.secrets import SecretsInterface
+            secrets = SecretsInterface()
+            project_id = secrets.get_secret("GCP_PROJECT_ID")
+            credentials_path = secrets.get_secret("GOOGLE_APPLICATION_CREDENTIALS")
+            if credentials_path:
+                os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credentials_path
+            
+        if not project_id:
+            console.print("[bold red]FATAL:[/bold red] Missing GCP_PROJECT_ID. Use `quanuxctl secrets set GCP_PROJECT_ID`")
+            raise typer.Exit(code=1)
+            
+        client = bigquery.Client(project=project_id)
+        table = transpiler.execute_bounded(client, bq_sql, timeout=timeout, max_results=max_rows)
+        
+        if table is None:
+            console.print("[bold yellow]SUCCESS:[/bold yellow] Query executed but returned no rows.")
+            return
+            
+        console.print("[bold green]SUCCESS:[/bold green] Bounded execution complete.")
+        console.print(f"[bold cyan]Retrieved {table.num_rows} rows.[/bold cyan]")
+        
+        from rich.table import Table
+        rich_table = Table(show_header=True, header_style="bold magenta")
+        for name in table.column_names:
+            rich_table.add_column(name)
+            
+        for i in range(table.num_rows):
+            row_data = [str(table.column(c)[i].as_py()) for c in table.column_names]
+            rich_table.add_row(*row_data)
+            
+        console.print(rich_table)
+        
+    except TranspilationError as e:
+        _handle_transpilation_error(e)
+    except Exception as e:
+        console.print(f"[bold red]FATAL EXECUTION ERROR:[/bold red] {e}")
+        raise typer.Exit(code=1)
+
 if __name__ == "__main__":
     app()
-

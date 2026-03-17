@@ -44,7 +44,7 @@ class QuanuXDuckToBQTranspiler:
         extra_info = node.get("extra_info", {})
         
         # Verify whitelist nodes
-        allowed_nodes = {"PROJECTION", "SEQ_SCAN ", "SEQ_SCAN", "FILTER", "HASH_GROUP_BY", "PERFECT_HASH_GROUP_BY", "UNGROUPED_AGGREGATE", "ORDER_BY", "LIMIT", "TOP_N", "HASH_JOIN"}
+        allowed_nodes = {"PROJECTION", "SEQ_SCAN ", "SEQ_SCAN", "FILTER", "HASH_GROUP_BY", "PERFECT_HASH_GROUP_BY", "UNGROUPED_AGGREGATE", "ORDER_BY", "LIMIT", "TOP_N", "HASH_JOIN", "STREAMING_LIMIT"}
         
         if name == "WINDOW":
             raise TranspilationError("WindowFunction", "Window functions are explicitly banned under the Tract 2 Control Spec")
@@ -122,7 +122,7 @@ class QuanuXDuckToBQTranspiler:
         
         return bq_sql.strip()
         
-    def execute_bounded(self, client, bq_sql: str):
+    def execute_bounded(self, client, bq_sql: str, timeout: int = 30, max_results: int = 100):
         """
         Executes the transpiled query against BigQuery and forces 
         arrow_iterable chunking to prevent memory exhaustion on result retrieval.
@@ -131,7 +131,7 @@ class QuanuXDuckToBQTranspiler:
         job = client.query(bq_sql)
         # We process the first chunk to ensure bounding behavior is engaged and return the table
         # In a real pipeline, the researcher would iterate over results_iterable pages.
-        results_iterable = job.result().to_arrow_iterable()
+        results_iterable = job.result(timeout=timeout, max_results=max_results).to_arrow_iterable()
         
         # Combine the chunks into a single table for local processing (simulating small/bounded analytical sets)
         import pyarrow as pa
