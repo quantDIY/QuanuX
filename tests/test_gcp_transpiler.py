@@ -107,6 +107,22 @@ def test_phase1_surface_contract_frozen(transpiler):
         # Verify the fail-close occurred
         assert "Fallback required" in str(excinfo.value)
 
+def test_internal_optimizer_artifacts_explicit(transpiler):
+    """
+    Explicitly regress internal DuckDB optimizer artifacts (TOP_N, STREAMING_LIMIT, 
+    rowid semi-joins) ensuring they remain explicitly authorized as internal-only 
+    mechanisms without bleeding into user-facing constructs.
+    """
+    # 1. TOP_N & HASH_JOIN (SEMI) on rowid = rowid artifacts
+    order_limit_query = "SELECT level FROM MarketTick ORDER BY level DESC LIMIT 5"
+    res1 = transpiler.transpile(order_limit_query)
+    assert "ORDER BY level DESC LIMIT 5" in res1
+    
+    # 2. STREAMING_LIMIT artifacts (LIMIT without ORDER BY)
+    streaming_limit_query = "SELECT level FROM MarketTick LIMIT 10"
+    res2 = transpiler.transpile(streaming_limit_query)
+    assert "LIMIT 10" in res2
+    
 def test_dialects_and_builtins(transpiler):
     """
     Tests specific dialect macros not allowed, like DuckDB unique things
@@ -267,6 +283,33 @@ def test_real_bq_semantic_parity(transpiler):
     assert local_result_3.column('instrument_id')[0].as_py() == remote_result_3.column('instrument_id')[0].as_py()
     # Float exactness can vary slightly on direct fetches if not aggregated, but we check 1e-9 tolerance anyway for safety
     assert math.isclose(local_result_3.column('bid_price')[0].as_py(), remote_result_3.column('bid_price')[0].as_py(), rel_tol=1e-9)
+
+    # 6. Quaternary Query Matrix Test: Complex explicit aliasing, GROUP BY + SUM + COUNT + AVG + Multiple WHERE
+    local_query_4 = '''
+        SELECT 
+            level as tick_level,
+            COUNT(instrument_id) as c_inst,
+            SUM(bid_size) as s_size,
+            AVG(ask_price) as a_price
+        FROM MarketTick
+        WHERE bid_size >= 10 AND ask_price < 200.0 AND level <= 5
+        GROUP BY tick_level
+        ORDER BY tick_level ASC
+    '''
+    local_result_4 = transpiler.conn.execute(local_query_4).fetch_arrow_table()
+    
+    bq_sql_4 = transpiler.transpile(local_query_4).replace("MarketTick", f"`{table_id}`")
+    remote_result_4 = transpiler.execute_bounded(client, bq_sql_4)
+    
+    assert remote_result_4 is not None
+    assert len(local_result_4) == len(remote_result_4)
+    # Check categorical mapping
+    assert local_result_4.column('tick_level')[0].as_py() == remote_result_4.column('tick_level')[0].as_py()
+    # Check counts precisely
+    assert local_result_4.column('c_inst')[0].as_py() == remote_result_4.column('c_inst')[0].as_py()
+    assert local_result_4.column('s_size')[0].as_py() == remote_result_4.column('s_size')[0].as_py()
+    # Check explicit float precision boundary for AVG
+    assert math.isclose(local_result_4.column('a_price')[0].as_py(), remote_result_4.column('a_price')[0].as_py(), rel_tol=1e-9)
 
     # Clean up test table
     client.delete_table(table_id, not_found_ok=True)
