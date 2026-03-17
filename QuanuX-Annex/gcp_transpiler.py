@@ -49,6 +49,9 @@ class QuanuXDuckToBQTranspiler:
         if name == "WINDOW":
             raise TranspilationError("WindowFunction", "Window functions are explicitly banned under the Tract 2 Control Spec")
             
+        if "JOIN" in name:
+            raise TranspilationError(name, "Joins are explicitly banned under the Tract 2 Control Spec Phase 1 Matrix")
+            
         if name and name not in allowed_nodes and name != "RESULT_COLLECTOR":
             raise TranspilationError(name, f"Relational IR '{name}' is explicitly banned under the Tract 2 Control Spec")
             

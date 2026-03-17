@@ -1,6 +1,7 @@
 import pytest
 import sys
 import os
+import math
 
 # Add QuanuX-Annex and the project root to path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../QuanuX-Annex')))
@@ -26,7 +27,7 @@ def test_read_only_enforcement(transpiler):
 
 def test_whitelist_acceptance_matrix(transpiler):
     """
-    Asserts that the approved subset matrix (SELECT, JOIN, GROUP BY, aggregations)
+    Asserts that the approved subset matrix (SELECT, GROUP BY, aggregations)
     maps perfectly.
     """
     queries = [
@@ -42,15 +43,28 @@ def test_whitelist_acceptance_matrix(transpiler):
 
 def test_unsupported_construct_rejection(transpiler):
     """
-    Explicitly injects Window Functions and CTEs to verify that 
+    Explicitly injects Window Functions, Joins, and CTEs to verify that 
     TranspilationError is thrown deterministically.
     """
+    # 1. Window Functions
     query = "SELECT instrument_id, AVG(ask_price) OVER (PARTITION BY instrument_id) FROM MarketTick"
     with pytest.raises(TranspilationError) as excinfo:
         transpiler.transpile(query)
     
     assert "WindowFunction" in str(excinfo.value)
     assert "Window functions are explicitly banned under the Tract 2 Control Spec" in str(excinfo.value)
+    
+    # 2. Joins
+    query_join = "SELECT a.instrument_id FROM MarketTick a JOIN MarketTick b ON a.instrument_id = b.instrument_id"
+    with pytest.raises(TranspilationError) as excinfo_join:
+        transpiler.transpile(query_join)
+    assert "Joins are explicitly banned" in str(excinfo_join.value)
+    
+    # 3. CTEs or unsupported IR
+    query_cte = "WITH CTE AS (SELECT instrument_id FROM MarketTick) SELECT * FROM CTE"
+    with pytest.raises(TranspilationError) as excinfo_cte:
+        transpiler.transpile(query_cte)
+    assert "Only SELECT statements are authorized" in str(excinfo_cte.value)
 
 def test_dialects_and_builtins(transpiler):
     """
@@ -124,8 +138,9 @@ def test_real_bq_semantic_parity(transpiler):
     project_id = os.environ["GCP_PROJECT_ID"]
     client = bigquery.Client(project=project_id)
     
+    import time
     dataset_id = f"{project_id}.quanux_historical_test"
-    table_id = f"{dataset_id}.market_ticks_test"
+    table_id = f"{dataset_id}.market_ticks_test_{int(time.time())}"
     
     # 1. Setup exact BQ test surface mirroring Tract 1
     dataset = bigquery.Dataset(dataset_id)
@@ -145,11 +160,6 @@ def test_real_bq_semantic_parity(transpiler):
         bigquery.SchemaField("level", "INTEGER"),
     ]
     table = bigquery.Table(table_id, schema=schema)
-    try:
-        client.get_table(table_id)
-        client.delete_table(table_id)
-    except:
-        pass
     table = client.create_table(table)
     
     # Insert rows into BOTH DuckDB and BigQuery
@@ -169,8 +179,8 @@ def test_real_bq_semantic_parity(transpiler):
     import time
     time.sleep(3) # Wait for BQ streaming buffer
     
-    # 2. Transpile
-    local_query = "SELECT instrument_id, SUM(ask_size) as total_ask FROM MarketTick WHERE bid_price > 90.0 GROUP BY instrument_id ORDER BY instrument_id"
+    # 2. Transpile with expanded AVG matrix
+    local_query = "SELECT instrument_id, SUM(ask_size) as total_ask, AVG(bid_price) as avg_bid, MIN(ask_price) as min_ask FROM MarketTick WHERE bid_price > 90.0 GROUP BY instrument_id ORDER BY instrument_id"
     local_result = transpiler.conn.execute(local_query).fetch_arrow_table()
     
     bq_sql = transpiler.transpile(local_query)
@@ -180,10 +190,29 @@ def test_real_bq_semantic_parity(transpiler):
     # 3. Execute bounded and assert parity
     remote_result = transpiler.execute_bounded(client, bq_sql)
     
+    # Exact Match Parity
+    assert local_result.column('total_ask')[0].as_py() == remote_result.column('total_ask')[0].as_py()
+    assert local_result.column('min_ask')[0].as_py() == remote_result.column('min_ask')[0].as_py()
+    
+    # Floating-Point Tolerance Parity for AVG (1e-9)
+    assert math.isclose(
+        local_result.column('avg_bid')[0].as_py(), 
+        remote_result.column('avg_bid')[0].as_py(), 
+        rel_tol=1e-9
+    )
+    
+    # 4. Secondary Query Matrix Test: COUNT, LIMIT, ORDER BY DESC
+    local_query_2 = "SELECT level, COUNT(instrument_id) as total_ticks, MAX(ask_size) as max_ask FROM MarketTick WHERE bid_price >= 50.0 GROUP BY level ORDER BY level DESC LIMIT 5"
+    local_result_2 = transpiler.conn.execute(local_query_2).fetch_arrow_table()
+    
+    bq_sql_2 = transpiler.transpile(local_query_2).replace("MarketTick", f"`{table_id}`")
+    remote_result_2 = transpiler.execute_bounded(client, bq_sql_2)
+    
+    assert remote_result_2 is not None
+    assert len(local_result_2) == len(remote_result_2)
+    assert local_result_2.column('total_ticks')[0].as_py() == remote_result_2.column('total_ticks')[0].as_py()
+    assert local_result_2.column('max_ask')[0].as_py() == remote_result_2.column('max_ask')[0].as_py()
+    assert local_result_2.column('level')[0].as_py() == remote_result_2.column('level')[0].as_py()
+
     # Clean up test table
     client.delete_table(table_id, not_found_ok=True)
-    
-    assert remote_result is not None
-    assert len(local_result) == len(remote_result)
-    assert local_result.column('instrument_id')[0].as_py() == remote_result.column('instrument_id')[0].as_py()
-    assert local_result.column('total_ask')[0].as_py() == remote_result.column('total_ask')[0].as_py()

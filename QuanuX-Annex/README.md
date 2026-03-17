@@ -22,6 +22,23 @@ quanuxctl infra do-droplets
 # Verify active Data Lake boundaries:
 quanuxctl infra do-spaces
 ```
+## Tract 2: Research Database Transpiler
+The QuanuX-Annex includes the `QuanuXDuckToBQTranspiler`, an execution layer designed to bridge local DuckDB queries into BigQuery Standard SQL text for bounded remote execution.
+
+To guarantee zero unauthorized mutation and maintain strict dataset parity, the transpiler operates under a mathematically verified Phase 1 Approved Query Matrix:
+- **Approved SQL Surface:** `SELECT`, `FROM`, `WHERE`, `GROUP BY`, `ORDER BY`, `LIMIT`.
+- **Approved Aggregates:** `COUNT`, `SUM`, `AVG`, `MIN`, `MAX`.
+- **Allowed Basics:** Explicit column aliases, numeric/string literals, and basic boolean predicates.
+
+**Unsupported Constructs (Fail-Closed):**
+The transpiler enforces physical read-only limits by strictly blocking state-mutating commands (`DROP`, `ALTER`, `UPDATE`, `INSERT`, `DELETE`). Due to complex dialect variance, it explicitly rejects advanced routing syntax such as:
+- Joins
+- Window Functions
+- Common Table Expressions (CTEs)
+- Subqueries (beyond exact proven Phase 1 fixtures)
+- DuckDB proprietary macros/functions
+
+Any query exceeding this whitelist will natively raise a `TranspilationError` and halt immediately before querying GCP. Operators must execute unauthorized complex logic natively against BigQuery if bypassing this prototype boundary.
 
 ## Agent Tools & Autonomous Systems
 Agent AI architecture contexts have been directly injected into every module via `SKILL.md` documents. Ensure parsing of `src/resolvers/SKILL.md` and `src/federation/SKILL.md` before initiating memory operations.
