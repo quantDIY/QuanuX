@@ -42,7 +42,33 @@ endif()
 
 # Main Executable
 find_package(Threads REQUIRED)
+find_package(arrow REQUIRED)
+find_package(HDF5 REQUIRED COMPONENTS C)
+find_package(blosc2 REQUIRED)
+find_package(google_cloud_cpp_storage REQUIRED)
 
-add_executable(quanux_annex src/main.cpp src/federation/HasuraRemoteWorker.cpp)
+set(QECD_SOURCES
+    src/TranslationMatrix.cpp
+    src/IngestionLoop.cpp
+    src/lookback/LookbackIpcServer.cpp
+    src/lookback/QueryTranslator.cpp
+    src/lookback/MarkdownFormatter.cpp
+    src/lookback/MetricsSink.cpp
+    src/storage/HDF5Chunker.cpp
+    src/storage/VaultUploader.cpp
+)
+
+add_executable(quanux_annex src/main.cpp src/federation/HasuraRemoteWorker.cpp ${QECD_SOURCES})
 target_include_directories(quanux_annex PUBLIC include)
-target_link_libraries(quanux_annex PRIVATE quanux_annex_resolvers Threads::Threads ${NATS_LIBRARY} curl crypto ssl)
+target_link_libraries(quanux_annex PRIVATE 
+    quanux_annex_resolvers 
+    Threads::Threads 
+    ${NATS_LIBRARY} 
+    curl 
+    crypto 
+    ssl 
+    arrow_shared 
+    HDF5::HDF5 
+    blosc2 
+    google-cloud-cpp::storage
+)

@@ -7,7 +7,7 @@ import typer
 from rich.console import Console
 
 from .commands import secrets, bridge, skills, extensions, integrate, node, storage, indicators, module, vcs, dashboard, topstepx, geminicli, foundry, crucible, spreader, probe, telemetry, deploy, orchestra
-from .commands import habitat_commands, nest_commands, infra_commands, query, engine_commands
+from .commands import habitat_commands, nest_commands, infra_commands, query, engine_commands, vault_commands
 from . import __version__
 
 app = typer.Typer(
@@ -24,6 +24,7 @@ app.add_typer(habitat_commands.app, name="habitat", help="Manage QuanuX OS-level
 app.add_typer(nest_commands.app, name="nest", help="Manage QuanuX C++ Sovereign Engine Nest Deployment.")
 app.add_typer(infra_commands.app, name="infra", help="QuanuX Control Plane: Ephemeral Infrastructure Auth & Provisioning.")
 app.add_typer(engine_commands.app, name="engine", help="Manage QuanuX Edge Engine Tuning & Execution.")
+app.add_typer(vault_commands.app, name="vault", help="Manage QuanuX Sovereign Vault and Local HW Cache.")
 
 app.add_typer(secrets.app, name="secrets", help="Manage API keys and secrets via OS Keyring.")
 app.add_typer(secrets.app, name="sec", help="Alias for secrets", hidden=True)
