@@ -47,3 +47,24 @@ quanuxctl deploy -p annex_core -t quanux_annex_node --type cpp_binary
 # Inject Mock NATS Data
 python tests/nats_injector.py --url nats://10.10.10.5:4222 --subject QUANUX.MARKET.TICK --type tick --count 1000
 ```
+
+## Tract 2: GCP Research Database Transpiler
+The QuanuX-Annex includes the `QuanuXDuckToBQTranspiler`, critically bridging native DuckDB operator commands to BigQuery Standard SQL text for bounded remote execution.
+
+### Operator Workflows
+The CLI `quanuxctl infra gcp-sql` exposes 3 deterministic states:
+- `validate`: Formally analyze AST tree restrictions strictly against the allowed matrix without cloud networking.
+- `transpile`: Emits exact semantic BigQuery string transformations dynamically without native execution.
+- `execute`: Dispatches transpiled AST requests enforcing rigorous payload constraints (`--timeout`, `--max-rows`). Machine-readable JSON structural guarantees flow efficiently to automated CI test grids.
+
+### Proven Bounded Matrix
+- **SQL Basics**: Read-only `SELECT`, `FROM`, `WHERE`, `GROUP BY`, `ORDER BY`, `LIMIT`, leveraging exactly matching `COUNT`/`SUM`/`AVG`/`MIN`/`MAX` statistical equivalencies over live dual-mapped BQ remote environments.
+- **Subqueries (Phase 3A)**: Shallow 1-level scalar depths isolating static equality loops. Resolves nested `IN (SELECT...)` expressions securely to uncorrelated memory tables.
+- **Joins (Phase 3B)**: Unidirectionally permits exactly one static explicit equality constraint per logical tree exclusively mapped via `INNER JOIN`.
+
+### Intentionally Unsupported (Fail-Closed)
+To completely eradicate state mutability, internal `DROP`/`UPDATE`/`INSERT` commands invoke an immediate systemic execution halt. All unverified syntax vectors encompassing deep outer, cross, natural joins, chained correlated subqueries, raw recursive combinations, window functions, and proprietary database schemas emit fatal AST rejections forcing analysts natively onto GCP tooling bounds.
+
+### Known Bolts & Next Objectives
+- **Known Bolts (Later Tightening)**: Subquery parameters potentially adapt gracefully to layered complexity aggregations. Bounded subset joins tentatively mapped to nested grouping intersections to resolve larger mathematical domains securely over AWS SigV4.
+- **Next Architectural Objectives**: Pivot explicitly back to Terraform/Ansible infrastructure orchestration, deep telemetry GraphQL/Hasura/superGraph/Aleph federations, and unified cold-data blob architectures.
