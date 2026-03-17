@@ -12,6 +12,7 @@ The conceptual "Russian Doll" architecture is formally and physically implemente
 - **Habitat (The Outer Doll / Conditioned Soil):** The physical or virtual OS boundary (e.g., Ubuntu VM, remote server, or bare-metal edge cluster node). The Habitat provides the conditioned runtime soil.
 - **Nest (The Core Doll / The "Baby"):** The sovereign logic process deployed deep into the Habitat. The core purpose of the node (a trading strategy, HFT engine, observation layer, protocol bridge) exists as the innermost protected Nest. The "Baby" is guarded at the core, all surface receptors perfectly insulated.
 
+
 ## 🏗️ The 5-Tier Core Topology
 
 To maintain maximum execution speed and organizational sovereignty, QuanuX is strictly partitioned into a 5-Tier layout:
@@ -89,6 +90,7 @@ The platform operates as a multi-language colossus spanning institutional tradin
 ### 5. The QuanuX-Annex Ingestion Engine
 - **HA Zero-Allocation NATS Core (`QuanuX-Annex/`)**: A sovereign C++ telemetry ingestion daemon deployed via Ansible to the outer Habitats. It maps high-velocity NATS JetStream data directly into byte-aligned C++ structs (e.g. `MarketTick`, `ExecutionLog`) using `<nats/nats.h>`, bypassing JVM and Python garbage collection completely.
 - **Tract 1 GCP Historical Lake Integration**: A Python pipeline (`gcp_ingestion_pipeline.py`) dynamically extracts JetStream events, projects the next append against the exact 37-byte fixed-schema Arrow model, flushes before any limit breach, and fails closed if materialized `PyArrow` footprint ever deviates from structural alignment.
+- **Tract 2 Research Database Transparency (DuckDB-to-BQ)**: GRADUATED PROTOTYPE (Commit `0a7df15`). A SQL AST transpiler (`QuanuXDuckToBQTranspiler`) translating DuckDB subsets into BigQuery standard SQL. It cleanly filters unapproved syntaxes via `TranspilationError` fail-closures. Its graduation achieved exact Arrow layout parity against actual remote Google Cloud data bindings powered seamlessly by the local `quanuxctl secrets` OS keyring.
 - **The Sentinel Protocol Pivot**: Incorporates rigorous Red Team mitigations for observability. Telegraf is deployed via direct static `.deb` injection into the outer droplets, avoiding hypervisor APT repository corruptions, with its telemetry interval dynamically orchestrated via `quanuxctl`.
 - **Phase 12 Pipeline Proving Ground (`tests/nats_injector.py`)**: Real-time NATS mocking tools written in Python that map native `struct` byte-alignments to validate the C++ QuanuX-Annex core without requiring a live colocation feed.
 
