@@ -1,0 +1,41 @@
+---
+- name: QuanuX GCP Engine - Kernel & Memory Physics Tuning
+  hosts: quanux_annex_node
+  become: yes
+  tasks:
+    - name: Disable Transparent Huge Pages (THP) to preserve runtime determinism
+      shell: echo never > /sys/kernel/mm/transparent_hugepage/enabled
+      args:
+        executable: /bin/bash
+      ignore_errors: true
+
+    - name: Persist THP disable via sysfsutils
+      lineinfile:
+        path: /etc/sysfs.conf
+        line: "kernel/mm/transparent_hugepage/enabled = never"
+        create: yes
+
+    - name: Configure Static Hugepages and CPU Isolation in GRUB
+      lineinfile:
+        path: /etc/default/grub
+        regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
+        line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet splash isolcpus=2-7 default_hugepagesz=1G hugepagesz=1G hugepages=16"'
+        
+    - name: Update GRUB
+      command: update-grub
+
+    - name: Apply QuanuX Low-Latency Network Fabric sysctl parameters
+      blockinfile:
+        path: /etc/sysctl.d/99-quanux-gcp.conf
+        create: yes
+        block: |
+          # QuanuX Low-Latency VPC tuning for c2-standard fabric
+          net.core.rmem_max=16777216
+          net.core.wmem_max=16777216
+          net.ipv4.tcp_rmem=4096 87380 16777216
+          net.ipv4.tcp_wmem=4096 65536 16777216
+          net.ipv4.tcp_low_latency=1
+          net.core.netdev_max_backlog=5000
+      
+    - name: Reload sysctl definitions
+      command: sysctl --system

@@ -1,0 +1,102 @@
+---
+- name: QuanuX GCP Engine - Initialization & Pipeline Boot
+  hosts: quanux_annex_node
+  become: yes
+  tasks:
+    - name: Install system dependencies for C++ Compilation
+      apt:
+        name: 
+          - build-essential
+          - python3-dev
+          - python3-pip
+          - cython3
+        state: present
+        update_cache: yes
+
+    - name: Extract and deploy CNATS JetStream fabric
+      shell: "curl -sfL https://binaries.nats.dev/nats-io/nats-server/v2@latest | sh"
+      args:
+        creates: /usr/local/bin/nats-server
+        executable: /bin/bash
+      
+    - name: Create NATS configuration directory
+      file:
+        path: /etc/nats
+        state: directory
+        
+    - name: Configure JetStream
+      copy:
+        dest: /etc/nats/nats-server.conf
+        content: |
+          port: 4222
+          jetstream: enabled
+          jetstream {
+              store_dir: "/var/lib/nats/jetstream"
+              max_mem: 1G
+              max_file: 10G
+          }
+          
+    - name: Initialize NATS Systemd Service (Strict Fail-Closed)
+      copy:
+        dest: /etc/systemd/system/nats.service
+        content: |
+          [Unit]
+          Description=CNATS JetStream QuanuX Fabric
+          After=network.target
+
+          [Service]
+          ExecStart=/usr/local/bin/nats-server -c /etc/nats/nats-server.conf
+          Restart=on-failure
+          RestartSec=5
+
+          [Install]
+          WantedBy=multi-user.target
+          
+    - name: Enable and Start CNATS Fabric
+      systemd:
+        name: nats
+        enabled: yes
+        state: restarted
+        daemon_reload: yes
+
+    - name: Sync QuanuX Repository State
+      synchronize:
+        src: ../../../
+        dest: /opt/quanux/
+        rsync_opts:
+          - "--exclude=.git"
+          - "--exclude=.env"
+
+    - name: Compile Omega Post-Trade Reconciliation C++ Decoder & Cython bindings natively
+      shell: |
+        cd /opt/quanux/QuanuX-Orchestra/omega
+        python3 setup.py build_ext --inplace
+      args:
+        executable: /bin/bash
+
+    - name: Create Annex Core Systemd Service (Strict Fail-Closed)
+      copy:
+        dest: /etc/systemd/system/quanux-annex.service
+        content: |
+          [Unit]
+          Description=QuanuX Annex Post-Trade Core Pipeline
+          After=network.target nats.service
+          Requires=nats.service
+
+          [Service]
+          WorkingDirectory=/opt/quanux/QuanuX-Annex
+          ExecStart=/usr/bin/python3 gcp_ingestion_pipeline.py
+          Environment="QUANUX_TARGET=gcp"
+          Environment="PYTHONPATH=/opt/quanux/QuanuX-Orchestra"
+          Restart=on-failure
+          RestartSec=5
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Enable and Start Annex subsystem
+      systemd:
+        name: quanux-annex
+        enabled: yes
+        state: restarted
+        daemon_reload: yes

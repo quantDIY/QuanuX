@@ -1,0 +1,41 @@
+.TH QUANUXCTL-INFRA 1 "March 2026" "QuanuX" "QuanuX Control Manual"
+.SH NAME
+quanuxctl-infra \- QuanuX Control Plane: Ephemeral Infrastructure Provisioning
+.SH SYNOPSIS
+.B quanuxctl infra
+[\fICOMMAND\fR] [\fIOPTIONS\fR]
+
+.SH DESCRIPTION
+.B quanuxctl infra
+manages the physical hardware and logical network boundaries for the QuanuX ecosystem. It directly interfaces with Terraform to deploy 0-Trust environments across cloud providers like DigitalOcean and Google Cloud Platform. 
+
+.SH COMMANDS
+.B Storage Authentication:
+.TP
+.B set-token \fItoken\fR
+Securely saves the DigitalOcean API Token to the native OS Keyring. Zero-disk footprint.
+.TP
+.B set-spaces-keys \fIaccess\fR \fIsecret\fR
+Securely saves DO Spaces keys to the OS Keyring.
+
+.B Provisioning Pipeline:
+.TP
+.B auth
+Retrieves provider credentials from OS Keyring (DO) or local identity files (GCP) and outputs bash export strings for Terraform parsing.
+Usage: \fBeval $(quanuxctl infra auth --target [do|gcp])\fR
+.TP
+.B apply
+Executes `terraform apply` targeting the designated provider zero-trust VPC and matrix structure.
+Usage: \fBquanuxctl infra apply --target [do|gcp]\fR
+.TP
+.B destroy
+Tears down the designated provider zero-trust environment using `terraform destroy`.
+Usage: \fBquanuxctl infra destroy --target [do|gcp]\fR
+.TP
+.B status
+Lists active node public and internal IPs by resolving the designated provider's terraform state. Also lists the active Sovereign Vault bucket.
+Usage: \fBquanuxctl infra status --target [do|gcp]\fR
+
+.SH EXIT STATUS
+Returns 0 on complete provisioning execution or correct state parsing.
+Returns 1 on Terraform errors, missing keys, or unreachable environments.

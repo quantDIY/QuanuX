@@ -45,57 +45,31 @@ def set_spaces_keys(
         console.print(f"[bold red]FATAL:[/bold red] Failed to inject spaces keys into the keyring: {e}")
         raise typer.Exit(code=1)
 
-@app.command("auth-shell")
-def auth_shell():
-    """
-    Retrieves the DigitalOcean token from the OS Keyring and outputs an export command.
-    Usage: eval $(quanuxctl infra auth-shell)
-    """
-    try:
-        token = keyring.get_password(SERVICE_NAME, TOKEN_KEY)
-        if not token:
-            console.print("echo '[ERROR] DO Token not found in Keyring. Run: quanuxctl infra set-token <TOKEN>'", err=True)
-            raise typer.Exit(code=1)
-        
-        # Native MacOS IP fetching via curl
-        import subprocess
-        import os
-        ipv4_proc = subprocess.run(["curl", "-4", "-s", "ifconfig.me"], capture_output=True, text=True)
-        admin_ipv4 = ipv4_proc.stdout.strip()
+def _get_admin_ip():
+    import subprocess
+    ipv4_proc = subprocess.run(["curl", "-4", "-s", "ifconfig.me"], capture_output=True, text=True)
+    return ipv4_proc.stdout.strip()
 
-        ssh_pub_path = os.path.expanduser("~/.ssh/id_ed25519.pub")
-        ssh_proc = subprocess.run(["ssh-keygen", "-E", "md5", "-lf", ssh_pub_path], capture_output=True, text=True)
-        fingerprint = ""
-        if ssh_proc.returncode == 0:
-            fingerprint = ssh_proc.stdout.split()[1].replace("MD5:", "").strip()
+def _get_ssh_fingerprint_and_key():
+    import subprocess, os
+    ssh_pub_path = os.path.expanduser("~/.ssh/id_ed25519.pub")
+    ssh_proc = subprocess.run(["ssh-keygen", "-E", "md5", "-lf", ssh_pub_path], capture_output=True, text=True)
+    fingerprint = ""
+    raw_key = ""
+    if ssh_proc.returncode == 0:
+        fingerprint = ssh_proc.stdout.split()[1].replace("MD5:", "").strip()
+    if os.path.exists(ssh_pub_path):
+        with open(ssh_pub_path, "r") as f:
+             raw_key = f.read().strip()
+    return fingerprint, raw_key
 
-        import sys
-        sys.stdout.write(f"export TF_VAR_do_token={token}\n") # lgtm [py/clear-text-logging-sensitive-data]
-        if admin_ipv4:
-            sys.stdout.write(f"export TF_VAR_admin_ip={admin_ipv4}\n")
-        else:
-            console.print("echo '[WARNING] Failed to fetch IPv4 admin IP.'", err=True)
-            
-        if fingerprint:
-            sys.stdout.write(f"export TF_VAR_ssh_keys='[\"{fingerprint}\"]'\n")
-        else:
-            console.print("echo '[WARNING] Failed to extract local SSH fingerprint.'", err=True)
-
-        spaces_access = keyring.get_password(SERVICE_NAME, "spaces_access_id")
-        spaces_secret = keyring.get_password(SERVICE_NAME, "spaces_secret_key")
-        if spaces_access and spaces_secret:
-            sys.stdout.write(f"export SPACES_ACCESS_KEY_ID={spaces_access}\n")
-            sys.stdout.write(f"export SPACES_SECRET_ACCESS_KEY={spaces_secret}\n") # lgtm [py/clear-text-logging-sensitive-data]
-
-    except Exception as e:
-        console.print(f"echo '[FATAL] Keyring retrieval failed: {e}'", err=True)
-def get_terraform_cwd():
+def get_terraform_cwd(target="do"):
     current_dir = os.path.abspath(os.path.dirname(__file__))
     repo_root = os.path.abspath(os.path.join(current_dir, "../../../../../"))
-    
+    sub = "gcp" if target == "gcp" else ""
     possible_paths = [
-        os.path.join(repo_root, "QuanuX-Infra/terraform"),
-        os.path.expanduser("~/Antigravity/QuanuX/QuanuX/QuanuX-Infra/terraform")
+        os.path.join(repo_root, "QuanuX-Infra/terraform", sub),
+        os.path.expanduser(f"~/Antigravity/QuanuX/QuanuX/QuanuX-Infra/terraform/{sub}")
     ]
     for p in possible_paths:
         if os.path.exists(p) and os.path.isdir(p):
@@ -105,7 +79,6 @@ def get_terraform_cwd():
 def get_annex_dir():
     current_dir = os.path.abspath(os.path.dirname(__file__))
     repo_root = os.path.abspath(os.path.join(current_dir, "../../../../../"))
-    
     possible_paths = [
         os.path.join(repo_root, "QuanuX-Annex"),
         os.path.expanduser("~/Antigravity/QuanuX/QuanuX/QuanuX-Annex")
@@ -115,17 +88,62 @@ def get_annex_dir():
             return os.path.abspath(p)
     return None
 
-@app.command("do-droplets")
-def do_droplets():
-    """List active DigitalOcean Droplets from Terraform State."""
-    cwd = get_terraform_cwd()
+@app.command("auth")
+def auth(target: str = typer.Option("gcp", help="Infrastructure target (do or gcp)")):
+    """Outputs export commands for QECD Phase 3 Terraform Provisioning."""
+    import sys, os, json
+    check_provider(target)
+    
+    admin_ipv4 = _get_admin_ip()
+    fingerprint, raw_key = _get_ssh_fingerprint_and_key()
+    
+    if target.lower() == "do":
+        token = keyring.get_password(SERVICE_NAME, TOKEN_KEY)
+        if not token:
+            console.print("echo '[ERROR] DO Token not found. Run: quanuxctl infra set-token <TOKEN>'", err=True)
+            raise typer.Exit(code=1)
+            
+        sys.stdout.write(f"export TF_VAR_do_token={token}\n")
+        if admin_ipv4:
+            sys.stdout.write(f"export TF_VAR_admin_ip={admin_ipv4}\n")
+        if fingerprint:
+            sys.stdout.write(f"export TF_VAR_ssh_keys='[\"{fingerprint}\"]'\n")
+            
+        spaces_access = keyring.get_password(SERVICE_NAME, "spaces_access_id")
+        spaces_secret = keyring.get_password(SERVICE_NAME, "spaces_secret_key")
+        if spaces_access and spaces_secret:
+            sys.stdout.write(f"export SPACES_ACCESS_KEY_ID={spaces_access}\n")
+            sys.stdout.write(f"export SPACES_SECRET_ACCESS_KEY={spaces_secret}\n")
+    else:
+        key_path = os.path.expanduser("~/.quanux/keys/qecd-tf-provisioner.json")
+        if not os.path.exists(key_path):
+            console.print("echo '[ERROR] GCP Key not found. Run Phase 2 IAM script first.'", err=True)
+            raise typer.Exit(code=1)
+            
+        sys.stdout.write(f"export TF_VAR_gcp_credentials_file={key_path}\n")
+        if admin_ipv4:
+            sys.stdout.write(f"export TF_VAR_admin_ip={admin_ipv4}\n")
+        try:
+            with open(key_path) as f:
+                 key_data = json.load(f)
+                 sys.stdout.write(f"export TF_VAR_project_id={key_data.get('project_id')}\n")
+        except:
+            pass
+        if raw_key:
+            sys.stdout.write(f"export TF_VAR_ssh_keys='[\"{raw_key}\"]'\n")
+
+@app.command("status")
+def status(target: str = typer.Option("gcp", help="Infrastructure target (do or gcp)")):
+    """Lists active nodes and vaults from terraform output."""
+    check_provider(target)
+    cwd = get_terraform_cwd(target)
     if not cwd:
-        console.print("[red]Could not locate QuanuX-Infra/terraform directory.[/red]")
+        console.print(f"[red]Could not locate {target.upper()} terraform directory.[/red]")
         raise typer.Exit(1)
         
     res = subprocess.run(["terraform", "output", "-json"], cwd=cwd, capture_output=True, text=True)
     if res.returncode != 0:
-        console.print("[red]Failed to read terraform outputs.[/red]")
+        console.print(f"[red]Failed to read terraform outputs for {target.upper()}.[/red]")
         raise typer.Exit(1)
         
     try:
@@ -134,45 +152,52 @@ def do_droplets():
         nexus_int = outputs.get("quanux_panopticon_nexus_internal_ip", {}).get("value", "N/A")
         annex_pub = outputs.get("quanux_annex_node_public_ip", {}).get("value", "N/A")
         annex_int = outputs.get("quanux_annex_node_internal_ip", {}).get("value", "N/A")
-
-        console.print("\n[bold cyan]=== DigitalOcean QuanuX Droplets ===[/bold cyan]")
+        
+        console.print(f"\n[bold blue]=== {target.upper()} QuanuX Nodes ===[/bold blue]")
         console.print(f"[bold green]Panopticon Nexus:[/bold green] {nexus_pub} (Internal: {nexus_int})")
         console.print(f"[bold green]Annex Ingestion Node:[/bold green] {annex_pub} (Internal: {annex_int})\n")
+        
+        vault_name = outputs.get("quanux_zarr_vault_name", {}).get("value", "N/A")
+        vault_endpoint = outputs.get("quanux_zarr_vault_endpoint", {}).get("value", "N/A")
+        if vault_name != "N/A":
+            console.print(f"[bold green]Zarr Vault Name:[/bold green] {vault_name}")
+            console.print(f"[bold green]Zarr Vault Endpoint:[/bold green] {vault_endpoint}\n")
     except Exception as e:
         console.print(f"[red]Error parsing terraform output: {e}[/red]")
 
-@app.command("do-spaces")
-def do_spaces():
-    """List active DigitalOcean Spaces from Terraform State."""
-    cwd = get_terraform_cwd()
+@app.command("apply")
+def tf_apply(target: str = typer.Option("gcp", help="Infrastructure target (do or gcp)")):
+    """Runs Terraform Apply strictly for the designated deployment."""
+    check_provider(target)
+    cwd = get_terraform_cwd(target)
     if not cwd:
-        console.print("[red]Could not locate QuanuX-Infra/terraform directory.[/red]")
+        console.print(f"[red]Could not locate {target.upper()} terraform directory.[/red]")
         raise typer.Exit(1)
         
-    res = subprocess.run(["terraform", "output", "-json"], cwd=cwd, capture_output=True, text=True)
-    if res.returncode != 0:
-        console.print("[red]Failed to read terraform outputs.[/red]")
+    console.print(f"[bold blue]Initiating {target.upper()} Provisioning...[/bold blue]")
+    subprocess.run(["terraform", "init"], cwd=cwd)
+    subprocess.run(["terraform", "apply", "-auto-approve"], cwd=cwd)
+
+@app.command("destroy")
+def tf_destroy(target: str = typer.Option("gcp", help="Infrastructure target (do or gcp)")):
+    """Destroys the designated QuanuX Deployment."""
+    check_provider(target)
+    cwd = get_terraform_cwd(target)
+    if not cwd:
+        console.print(f"[red]Could not locate {target.upper()} terraform directory.[/red]")
         raise typer.Exit(1)
         
-    try:
-        outputs = json.loads(res.stdout)
-        vault_name = outputs.get("quanux_zarr_vault_name", {}).get("value", "N/A")
-        vault_endpoint = outputs.get("quanux_zarr_vault_endpoint", {}).get("value", "N/A")
-        
-        console.print("\n[bold cyan]=== DigitalOcean QuanuX Spaces ===[/bold cyan]")
-        console.print(f"[bold green]Zarr Vault Name:[/bold green] {vault_name}")
-        console.print(f"[bold green]Zarr Vault Endpoint:[/bold green] {vault_endpoint}\n")
-    except Exception as e:
-        console.print(f"[red]Error parsing terraform output: {e}[/red]")
+    console.print(f"[bold red]Initiating {target.upper()} Destruction...[/bold red]")
+    subprocess.run(["terraform", "destroy", "-auto-approve"], cwd=cwd)
 
 @app.command("ingest-start")
 def ingest_start(
-    provider: str = typer.Option("do", help="Cloud provider (do or gcp)"),
+    target: str = typer.Option("gcp", help="Cloud target (do or gcp)"),
     memory_limit_mb: int = typer.Option(500, help="Memory limit in MB for JetStream batching")
 ):
     """Starts the QuanuX asynchronous ingestion pipeline."""
-    check_provider(provider)
-    if provider.lower() == "gcp":
+    check_provider(target)
+    if target.lower() == "gcp":
         console.print(f"[bold cyan]GCP Ingestion:[/bold cyan] Initiating pipeline with {memory_limit_mb}MB limit.")
         annex_dir = get_annex_dir()
         if not annex_dir:
@@ -191,13 +216,13 @@ def ingest_start(
 
 @app.command("table-register")
 def table_register(
-    provider: str = typer.Option("do", help="Cloud provider (do or gcp)"),
+    target: str = typer.Option("gcp", help="Cloud target (do or gcp)"),
     project: str = typer.Option(..., help="GCP Project ID"),
     uri: str = typer.Option(..., help="GCS URI for Parquet files")
 ):
     """Registers an external table against the data lake."""
-    check_provider(provider)
-    if provider.lower() == "gcp":
+    check_provider(target)
+    if target.lower() == "gcp":
         console.print(f"[bold cyan]GCP BigQuery:[/bold cyan] Registering external table for {uri} in project {project}.")
         annex_dir = get_annex_dir()
         if not annex_dir:
@@ -212,17 +237,6 @@ def table_register(
             raise typer.Exit(code=1)
     else:
         console.print("[dim]DigitalOcean table registration not applicable.[/dim]")
-
-@app.command("nodes")
-def list_nodes(provider: str = typer.Option("do", help="Cloud provider (do or gcp)")):
-    """List active QuanuX nodes."""
-    check_provider(provider)
-    if provider.lower() == "do":
-        # Route to do_droplets equivalent
-        do_droplets()
-    elif provider.lower() == "gcp":
-        console.print("\n[bold cyan]=== GCP QuanuX Nodes ===[/bold cyan]")
-        console.print("[dim]Fetching GCP Compute Engine instances... (Not yet implemented)[/dim]\n")
 
 gcp_sql_app = typer.Typer(help="GCP Bounded AST SQL Transpilation")
 app.add_typer(gcp_sql_app, name="gcp-sql")

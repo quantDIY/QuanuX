@@ -1,0 +1,31 @@
+.TH QUANUXCTL-ENGINE 1 "March 2026" "QuanuX" "QuanuX Control Manual"
+.SH NAME
+quanuxctl-engine \- QuanuX Edge Engine Tuning & Execution
+.SH SYNOPSIS
+.B quanuxctl engine
+[\fICOMMAND\fR] [\fIOPTIONS\fR]
+
+.SH DESCRIPTION
+.B quanuxctl engine
+bridges the ephemeral infrastructure state to the QuanuX configuration management layout. It is securely responsible for OS/Kernel deterministic tuning, CNATS cluster deployment, and the strict lifecycle of the native Annex C++ decoder processes.
+
+.SH COMMANDS
+.TP
+.B tune \fB--target [do|gcp]\fR
+Invokes kernel and OS tuning playbooks for the designated cloud architecture natively.
+For GCP targets, this intentionally disables THP in favor of enforcing Static Hugepages, isolates CPU assignments via grub, and injects raw network buffer parameters for low-latency transmission protocols.
+.TP
+.B start \fB--target [do|gcp]\fR
+Initializes CNATS JetStream, starts the parent Annex ingestion sub-services, and securely compiles the Omega C++ Decoder natively on the target hardware payload footprint.
+.TP
+.B setup-topology \fB--target [do|gcp]\fR
+Configures the core JetStream QUANUX_INGEST stream.
+Provisions the Stream with 50GB file-backed storage limits on the live cluster.
+Attaches the ANNEX_PROCESSOR and ALEPH_OBSERVER consumers configured for Durable Pull requests with Explicit ACKs, enabling line-rate ingestion loops safely.
+
+.SH ENVIRONMENT
+.B QUANUX_TARGET
+Determines the tfstate dynamic inventory path mapping for secure state extraction.
+
+.SH EXIT STATUS
+Returns 0 on successful Ansible playbook execution string. Returns 1 on task or subsystem failure.

@@ -5,7 +5,9 @@ import os
 
 def get_terraform_outputs():
     # Run terraform output -json to extract the active IPs securely
-    terraform_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../terraform"))
+    target = os.environ.get("QUANUX_TARGET", "do")
+    sub = "gcp" if target == "gcp" else ""
+    terraform_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), f"../terraform/{sub}"))
     try:
         result = subprocess.run(["terraform", "output", "-json"], capture_output=True, text=True, cwd=terraform_dir, check=True)
         return json.loads(result.stdout)
