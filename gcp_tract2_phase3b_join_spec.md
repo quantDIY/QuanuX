@@ -9,7 +9,7 @@ Code will fail-closed if it deviates from this singular accepted structure:
 *   **Single Join Only:** A query may contain at most one `JOIN` operation.
 *   **`INNER JOIN` Only:** Only explicit `INNER JOIN` (or default `JOIN` assuming `INNER`) is permitted.
 *   **Equality Predicates Only:** The `ON` clause must consist of a strict equality check between explicit column references (e.g., `ON a.instrument_id = b.instrument_id`).
-*   **No Join Chains:** A single bridging of exactly two referenced tables (or self-aliases) is the absolute ceiling.
+*   **No Join Chains:** A single bridging of exactly two referenced tables (or self-aliases) is the absolute ceiling. Self-joins (e.g., joining a table to itself via distinct aliases like `MarketTick t1 JOIN MarketTick t2`) are explicitly allowed under this subset, provided all other constraints are met.
 
 ## 3. Explicitly Banned Join Behaviors (The "Rejected" Matrix)
 The following constructs are strictly banned and must issue a deterministic `TranspilationError`:
