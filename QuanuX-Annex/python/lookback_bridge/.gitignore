@@ -1,0 +1,5 @@
+*.so
+*.o
+*.c
+build/
+__pycache__/

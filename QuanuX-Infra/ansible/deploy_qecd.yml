@@ -1,0 +1,258 @@
+---
+- name: QuanuX Phase 6 - Aleph Protocol & superGraph Orchestration
+  hosts: quanux_annex_node
+  become: true
+  tasks:
+    # Action 1: The Substrate Chokehold
+    - name: Disable Transparent Huge Pages (THP)
+      shell: echo never > /sys/kernel/mm/transparent_hugepage/enabled
+      args:
+        executable: /bin/bash
+      ignore_errors: true
+
+    - name: Persist THP disable
+      lineinfile:
+        path: /etc/sysfs.conf
+        line: "kernel/mm/transparent_hugepage/enabled = never"
+        create: true
+
+    - name: Configure Static Hugepages and CPU Isolation in GRUB
+      lineinfile:
+        path: /etc/default/grub
+        regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
+        line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet splash isolcpus=2-7 default_hugepagesz=1G hugepagesz=1G hugepages=16"'
+        
+    - name: Update GRUB
+      command: update-grub
+
+    - name: Apply QuanuX Low-Latency Network Fabric sysctl parameters
+      blockinfile:
+        path: /etc/sysctl.d/99-quanux-gcp.conf
+        create: true
+        block: |
+          net.core.rmem_max=16777216
+          net.core.wmem_max=16777216
+          net.ipv4.tcp_rmem=4096 87380 16777216
+          net.ipv4.tcp_wmem=4096 65536 16777216
+          net.ipv4.tcp_low_latency=1
+          net.core.netdev_max_backlog=5000
+      
+    - name: Reload sysctl definitions
+      command: sysctl --system
+
+    # Action 2: Native Edge Compilation
+    - name: Verify QuanuX Repository Path exists
+      file:
+        path: /opt/quanux/QuanuX-Annex
+        state: directory
+
+    - name: Sync QuanuX Repo to Edge (Simulating git pull main)
+      synchronize:
+        src: ../../../
+        dest: /opt/quanux/
+        rsync_opts:
+          - "--exclude=.git"
+          - "--exclude=.terraform"
+          - "--exclude=__pycache__"
+          - "--exclude=.gemini"
+          - "--exclude=.agent"
+
+    - name: Install OS-level Native C++ Dependencies (Apt Foundation)
+      apt:
+        name: 
+          - build-essential
+          - cmake
+          - g++
+          - libhdf5-dev
+          - libblosc2-dev
+          - libcurl4-openssl-dev
+          - libssl-dev
+          - pkg-config
+          - zip
+          - unzip
+          - tar
+          - git
+          - flex
+          - bison
+          - ninja-build
+        state: present
+        update_cache: true
+
+    - name: Download Miniforge3 Installer
+      get_url:
+        url: https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
+        dest: /tmp/Miniforge3.sh
+        mode: '0755'
+
+    - name: Install Miniforge3 to /opt/conda natively
+      shell: |
+        if [ ! -d /opt/conda ]; then
+          bash /tmp/Miniforge3.sh -b -p /opt/conda
+        fi
+      args:
+        executable: /bin/bash
+        creates: /opt/conda/bin/conda
+
+    - name: Initialize Conda for system-wide access
+      shell: /opt/conda/bin/conda init bash
+      args:
+        executable: /bin/bash
+
+    - name: Install QuanuX C++ Dependencies via Conda Forge
+      shell: |
+        # Utilizing pre-compiled binaries from conda-forge
+        /opt/conda/bin/conda install -y -c conda-forge \
+          google-cloud-cpp \
+          arrow-cpp \
+          c-blosc2 \
+          hdf5 \
+          cxx-compiler \
+          ninja
+      args:
+        executable: /bin/bash
+
+    - name: Execute Native CMake Build via Conda Toolchain
+      shell: |
+        source /opt/conda/bin/activate
+        mkdir -p build
+        cd build
+        # Expose the Conda environment path to CMake for library linking
+        cmake -DCLOUD_TARGET=GCP -DCMAKE_PREFIX_PATH=/opt/conda -G Ninja ..
+        ninja
+      args:
+        chdir: /opt/quanux/QuanuX-Annex
+        executable: /bin/bash
+
+    # Action 3: The AI Translation Pipeline (JSON-to-Markdown)
+    - name: Install Python dependencies for Aleph Ingest Worker
+      apt:
+        name: python3-venv
+        state: present
+    
+    - name: Setup Aleph Ingest Worker VENV
+      command: python3 -m venv /opt/quanux/QuanuX-Observability/python/aleph_ingest/venv
+      args:
+        creates: /opt/quanux/QuanuX-Observability/python/aleph_ingest/venv/bin/activate
+
+    - name: Install NATS python SDK
+      shell: /opt/quanux/QuanuX-Observability/python/aleph_ingest/venv/bin/pip install nats-py
+      
+    - name: Create Aleph Ingest Systemd Service
+      copy:
+        dest: /etc/systemd/system/quanux-aleph-ingest.service
+        content: |
+          [Unit]
+          Description=QuanuX Aleph Protocol JSON-to-Markdown Ingestion
+          After=network.target nats.service
+          
+          [Service]
+          WorkingDirectory=/opt/quanux/QuanuX-Observability/python/aleph_ingest
+          ExecStart=/opt/quanux/QuanuX-Observability/python/aleph_ingest/venv/bin/python supergraph_ingest_worker.py
+          Restart=always
+          
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Enable and Start Aleph Ingest Worker
+      systemd:
+        name: quanux-aleph-ingest
+        enabled: true
+        state: restarted
+        daemon_reload: true
+
+    # Action 4 & 5: Bare Metal superGraph Fabric & Synapse Connection
+    - name: Install PostgreSQL Natively (Hasura Metadata State)
+      apt:
+        name: [postgresql, postgresql-contrib, apt-transport-https, gnupg, curl]
+        state: present
+        update_cache: true
+
+    - name: Configure PostgreSQL Network Bindings
+      shell: |
+        for conf in /etc/postgresql/*/main/postgresql.conf; do
+          sed -i "s/^#\?listen_addresses.*/listen_addresses = '127.0.0.1'/g" "$conf"
+        done
+        systemctl restart postgresql
+
+    - name: Hydrate Hasura Metadata Database
+      become: true
+      become_user: postgres
+      shell: |
+        psql -tc "SELECT 1 FROM pg_database WHERE datname = 'hasura_metadata'" | grep -q 1 || psql -c "CREATE DATABASE hasura_metadata;"
+        psql -c "ALTER USER postgres WITH PASSWORD 'postgres';"
+
+    - name: Add OpenSearch GPG key
+      apt_key:
+        url: https://artifacts.opensearch.org/publickeys/opensearch.pgp
+        state: present
+
+    - name: Add OpenSearch APT repository
+      apt_repository:
+        repo: deb https://artifacts.opensearch.org/releases/bundle/opensearch/2.x/apt stable main
+        state: present
+
+    - name: Install Native OpenSearch
+      shell: "env OPENSEARCH_INITIAL_ADMIN_PASSWORD='QuanuX-SuperSecret-123!' DEBIAN_FRONTEND=noninteractive apt-get install -y opensearch=2.19.4"
+      args:
+        executable: /bin/bash
+        creates: /etc/opensearch/opensearch.yml
+
+    - name: Configure OpenSearch strictly to localhost for Edge routing
+      lineinfile:
+        path: /etc/opensearch/opensearch.yml
+        regexp: '^#?network\.host:'
+        line: "network.host: 127.0.0.1"
+
+    - name: Configure OpenSearch single-node discovery
+      lineinfile:
+        path: /etc/opensearch/opensearch.yml
+        regexp: '^#?discovery\.type:'
+        line: "discovery.type: single-node"
+
+    - name: Disable OpenSearch Security locally
+      lineinfile:
+        path: /etc/opensearch/opensearch.yml
+        regexp: '^#?plugins\.security\.disabled:'
+        line: "plugins.security.disabled: true"
+
+    - name: Enable and Start Native OpenSearch
+      systemd:
+        name: opensearch
+        enabled: true
+        state: restarted
+        daemon_reload: true
+
+    - name: Download Native Hasura GraphQL Binary
+      get_url:
+        url: https://github.com/hasura/graphql-engine/releases/download/v2.37.0/graphql-engine-ubuntu-x86_64
+        dest: /usr/local/bin/graphql-engine
+        mode: '0755'
+
+    - name: Create Native Hasura Systemd Service Wrapper
+      copy:
+        dest: /etc/systemd/system/hasura.service
+        content: |
+          [Unit]
+          Description=Hasura GraphQL Engine (QuanuX superGraph Synapse)
+          After=network-online.target postgresql.service
+          
+          [Service]
+          Environment="HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/hasura_metadata"
+          Environment="HASURA_GRAPHQL_ENABLE_CONSOLE=true"
+          Environment="HASURA_GRAPHQL_DEV_MODE=true"
+          Environment="HASURA_GRAPHQL_SERVER_PORT=8080"
+          Environment="HASURA_GRAPHQL_ADMIN_SECRET=QuanuX-Node-Secret"
+          # QuanuX Lookback Synapse Binding Context
+          Environment="QUANUX_LOOKBACK_IPC_SOCKET=/tmp/quanux_lookback.arrow"
+          ExecStart=/usr/local/bin/graphql-engine serve
+          Restart=always
+          
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Enable and Start Native Hasura Engine
+      systemd:
+        name: hasura
+        enabled: true
+        state: restarted
+        daemon_reload: true
