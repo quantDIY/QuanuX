@@ -1,8 +1,7 @@
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/QuanuX/qxctl/pkg/manager"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -10,9 +9,9 @@ import (
 var predeployCmd = &cobra.Command{
 	Use:   "predeploy",
 	Short: "Performs a Capability Handshake prior to deployment",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("predeploy invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+	RunE: func(cmd *cobra.Command, args []string) error {
+		payload := viper.GetString("predeploy.predeploy.payload")
+		return manager.Exec(cmd.Context(), "predeploy", payload)
 	},
 }
 
