@@ -26,7 +26,7 @@ var nodeDeployCmd = &cobra.Command{
 		
 		config := &ssh.ClientConfig{
 			User:            "root",
-			Auth:            []ssh.AuthMethod{ssh.Password("mock_password")},
+			Auth:            []ssh.AuthMethod{ssh.Password("example_password_placeholder")},
 			HostKeyCallback: ssh.InsecureIgnoreHostKey(),
 		}
 		
