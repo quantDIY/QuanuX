@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/go-plugin"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/QuanuX/qxctl/pkg/ext"
 )
 
 var extCmd = &cobra.Command{
@@ -85,9 +86,10 @@ var extRemoveCmd = &cobra.Command{
 var extRunCmd = &cobra.Command{
 	Use:   "run [name]",
 	Short: "Run an extension in the foreground (injecting secrets)",
-	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("run [name] invoked.")
-        fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+	Args:  cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		target := args[0]
+		return ext.ConnectSidecar(cmd.Context(), target)
 	},
 }
 

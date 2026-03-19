@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/QuanuX/qxctl/pkg/vcs"
 )
 
 var vcsCmd = &cobra.Command{
@@ -27,9 +28,10 @@ var vcsCloneCmd = &cobra.Command{
 var vcsCommitCmd = &cobra.Command{
 	Use:   "commit",
 	Short: "Commit changes to the local repository",
-	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("commit invoked.")
-        fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+	RunE: func(cmd *cobra.Command, args []string) error {
+		msg := viper.GetString("vcs.vcs.commit.message")
+		all := viper.GetBool("vcs.vcs.commit.all")
+		return vcs.Commit(cmd.Context(), msg, all)
 	},
 }
 
@@ -72,9 +74,8 @@ var vcsSetupCmd = &cobra.Command{
 var vcsStatusCmd = &cobra.Command{
 	Use:   "status",
 	Short: "Show status of the current repository",
-	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("status invoked.")
-        fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return vcs.Status(cmd.Context())
 	},
 }
 
