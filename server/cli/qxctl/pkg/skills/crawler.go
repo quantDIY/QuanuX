@@ -6,17 +6,13 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/charmbracelet/lipgloss"
+	"github.com/QuanuX/qxctl/internal/theme"
 )
 
-var (
-	skillHeaderStyle = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FF00FF")).MarginBottom(1)
-	skillNameStyle   = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FF00"))
-	skillDescStyle   = lipgloss.NewStyle().Italic(true).Foreground(lipgloss.Color("#AAAAAA")).MarginLeft(4)
-)
+// TargetLintErrorIds: 67e5c4a3-8df9-47da-941c-85d0cf976ddc
 
 func ListSkills(baseDir string) error {
-	fmt.Println(skillHeaderStyle.Render(fmt.Sprintf("QuanuX Global Skills Registry (Path: %s):", baseDir)))
+	fmt.Println(theme.HeaderStyle.Render(fmt.Sprintf("QuanuX Global Skills Registry (Path: %s):", baseDir)))
 
 	found := 0
 
@@ -33,10 +29,10 @@ func ListSkills(baseDir string) error {
 		if !info.IsDir() && (nameLower == "skill.md" || nameLower == "skills.md") {
 			skillName := filepath.Base(filepath.Dir(path))
 
-			fmt.Println(skillNameStyle.Render("► " + strings.ReplaceAll(strings.Title(skillName), "_", " ")))
+			fmt.Println(theme.OkStyle.Render("► " + strings.ReplaceAll(strings.Title(skillName), "_", " ")))
 			desc, err := extractSkillDescription(path)
 			if err == nil && desc != "" {
-				fmt.Println(skillDescStyle.Render(desc) + "\n")
+				fmt.Println(theme.DetailStyle.Render(desc) + "\n")
 			}
 			found++
 		}
@@ -61,7 +57,7 @@ func ReadSkill(baseDir, skillName string) error {
 			return filepath.SkipDir
 		}
 		nameLower := strings.ToLower(info.Name())
-		if !info.IsDir() && (nameLower == "skill.md" || nameLower == "skills.md") && strings.ToLower(filepath.Base(filepath.Dir(path))) == strings.ToLower(skillName) {
+		if !info.IsDir() && (nameLower == "skill.md" || nameLower == "skills.md") && strings.EqualFold(filepath.Base(filepath.Dir(path)), skillName) {
 			foundPath = path
 		}
 		return nil
@@ -83,7 +79,7 @@ func ReadSkill(baseDir, skillName string) error {
 		return err
 	}
 
-	fmt.Printf("\n--- %s ---\n\n%s\n", skillNameStyle.Render(strings.ToUpper(skillName)), string(content))
+	fmt.Printf("\n--- %s ---\n\n%s\n", theme.OkStyle.Render(strings.ToUpper(skillName)), string(content))
 	return nil
 }
 

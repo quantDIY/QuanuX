@@ -8,18 +8,12 @@ import (
 	"time"
 
 	"github.com/charmbracelet/lipgloss"
+	"github.com/QuanuX/qxctl/internal/theme"
 	"github.com/zalando/go-keyring"
 )
 
-var (
-	probeHeaderStyle = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FFFF")).MarginBottom(1)
-	probeOkStyle     = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#00FF00"))
-	probeFailStyle   = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FF0000"))
-	probeLabelStyle  = lipgloss.NewStyle().Width(35)
-)
-
 func ExecuteDiagnostics(ctx context.Context, timeout int, isFix bool) error {
-	fmt.Println(probeHeaderStyle.Render("Initializing QuanuX High-Frequency Health Probe (Concurrency: 6...)\n"))
+	fmt.Println(theme.HeaderStyle.Render("Initializing QuanuX High-Frequency Health Probe (Concurrency: 6...)\n"))
 
 	endpoints := map[string]string{
 		"NATS JetStream Edge Core":         "1.1.1.1:53",
@@ -44,13 +38,13 @@ func ExecuteDiagnostics(ctx context.Context, timeout int, isFix bool) error {
 			dialer.Timeout = time.Duration(timeout) * time.Millisecond
 			conn, err := dialer.DialContext(ctx, "tcp", a)
 			
-			status := probeFailStyle.Render("[X] OFFLINE ")
+			status := theme.FailStyle.Render("[X] OFFLINE ")
 			if err == nil {
-				status = probeOkStyle.Render("[✔] ONLINE  ")
+				status = theme.OkStyle.Render("[✔] ONLINE  ")
 				conn.Close()
 			}
 			
-			res := fmt.Sprintf("%s %s %s", status, probeLabelStyle.Render(l), lipgloss.NewStyle().Foreground(lipgloss.Color("#666")).Render("("+a+")"))
+			res := fmt.Sprintf("%s %s %s", status, theme.LabelStyle.Render(l), lipgloss.NewStyle().Foreground(theme.Grey).Render("("+a+")"))
 			
 			mu.Lock()
 			results = append(results, res)
@@ -64,12 +58,12 @@ func ExecuteDiagnostics(ctx context.Context, timeout int, isFix bool) error {
 		
 		_, err := keyring.Get("QuanuX_Probe", "health_check_ping")
 		
-		status := probeFailStyle.Render("[X] OFFLINE ")
+		status := theme.FailStyle.Render("[X] OFFLINE ")
 		if err == nil || err == keyring.ErrNotFound {
-			status = probeOkStyle.Render("[✔] ONLINE  ")
+			status = theme.OkStyle.Render("[✔] ONLINE  ")
 		}
 		
-		res := fmt.Sprintf("%s %s %s", status, probeLabelStyle.Render("Hardware OS Keyring Access"), lipgloss.NewStyle().Foreground(lipgloss.Color("#666")).Render("(Native Apple Keychain API)"))
+		res := fmt.Sprintf("%s %s %s", status, theme.LabelStyle.Render("Hardware OS Keyring Access"), lipgloss.NewStyle().Foreground(theme.Grey).Render("(Native Apple Keychain API)"))
 		
 		mu.Lock()
 		results = append(results, res)
@@ -86,7 +80,7 @@ func ExecuteDiagnostics(ctx context.Context, timeout int, isFix bool) error {
 	fmt.Printf("\nDiagnostic sweep completed natively in %s.\n", elapsed)
 	
 	if isFix {
-		fmt.Println(probeHeaderStyle.Render("\nAuto-Suture Protocol [--fix] engaged. Attempting localized repairs via cluster rollout..."))
+		fmt.Println(theme.HeaderStyle.Render("\nAuto-Suture Protocol [--fix] engaged. Attempting localized repairs via cluster rollout..."))
 	}
 	
 	return nil

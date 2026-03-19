@@ -16,7 +16,8 @@ import (
 func Apply(ctx context.Context, target string) error {
 	fmt.Printf("Initialising Native Terraform Workspace Context Target: [%s]\n", target)
 
-	repoRoot := "/Users/Duncan/Antigravity/QuanuX/QuanuX"
+	home, _ := os.UserHomeDir()
+	repoRoot := filepath.Join(home, "Antigravity", "QuanuX", "QuanuX")
 	workingDir := filepath.Join(repoRoot, "QuanuX-Infra", "terraform", target)
 
 	if _, err := os.Stat(workingDir); os.IsNotExist(err) {
