@@ -1,6 +1,10 @@
 #include "quanux/annex/storage/VaultUploader.hpp"
 #include <iostream>
 #include <chrono>
+#include <fstream>
+#include <cstdio>
+#include <google/cloud/storage/client.h>
+#include <google/cloud/storage/well_known_headers.h>
 
 namespace quanux {
 namespace annex {
@@ -33,6 +37,13 @@ void VaultUploader::queueArtifactForUpload(const std::string& filepath) {
 }
 
 void VaultUploader::workerLoop() {
+    namespace gcs = google::cloud::storage;
+    auto client = gcs::Client::CreateDefaultClient();
+    if (!client) {
+        std::cerr << "[SOVEREIGN_VAULT] Failed to initialize GCP Storage Client." << std::endl;
+        return;
+    }
+
     while (isRunning_) {
         std::string targetFile;
         {
@@ -44,25 +55,37 @@ void VaultUploader::workerLoop() {
             uploadQueue_.pop_front();
         }
 
-        if (uploadToGcs(targetFile)) {
-            if (verifyChecksum(targetFile)) {
-                std::cout << "[SOVEREIGN_VAULT] Artifact replicated cleanly. Deleting local NVMe cache: " << targetFile << std::endl;
-            }
+        std::string object_name = targetFile.substr(targetFile.find_last_of("/\\") + 1);
+        std::cout << "[SOVEREIGN_VAULT] Executing google_cloud_cpp::storage Upload for: " << targetFile << std::endl;
+        
+        auto local_crc32c_status = gcs::ComputeCrc32cChecksum(targetFile);
+        if (!local_crc32c_status) {
+            std::cerr << "[SOVEREIGN_VAULT] Could not compute local CRC32c for " << targetFile << std::endl;
+            continue;
+        }
+        std::string local_crc32c = *local_crc32c_status;
+
+        auto metadata = client->UploadFile(targetFile, "google_storage_bucket", object_name);
+        
+        if (!metadata) {
+            std::cerr << "[SOVEREIGN_VAULT] Failed to upload artifact: " << metadata.status().message() << std::endl;
+            continue;
+        }
+
+        if (metadata->crc32c() == local_crc32c) {
+            std::cout << "[SOVEREIGN_VAULT] Checksum Matched! Artifact replicated cleanly. Deleting NVMe cache: " << targetFile << std::endl;
+            std::remove(targetFile.c_str());
+        } else {
+            std::cerr << "[SOVEREIGN_VAULT] CRITICAL: Checksum mismatch. GCP: " << metadata->crc32c() << " vs Local: " << local_crc32c << std::endl;
         }
     }
 }
 
 bool VaultUploader::uploadToGcs(const std::string& filepath) {
-    // Utilize google-cloud-cpp::storage Client
-    // namespace gcs = google::cloud::storage;
-    // auto client = gcs::Client::CreateDefaultClient().value();
-    // client.UploadFile(filepath, "google_storage_bucket", object_name);
-    std::cout << "[SOVEREIGN_VAULT] Executing google_cloud_cpp::storage Upload for: " << filepath << std::endl;
-    return true; // Assume success for mock
+    return true; 
 }
 
 bool VaultUploader::verifyChecksum(const std::string& filepath) {
-    // CRC32C matching
     return true;
 }
 

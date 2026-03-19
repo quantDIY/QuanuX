@@ -60,7 +60,7 @@ def build_inventory():
         inventory["panopticon_ledger"]["hosts"].append("panopticon-ledger")
         inventory["_meta"]["hostvars"]["panopticon-ledger"] = {
             "ansible_host": pub_ip,
-            "ansible_user": "root",
+            "ansible_user": "quanux" if os.environ.get("QUANUX_TARGET", "do") == "gcp" else "root",
             "internal_ip": priv_ip
         }
 
@@ -71,7 +71,7 @@ def build_inventory():
         inventory["panopticon_buffer"]["hosts"].append("panopticon-buffer")
         inventory["_meta"]["hostvars"]["panopticon-buffer"] = {
             "ansible_host": pub_ip,
-            "ansible_user": "root",
+            "ansible_user": "quanux" if os.environ.get("QUANUX_TARGET", "do") == "gcp" else "root",
             "internal_ip": priv_ip
         }
 
@@ -82,7 +82,7 @@ def build_inventory():
         inventory["panopticon_forge"]["hosts"].append("panopticon-forge")
         inventory["_meta"]["hostvars"]["panopticon-forge"] = {
             "ansible_host": pub_ip,
-            "ansible_user": "root",
+            "ansible_user": "quanux" if os.environ.get("QUANUX_TARGET", "do") == "gcp" else "root",
             "internal_ip": priv_ip
         }
 
@@ -93,7 +93,7 @@ def build_inventory():
         inventory["panopticon_vault"]["hosts"].append("panopticon-vault")
         inventory["_meta"]["hostvars"]["panopticon-vault"] = {
             "ansible_host": pub_ip,
-            "ansible_user": "root",
+            "ansible_user": "quanux" if os.environ.get("QUANUX_TARGET", "do") == "gcp" else "root",
             "internal_ip": priv_ip
         }
 
@@ -104,7 +104,7 @@ def build_inventory():
         inventory["panopticon_oracle"]["hosts"].append("panopticon-oracle")
         inventory["_meta"]["hostvars"]["panopticon-oracle"] = {
             "ansible_host": pub_ip,
-            "ansible_user": "root",
+            "ansible_user": "quanux" if os.environ.get("QUANUX_TARGET", "do") == "gcp" else "root",
             "internal_ip": priv_ip
         }
 
@@ -115,7 +115,7 @@ def build_inventory():
         inventory["panopticon_nexus"]["hosts"].append("panopticon-nexus")
         inventory["_meta"]["hostvars"]["panopticon-nexus"] = {
             "ansible_host": pub_ip,
-            "ansible_user": "root",
+            "ansible_user": "quanux" if os.environ.get("QUANUX_TARGET", "do") == "gcp" else "root",
             "internal_ip": priv_ip
         }
 
@@ -126,7 +126,7 @@ def build_inventory():
         inventory["edge_nodes"]["hosts"].append("edge-nyc-1")
         inventory["_meta"]["hostvars"]["edge-nyc-1"] = {
             "ansible_host": pub_ip1,
-            "ansible_user": "root",
+            "ansible_user": "quanux" if os.environ.get("QUANUX_TARGET", "do") == "gcp" else "root",
             "internal_ip": priv_ip1
         }
         
@@ -136,7 +136,7 @@ def build_inventory():
         inventory["edge_nodes"]["hosts"].append("edge-nyc-2")
         inventory["_meta"]["hostvars"]["edge-nyc-2"] = {
             "ansible_host": pub_ip2,
-            "ansible_user": "root",
+            "ansible_user": "quanux" if os.environ.get("QUANUX_TARGET", "do") == "gcp" else "root",
             "internal_ip": priv_ip2
         }
 
@@ -147,7 +147,7 @@ def build_inventory():
         inventory["quanux_annex_node"]["hosts"].append("quanux_annex_node")
         inventory["_meta"]["hostvars"]["quanux_annex_node"] = {
             "ansible_host": pub_ip_annex,
-            "ansible_user": "root",
+            "ansible_user": "quanux" if os.environ.get("QUANUX_TARGET", "do") == "gcp" else "root",
             "internal_ip": priv_ip_annex
         }
 

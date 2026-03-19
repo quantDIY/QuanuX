@@ -73,7 +73,7 @@ locals {
   default_machine_type = "e2-medium"     # Roughly equivalent to s-2vcpu-4gb
   nexus_machine_type   = "e2-standard-2" # Roughly equivalent to s-4vcpu-8gb
   annex_machine_type   = "c2-standard-4" # Compute-optimized explicitly requested
-  ubuntu_image         = "ubuntu-os-cloud/ubuntu-2404-noble-amd64-v20240924"
+  ubuntu_image         = "ubuntu-os-cloud/ubuntu-2404-lts-amd64"
   # Fetch from tf variables for standard dynamic injection map
   ssh_metadata = length(var.ssh_keys) > 0 ? {
     "ssh-keys" = join("\n", [for key in var.ssh_keys : "quanux:${key}"])
