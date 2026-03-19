@@ -1,21 +1,19 @@
 package cmd
 
 import (
-	"fmt"
+	"github.com/QuanuX/qxctl/pkg/manager"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 var enableCmd = &cobra.Command{
 	Use:   "enable [feature]",
 	Short: "Enable advanced functionality toggles",
-	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("enable [feature] invoked.")
-        fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+	Args:  cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return manager.Exec(cmd.Context(), "enable", args[0])
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(enableCmd)
 }
-

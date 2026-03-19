@@ -1,9 +1,9 @@
 package cmd
 
 import (
+	"github.com/QuanuX/qxctl/pkg/probe"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/QuanuX/qxctl/pkg/probe"
 )
 
 var probeCmd = &cobra.Command{
@@ -32,4 +32,3 @@ func init() {
 	probeProbeCmd.Flags().Int("timeout", 80, "Timeout for TCP dial in ms")
 	viper.BindPFlag("probe.probe.probe.timeout", probeProbeCmd.Flags().Lookup("timeout"))
 }
-

@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"fmt"
+
+	"github.com/QuanuX/qxctl/pkg/nest"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -10,17 +12,18 @@ var nestCmd = &cobra.Command{
 	Use:   "nest",
 	Short: "Manage QuanuX C++ Sovereign Engine Nest Deployment",
 	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("nest invoked.")
-        fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+		fmt.Println("nest invoked.")
+		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
 	},
 }
 
 var nestDropCmd = &cobra.Command{
 	Use:   "drop [target]",
 	Short: "Deploys the C++ execution logic into a pre-conditioned OS Habitat",
-	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("drop [target] invoked.")
-        fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+	Args:  cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		engine := viper.GetString("nest.nest.drop.engine")
+		return nest.Drop(cmd.Context(), args[0], engine)
 	},
 }
 
@@ -30,4 +33,3 @@ func init() {
 	nestDropCmd.Flags().String("engine", "spreader", "Engine type to compile and bind")
 	viper.BindPFlag("nest.nest.drop.engine", nestDropCmd.Flags().Lookup("engine"))
 }
-

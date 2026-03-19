@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"fmt"
+
+	"github.com/QuanuX/qxctl/pkg/indicators"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -10,17 +12,18 @@ var indicatorsCmd = &cobra.Command{
 	Use:   "indicators",
 	Short: "Manage Indicator Registry (Community)",
 	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("indicators invoked.")
-        fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+		fmt.Println("indicators invoked.")
+		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
 	},
 }
 
 var indicatorsInstallCmd = &cobra.Command{
 	Use:   "install [url]",
 	Short: "Install a community indicator from Git",
-	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("install [url] invoked.")
-        fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+	Args:  cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		name := viper.GetString("indicators.indicators.install.name")
+		return indicators.Install(cmd.Context(), args[0], name)
 	},
 }
 
@@ -28,8 +31,8 @@ var indicatorsListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List installed community indicators",
 	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("list invoked.")
-        fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+		fmt.Println("list invoked.")
+		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
 	},
 }
 
@@ -37,8 +40,8 @@ var indicatorsRemoveCmd = &cobra.Command{
 	Use:   "remove [name]",
 	Short: "Remove a community indicator",
 	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("remove [name] invoked.")
-        fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+		fmt.Println("remove [name] invoked.")
+		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
 	},
 }
 
@@ -50,4 +53,3 @@ func init() {
 	indicatorsCmd.AddCommand(indicatorsListCmd)
 	indicatorsCmd.AddCommand(indicatorsRemoveCmd)
 }
-

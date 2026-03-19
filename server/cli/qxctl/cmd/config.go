@@ -22,14 +22,14 @@ var viewCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("--- Active Viper Configuration ---")
 		fmt.Printf("Config File Used: %s\n", viper.ConfigFileUsed())
-		
+
 		settings := viper.AllSettings()
 		yamlData, err := yaml.Marshal(&settings)
 		if err != nil {
 			fmt.Printf("Error marshalling config: %v\n", err)
 			return
 		}
-		
+
 		fmt.Println(string(yamlData))
 	},
 }
@@ -56,7 +56,7 @@ var initCmd = &cobra.Command{
 		viper.Set("infra.default_provider", "gcp")
 		viper.Set("auth.method", "standard") // Try changing to 'biometric' !
 		viper.Set("telemetry.interval", "10s")
-		
+
 		err = viper.WriteConfigAs(configPath)
 		if err != nil {
 			fmt.Printf("Failed to write config file: %v\n", err)

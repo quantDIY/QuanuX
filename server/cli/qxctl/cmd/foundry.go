@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"fmt"
+
+	"github.com/QuanuX/qxctl/pkg/foundry"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -10,8 +12,8 @@ var foundryCmd = &cobra.Command{
 	Use:   "foundry",
 	Short: "Manage QuanuX Foundry (Strategy Generator)",
 	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("foundry invoked.")
-        fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+		fmt.Println("foundry invoked.")
+		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
 	},
 }
 
@@ -19,17 +21,20 @@ var foundryDeployCmd = &cobra.Command{
 	Use:   "deploy",
 	Short: "Vendor code and push a fully self-sovereign artifact to an Execution Node",
 	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("deploy invoked.")
-        fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+		fmt.Println("deploy invoked.")
+		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
 	},
 }
 
 var foundryForgeCmd = &cobra.Command{
 	Use:   "forge",
 	Short: "Forge a new sovereign trading component via AI Generation",
-	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("forge invoked.")
-        fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+	RunE: func(cmd *cobra.Command, args []string) error {
+		cType := viper.GetString("foundry.foundry.forge.type")
+		name := viper.GetString("foundry.foundry.forge.name")
+		lang := viper.GetString("foundry.foundry.forge.lang")
+		version := viper.GetString("foundry.foundry.forge.version")
+		return foundry.Forge(cmd.Context(), cType, name, lang, version)
 	},
 }
 
@@ -37,8 +42,8 @@ var foundryInspectCmd = &cobra.Command{
 	Use:   "inspect [target]",
 	Short: "Connect to edge node for real-time inspection and modular hot-swapping",
 	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("inspect [target] invoked.")
-        fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+		fmt.Println("inspect [target] invoked.")
+		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
 	},
 }
 
@@ -46,8 +51,8 @@ var foundryVerifyCmd = &cobra.Command{
 	Use:   "verify",
 	Short: "Trigger the Deterministic Sandbox for mathematical equivalence testing",
 	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("verify invoked.")
-        fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+		fmt.Println("verify invoked.")
+		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
 	},
 }
 
@@ -72,4 +77,3 @@ func init() {
 	foundryVerifyCmd.Flags().StringP("target", "t", "", "Name of the strategy/component to verify")
 	viper.BindPFlag("foundry.foundry.verify.target", foundryVerifyCmd.Flags().Lookup("target"))
 }
-

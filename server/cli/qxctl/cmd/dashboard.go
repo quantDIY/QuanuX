@@ -2,9 +2,10 @@ package cmd
 
 import (
 	"log"
+
+	"github.com/QuanuX/qxctl/internal/tui"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/QuanuX/qxctl/internal/tui"
 )
 
 var dashboardCmd = &cobra.Command{

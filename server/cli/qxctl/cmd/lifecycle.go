@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"fmt"
+
+	"github.com/QuanuX/qxctl/pkg/lifecycle"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -10,17 +12,19 @@ var lifecycleCmd = &cobra.Command{
 	Use:   "lifecycle",
 	Short: "Dynamic Habitat Deployment & Telemetry Lifecycle",
 	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("lifecycle invoked.")
-        fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+		fmt.Println("lifecycle invoked.")
+		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
 	},
 }
 
 var lifecycleDeployCmd = &cobra.Command{
 	Use:   "deploy",
 	Short: "Deploys a payload into the outer shell (Habitat) safely using valid wiring hooks",
-	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("deploy invoked.")
-        fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+	RunE: func(cmd *cobra.Command, args []string) error {
+		payload := viper.GetString("lifecycle.lifecycle.deploy.payload")
+		target := viper.GetString("lifecycle.lifecycle.deploy.target")
+		pType := viper.GetString("lifecycle.lifecycle.deploy.type")
+		return lifecycle.Deploy(cmd.Context(), payload, target, pType)
 	},
 }
 
@@ -28,8 +32,8 @@ var lifecyclePredeployCmd = &cobra.Command{
 	Use:   "predeploy",
 	Short: "Performs a Capability Handshake prior to deployment",
 	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("predeploy invoked.")
-        fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+		fmt.Println("predeploy invoked.")
+		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
 	},
 }
 
@@ -37,8 +41,8 @@ var lifecycleSshCmd = &cobra.Command{
 	Use:   "ssh [target] [payload_name]",
 	Short: "Executes a payload via SSH, conditioned on the C++ Envoy generating the wrapper",
 	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("ssh [target] [payload_name] invoked.")
-        fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+		fmt.Println("ssh [target] [payload_name] invoked.")
+		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
 	},
 }
 
@@ -60,4 +64,3 @@ func init() {
 	viper.BindPFlag("lifecycle.lifecycle.predeploy.type", lifecyclePredeployCmd.Flags().Lookup("type"))
 	lifecycleCmd.AddCommand(lifecycleSshCmd)
 }
-

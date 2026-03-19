@@ -56,7 +56,7 @@ func initConfig() {
 	}
 
 	viper.SetEnvPrefix("QXCTL") // Automatically prefix matched EnvVars like QXCTL_HUB
-	viper.AutomaticEnv() // read in environment variables that match
+	viper.AutomaticEnv()        // read in environment variables that match
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {

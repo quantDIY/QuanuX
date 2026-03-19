@@ -2,17 +2,18 @@ package cmd
 
 import (
 	"fmt"
+
+	"github.com/QuanuX/qxctl/pkg/node"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/QuanuX/qxctl/pkg/node"
 )
 
 var nodeCmd = &cobra.Command{
 	Use:   "node",
 	Short: "Manage Remote Execution Nodes (Deploy, List)",
 	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("node invoked.")
-        fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+		fmt.Println("node invoked.")
+		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
 	},
 }
 
@@ -39,4 +40,3 @@ func init() {
 	nodeDeployCmd.Flags().Bool("dry-run", false, "Print command without executing")
 	viper.BindPFlag("node.node.deploy.dry_run", nodeDeployCmd.Flags().Lookup("dry-run"))
 }
-

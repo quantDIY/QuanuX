@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"fmt"
+
+	"github.com/QuanuX/qxctl/pkg/bridge"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -10,17 +12,18 @@ var bridgeCmd = &cobra.Command{
 	Use:   "bridge",
 	Short: "Manage the SignalR Bridge",
 	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("bridge invoked.")
-        fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+		fmt.Println("bridge invoked.")
+		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
 	},
 }
 
 var bridgeStartCmd = &cobra.Command{
 	Use:   "start",
 	Short: "Start the SignalR bridge process",
-	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("start invoked.")
-        fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+	RunE: func(cmd *cobra.Command, args []string) error {
+		runtime := viper.GetString("bridge.bridge.start.runtime")
+		port := viper.GetInt("bridge.bridge.start.port")
+		return bridge.Start(cmd.Context(), runtime, port)
 	},
 }
 
@@ -28,8 +31,8 @@ var bridgeStopCmd = &cobra.Command{
 	Use:   "stop",
 	Short: "Stop the SignalR bridge (placeholder)",
 	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("stop invoked.")
-        fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+		fmt.Println("stop invoked.")
+		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
 	},
 }
 
@@ -42,4 +45,3 @@ func init() {
 	viper.BindPFlag("bridge.bridge.start.port", bridgeStartCmd.Flags().Lookup("port"))
 	bridgeCmd.AddCommand(bridgeStopCmd)
 }
-

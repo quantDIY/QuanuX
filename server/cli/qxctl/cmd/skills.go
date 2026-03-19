@@ -1,9 +1,9 @@
 package cmd
 
 import (
+	"github.com/QuanuX/qxctl/pkg/skills"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/QuanuX/qxctl/pkg/skills"
 )
 
 var skillsCmd = &cobra.Command{
