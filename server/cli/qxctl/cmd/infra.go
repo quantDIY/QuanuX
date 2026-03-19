@@ -20,9 +20,9 @@ var infraCmd = &cobra.Command{
 var infraApplyCmd = &cobra.Command{
 	Use:   "apply",
 	Short: "Runs Terraform Apply strictly for the designated deployment",
-	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("apply invoked.")
-        fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+	RunE: func(cmd *cobra.Command, args []string) error {
+		target := viper.GetString("infra.infra.apply.target")
+		return infra.Apply(cmd.Context(), target)
 	},
 }
 
