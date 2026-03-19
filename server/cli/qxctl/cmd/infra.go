@@ -2,11 +2,10 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/zalando/go-keyring"
+	"github.com/QuanuX/qxctl/pkg/infra"
 )
 
 var infraCmd = &cobra.Command{
@@ -103,17 +102,10 @@ var infraSetTokenCmd = &cobra.Command{
 	Use:   "set-token [token]",
 	Short: "Securely saves the DigitalOcean API Token to the native OS Keyring (Zero-Disk storage)",
 	Args:  cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		token := args[0]
-		service := "quanux_terraform"
-		user := "do_token"
-
-		err := keyring.Set(service, user, token)
-		if err != nil {
-			log.Fatalf("FATAL: Failed to inject token into the keyring: %v", err)
-		}
-		fmt.Println("SUCCESS: DigitalOcean token securely locked into the OS Keychain.")
-		fmt.Printf("The token will perfectly synchronize with Viper Target: %s\n", viper.GetString("infra.infra.status.target"))
+		target := viper.GetString("infra.infra.status.target")
+		return infra.SetToken(token, target)
 	},
 }
 
