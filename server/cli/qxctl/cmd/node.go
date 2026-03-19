@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"golang.org/x/crypto/ssh"
+	"github.com/QuanuX/qxctl/pkg/node"
 )
 
 var nodeCmd = &cobra.Command{
@@ -20,20 +20,12 @@ var nodeDeployCmd = &cobra.Command{
 	Use:   "deploy [target]",
 	Short: "Deploy the QuanuX Execution Node to a remote server via SSH",
 	Args:  cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		target := args[0]
-		fmt.Printf("Deploying QuanuX Node to %s...\n", target)
-		
-		config := &ssh.ClientConfig{
-			User:            "root",
-			Auth:            []ssh.AuthMethod{ssh.Password("example_password_placeholder")},
-			HostKeyCallback: ssh.InsecureIgnoreHostKey(),
-		}
-		
-		fmt.Printf("[Mock] Dialing tcp://%s:22...\n", target)
-		fmt.Printf("[Mock] SSH Client configured with Viper Hub: %s\n", viper.GetString("node.node.deploy.hub"))
-		_ = config
-		fmt.Println("SUCCESS: Execution node payload transmitted completely via Go SSH buffer bindings.")
+		hub := viper.GetString("node.node.deploy.hub")
+		token := viper.GetString("node.node.deploy.token")
+		dryRun := viper.GetBool("node.node.deploy.dry_run")
+		return node.Deploy(cmd.Context(), target, hub, token, dryRun)
 	},
 }
 

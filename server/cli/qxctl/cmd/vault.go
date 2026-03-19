@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/QuanuX/qxctl/pkg/vault"
 )
 
 var vaultCmd = &cobra.Command{
@@ -18,9 +19,9 @@ var vaultCmd = &cobra.Command{
 var vaultStatusCmd = &cobra.Command{
 	Use:   "status",
 	Short: "Interrogates the live Annex C++ daemon bounding the Sovereign Vault and NVMe chunk cache",
-	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("status invoked.")
-        fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+	RunE: func(cmd *cobra.Command, args []string) error {
+		target := viper.GetString("vault.vault.status.target")
+		return vault.Status(cmd.Context(), target)
 	},
 }
 

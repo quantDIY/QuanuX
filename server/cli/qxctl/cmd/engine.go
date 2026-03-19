@@ -2,11 +2,9 @@ package cmd
 
 import (
 	"fmt"
-
-	"github.com/apache/arrow/go/v14/arrow/memory"
-	"github.com/nats-io/nats.go"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/QuanuX/qxctl/pkg/engine"
 )
 
 var engineCmd = &cobra.Command{
@@ -30,22 +28,13 @@ var engineSetupTopologyCmd = &cobra.Command{
 var engineStartCmd = &cobra.Command{
 	Use:   "start",
 	Short: "Initializes CNATS, Annex, and Omega Edge pipelines",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Starting QuanuX Edge Engine...")
-		
+	RunE: func(cmd *cobra.Command, args []string) error {
 		hubUrl := viper.GetString("hub")
 		if hubUrl == "" {
-			hubUrl = nats.DefaultURL
+			hubUrl = "nats://127.0.0.1:4222"
 		}
-		
-		fmt.Printf("[Mock] Initializing NATS Jetstream connection at %s...\n", hubUrl)
-		
-		allocator := memory.NewGoAllocator()
-		buf := memory.NewResizableBuffer(allocator)
-		buf.Resize(1024 * 1024 * 50)
-		fmt.Printf("[Mock] Allocated 50MB contiguous Cython/Go CGO Bridge Arrow schema matrix block.\n")
-		
-		fmt.Printf("Successfully wired QuanuX Edge pipeline to target: %s\n", viper.GetString("engine.engine.start.target"))
+		target := viper.GetString("engine.engine.start.target")
+		return engine.Start(cmd.Context(), hubUrl, target)
 	},
 }
 

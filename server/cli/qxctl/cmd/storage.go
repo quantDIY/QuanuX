@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/QuanuX/qxctl/pkg/storage"
 )
 
 var storageCmd = &cobra.Command{
@@ -54,9 +55,8 @@ var storageDuckdbInitCmd = &cobra.Command{
 var storageScanCmd = &cobra.Command{
 	Use:   "scan",
 	Short: "Scan for connected storage arrays and volumes",
-	Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("scan invoked.")
-        fmt.Printf("Viper State: %+v\n", viper.AllSettings())
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return storage.Scan(cmd.Context())
 	},
 }
 
