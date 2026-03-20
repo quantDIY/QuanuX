@@ -51,14 +51,23 @@ bool TranslationMatrix::isValidCounterparty(uint32_t counterparty_id) const {
 }
 
 bool TranslationMatrix::isValidIdentitySet(uint32_t venue_id, uint32_t route_id, uint32_t counterparty_id) const {
-    if (!isValidVenue(venue_id) || !isValidRoute(route_id) || !isValidCounterparty(counterparty_id)) {
-        return false;
+    if (!isValidRoute(route_id)) return false;
+
+    if (venue_id > 0) {
+        // Native Exchange or Dark Pool Routing Path
+        if (!isValidVenue(venue_id)) return false;
+        
+        // Option A Enforcement: counterparty_id must be forbidden (0) for venue-direct
+        if (counterparty_id != 0) return false;
+        
+        // Synthetic Route Override Avoidance
+        if (venue_id >= 1001 && venue_id <= 1005 && route_id < 100) return false;
+    } else {
+        // Broker/Dealer Path (Venue = 0)
+        // Counterparty is strictly required
+        if (!isValidCounterparty(counterparty_id)) return false;
     }
-    // Combinatorial contradictions:
-    // If venue_id is a native exchange (1001-1005), route_id must map directly (e.g. > 100), avoiding synthetic dark-pool route overlaps (< 10)
-    if (venue_id >= 1001 && venue_id <= 1005 && route_id < 100) {
-        return false;
-    }
+
     return true;
 }
 

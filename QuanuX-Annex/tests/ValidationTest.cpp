@@ -34,12 +34,19 @@ TEST(ConsumerIdentityTest, NasdaqStagingAcceptance) {
 
 TEST(ConsumerIdentityTest, RejectsContradictoryIdentityCombinations) {
     auto& tMatrix = TranslationMatrix::getInstance();
-    // Valid: NASDAQ (1001), Route (201), Counterparty (301)
-    EXPECT_TRUE(tMatrix.isValidIdentitySet(1001, 201, 301));
-    // Invalid: Native exchange (1002) with synthetic dark-pool route (<100)
-    EXPECT_FALSE(tMatrix.isValidIdentitySet(1002, 5, 301)); 
-    // Invalid: Valid route and counterparty but 0 venue
-    EXPECT_FALSE(tMatrix.isValidIdentitySet(0, 201, 301));
+    
+    // VALID BROKER/DEALER PATH: venue (0), Route (201), Counterparty (301)
+    EXPECT_TRUE(tMatrix.isValidIdentitySet(0, 201, 301));
+    
+    // INVALID NATIVE EXCHANGE WITH COUNTERPARTY: NASDAQ (1001), Route (201), Counterparty (301)
+    // Option A: execution limits state counterparty must be 0 for native routing
+    EXPECT_FALSE(tMatrix.isValidIdentitySet(1001, 201, 301));
+
+    // INVALID NATIVE EXCHANGE WITH SYNTHETIC ROUTE: BATS (1002) with synthetic dark-pool route (<100)
+    EXPECT_FALSE(tMatrix.isValidIdentitySet(1002, 5, 0)); 
+    
+    // INVALID BROKER/DEALER WITHOUT COUNTERPARTY: venue (0), route (201), counterparty (0)
+    EXPECT_FALSE(tMatrix.isValidIdentitySet(0, 201, 0));
 }
 
 TEST(ConsumerIdentityTest, StructuralMemoryLayoutUnchanged) {
