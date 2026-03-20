@@ -19,6 +19,14 @@ enum class RegistryReadiness {
     RecoverySync = 4
 };
 
+enum class DegradationReason {
+    None = 0,
+    SequenceGap = 1,
+    HeartbeatTimeout = 2,
+    MulticastDrop = 3,
+    OperatorOverride = 4
+};
+
 class StockDirectoryRegistry {
 public:
     static StockDirectoryRegistry& getInstance() {
@@ -60,14 +68,32 @@ public:
     // Operator Lifecycle Gates
     void mark_ready() {
         _state.store(RegistryReadiness::Ready, std::memory_order_release);
+        _last_reason.store(DegradationReason::None, std::memory_order_release);
     }
 
-    void mark_degraded() {
+    void trigger_degradation(DegradationReason reason) {
+        _last_reason.store(reason, std::memory_order_release);
         _state.store(RegistryReadiness::Degraded, std::memory_order_release);
     }
 
-    void begin_recovery_sync() {
+    void begin_recovery_sync(uint64_t target_sequence) {
+        _target_sync_sequence.store(target_sequence, std::memory_order_release);
         _state.store(RegistryReadiness::RecoverySync, std::memory_order_release);
+    }
+
+    bool check_catchup_completion(uint64_t current_sequence) {
+        _current_sync_sequence.store(current_sequence, std::memory_order_release);
+        if (_state.load(std::memory_order_acquire) == RegistryReadiness::RecoverySync) {
+            if (current_sequence >= _target_sync_sequence.load(std::memory_order_acquire)) {
+                mark_ready(); // Automatically transitions
+                return true;
+            }
+        }
+        return false;
+    }
+
+    DegradationReason get_last_reason() const {
+        return _last_reason.load(std::memory_order_acquire);
     }
 
     RegistryReadiness get_readiness_state() const {
@@ -105,6 +131,9 @@ private:
     std::array<LocateEntry, 65536> _directory;
     mutable std::mutex _mutex;
     std::atomic<RegistryReadiness> _state;
+    std::atomic<DegradationReason> _last_reason{DegradationReason::None};
+    std::atomic<uint64_t> _target_sync_sequence{0};
+    std::atomic<uint64_t> _current_sync_sequence{0};
 };
 
 } // namespace nasdaq

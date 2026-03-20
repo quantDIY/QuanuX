@@ -160,12 +160,12 @@ void test_full_session_lifecycle_state_transitions() {
     assert(dir.get_readiness_state() == RegistryReadiness::Ready);
     
     // Network degradation triggers degraded limits
-    dir.mark_degraded();
+    dir.trigger_degradation(DegradationReason::MulticastDrop);
     assert(!dir.is_ready()); // Execution payloads natively blocked seamlessly
     assert(dir.get_readiness_state() == RegistryReadiness::Degraded);
     
     // Recovery Phase (Resyncing historical packets)
-    dir.begin_recovery_sync();
+    dir.begin_recovery_sync(100);
     assert(!dir.is_ready()); 
     assert(dir.get_readiness_state() == RegistryReadiness::RecoverySync);
     
@@ -205,6 +205,49 @@ void test_nasdaq_semantic_failures() {
     std::cout << "OK - Standard Semantic Fallbacks Reverted Properly" << std::endl;
 }
 
+// 8. Prove Disconnect/Reconnect Sequence Sync Operations (Phase 11 Tracker)
+void test_nasdaq_disconnect_reconnect_recovery() {
+    auto& dir = StockDirectoryRegistry::getInstance();
+    dir.clear_for_new_trading_day();
+    dir.declare_locate(50, "GOOG", 100);
+    dir.mark_ready();
+
+    // 1. Explicit Degradation trigger via Sequence Gap
+    dir.trigger_degradation(DegradationReason::SequenceGap);
+    assert(dir.get_readiness_state() == RegistryReadiness::Degraded);
+    assert(dir.get_last_reason() == DegradationReason::SequenceGap);
+
+    // 2. Multicast drop creates a sync mandate; Target Sequence is 5000
+    dir.begin_recovery_sync(5000);
+    assert(dir.get_readiness_state() == RegistryReadiness::RecoverySync);
+
+    // 3. Execution Fail-Closed Check during Sync Window
+    NasdaqIngressMock early_msg{};
+    std::memset(&early_msg, 0, sizeof(early_msg));
+    early_msg.message_type = 'A';
+    early_msg.stock_locate = __builtin_bswap16(50);
+    core::OmegaEventEnvelope early_env;
+    bool parsed = NasdaqAdapter::parse_ingress_message(reinterpret_cast<const uint8_t*>(&early_msg), sizeof(early_msg), early_env);
+    assert(!parsed); // MUST FAil closed physically
+
+    // 4. Directory Read Valid During Sync Window
+    std::string out_sym;
+    assert(dir.try_get_symbol(50, out_sym));
+    assert(out_sym == "GOOG"); // Partially valid directory operates linearly O(1) appropriately
+
+    // 5. Catch-up Replay Injection simulating incoming loop
+    assert(!dir.check_catchup_completion(4998));
+    assert(!dir.check_catchup_completion(4999));
+    assert(!dir.is_ready());
+
+    // 6. Final target matched. Returns Ready.
+    assert(dir.check_catchup_completion(5000));
+    assert(dir.is_ready());
+    assert(dir.get_last_reason() == DegradationReason::None);
+
+    std::cout << "OK - Disconnect/Reconnect Sequencer Catch-up matrix proven cleanly" << std::endl;
+}
+
 int main() {
     test_duplicate_r_replay_rejection_equal_timestamp();
     test_stale_r_replay_rejection_older_timestamp();
@@ -213,6 +256,7 @@ int main() {
     test_post_readiness_market_packet_acceptance();
     test_full_session_lifecycle_state_transitions();
     test_nasdaq_semantic_failures();
+    test_nasdaq_disconnect_reconnect_recovery();
     std::cout << "NASDAQ Readiness Matrix Closure complete." << std::endl;
     return 0;
 }
