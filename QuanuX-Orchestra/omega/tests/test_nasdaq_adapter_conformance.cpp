@@ -145,21 +145,35 @@ void test_full_session_lifecycle_state_transitions() {
     auto& dir = StockDirectoryRegistry::getInstance();
     dir.clear_for_new_trading_day();
     
-    // Initial State: Loading
+    // Initial State: ColdStart
     assert(!dir.is_ready());
-    assert(dir.get_readiness_state() == RegistryReadiness::Loading);
+    assert(dir.get_readiness_state() == RegistryReadiness::ColdStart);
 
     // Operator marks ready
     dir.mark_ready();
     assert(dir.is_ready());
     assert(dir.get_readiness_state() == RegistryReadiness::Ready);
+    
+    // Network degradation triggers degraded limits
+    dir.mark_degraded();
+    assert(!dir.is_ready()); // Execution payloads natively blocked seamlessly
+    assert(dir.get_readiness_state() == RegistryReadiness::Degraded);
+    
+    // Recovery Phase (Resyncing historical packets)
+    dir.begin_recovery_sync();
+    assert(!dir.is_ready()); 
+    assert(dir.get_readiness_state() == RegistryReadiness::RecoverySync);
+    
+    // Restoration Complete
+    dir.mark_ready();
+    assert(dir.is_ready());
 
     // Day Roll Reset
     dir.clear_for_new_trading_day();
     assert(!dir.is_ready());
-    assert(dir.get_readiness_state() == RegistryReadiness::Loading);
+    assert(dir.get_readiness_state() == RegistryReadiness::ColdStart);
 
-    std::cout << "OK - Session lifecycle readiness status transitions (Loading->Ready->Loading) proven" << std::endl;
+    std::cout << "OK - Session lifecycle readiness status transitions (ColdStart->Ready->Degraded->RecoverySync->Ready->ColdStart) proven" << std::endl;
 }
 
 // Keep Previous Semantic Failure Coverage

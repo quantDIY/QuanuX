@@ -12,10 +12,11 @@ namespace adapters {
 namespace nasdaq {
 
 enum class RegistryReadiness {
-    Stale = 0,
-    Loading = 1,
+    ColdStart = 0,
+    PartialPreload = 1,
     Ready = 2,
-    Invalid = 3
+    Degraded = 3,
+    RecoverySync = 4
 };
 
 class StockDirectoryRegistry {
@@ -31,7 +32,11 @@ public:
             _directory[i].symbol = "";
             _directory[i].last_update_nanos = 0;
         }
-        _state.store(RegistryReadiness::Loading, std::memory_order_release);
+        _state.store(RegistryReadiness::ColdStart, std::memory_order_release);
+    }
+    
+    void begin_partial_preload() {
+        _state.store(RegistryReadiness::PartialPreload, std::memory_order_release);
     }
 
     // DOCTRINE: Timestamp-Aware Overwrite. Rejects older UDP replays dynamically natively.
@@ -57,6 +62,14 @@ public:
         _state.store(RegistryReadiness::Ready, std::memory_order_release);
     }
 
+    void mark_degraded() {
+        _state.store(RegistryReadiness::Degraded, std::memory_order_release);
+    }
+
+    void begin_recovery_sync() {
+        _state.store(RegistryReadiness::RecoverySync, std::memory_order_release);
+    }
+
     RegistryReadiness get_readiness_state() const {
         return _state.load(std::memory_order_acquire);
     }
@@ -78,7 +91,7 @@ public:
 
 private:
     StockDirectoryRegistry() {
-        _state.store(RegistryReadiness::Stale, std::memory_order_release);
+        _state.store(RegistryReadiness::ColdStart, std::memory_order_release);
         clear_for_new_trading_day();
     }
     StockDirectoryRegistry(const StockDirectoryRegistry&) = delete;
