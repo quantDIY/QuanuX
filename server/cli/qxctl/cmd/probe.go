@@ -3,32 +3,33 @@ package cmd
 import (
 	"github.com/QuanuX/qxctl/pkg/probe"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 var probeCmd = &cobra.Command{
 	Use:   "probe",
 	Short: "Neural Tap Diagnostic & Auto-Suture",
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
-	},
 }
 
-var probeProbeCmd = &cobra.Command{
-	Use:   "probe",
+var probeExecuteCmd = &cobra.Command{
+	Use:   "execute",
 	Short: "Neural Tap: The cluster diagnostic stethoscope and surgical kit",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		timeout := viper.GetInt("probe.probe.probe.timeout")
-		isFix := viper.GetBool("probe.probe.probe.fix")
-		return probe.ExecuteDiagnostics(cmd.Context(), timeout, isFix)
+		// Task 1: Command solely processes flags natively without global Viper state arrays.
+		timeout, _ := cmd.Flags().GetInt("timeout")
+		isFix, _ := cmd.Flags().GetBool("fix")
+
+		App.Out.Log("INFO", "Delegating probe execution to service boundary via App container.")
+
+		// Task 5: Context explicitly propagated.
+		return probe.ExecuteDiagnostics(App.Ctx, timeout, isFix)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(probeCmd)
-	probeCmd.AddCommand(probeProbeCmd)
-	probeProbeCmd.Flags().Bool("fix", false, "Execute Auto-Suture Protocol to repair critical systems")
-	viper.BindPFlag("probe.probe.probe.fix", probeProbeCmd.Flags().Lookup("fix"))
-	probeProbeCmd.Flags().Int("timeout", 80, "Timeout for TCP dial in ms")
-	viper.BindPFlag("probe.probe.probe.timeout", probeProbeCmd.Flags().Lookup("timeout"))
+	probeCmd.AddCommand(probeExecuteCmd)
+
+	// Dependency mapping rests on the execution block, Viper overrides abandoned natively.
+	probeExecuteCmd.Flags().Bool("fix", false, "Execute Auto-Suture Protocol to repair critical systems")
+	probeExecuteCmd.Flags().Int("timeout", 80, "Timeout for TCP dial in ms")
 }
