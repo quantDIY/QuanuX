@@ -1,7 +1,9 @@
 package skills
 
 import (
+	"context"
 	"fmt"
+	"github.com/QuanuX/qxctl/internal/output"
 	"os"
 	"path/filepath"
 	"strings"
@@ -11,8 +13,8 @@ import (
 
 // TargetLintErrorIds: 67e5c4a3-8df9-47da-941c-85d0cf976ddc
 
-func ListSkills(baseDir string) error {
-	fmt.Println(theme.HeaderStyle.Render(fmt.Sprintf("QuanuX Global Skills Registry (Path: %s):", baseDir)))
+func ListSkills(ctx context.Context, baseDir string) error {
+	output.FromContext(ctx).EmitRaw(theme.HeaderStyle.Render(fmt.Sprintf("QuanuX Global Skills Registry (Path: %s):", baseDir)))
 
 	found := 0
 
@@ -29,10 +31,10 @@ func ListSkills(baseDir string) error {
 		if !info.IsDir() && (nameLower == "skill.md" || nameLower == "skills.md") {
 			skillName := filepath.Base(filepath.Dir(path))
 
-			fmt.Println(theme.OkStyle.Render("► " + strings.ReplaceAll(strings.Title(skillName), "_", " ")))
+			output.FromContext(ctx).EmitRaw(theme.OkStyle.Render("► " + strings.ReplaceAll(strings.Title(skillName), "_", " ")))
 			desc, err := extractSkillDescription(path)
 			if err == nil && desc != "" {
-				fmt.Println(theme.DetailStyle.Render(desc) + "\n")
+				output.FromContext(ctx).EmitRaw(theme.DetailStyle.Render(desc) + "\n")
 			}
 			found++
 		}
@@ -40,14 +42,14 @@ func ListSkills(baseDir string) error {
 	})
 
 	if err != nil {
-		fmt.Printf("Error analyzing registry bounds: %v\n", err)
+		output.FromContext(ctx).EmitRawf("Error analyzing registry bounds: %v\n", err)
 	}
 
-	fmt.Printf("%d Active Skills Loaded.\n", found)
+	output.FromContext(ctx).EmitRawf("%d Active Skills Loaded.\n", found)
 	return err
 }
 
-func ReadSkill(baseDir, skillName string) error {
+func ReadSkill(ctx context.Context, baseDir, skillName string) error {
 	var foundPath string
 	err := filepath.Walk(baseDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -64,22 +66,22 @@ func ReadSkill(baseDir, skillName string) error {
 	})
 
 	if err != nil {
-		fmt.Printf("Error searching registry: %v\n", err)
+		output.FromContext(ctx).EmitRawf("Error searching registry: %v\n", err)
 		return err
 	}
 
 	if foundPath == "" {
-		fmt.Printf("Error: Could not find skill '%s' in any directory.\n", skillName)
+		output.FromContext(ctx).EmitRawf("Error: Could not find skill '%s' in any directory.\n", skillName)
 		return fmt.Errorf("skill not found")
 	}
 
 	content, err := os.ReadFile(foundPath)
 	if err != nil {
-		fmt.Printf("Error reading skill file: %v\n", err)
+		output.FromContext(ctx).EmitRawf("Error reading skill file: %v\n", err)
 		return err
 	}
 
-	fmt.Printf("\n--- %s ---\n\n%s\n", theme.OkStyle.Render(strings.ToUpper(skillName)), string(content))
+	output.FromContext(ctx).EmitRawf("\n--- %s ---\n\n%s\n", theme.OkStyle.Render(strings.ToUpper(skillName)), string(content))
 	return nil
 }
 

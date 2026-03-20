@@ -1,37 +1,35 @@
 package cmd
 
 import (
+	"github.com/QuanuX/qxctl/internal/runtime"
 	"github.com/QuanuX/qxctl/pkg/bridge"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
-var bridgeCmd = &cobra.Command{
-	Use:   "bridge",
-	Short: "Manage the SignalR Bridge",
-}
+func NewBridgeCmd(app *runtime.App) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "bridge",
+		Short: "Manage the SignalR Bridge",
+	}
 
-var bridgeStartCmd = &cobra.Command{
-	Use:   "start",
-	Short: "Start the SignalR bridge process",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		runtime := viper.GetString("bridge.bridge.start.runtime")
-		port := viper.GetInt("bridge.bridge.start.port")
-		return bridge.Start(cmd.Context(), runtime, port)
-	},
-}
+	startCmd := &cobra.Command{
+		Use:   "start",
+		Short: "Start the SignalR bridge process",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			runtimeName, _ := cmd.Flags().GetString("runtime")
+			port, _ := cmd.Flags().GetInt("port")
+			return bridge.Start(app.Ctx, runtimeName, port)
+		},
+	}
+	startCmd.Flags().StringP("runtime", "r", "flask", "Runtime to use: 'flask' or 'node'.")
+	startCmd.Flags().IntP("port", "p", 8077, "Port to bind the bridge to.")
 
-var bridgeStopCmd = &cobra.Command{
-	Use:   "stop",
-	Short: "Stop the SignalR bridge (placeholder)",
-}
+	stopCmd := &cobra.Command{
+		Use:   "stop",
+		Short: "Stop the SignalR bridge (placeholder)",
+		RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
 
-func init() {
-	rootCmd.AddCommand(bridgeCmd)
-	bridgeCmd.AddCommand(bridgeStartCmd)
-	bridgeStartCmd.Flags().StringP("runtime", "r", "flask", "Runtime to use: 'flask' or 'node'.")
-	viper.BindPFlag("bridge.bridge.start.runtime", bridgeStartCmd.Flags().Lookup("runtime"))
-	bridgeStartCmd.Flags().IntP("port", "p", 8077, "Port to bind the bridge to.")
-	viper.BindPFlag("bridge.bridge.start.port", bridgeStartCmd.Flags().Lookup("port"))
-	bridgeCmd.AddCommand(bridgeStopCmd)
+	cmd.AddCommand(startCmd, stopCmd)
+	return cmd
 }

@@ -10,6 +10,7 @@ import (
 
 	"github.com/QuanuX/qxctl/internal/config"
 	"github.com/QuanuX/qxctl/internal/output"
+	"github.com/QuanuX/qxctl/internal/providers"
 )
 
 // App is the canonical dependency injection container replacing global Viper states.
@@ -17,7 +18,9 @@ type App struct {
 	Cfg *config.Config
 	Ctx context.Context
 	Out *output.Manager
-	// Endpoints for future NATS, Vault, HTTP clients go here safely
+	
+	NATS  providers.JetStreamEngine
+	Vault providers.SecretStore
 }
 
 // Overrides carries flag overrides securely evaluated from the CLI layer without Cobra coupling.
@@ -27,6 +30,29 @@ type Overrides struct {
 	Output     string
 	Trace      bool
 	Verbose    bool
+}
+
+// ParseOverrides isolates pre-Cobra string token evaluations precisely matching global flags.
+func ParseOverrides(args []string) Overrides {
+	ovr := Overrides{}
+	for i, arg := range args {
+		if arg == "--config" && i+1 < len(args) {
+			ovr.ConfigFile = args[i+1]
+		}
+		if arg == "--hub" && i+1 < len(args) {
+			ovr.HubURL = args[i+1]
+		}
+		if arg == "--output" && i+1 < len(args) {
+			ovr.Output = args[i+1]
+		}
+		if arg == "--trace" {
+			ovr.Trace = true
+		}
+		if arg == "--verbose" {
+			ovr.Verbose = true
+		}
+	}
+	return ovr
 }
 
 // New initializes the application container safely parsing Config contracts.
@@ -45,9 +71,11 @@ func New(ctx context.Context, ovr Overrides) (*App, error) {
 	out := output.NewManager(cfg.Output)
 
 	app := &App{
-		Cfg: cfg,
-		Ctx: ctx,
-		Out: out,
+		Cfg:   cfg,
+		Ctx:   output.ContextWithManager(ctx, out),
+		Out:   out,
+		NATS:  providers.DefaultJetStream(),
+		Vault: providers.DefaultSecretStore(),
 	}
 
 	if cfg.TraceMode {

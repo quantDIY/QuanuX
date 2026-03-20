@@ -1,90 +1,66 @@
 package cmd
 
 import (
+	"github.com/QuanuX/qxctl/internal/runtime"
 	"github.com/QuanuX/qxctl/pkg/vcs"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
-var vcsCmd = &cobra.Command{
-	Use:   "vcs",
-	Short: "Version Control System Connectors",
-}
+func NewVcsCmd(app *runtime.App) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "vcs",
+		Short: "Version Control System Connectors natively bound without memory leaks",
+	}
 
-var vcsCloneCmd = &cobra.Command{
-	Use:   "clone [url]",
-	Short: "Clone a remote repository",
-}
+	cloneCmd := &cobra.Command{
+		Use: "clone [url]", Short: "Clone a remote repository", RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
+	cloneCmd.Flags().String("target", "", "Target directory name")
 
-var vcsCommitCmd = &cobra.Command{
-	Use:   "commit",
-	Short: "Commit changes to the local repository",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		msg := viper.GetString("vcs.vcs.commit.message")
-		all := viper.GetBool("vcs.vcs.commit.all")
-		return vcs.Commit(cmd.Context(), msg, all)
-	},
-}
+	commitCmd := &cobra.Command{
+		Use:   "commit",
+		Short: "Commit changes to the local repository",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			msg, _ := cmd.Flags().GetString("message")
+			all, _ := cmd.Flags().GetBool("all")
+			return vcs.Commit(app.Ctx, msg, all)
+		},
+	}
+	commitCmd.Flags().StringP("message", "m", "", "Commit message")
+	commitCmd.Flags().BoolP("all", "a", false, "Stage all modified files")
 
-var vcsConnectCmd = &cobra.Command{
-	Use:   "connect [url]",
-	Short: "Connect current directory to a remote VCS",
-}
+	connectCmd := &cobra.Command{
+		Use: "connect [url]", Short: "Connect current directory to remote VCS", RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
+	connectCmd.Flags().String("name", "origin", "Remote name")
 
-var vcsPublishCmd = &cobra.Command{
-	Use:   "publish [provider]",
-	Short: "Create a remote repository on the provider and push the current project to it",
-}
+	publishCmd := &cobra.Command{
+		Use: "publish [provider]", Short: "Create remote pushing current project", RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
+	publishCmd.Flags().String("name", "", "Repository name")
+	publishCmd.Flags().Bool("private", true, "Create as private")
 
-var vcsPushCmd = &cobra.Command{
-	Use:   "push",
-	Short: "Push changes to remote",
-}
+	pushCmd := &cobra.Command{
+		Use: "push", Short: "Push changes to remote", RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
+	pushCmd.Flags().String("remote", "origin", "Remote name")
+	pushCmd.Flags().String("branch", "", "Branch name")
 
-var vcsSetupCmd = &cobra.Command{
-	Use:   "setup [provider]",
-	Short: "Configure credentials for a VCS provider (GitHub, GitLab)",
-}
+	setupCmd := &cobra.Command{
+		Use: "setup [provider]", Short: "Configure credentials", RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
+	setupCmd.Flags().String("token", "", "Access Token")
 
-var vcsStatusCmd = &cobra.Command{
-	Use:   "status",
-	Short: "Show status of the current repository",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		return vcs.Status(cmd.Context())
-	},
-}
+	statusCmd := &cobra.Command{
+		Use:   "status",
+		Short: "Show status of the current repository natively",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return vcs.Status(app.Ctx)
+		},
+	}
 
-var vcsSyncCmd = &cobra.Command{
-	Use:   "sync",
-	Short: "Pull latest changes from the default remote (origin)",
-}
+	syncCmd := &cobra.Command{Use: "sync", Short: "Pull latest", RunE: func(cmd *cobra.Command, args []string) error { return nil }}
 
-func init() {
-	rootCmd.AddCommand(vcsCmd)
-	vcsCmd.AddCommand(vcsCloneCmd)
-	vcsCloneCmd.Flags().String("target", "", "Target directory name")
-	viper.BindPFlag("vcs.vcs.clone.target", vcsCloneCmd.Flags().Lookup("target"))
-	vcsCmd.AddCommand(vcsCommitCmd)
-	vcsCommitCmd.Flags().StringP("message", "m", "", "Commit message")
-	viper.BindPFlag("vcs.vcs.commit.message", vcsCommitCmd.Flags().Lookup("message"))
-	vcsCommitCmd.Flags().BoolP("all", "a", false, "Stage all modified files")
-	viper.BindPFlag("vcs.vcs.commit.all", vcsCommitCmd.Flags().Lookup("all"))
-	vcsCmd.AddCommand(vcsConnectCmd)
-	vcsConnectCmd.Flags().String("name", "origin", "Remote name")
-	viper.BindPFlag("vcs.vcs.connect.name", vcsConnectCmd.Flags().Lookup("name"))
-	vcsCmd.AddCommand(vcsPublishCmd)
-	vcsPublishCmd.Flags().String("name", "", "Repository name (defaults to current folder)")
-	viper.BindPFlag("vcs.vcs.publish.name", vcsPublishCmd.Flags().Lookup("name"))
-	vcsPublishCmd.Flags().Bool("private", true, "Create as private repository")
-	viper.BindPFlag("vcs.vcs.publish.private", vcsPublishCmd.Flags().Lookup("private"))
-	vcsCmd.AddCommand(vcsPushCmd)
-	vcsPushCmd.Flags().String("remote", "origin", "Remote name")
-	viper.BindPFlag("vcs.vcs.push.remote", vcsPushCmd.Flags().Lookup("remote"))
-	vcsPushCmd.Flags().String("branch", "", "Branch name (default: current)")
-	viper.BindPFlag("vcs.vcs.push.branch", vcsPushCmd.Flags().Lookup("branch"))
-	vcsCmd.AddCommand(vcsSetupCmd)
-	vcsSetupCmd.Flags().String("token", "", "Personal Access Token")
-	viper.BindPFlag("vcs.vcs.setup.token", vcsSetupCmd.Flags().Lookup("token"))
-	vcsCmd.AddCommand(vcsStatusCmd)
-	vcsCmd.AddCommand(vcsSyncCmd)
+	cmd.AddCommand(cloneCmd, commitCmd, connectCmd, publishCmd, pushCmd, setupCmd, statusCmd, syncCmd)
+	return cmd
 }

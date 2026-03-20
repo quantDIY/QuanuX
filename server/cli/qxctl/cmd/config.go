@@ -5,69 +5,53 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/QuanuX/qxctl/internal/runtime"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
-	"gopkg.in/yaml.v3"
 )
 
-var configCmd = &cobra.Command{
-	Use:   "config",
-	Short: "Manage the global QuanuX configuration (Viper)",
-	Long:  "Initialize or view your ~/.qxctl.yaml file managed entirely by Viper.",
-}
+func NewConfigCmd(app *runtime.App) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "config",
+		Short: "Manage the global QuanuX configuration natively",
+	}
 
-var viewCmd = &cobra.Command{
-	Use:   "view",
-	Short: "View the active Viper configuration state",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("--- Active Viper Configuration ---")
-		fmt.Printf("Config File Used: %s\n", viper.ConfigFileUsed())
+	viewCmd := &cobra.Command{
+		Use:   "view",
+		Short: "View the active configuration struct",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			// Output firmly through Emit/Print bounds handling JSON cleanly!
+			app.Out.Print(app.Cfg, func() string {
+				return fmt.Sprintf("--- Active Configuration ---\nHubURL: %s\nTarget: %s\nOutput: %s\nVerbose: %v",
+					app.Cfg.HubURL, app.Cfg.Target, app.Cfg.Output, app.Cfg.Verbose)
+			})
+			return nil
+		},
+	}
 
-		settings := viper.AllSettings()
-		yamlData, err := yaml.Marshal(&settings)
-		if err != nil {
-			fmt.Printf("Error marshalling config: %v\n", err)
-			return
-		}
+	initCmd := &cobra.Command{
+		Use:   "init",
+		Short: "Initialize a default ~/.qxctl.yaml config file",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			home, err := os.UserHomeDir()
+			if err != nil {
+				return fmt.Errorf("error locating home directory: %v", err)
+			}
+			configPath := filepath.Join(home, ".qxctl.yaml")
+			if _, err := os.Stat(configPath); err == nil {
+				app.Out.Log("INFO", fmt.Sprintf("Configuration file already exists at %s", configPath))
+				return nil
+			}
+			
+			// This generates natively without Viper directly.
+			defaultConfig := []byte("hub_url: nats://hub.quanux.io:4222\ntarget: gcp\noutput: text\n")
+			if err := os.WriteFile(configPath, defaultConfig, 0644); err != nil {
+				return fmt.Errorf("failed to write config file: %v", err)
+			}
+			app.Out.Log("INFO", fmt.Sprintf("Successfully created default configuration at: %s", configPath))
+			return nil
+		},
+	}
 
-		fmt.Println(string(yamlData))
-	},
-}
-
-var initCmd = &cobra.Command{
-	Use:   "init",
-	Short: "Initialize a default ~/.qxctl.yaml config file",
-	Run: func(cmd *cobra.Command, args []string) {
-		home, err := os.UserHomeDir()
-		if err != nil {
-			fmt.Println("Error locating home directory:", err)
-			return
-		}
-
-		configPath := filepath.Join(home, ".qxctl.yaml")
-
-		if _, err := os.Stat(configPath); err == nil {
-			fmt.Printf("Configuration file already exists at %s\n", configPath)
-			return
-		}
-
-		// Set baseline QuanuX defaults in Viper
-		viper.Set("hub", "nats://hub.quanux.io:4222")
-		viper.Set("infra.default_provider", "gcp")
-		viper.Set("auth.method", "standard") // Try changing to 'biometric' !
-		viper.Set("telemetry.interval", "10s")
-
-		err = viper.WriteConfigAs(configPath)
-		if err != nil {
-			fmt.Printf("Failed to write config file: %v\n", err)
-		} else {
-			fmt.Printf("Successfully created default configuration at: %s\n", configPath)
-		}
-	},
-}
-
-func init() {
-	rootCmd.AddCommand(configCmd)
-	configCmd.AddCommand(viewCmd)
-	configCmd.AddCommand(initCmd)
+	cmd.AddCommand(viewCmd, initCmd)
+	return cmd
 }

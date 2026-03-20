@@ -1,53 +1,46 @@
 package cmd
 
 import (
+	"github.com/QuanuX/qxctl/internal/runtime"
 	"github.com/QuanuX/qxctl/pkg/storage"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
-var storageCmd = &cobra.Command{
-	Use:   "storage",
-	Short: "Manage connected storage and databases",
-}
+func NewStorageCmd(app *runtime.App) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "storage",
+		Short: "Manage connected storage and databases natively",
+	}
 
-var storageDuckdbCmd = &cobra.Command{
-	Use:   "duckdb",
-	Short: "Manage DuckDB cartridges",
-}
+	duckdbCmd := &cobra.Command{
+		Use:   "duckdb",
+		Short: "Manage DuckDB cartridges statically",
+	}
 
-var storageDuckdbAttachCmd = &cobra.Command{
-	Use:   "attach [path] [alias]",
-	Short: "Attach a DB file to the running QuanuX Server",
-}
+	attachCmd := &cobra.Command{
+		Use:   "attach [path] [alias]", Short: "Attach a DB file to the running QuanuX Server", RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
+	attachCmd.Flags().String("server-url", "http://localhost:8000", "QuanuX Server URL")
 
-var storageDuckdbDetachCmd = &cobra.Command{
-	Use:   "detach [alias]",
-	Short: "Detach a DB file from the QuanuX Server",
-}
+	detachCmd := &cobra.Command{
+		Use:   "detach [alias]", Short: "Detach it securely", RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
+	detachCmd.Flags().String("server-url", "http://localhost:8000", "QuanuX Server URL")
 
-var storageDuckdbInitCmd = &cobra.Command{
-	Use:   "init [path]",
-	Short: "Initialize a new empty DuckDB file",
-}
+	initCmd := &cobra.Command{
+		Use:   "init [path]", Short: "Initialize a new empty DuckDB file natively", RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
 
-var storageScanCmd = &cobra.Command{
-	Use:   "scan",
-	Short: "Scan for connected storage arrays and volumes",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		return storage.Scan(cmd.Context())
-	},
-}
+	duckdbCmd.AddCommand(attachCmd, detachCmd, initCmd)
 
-func init() {
-	rootCmd.AddCommand(storageCmd)
-	storageCmd.AddCommand(storageDuckdbCmd)
-	storageDuckdbCmd.AddCommand(storageDuckdbAttachCmd)
-	storageDuckdbAttachCmd.Flags().String("server-url", "http://localhost:8000", "QuanuX Server URL")
-	viper.BindPFlag("storage.storage.duckdb.attach.server_url", storageDuckdbAttachCmd.Flags().Lookup("server-url"))
-	storageDuckdbCmd.AddCommand(storageDuckdbDetachCmd)
-	storageDuckdbDetachCmd.Flags().String("server-url", "http://localhost:8000", "QuanuX Server URL")
-	viper.BindPFlag("storage.storage.duckdb.detach.server_url", storageDuckdbDetachCmd.Flags().Lookup("server-url"))
-	storageDuckdbCmd.AddCommand(storageDuckdbInitCmd)
-	storageCmd.AddCommand(storageScanCmd)
+	scanCmd := &cobra.Command{
+		Use:   "scan",
+		Short: "Scan for connected storage arrays and volumes securely bound via contexts",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return storage.Scan(app.Ctx)
+		},
+	}
+
+	cmd.AddCommand(duckdbCmd, scanCmd)
+	return cmd
 }

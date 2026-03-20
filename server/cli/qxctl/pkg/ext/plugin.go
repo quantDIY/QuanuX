@@ -3,6 +3,7 @@ package ext
 import (
 	"context"
 	"fmt"
+	"github.com/QuanuX/qxctl/internal/output"
 	"os/exec"
 
 	"github.com/hashicorp/go-plugin"
@@ -18,12 +19,12 @@ var Handshake = plugin.HandshakeConfig{
 
 // ConnectSidecar allocates a secure gRPC channel linking the lightweight CLI natively to the massive Cython C++ executables.
 func ConnectSidecar(ctx context.Context, exchangeName string) error {
-	fmt.Println(theme.HeaderStyle.Render(fmt.Sprintf("Establishing Airgapped gRPC Socket to QuanuX Sidecar: [%s]", exchangeName)))
+	output.FromContext(ctx).EmitRaw(theme.HeaderStyle.Render(fmt.Sprintf("Establishing Airgapped gRPC Socket to QuanuX Sidecar: [%s]", exchangeName)))
 
 	// The architectural standard maps plugin targets exactly to sidecar binary nomenclature
 	binaryName := fmt.Sprintf("qxctl-%s", exchangeName)
 
-	fmt.Println(theme.DetailStyle.Render(fmt.Sprintf("Locating binary interlock target: %s", binaryName)))
+	output.FromContext(ctx).EmitRaw(theme.DetailStyle.Render(fmt.Sprintf("Locating binary interlock target: %s", binaryName)))
 
 	client := plugin.NewClient(&plugin.ClientConfig{
 		HandshakeConfig: Handshake,
@@ -39,12 +40,12 @@ func ConnectSidecar(ctx context.Context, exchangeName string) error {
 
 	_, err := client.Client()
 	if err != nil {
-		fmt.Printf("\n%s\n", theme.FailStyle.Render(fmt.Sprintf("[X] Sidecar socket closed. Ensure [%s] is successfully cross-compiled natively and available system-wide in $PATH.", binaryName)))
+		output.FromContext(ctx).EmitRawf("\n%s\n", theme.FailStyle.Render(fmt.Sprintf("[X] Sidecar socket closed. Ensure [%s] is successfully cross-compiled natively and available system-wide in $PATH.", binaryName)))
 		// We explicitly bypass printing Cobra err strings here, handling the architectural failure contextually Native
 		return nil 
 	}
 
-	fmt.Println(theme.OkStyle.Render(fmt.Sprintf("[✔] Successfully established Memory Socket Handshake with %s natively over gRPC!", binaryName)))
+	output.FromContext(ctx).EmitRaw(theme.OkStyle.Render(fmt.Sprintf("[✔] Successfully established Memory Socket Handshake with %s natively over gRPC!", binaryName)))
 	
 	return nil
 }

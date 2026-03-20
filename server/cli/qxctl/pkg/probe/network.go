@@ -3,6 +3,7 @@ package probe
 import (
 	"context"
 	"fmt"
+	"github.com/QuanuX/qxctl/internal/output"
 	"net"
 	"sync"
 	"time"
@@ -13,7 +14,7 @@ import (
 )
 
 func ExecuteDiagnostics(ctx context.Context, timeout int, isFix bool) error {
-	fmt.Println(theme.HeaderStyle.Render("Initializing QuanuX High-Frequency Health Probe (Concurrency: 6...)\n"))
+	output.FromContext(ctx).EmitRaw(theme.HeaderStyle.Render("Initializing QuanuX High-Frequency Health Probe (Concurrency: 6...)\n"))
 
 	endpoints := map[string]string{
 		"NATS JetStream Edge Core":         "1.1.1.1:53",
@@ -74,13 +75,13 @@ func ExecuteDiagnostics(ctx context.Context, timeout int, isFix bool) error {
 	elapsed := time.Since(start)
 
 	for _, r := range results {
-		fmt.Println(r)
+		output.FromContext(ctx).EmitRaw(r)
 	}
 
-	fmt.Printf("\nDiagnostic sweep completed natively in %s.\n", elapsed)
+	output.FromContext(ctx).EmitRawf("\nDiagnostic sweep completed natively in %s.\n", elapsed)
 	
 	if isFix {
-		fmt.Println(theme.HeaderStyle.Render("\nAuto-Suture Protocol [--fix] engaged. Attempting localized repairs via cluster rollout..."))
+		output.FromContext(ctx).EmitRaw(theme.HeaderStyle.Render("\nAuto-Suture Protocol [--fix] engaged. Attempting localized repairs via cluster rollout..."))
 	}
 	
 	return nil

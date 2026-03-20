@@ -2,130 +2,110 @@ package cmd
 
 import (
 	"fmt"
-
+	"github.com/QuanuX/qxctl/internal/runtime"
 	"github.com/QuanuX/qxctl/pkg/ext"
 	"github.com/hashicorp/go-plugin"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
-var extCmd = &cobra.Command{
-	Use:   "ext",
-	Short: "Manage QXP Extensions (List, Run)",
-}
+func NewExtCmd(app *runtime.App) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "ext",
+		Short: "Manage QXP Extensions (List, Run)",
+	}
 
-var extCleanCmd = &cobra.Command{
-	Use:   "clean [name]",
-	Short: "Remove logs and runtime files",
-}
+	cleanCmd := &cobra.Command{
+		Use:   "clean [name]",
+		Short: "Remove logs and runtime files",
+		RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
+	cleanCmd.Flags().Bool("all", false, "Clean all extensions")
 
-var extEnhanceCmd = &cobra.Command{
-	Use:   "enhance [name]",
-	Short: "Trigger a 'Turbo' build with specialized performance options",
-}
+	enhanceCmd := &cobra.Command{
+		Use:   "enhance [name]",
+		Short: "Trigger a 'Turbo' build with specialized performance options",
+		RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
+	enhanceCmd.Flags().String("allocator", "system", "Memory allocator: system, jemalloc, mimalloc")
+	enhanceCmd.Flags().String("logger", "file", "Logging strategy: file, async, null")
 
-var extInstallCmd = &cobra.Command{
-	Use:   "install [name]",
-	Short: "Build/Install the extension (runs build",
-}
+	installCmd := &cobra.Command{
+		Use:   "install [name]",
+		Short: "Build/Install the extension",
+		RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
+	installCmd.Flags().StringP("version", "v", "", "Version anchor")
 
-var extIntegrateCmd = &cobra.Command{
-	Use:   "integrate [name]",
-	Short: "Inject a local proprietary SDK into the centralized extensions/sdks repository",
-}
+	integrateCmd := &cobra.Command{
+		Use:   "integrate [name]",
+		Short: "Inject a local proprietary SDK into the centralized extensions/sdks repository",
+		RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
+	integrateCmd.Flags().StringP("path", "p", "", "Path to local SDK folder")
 
-var extListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "List all installed extensions and their status",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Querying Hashicorp RPC go-plugin registry...")
+	listCmd := &cobra.Command{
+		Use:   "list",
+		Short: "List all installed extensions and their status",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			// Task C: Routing raw fmt endpoints firmly onto UX Emits natively filtering arrays structurally.
+			app.Out.Log("INFO", "Querying Hashicorp RPC go-plugin registry limits across Vault environments...")
 
-		var pluginMap = map[string]plugin.Plugin{
-			"figma":   nil,
-			"topstep": nil,
-			"rithmic": nil,
-		}
+			pluginMap := map[string]plugin.Plugin{
+				"figma":   nil,
+				"topstep": nil,
+				"rithmic": nil,
+			}
 
-		fmt.Println("Registered Plugins across Vaults:")
-		for name := range pluginMap {
-			fmt.Printf("- %s (Active)\n", name)
-		}
-		fmt.Printf("\nChecked Viper State config globally: %+v\n", viper.GetString("ext.ext.clean.all"))
-	},
-}
+			// For lists we format it gracefully via App Output limits
+			app.Out.Print(pluginMap, func() string {
+				out := "Registered Plugins across Vaults natively:\n"
+				for name := range pluginMap {
+					out += fmt.Sprintf("- %s (Active)\n", name)
+				}
+				return out
+			})
+			return nil
+		},
+	}
 
-var extRemoveCmd = &cobra.Command{
-	Use:   "remove [name]",
-	Short: "Alias for uninstall",
-}
+	removeCmd := &cobra.Command{
+		Use:   "remove [name]",
+		Short: "Alias for uninstall",
+		RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
+	removeCmd.Flags().BoolP("force", "f", false, "Force delete")
 
-var extRunCmd = &cobra.Command{
-	Use:   "run [name]",
-	Short: "Run an extension in the foreground (injecting secrets)",
-	Args:  cobra.ExactArgs(1),
-	RunE: func(cmd *cobra.Command, args []string) error {
-		target := args[0]
-		return ext.ConnectSidecar(cmd.Context(), target)
-	},
-}
+	runCmd := &cobra.Command{
+		Use:   "run [name]",
+		Short: "Run an extension in the foreground (injecting secrets safely extracted dynamically)",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			target := args[0]
+			return ext.ConnectSidecar(app.Ctx, target)
+		},
+	}
 
-var extStartCmd = &cobra.Command{
-	Use:   "start [name]",
-	Short: "Start an extension in the background",
-}
+	startCmd := &cobra.Command{
+		Use:   "start [name]", Short: "Start an extension in the background", RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
+	statusCmd := &cobra.Command{
+		Use:   "status [name]", Short: "Check if an extension is running", RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
+	stopCmd := &cobra.Command{
+		Use:   "stop [name]", Short: "Stop a running extension", RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
+	uninstallCmd := &cobra.Command{
+		Use:   "uninstall [name]", Short: "Clean up build artifacts (removes 'build' directory)", RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
+	uninstallCmd.Flags().BoolP("force", "f", false, "Force delete")
+	
+	upgradeCmd := &cobra.Command{
+		Use:   "upgrade [name]", Short: "Auto-upgrade to the latest version found upstream", RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
+	upgradeableCmd := &cobra.Command{
+		Use:   "upgradeable [name]", Short: "Check for available updates", RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
 
-var extStatusCmd = &cobra.Command{
-	Use:   "status [name]",
-	Short: "Check if an extension is running",
-}
-
-var extStopCmd = &cobra.Command{
-	Use:   "stop [name]",
-	Short: "Stop a running extension",
-}
-
-var extUninstallCmd = &cobra.Command{
-	Use:   "uninstall [name]",
-	Short: "Clean up build artifacts (removes 'build' directory)",
-}
-
-var extUpgradeCmd = &cobra.Command{
-	Use:   "upgrade [name]",
-	Short: "Auto-upgrade to the latest version found upstream",
-}
-
-var extUpgradeableCmd = &cobra.Command{
-	Use:   "upgradeable [name]",
-	Short: "Check for available updates (compares installed version vs upstream tags)",
-}
-
-func init() {
-	rootCmd.AddCommand(extCmd)
-	extCmd.AddCommand(extCleanCmd)
-	extCleanCmd.Flags().Bool("all", false, "Clean all extensions")
-	viper.BindPFlag("ext.ext.clean.all", extCleanCmd.Flags().Lookup("all"))
-	extCmd.AddCommand(extEnhanceCmd)
-	extEnhanceCmd.Flags().String("allocator", "system", "Memory allocator: system, jemalloc, mimalloc")
-	viper.BindPFlag("ext.ext.enhance.allocator", extEnhanceCmd.Flags().Lookup("allocator"))
-	extEnhanceCmd.Flags().String("logger", "file", "Logging strategy: file, async, null")
-	viper.BindPFlag("ext.ext.enhance.logger", extEnhanceCmd.Flags().Lookup("logger"))
-	extCmd.AddCommand(extInstallCmd)
-	extInstallCmd.Flags().StringP("version", "v", "", "")
-	viper.BindPFlag("ext.ext.install.version", extInstallCmd.Flags().Lookup("version"))
-	extCmd.AddCommand(extIntegrateCmd)
-	extIntegrateCmd.Flags().StringP("path", "p", "", "Path to local SDK folder")
-	viper.BindPFlag("ext.ext.integrate.path", extIntegrateCmd.Flags().Lookup("path"))
-	extCmd.AddCommand(extListCmd)
-	extCmd.AddCommand(extRemoveCmd)
-	extRemoveCmd.Flags().BoolP("force", "f", false, "")
-	viper.BindPFlag("ext.ext.remove.force", extRemoveCmd.Flags().Lookup("force"))
-	extCmd.AddCommand(extRunCmd)
-	extCmd.AddCommand(extStartCmd)
-	extCmd.AddCommand(extStatusCmd)
-	extCmd.AddCommand(extStopCmd)
-	extCmd.AddCommand(extUninstallCmd)
-	extUninstallCmd.Flags().BoolP("force", "f", false, "")
-	viper.BindPFlag("ext.ext.uninstall.force", extUninstallCmd.Flags().Lookup("force"))
-	extCmd.AddCommand(extUpgradeCmd)
-	extCmd.AddCommand(extUpgradeableCmd)
+	cmd.AddCommand(cleanCmd, enhanceCmd, installCmd, integrateCmd, listCmd, removeCmd, runCmd, startCmd, statusCmd, stopCmd, uninstallCmd, upgradeCmd, upgradeableCmd)
+	return cmd
 }

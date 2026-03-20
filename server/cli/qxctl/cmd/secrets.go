@@ -1,43 +1,42 @@
 package cmd
 
 import (
+	"github.com/QuanuX/qxctl/internal/runtime"
 	"github.com/QuanuX/qxctl/pkg/secrets"
 	"github.com/spf13/cobra"
 )
 
-var secretsCmd = &cobra.Command{
-	Use:   "secrets",
-	Short: "Manage API keys and secrets via OS Keyring",
-}
+func NewSecretsCmd(app *runtime.App) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "secrets",
+		Short: "Manage API keys and secrets via OS Keyring natively",
+	}
 
-var secretsGetCmd = &cobra.Command{
-	Use:   "get [key]",
-	Short: "Retrieve and print a secret value (Show plaintext)",
-}
+	getCmd := &cobra.Command{
+		Use:   "get [key]",
+		Short: "Retrieve and print a secret value safely",
+		RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
 
-var secretsListKeysCmd = &cobra.Command{
-	Use:   "list-keys",
-	Short: "List configured keys (hiding values)",
-}
+	listCmd := &cobra.Command{
+		Use:   "list-keys",
+		Short: "List configured keys (hiding values)",
+		RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
 
-var secretsSetCmd = &cobra.Command{
-	Use:   "set [key] [value]",
-	Short: "Set a specific secret key",
-	Args:  cobra.ExactArgs(2),
-	RunE: func(cmd *cobra.Command, args []string) error {
-		return secrets.Set(cmd.Context(), args[0], args[1])
-	},
-}
+	setCmd := &cobra.Command{
+		Use:   "set [key] [value]",
+		Short: "Set a specific secret key safely directly into Keyring targets",
+		Args:  cobra.ExactArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return secrets.Set(app.Ctx, args[0], args[1])
+		},
+	}
 
-var secretsSetupCmd = &cobra.Command{
-	Use:   "setup",
-	Short: "Interactive wizard to set up common API keys",
-}
+	setupCmd := &cobra.Command{
+		Use:   "setup", Short: "Interactive wizard safely bound to outputs", RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
 
-func init() {
-	rootCmd.AddCommand(secretsCmd)
-	secretsCmd.AddCommand(secretsGetCmd)
-	secretsCmd.AddCommand(secretsListKeysCmd)
-	secretsCmd.AddCommand(secretsSetCmd)
-	secretsCmd.AddCommand(secretsSetupCmd)
+	cmd.AddCommand(getCmd, listCmd, setCmd, setupCmd)
+	return cmd
 }

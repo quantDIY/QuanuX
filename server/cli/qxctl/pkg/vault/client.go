@@ -3,6 +3,7 @@ package vault
 import (
 	"context"
 	"fmt"
+	"github.com/QuanuX/qxctl/internal/output"
 	"os"
 
 	"github.com/hashicorp/vault/api"
@@ -11,7 +12,7 @@ import (
 
 // Status probes the global Zero-Trust Hashicorp Vault infrastructure directly in memory instead of executing bash scripts natively.
 func Status(ctx context.Context, target string) error {
-	fmt.Println(theme.HeaderStyle.Render(fmt.Sprintf("QuanuX Sovereign Vault Native Interlock (Target: %s)", target)))
+	output.FromContext(ctx).EmitRaw(theme.HeaderStyle.Render(fmt.Sprintf("QuanuX Sovereign Vault Native Interlock (Target: %s)", target)))
 
 	// Initialize Native HashiCorp Vault Client
 	config := api.DefaultConfig()
@@ -24,23 +25,23 @@ func Status(ctx context.Context, target string) error {
 
 	client, err := api.NewClient(config)
 	if err != nil {
-		fmt.Println(theme.FailStyle.Render("[X] Failed to allocate HashiCorp Vault API structs natively."))
+		output.FromContext(ctx).EmitRaw(theme.FailStyle.Render("[X] Failed to allocate HashiCorp Vault API structs natively."))
 		return err
 	}
 
-	fmt.Println(theme.DetailStyle.Render(fmt.Sprintf("Pinging QuanuX PKI Engine natively at %s...", config.Address)))
+	output.FromContext(ctx).EmitRaw(theme.DetailStyle.Render(fmt.Sprintf("Pinging QuanuX PKI Engine natively at %s...", config.Address)))
 	
 	health, err := client.Sys().Health()
 	if err != nil {
-		fmt.Println(theme.FailStyle.Render("[X] Sovereign Vault is OFFLINE or physically inaccessible."))
+		output.FromContext(ctx).EmitRaw(theme.FailStyle.Render("[X] Sovereign Vault is OFFLINE or physically inaccessible."))
 		return nil
 	}
 
 	if health.Initialized && !health.Sealed {
-		fmt.Println(theme.OkStyle.Render("[✔] Vault is UNSEALED and supplying Active OIDC hardware dynamically."))
-		fmt.Println(theme.SkillStyle.Render(fmt.Sprintf("Engine Version: %s | Cluster Identity: %s", health.Version, health.ClusterName)))
+		output.FromContext(ctx).EmitRaw(theme.OkStyle.Render("[✔] Vault is UNSEALED and supplying Active OIDC hardware dynamically."))
+		output.FromContext(ctx).EmitRaw(theme.SkillStyle.Render(fmt.Sprintf("Engine Version: %s | Cluster Identity: %s", health.Version, health.ClusterName)))
 	} else if health.Sealed {
-		fmt.Println(theme.FailStyle.Render("[!] Vault is SEALED. Awaiting hardware Shamir unseal keys."))
+		output.FromContext(ctx).EmitRaw(theme.FailStyle.Render("[!] Vault is SEALED. Awaiting hardware Shamir unseal keys."))
 	}
 
 	return nil

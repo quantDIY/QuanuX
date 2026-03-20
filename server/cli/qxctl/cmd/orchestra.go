@@ -1,40 +1,37 @@
 package cmd
 
 import (
+	"github.com/QuanuX/qxctl/internal/runtime"
 	"github.com/QuanuX/qxctl/pkg/orchestra"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
-var orchestraCmd = &cobra.Command{
-	Use:   "orchestra",
-	Short: "Manage QuanuX-Orchestra Universal Naming Registry",
-}
+func NewOrchestraCmd(app *runtime.App) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "orchestra",
+		Short: "Manage QuanuX-Orchestra Universal Naming Registry",
+	}
 
-var orchestraBootstrapCmd = &cobra.Command{
-	Use:   "bootstrap",
-	Short: "Executes the Python script to download the ISO 20022 XML and generate constants",
-}
+	bootstrapCmd := &cobra.Command{
+		Use:   "bootstrap",
+		Short: "Executes the Python script to download the ISO 20022 XML and generate constants",
+		RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
 
-var orchestraCompileCmd = &cobra.Command{
-	Use:   "compile",
-	Short: "Executes standardizer_cli, generating the C++ constexpr bridge, the Cython wrappers, and embedding the checksums",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		venue := viper.GetString("orchestra.orchestra.compile.venue")
-		return orchestra.Compile(cmd.Context(), venue)
-	},
-}
+	compileCmd := &cobra.Command{
+		Use:   "compile",
+		Short: "Executes standardizer_cli, generating the C++ constexpr bridge, the Cython wrappers, and embedding the checksums",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			venue, _ := cmd.Flags().GetString("venue")
+			return orchestra.Compile(app.Ctx, venue)
+		},
+	}
+	compileCmd.Flags().StringP("venue", "v", "", "The broker venue to compile (e.g. ibkr)")
 
-var orchestraVerifyCmd = &cobra.Command{
-	Use:   "verify",
-	Short: "Checks parity between the active Spreader binary checksum and the Python superGraph bindings",
-}
+	verifyCmd := &cobra.Command{
+		Use:   "verify", Short: "Checks parity between active checksums safely", RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
 
-func init() {
-	rootCmd.AddCommand(orchestraCmd)
-	orchestraCmd.AddCommand(orchestraBootstrapCmd)
-	orchestraCmd.AddCommand(orchestraCompileCmd)
-	orchestraCompileCmd.Flags().StringP("venue", "v", "", "The broker venue to compile (e.g. ibkr)")
-	viper.BindPFlag("orchestra.orchestra.compile.venue", orchestraCompileCmd.Flags().Lookup("venue"))
-	orchestraCmd.AddCommand(orchestraVerifyCmd)
+	cmd.AddCommand(bootstrapCmd, compileCmd, verifyCmd)
+	return cmd
 }

@@ -3,6 +3,7 @@ package vcs
 import (
 	"context"
 	"fmt"
+	"github.com/QuanuX/qxctl/internal/output"
 	"os"
 
 	"github.com/go-git/go-git/v5"
@@ -12,11 +13,11 @@ import (
 // Status reads the Git directory natively through CGO file handles instead of `subprocess.run()`.
 func Status(ctx context.Context) error {
 	dir, _ := os.Getwd()
-	fmt.Println(theme.HeaderStyle.Render(fmt.Sprintf("QuanuX Native VCS Engine (Path: %s)", dir)))
+	output.FromContext(ctx).EmitRaw(theme.HeaderStyle.Render(fmt.Sprintf("QuanuX Native VCS Engine (Path: %s)", dir)))
 
 	repo, err := git.PlainOpenWithOptions(dir, &git.PlainOpenOptions{DetectDotGit: true})
 	if err != nil {
-		fmt.Println(theme.FailStyle.Render("[X] Not a git repository natively recognized by go-git."))
+		output.FromContext(ctx).EmitRaw(theme.FailStyle.Render("[X] Not a git repository natively recognized by go-git."))
 		return err
 	}
 
@@ -31,9 +32,9 @@ func Status(ctx context.Context) error {
 	}
 
 	if status.IsClean() {
-		fmt.Println(theme.OkStyle.Render("[✔] Working directory completely clean natively. Zero uncommitted frames."))
+		output.FromContext(ctx).EmitRaw(theme.OkStyle.Render("[✔] Working directory completely clean natively. Zero uncommitted frames."))
 	} else {
-		fmt.Println(theme.SkillStyle.Render(status.String()))
+		output.FromContext(ctx).EmitRaw(theme.SkillStyle.Render(status.String()))
 	}
 	return nil
 }
@@ -53,7 +54,7 @@ func Commit(ctx context.Context, message string, all bool) error {
 	}
 
 	if all {
-		fmt.Println(theme.DetailStyle.Render("Staging all tracked modifications natively..."))
+		output.FromContext(ctx).EmitRaw(theme.DetailStyle.Render("Staging all tracked modifications natively..."))
 		err = worktree.AddWithOptions(&git.AddOptions{All: true})
 		if err != nil {
 			return err
@@ -69,6 +70,6 @@ func Commit(ctx context.Context, message string, all bool) error {
 		return fmt.Errorf("native commit failure: %w", err)
 	}
 
-	fmt.Println(theme.OkStyle.Render(fmt.Sprintf("[✔] Native Commit Secured: %s", commit.String()[:8])))
+	output.FromContext(ctx).EmitRaw(theme.OkStyle.Render(fmt.Sprintf("[✔] Native Commit Secured: %s", commit.String()[:8])))
 	return nil
 }

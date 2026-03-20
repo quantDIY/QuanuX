@@ -3,6 +3,7 @@ package spreader
 import (
 	"context"
 	"fmt"
+	"github.com/QuanuX/qxctl/internal/output"
 	"strings"
 
 	"github.com/quickfixgo/quickfix"
@@ -11,9 +12,9 @@ import (
 
 // Deploy triggers a pure Native Go FIX integration pipeline to allocate QuanuX-Spreader strategy configurations.
 func Deploy(ctx context.Context, binaryName string) error {
-	fmt.Println(theme.HeaderStyle.Render(fmt.Sprintf("QuanuX-Spreader Native FIX Engine Isolation (Target: %s)", binaryName)))
+	output.FromContext(ctx).EmitRaw(theme.HeaderStyle.Render(fmt.Sprintf("QuanuX-Spreader Native FIX Engine Isolation (Target: %s)", binaryName)))
 
-	fmt.Println(theme.DetailStyle.Render("Initializing Sub-Microsecond quickfixgo socket boundaries..."))
+	output.FromContext(ctx).EmitRaw(theme.DetailStyle.Render("Initializing Sub-Microsecond quickfixgo socket boundaries..."))
 	
 	// Native QuickFIX Engine memory block
 	cfgString := `
@@ -35,7 +36,7 @@ SocketConnectPort=9876
 `
 	cfg, err := quickfix.ParseSettings(strings.NewReader(cfgString))
 	if err != nil {
-		fmt.Println(theme.FailStyle.Render("[X] Failed to allocate native FIX Session structural arrays."))
+		output.FromContext(ctx).EmitRaw(theme.FailStyle.Render("[X] Failed to allocate native FIX Session structural arrays."))
 		return nil
 	}
 
@@ -45,11 +46,11 @@ SocketConnectPort=9876
 
 	initiator, err := quickfix.NewInitiator(app, storeFactory, cfg, logFactory)
 	if err != nil {
-		fmt.Println(theme.FailStyle.Render("[X] Failed to bind initiator to physical hardware networking limits."))
+		output.FromContext(ctx).EmitRaw(theme.FailStyle.Render("[X] Failed to bind initiator to physical hardware networking limits."))
 		return nil
 	}
 
-	fmt.Println(theme.OkStyle.Render("[✔] QuanuX-Spreader successfully natively piped into Go FIX Initiator memory structures!"))
+	output.FromContext(ctx).EmitRaw(theme.OkStyle.Render("[✔] QuanuX-Spreader successfully natively piped into Go FIX Initiator memory structures!"))
 	
 	_ = initiator
 	return nil

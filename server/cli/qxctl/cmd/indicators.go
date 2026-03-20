@@ -1,41 +1,35 @@
 package cmd
 
 import (
+	"github.com/QuanuX/qxctl/internal/runtime"
 	"github.com/QuanuX/qxctl/pkg/indicators"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
-var indicatorsCmd = &cobra.Command{
-	Use:   "indicators",
-	Short: "Manage Indicator Registry (Community)",
-}
+func NewIndicatorsCmd(app *runtime.App) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "indicators",
+		Short: "Manage Indicator Registry (Community)",
+	}
 
-var indicatorsInstallCmd = &cobra.Command{
-	Use:   "install [url]",
-	Short: "Install a community indicator from Git",
-	Args:  cobra.ExactArgs(1),
-	RunE: func(cmd *cobra.Command, args []string) error {
-		name := viper.GetString("indicators.indicators.install.name")
-		return indicators.Install(cmd.Context(), args[0], name)
-	},
-}
+	installCmd := &cobra.Command{
+		Use:   "install [url]",
+		Short: "Install a community indicator from Git",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			name, _ := cmd.Flags().GetString("name")
+			return indicators.Install(app.Ctx, args[0], name)
+		},
+	}
+	installCmd.Flags().String("name", "", "Local name for the indicator package")
 
-var indicatorsListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "List installed community indicators",
-}
+	listCmd := &cobra.Command{
+		Use:   "list", Short: "List installed community indicators", RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
+	removeCmd := &cobra.Command{
+		Use:   "remove [name]", Short: "Remove a community indicator", RunE: func(cmd *cobra.Command, args []string) error { return nil },
+	}
 
-var indicatorsRemoveCmd = &cobra.Command{
-	Use:   "remove [name]",
-	Short: "Remove a community indicator",
-}
-
-func init() {
-	rootCmd.AddCommand(indicatorsCmd)
-	indicatorsCmd.AddCommand(indicatorsInstallCmd)
-	indicatorsInstallCmd.Flags().String("name", "", "Local name for the indicator package")
-	viper.BindPFlag("indicators.indicators.install.name", indicatorsInstallCmd.Flags().Lookup("name"))
-	indicatorsCmd.AddCommand(indicatorsListCmd)
-	indicatorsCmd.AddCommand(indicatorsRemoveCmd)
+	cmd.AddCommand(installCmd, listCmd, removeCmd)
+	return cmd
 }
