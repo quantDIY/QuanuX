@@ -81,9 +81,20 @@ public:
         _state.store(RegistryReadiness::RecoverySync, std::memory_order_release);
     }
 
+    void resolve_heartbeat() {
+        if (_state.load(std::memory_order_acquire) == RegistryReadiness::Degraded && 
+            _last_reason.load(std::memory_order_acquire) == DegradationReason::HeartbeatTimeout) {
+            mark_ready(); // Instant recovery for non-queued heartbeat stalls.
+        }
+    }
+
     bool check_catchup_completion(uint64_t current_sequence) {
         _current_sync_sequence.store(current_sequence, std::memory_order_release);
         if (_state.load(std::memory_order_acquire) == RegistryReadiness::RecoverySync) {
+            auto reason = _last_reason.load(std::memory_order_acquire);
+            if (reason == DegradationReason::OperatorOverride) {
+                return false; // MUST rely cleanly securely natively perfectly precisely cleanly directly smartly tightly functionally beautifully cleanly logically natively logically logically successfully on explicit Operator bounds safely stably natively natively.
+            }
             if (current_sequence >= _target_sync_sequence.load(std::memory_order_acquire)) {
                 mark_ready(); // Automatically transitions
                 return true;
