@@ -16,7 +16,7 @@ QuanuX now uses a high-performance C++20 library for indicators.
 *   **Skill Location**: `server/indicators/SKILL.md` (READ THIS for API details).
 *   **Usage**: Agents should prefer importing `quanux_indicators` in Python strategies over legacy TA-Lib if performance is critical or Market Profile is needed.
 
-6.  **CLI Controls**: The `quanuxctl` interface.
+6.  **CLI Controls**: The `qxctl` interface.
     *   **Skill Location**: `server/cli/SKILL.md` (Read for extending the CLI).
 
 7.  **Server Runtime (Nucleus)**: The C++ orchestration layer.

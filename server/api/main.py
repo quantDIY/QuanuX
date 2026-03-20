@@ -8,8 +8,20 @@ import json
 import os
 from contextlib import asynccontextmanager
 
-# Import the core logic from our probe
-from server.cli.src.quanuxctl.commands.probe import execute_probe, ProbeResult, LOG_FILE
+import subprocess
+
+class ProbeResult(BaseModel):
+    status: str
+    details: str
+
+LOG_FILE = "/tmp/quanux_fix.log"
+
+def execute_probe(fix=False, log_to_console=False):
+    try:
+        res = subprocess.run(["qxctl", "probe"], capture_output=True, text=True)
+        return ProbeResult(status="healthy" if res.returncode == 0 else "degraded", details="Native Go CLI probe execution successful.")
+    except Exception as e:
+        return ProbeResult(status="error", details=str(e))
 
 # Ensure nats-py is available
 try:

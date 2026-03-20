@@ -1,16 +1,15 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
+	"github.com/QuanuX/qxctl/pkg/nest"
 )
 
 var rootDeployCmd = &cobra.Command{
 	Use:   "deploy",
 	Short: "Dynamic Habitat Deployment & Telemetry Lifecycle.",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("deploy module initialized. Tauri JSON-RPC listener ready.")
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return nest.Drop(cmd.Context(), "auto", "engine")
 	},
 }
 
