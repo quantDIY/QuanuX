@@ -2,9 +2,11 @@ package runtime
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/QuanuX/qxctl/internal/config"
 	"github.com/QuanuX/qxctl/internal/output"
@@ -29,6 +31,8 @@ type Overrides struct {
 
 // New initializes the application container safely parsing Config contracts.
 func New(ctx context.Context, ovr Overrides) (*App, error) {
+	bootStart := time.Now()
+
 	// Task 5: Context Propagation
 	ctx, cancel := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)
 	_ = cancel // Handled via defer in main.go runtime loop
@@ -40,9 +44,15 @@ func New(ctx context.Context, ovr Overrides) (*App, error) {
 
 	out := output.NewManager(cfg.Output)
 
-	return &App{
+	app := &App{
 		Cfg: cfg,
 		Ctx: ctx,
 		Out: out,
-	}, nil
+	}
+
+	if cfg.TraceMode {
+		app.Out.Log("INFO", fmt.Sprintf("QuanuX Architecture Boot Trace: %v", time.Since(bootStart)))
+	}
+
+	return app, nil
 }
