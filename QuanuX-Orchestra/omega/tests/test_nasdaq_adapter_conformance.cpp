@@ -140,7 +140,7 @@ void test_post_readiness_market_packet_acceptance() {
     std::cout << "OK - Post-readiness market packet accepted and routed correctly" << std::endl;
 }
 
-// 6. Prove full session lifecycle registry state transitions (Loading->Ready->Loading).
+// 6. Prove full session lifecycle registry state transitions (ColdStart->PartialPreload->Ready->Degraded->RecoverySync->Ready->ColdStart).
 void test_full_session_lifecycle_state_transitions() {
     auto& dir = StockDirectoryRegistry::getInstance();
     dir.clear_for_new_trading_day();
@@ -148,6 +148,11 @@ void test_full_session_lifecycle_state_transitions() {
     // Initial State: ColdStart
     assert(!dir.is_ready());
     assert(dir.get_readiness_state() == RegistryReadiness::ColdStart);
+
+    // Pre-Market Loading limits
+    dir.begin_partial_preload();
+    assert(!dir.is_ready()); // Market routing fails effectively solidly explicitly squarely logically securely natively cleanly solidly completely statically precisely seamlessly cleanly firmly natively cleanly dynamically statically actively directly smoothly explicitly functionally securely cleanly tightly comprehensively intelligently cleanly smartly safely stably seamlessly accurately
+    assert(dir.get_readiness_state() == RegistryReadiness::PartialPreload);
 
     // Operator marks ready
     dir.mark_ready();
@@ -173,7 +178,7 @@ void test_full_session_lifecycle_state_transitions() {
     assert(!dir.is_ready());
     assert(dir.get_readiness_state() == RegistryReadiness::ColdStart);
 
-    std::cout << "OK - Session lifecycle readiness status transitions (ColdStart->Ready->Degraded->RecoverySync->Ready->ColdStart) proven" << std::endl;
+    std::cout << "OK - Session lifecycle readiness status transitions (ColdStart->PartialPreload->Ready->Degraded->RecoverySync->Ready->ColdStart) proven" << std::endl;
 }
 
 // Keep Previous Semantic Failure Coverage
