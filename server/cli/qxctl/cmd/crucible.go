@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/QuanuX/qxctl/pkg/crucible"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -11,10 +9,6 @@ import (
 var crucibleCmd = &cobra.Command{
 	Use:   "crucible",
 	Short: "Manage QuanuX Crucible (Backtesting Studio)",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("crucible invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var crucibleReportCmd = &cobra.Command{
@@ -29,37 +23,21 @@ var crucibleReportCmd = &cobra.Command{
 var crucibleReportAdvancedCmd = &cobra.Command{
 	Use:   "report-advanced [strategy]",
 	Short: "Retrieve Phase 5 Deep Statistical Analysis directly from the C++ Engine via Cython",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("report-advanced [strategy] invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var crucibleStartCmd = &cobra.Command{
 	Use:   "start [strategy]",
 	Short: "Start an isolated QuanuX Crucible backtest run",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("start [strategy] invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var crucibleStatusCmd = &cobra.Command{
 	Use:   "status",
 	Short: "Check the status of the Crucible Engine",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("status invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var crucibleStopCmd = &cobra.Command{
 	Use:   "stop",
 	Short: "Stop the currently running Crucible backtest",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("stop invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 func init() {

@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/QuanuX/qxctl/pkg/telemetry"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -11,10 +9,6 @@ import (
 var telemetryCmd = &cobra.Command{
 	Use:   "telemetry",
 	Short: "Manage Node Telemetry Services remotely",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("telemetry invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var telemetryRestartCmd = &cobra.Command{
@@ -30,28 +24,16 @@ var telemetryRestartCmd = &cobra.Command{
 var telemetryStartCmd = &cobra.Command{
 	Use:   "start",
 	Short: "Start a remote telemetry service",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("start invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var telemetryStatusCmd = &cobra.Command{
 	Use:   "status",
 	Short: "Check the status of a remote telemetry service",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("status invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var telemetryStopCmd = &cobra.Command{
 	Use:   "stop",
 	Short: "Stop a remote telemetry service",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("stop invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 func init() {

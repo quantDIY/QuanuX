@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/QuanuX/qxctl/pkg/vault"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -11,10 +9,6 @@ import (
 var vaultCmd = &cobra.Command{
 	Use:   "vault",
 	Short: "Manage QuanuX Sovereign Vault and Local HW Cache",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("vault invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var vaultStatusCmd = &cobra.Command{

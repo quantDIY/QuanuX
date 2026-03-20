@@ -1,20 +1,13 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/QuanuX/qxctl/pkg/module"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 var moduleCmd = &cobra.Command{
 	Use:   "module",
 	Short: "Manage Core Modules (Lifecycle)",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("module invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var moduleCheckCmd = &cobra.Command{

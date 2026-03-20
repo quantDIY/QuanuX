@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/QuanuX/qxctl/pkg/lifecycle"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -11,10 +9,6 @@ import (
 var lifecycleCmd = &cobra.Command{
 	Use:   "lifecycle",
 	Short: "Dynamic Habitat Deployment & Telemetry Lifecycle",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("lifecycle invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var lifecycleDeployCmd = &cobra.Command{
@@ -31,19 +25,11 @@ var lifecycleDeployCmd = &cobra.Command{
 var lifecyclePredeployCmd = &cobra.Command{
 	Use:   "predeploy",
 	Short: "Performs a Capability Handshake prior to deployment",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("predeploy invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var lifecycleSshCmd = &cobra.Command{
 	Use:   "ssh [target] [payload_name]",
 	Short: "Executes a payload via SSH, conditioned on the C++ Envoy generating the wrapper",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("ssh [target] [payload_name] invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 func init() {

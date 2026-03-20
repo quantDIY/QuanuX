@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/QuanuX/qxctl/pkg/nest"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -11,10 +9,6 @@ import (
 var nestCmd = &cobra.Command{
 	Use:   "nest",
 	Short: "Manage QuanuX C++ Sovereign Engine Nest Deployment",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("nest invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var nestDropCmd = &cobra.Command{

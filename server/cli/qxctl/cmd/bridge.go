@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/QuanuX/qxctl/pkg/bridge"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -11,10 +9,6 @@ import (
 var bridgeCmd = &cobra.Command{
 	Use:   "bridge",
 	Short: "Manage the SignalR Bridge",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("bridge invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var bridgeStartCmd = &cobra.Command{
@@ -30,10 +24,6 @@ var bridgeStartCmd = &cobra.Command{
 var bridgeStopCmd = &cobra.Command{
 	Use:   "stop",
 	Short: "Stop the SignalR bridge (placeholder)",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("stop invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 func init() {

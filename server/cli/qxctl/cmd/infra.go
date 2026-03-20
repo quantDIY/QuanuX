@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/QuanuX/qxctl/pkg/infra"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -11,10 +9,6 @@ import (
 var infraCmd = &cobra.Command{
 	Use:   "infra",
 	Short: "QuanuX Control Plane: Ephemeral Infrastructure Auth & Provisioning",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("infra invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var infraApplyCmd = &cobra.Command{
@@ -29,73 +23,41 @@ var infraApplyCmd = &cobra.Command{
 var infraAuthCmd = &cobra.Command{
 	Use:   "auth",
 	Short: "Outputs export commands for QECD Phase 3 Terraform Provisioning",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("auth invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var infraDestroyCmd = &cobra.Command{
 	Use:   "destroy",
 	Short: "Destroys the designated QuanuX Deployment",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("destroy invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var infraGcpSqlCmd = &cobra.Command{
 	Use:   "gcp-sql",
 	Short: "GCP Bounded AST SQL Transpilation",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("gcp-sql invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var infraGcpSqlExecuteCmd = &cobra.Command{
 	Use:   "execute [query]",
 	Short: "Validates, transpiles, and executes bounded SQL against BigQuery",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("execute [query] invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var infraGcpSqlTranspileCmd = &cobra.Command{
 	Use:   "transpile [query]",
 	Short: "Emits translated BigQuery SQL if within the approved Phase 1 matrix",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("transpile [query] invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var infraGcpSqlValidateCmd = &cobra.Command{
 	Use:   "validate [query]",
 	Short: "Validates if the query is within the approved Phase 1 matrix",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("validate [query] invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var infraIngestStartCmd = &cobra.Command{
 	Use:   "ingest-start",
 	Short: "Starts the QuanuX asynchronous ingestion pipeline",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("ingest-start invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var infraSetSpacesKeysCmd = &cobra.Command{
 	Use:   "set-spaces-keys [access_id] [secret_key]",
 	Short: "Securely saves the DigitalOcean Spaces keys to the native OS Keyring",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("set-spaces-keys [access_id] [secret_key] invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var infraSetTokenCmd = &cobra.Command{
@@ -112,19 +74,11 @@ var infraSetTokenCmd = &cobra.Command{
 var infraStatusCmd = &cobra.Command{
 	Use:   "status",
 	Short: "Lists active nodes and vaults from terraform output",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("status invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var infraTableRegisterCmd = &cobra.Command{
 	Use:   "table-register",
 	Short: "Registers an external table against the data lake",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("table-register invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 func init() {

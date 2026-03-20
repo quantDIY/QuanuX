@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/QuanuX/qxctl/pkg/engine"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -11,19 +9,11 @@ import (
 var engineCmd = &cobra.Command{
 	Use:   "engine",
 	Short: "Manage QuanuX Edge Engine Tuning & Execution",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("engine invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var engineSetupTopologyCmd = &cobra.Command{
 	Use:   "setup-topology",
 	Short: "Configures the core JetStream QUANUX_INGEST stream and dual-consumer routing topology",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("setup-topology invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var engineStartCmd = &cobra.Command{
@@ -42,10 +32,6 @@ var engineStartCmd = &cobra.Command{
 var engineTuneCmd = &cobra.Command{
 	Use:   "tune",
 	Short: "Invokes kernel and OS tuning playbooks for the designated architecture",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("tune invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 func init() {

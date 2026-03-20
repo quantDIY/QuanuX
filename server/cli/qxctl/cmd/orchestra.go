@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/QuanuX/qxctl/pkg/orchestra"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -11,19 +9,11 @@ import (
 var orchestraCmd = &cobra.Command{
 	Use:   "orchestra",
 	Short: "Manage QuanuX-Orchestra Universal Naming Registry",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("orchestra invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var orchestraBootstrapCmd = &cobra.Command{
 	Use:   "bootstrap",
 	Short: "Executes the Python script to download the ISO 20022 XML and generate constants",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("bootstrap invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var orchestraCompileCmd = &cobra.Command{
@@ -38,10 +28,6 @@ var orchestraCompileCmd = &cobra.Command{
 var orchestraVerifyCmd = &cobra.Command{
 	Use:   "verify",
 	Short: "Checks parity between the active Spreader binary checksum and the Python superGraph bindings",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("verify invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 func init() {

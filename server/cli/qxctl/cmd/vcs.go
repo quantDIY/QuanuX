@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/QuanuX/qxctl/pkg/vcs"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -11,19 +9,11 @@ import (
 var vcsCmd = &cobra.Command{
 	Use:   "vcs",
 	Short: "Version Control System Connectors",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("vcs invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var vcsCloneCmd = &cobra.Command{
 	Use:   "clone [url]",
 	Short: "Clone a remote repository",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("clone [url] invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var vcsCommitCmd = &cobra.Command{
@@ -39,37 +29,21 @@ var vcsCommitCmd = &cobra.Command{
 var vcsConnectCmd = &cobra.Command{
 	Use:   "connect [url]",
 	Short: "Connect current directory to a remote VCS",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("connect [url] invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var vcsPublishCmd = &cobra.Command{
 	Use:   "publish [provider]",
 	Short: "Create a remote repository on the provider and push the current project to it",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("publish [provider] invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var vcsPushCmd = &cobra.Command{
 	Use:   "push",
 	Short: "Push changes to remote",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("push invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var vcsSetupCmd = &cobra.Command{
 	Use:   "setup [provider]",
 	Short: "Configure credentials for a VCS provider (GitHub, GitLab)",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("setup [provider] invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var vcsStatusCmd = &cobra.Command{
@@ -83,10 +57,6 @@ var vcsStatusCmd = &cobra.Command{
 var vcsSyncCmd = &cobra.Command{
 	Use:   "sync",
 	Short: "Pull latest changes from the default remote (origin)",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("sync invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 func init() {

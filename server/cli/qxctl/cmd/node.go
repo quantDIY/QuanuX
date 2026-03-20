@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/QuanuX/qxctl/pkg/node"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -11,10 +9,6 @@ import (
 var nodeCmd = &cobra.Command{
 	Use:   "node",
 	Short: "Manage Remote Execution Nodes (Deploy, List)",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("node invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var nodeDeployCmd = &cobra.Command{

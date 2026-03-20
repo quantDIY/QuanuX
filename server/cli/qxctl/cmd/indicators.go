@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/QuanuX/qxctl/pkg/indicators"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -11,10 +9,6 @@ import (
 var indicatorsCmd = &cobra.Command{
 	Use:   "indicators",
 	Short: "Manage Indicator Registry (Community)",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("indicators invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var indicatorsInstallCmd = &cobra.Command{
@@ -30,19 +24,11 @@ var indicatorsInstallCmd = &cobra.Command{
 var indicatorsListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List installed community indicators",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("list invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var indicatorsRemoveCmd = &cobra.Command{
 	Use:   "remove [name]",
 	Short: "Remove a community indicator",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("remove [name] invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 func init() {

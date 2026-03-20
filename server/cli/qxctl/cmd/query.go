@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/QuanuX/qxctl/pkg/query"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -11,10 +9,6 @@ import (
 var queryCmd = &cobra.Command{
 	Use:   "query",
 	Short: "Manage Analytical Extensions (Validate & Estimate SQL)",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("query invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var queryEstimateCmd = &cobra.Command{
@@ -30,10 +24,6 @@ var queryEstimateCmd = &cobra.Command{
 var queryValidateCmd = &cobra.Command{
 	Use:   "validate [sql_file]",
 	Short: "Parses local DuckDB SQL against the Allowed/Banned matrix",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("validate [sql_file] invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 func init() {

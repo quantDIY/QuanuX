@@ -12,46 +12,26 @@ import (
 var extCmd = &cobra.Command{
 	Use:   "ext",
 	Short: "Manage QXP Extensions (List, Run)",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("ext invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var extCleanCmd = &cobra.Command{
 	Use:   "clean [name]",
 	Short: "Remove logs and runtime files",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("clean [name] invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var extEnhanceCmd = &cobra.Command{
 	Use:   "enhance [name]",
 	Short: "Trigger a 'Turbo' build with specialized performance options",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("enhance [name] invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var extInstallCmd = &cobra.Command{
 	Use:   "install [name]",
 	Short: "Build/Install the extension (runs build",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("install [name] invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var extIntegrateCmd = &cobra.Command{
 	Use:   "integrate [name]",
 	Short: "Inject a local proprietary SDK into the centralized extensions/sdks repository",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("integrate [name] invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var extListCmd = &cobra.Command{
@@ -77,10 +57,6 @@ var extListCmd = &cobra.Command{
 var extRemoveCmd = &cobra.Command{
 	Use:   "remove [name]",
 	Short: "Alias for uninstall",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("remove [name] invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var extRunCmd = &cobra.Command{
@@ -96,55 +72,31 @@ var extRunCmd = &cobra.Command{
 var extStartCmd = &cobra.Command{
 	Use:   "start [name]",
 	Short: "Start an extension in the background",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("start [name] invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var extStatusCmd = &cobra.Command{
 	Use:   "status [name]",
 	Short: "Check if an extension is running",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("status [name] invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var extStopCmd = &cobra.Command{
 	Use:   "stop [name]",
 	Short: "Stop a running extension",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("stop [name] invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var extUninstallCmd = &cobra.Command{
 	Use:   "uninstall [name]",
 	Short: "Clean up build artifacts (removes 'build' directory)",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("uninstall [name] invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var extUpgradeCmd = &cobra.Command{
 	Use:   "upgrade [name]",
 	Short: "Auto-upgrade to the latest version found upstream",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("upgrade [name] invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 var extUpgradeableCmd = &cobra.Command{
 	Use:   "upgradeable [name]",
 	Short: "Check for available updates (compares installed version vs upstream tags)",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("upgradeable [name] invoked.")
-		fmt.Printf("Viper State: %+v\n", viper.AllSettings())
-	},
 }
 
 func init() {
