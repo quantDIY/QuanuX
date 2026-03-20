@@ -20,8 +20,13 @@ func TestLiveRedaction(t *testing.T) {
 	oldStdout := os.Stdout
 	os.Stdout = w
 
-	// Emit raw string with a secret NATS token directly natively.
+	// Emit across ALL exposed formatter boundaries to brutally prove mask loops.
 	manager.EmitRaw("Connecting natively with token = 'super-secret-bearer-99' over TCP.")
+	manager.EmitRawf("Vault signature: %s\n", "s.1234567890abcdef12345678")
+	manager.Info("bearer my-secret-oidc-string connected!")
+	manager.Warn("Leaking password: 'db-secret-password-xyz'")
+	manager.Error("Fatal Error. Key=s.abcdef1234567890abcdef12")
+	manager.Debug("Token: super-secret-bearer-99 initialized")
 	
 	// Close pipe
 	w.Close()
@@ -31,12 +36,22 @@ func TestLiveRedaction(t *testing.T) {
 	io.Copy(&buf, r)
 	out := buf.String()
 
-	if strings.Contains(out, "super-secret-bearer-99") {
-		t.Fatalf("Redaction FAILURE: Raw token leaked directly into STDOUT buffers! Output: %v", out)
+	leakChecks := []string{
+		"super-secret-bearer-99", 
+		"s.1234567890abcdef12345678", 
+		"my-secret-oidc-string", 
+		"db-secret-password-xyz",
+		"s.abcdef1234567890abcdef12",
 	}
 
-	if !strings.Contains(out, "[REDACTED]") {
-		t.Fatalf("Redaction MISS: Scrubber missed masking the payload signature.")
+	for _, leak := range leakChecks {
+		if strings.Contains(out, leak) {
+			t.Fatalf("Redaction FAILURE: Raw token leaked directly into STDOUT buffers! Output: %v", leak)
+		}
+	}
+
+	if strings.Count(out, "[REDACTED]") < 6 {
+		t.Fatalf("Redaction MISS: Scrubber mapping count failed. Expected at least 6 tokens neutralized. Output: %v", out)
 	}
 }
 
