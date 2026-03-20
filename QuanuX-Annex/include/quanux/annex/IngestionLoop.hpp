@@ -17,6 +17,9 @@ namespace annex {
 struct alignas(64) WarmSoABuffer {
     std::vector<int64_t> timestamp_ns;
     std::vector<int32_t> instrument_id;
+    std::vector<int32_t> venue_id;
+    std::vector<int32_t> route_id;
+    std::vector<int32_t> counterparty_id;
     std::vector<float> bid;
     std::vector<float> ask;
     std::vector<int32_t> volume;
@@ -24,6 +27,9 @@ struct alignas(64) WarmSoABuffer {
     void reserve(size_t capacity) {
         timestamp_ns.reserve(capacity);
         instrument_id.reserve(capacity);
+        venue_id.reserve(capacity);
+        route_id.reserve(capacity);
+        counterparty_id.reserve(capacity);
         bid.reserve(capacity);
         ask.reserve(capacity);
         volume.reserve(capacity);
@@ -32,6 +38,9 @@ struct alignas(64) WarmSoABuffer {
     void clear() {
         timestamp_ns.clear();
         instrument_id.clear();
+        venue_id.clear();
+        route_id.clear();
+        counterparty_id.clear();
         bid.clear();
         ask.clear();
         volume.clear();

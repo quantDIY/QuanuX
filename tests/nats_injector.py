@@ -14,9 +14,9 @@ async def run(url, subject, msg_type, count):
         
         for i in range(count):
             if msg_type == "tick":
-                # MarketTick struct: uint64_t timestamp_ns, uint32_t instrument_id, double bid_price, double ask_price, uint32_t bid_size, uint32_t ask_size, uint8_t level
-                # C-struct byte alignment format: < Q I d d I I B
-                data = struct.pack("<QIddIIB", time.time_ns(), 101, 150.25, 150.30, 100, 200, 2)
+                # MarketTick struct: uint64_t timestamp_ns, uint32_t instrument_id, uint32_t venue_id, uint32_t route_id, uint32_t counterparty_id, double bid_price, double ask_price, uint32_t bid_size, uint32_t ask_size, uint8_t level
+                # C-struct byte alignment format: < Q I I I I d d I I B
+                data = struct.pack("<QIIIIddIIB", time.time_ns(), 101, 1001, 201, 301, 150.25, 150.30, 100, 200, 2)
             elif msg_type == "exec":
                 # ExecutionLog struct: uint64_t order_id, uint64_t execution_timestamp_ns, double fill_price, uint32_t fill_quantity, uint32_t strategy_id, uint32_t latency_micros
                 # C-struct byte alignment format: < Q Q d I I I

@@ -19,6 +19,16 @@ public:
     // Returns 0 (undefined) if unknown so the loop doesn't block
     int32_t mapVenueToInstrumentId(const std::string& venueCode) const;
 
+    // Phase 5 Route & Venue Validation Constraints
+    // Explicit Numeric Registry Declarations (Non-Eternal)
+    static constexpr uint32_t VENUE_NASDAQ_XNAS = 1001;
+    static constexpr uint32_t VENUE_IEX_IEXG = 1005;
+
+    bool isValidVenue(uint32_t venue_id) const;
+    bool isValidRoute(uint32_t route_id) const;
+    bool isValidCounterparty(uint32_t counterparty_id) const;
+    bool isValidIdentitySet(uint32_t venue_id, uint32_t route_id, uint32_t counterparty_id) const;
+
 private:
     TranslationMatrix() = default;
     ~TranslationMatrix() = default;

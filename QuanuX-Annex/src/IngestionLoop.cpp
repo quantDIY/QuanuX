@@ -1,5 +1,6 @@
 #include "quanux/annex/IngestionLoop.hpp"
 #include "quanux/annex/TranslationMatrix.hpp"
+#include "quanux/annex/TelemetryExhaust.hpp"
 #include <iostream>
 #include <cstring>
 
@@ -82,30 +83,33 @@ void IngestionLoop::loop() {
 }
 
 void IngestionLoop::processMessage(natsMsg* msg) {
-    const char* subj = natsMsg_GetSubject(msg);
-    std::string subjectStr(subj);
-    std::string venueCode = "UNKNOWN";
-    
-    size_t firstDot = subjectStr.find('.');
-    size_t secondDot = subjectStr.find('.', firstDot + 1);
-    
-    if (firstDot != std::string::npos && secondDot != std::string::npos) {
-        venueCode = subjectStr.substr(firstDot + 1, secondDot - firstDot - 1);
-    }
-    
-    int32_t instrument_id = TranslationMatrix::getInstance().mapVenueToInstrumentId(venueCode);
-    
     std::lock_guard<std::mutex> lock(bufferMutex_);
     if (activeBuffer_->timestamp_ns.size() >= BUFFER_CAPACITY) {
         rotateBuffer();
     }
     
-    // Simulate appending the payload to the contiguous SoA
-    activeBuffer_->timestamp_ns.push_back(1680000000000000000LL);
-    activeBuffer_->instrument_id.push_back(instrument_id);
-    activeBuffer_->bid.push_back(150.25f);
-    activeBuffer_->ask.push_back(150.26f);
-    activeBuffer_->volume.push_back(100);
+    // Validate Structural Boundaries Natively
+    if (natsMsg_GetDataLength(msg) == sizeof(MarketTick)) {
+        MarketTick* tick = reinterpret_cast<MarketTick*>(const_cast<char*>(natsMsg_GetData(msg)));
+        
+        auto& tMatrix = TranslationMatrix::getInstance();
+        if (!tMatrix.isValidIdentitySet(tick->venue_id, tick->route_id, tick->counterparty_id)) {
+            std::cerr << "[ANNEX] Dropped payload: Route/Venue capabilities mismatch or contradictory combinations. Identity validation failed natively." << std::endl;
+            return;
+        }
+
+        activeBuffer_->timestamp_ns.push_back(tick->timestamp_ns);
+        activeBuffer_->instrument_id.push_back(tick->instrument_id);
+        activeBuffer_->venue_id.push_back(tick->venue_id);
+        activeBuffer_->route_id.push_back(tick->route_id);
+        activeBuffer_->counterparty_id.push_back(tick->counterparty_id);
+        activeBuffer_->bid.push_back(static_cast<float>(tick->bid_price));
+        activeBuffer_->ask.push_back(static_cast<float>(tick->ask_price));
+        activeBuffer_->volume.push_back(tick->bid_size);
+    } else {
+        std::cerr << "[ANNEX] Dropped payload: structural schema mismatch constraints violated. Expected bytes: " 
+                  << sizeof(MarketTick) << ", received: " << natsMsg_GetDataLength(msg) << std::endl;
+    }
 }
 
 std::shared_ptr<WarmSoABuffer> IngestionLoop::getActiveBuffer() {

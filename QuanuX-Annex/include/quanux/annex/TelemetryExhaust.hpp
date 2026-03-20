@@ -13,6 +13,9 @@ namespace annex {
 struct MarketTick {
     uint64_t timestamp_ns;
     uint32_t instrument_id;
+    uint32_t venue_id;         // Annex Identity Projection
+    uint32_t route_id;         // Annex Identity Projection
+    uint32_t counterparty_id;  // Annex Identity Projection
     double bid_price;
     double ask_price;
     uint32_t bid_size;
