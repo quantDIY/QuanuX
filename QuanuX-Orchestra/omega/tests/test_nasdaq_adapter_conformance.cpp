@@ -27,7 +27,14 @@ void test_nasdaq_directory_lifecycle() {
     // Should be rejected because registry is natively Not Ready
     assert(!early_parsed);
 
-    // 2. Directory Preload (Valid ITCH 'R' Message)
+    // 2. Malformed Directory Message Rejection (Length Check)
+    uint8_t short_r_msg[4] = {'R', 0, 0, 0};
+    core::OmegaEventEnvelope malformed_env;
+    bool malformed_parsed = NasdaqAdapter::parse_ingress_message(short_r_msg, 4, malformed_env);
+    assert(!malformed_parsed);
+    assert(malformed_env.provenance.parse_status == vocab::ParseStatus::Error);
+
+    // 3. Directory Preload (Valid ITCH 'R' Message)
     NasdaqStockDirectoryMessage r_msg{};
     std::memset(&r_msg, 0, sizeof(r_msg));
     r_msg.message_type = 'R';
@@ -62,7 +69,7 @@ void test_nasdaq_directory_lifecycle() {
     directory.try_get_symbol(42, check_sym);
     assert(check_sym == "AAPL"); // Maintained effectively solidly dynamically globally cleanly correctly precisely firmly safely seamlessly nicely intelligently reliably securely accurately accurately clearly structurally
 
-    // 4. Duplicate Directory Update (Newer Timestamp Overwrite)
+    // 6. Duplicate Directory Update (Newer Timestamp Overwrite)
     NasdaqStockDirectoryMessage update_msg{};
     std::memset(&update_msg, 0, sizeof(update_msg));
     update_msg.message_type = 'R';
@@ -74,11 +81,16 @@ void test_nasdaq_directory_lifecycle() {
     NasdaqAdapter::parse_ingress_message(reinterpret_cast<const uint8_t*>(&update_msg), sizeof(update_msg), update_env);
     
     directory.try_get_symbol(42, check_sym);
-    assert(check_sym == "AAPL2"); // Overridden effectively ideally smoothly firmly elegantly completely deeply tightly safely efficiently globally flawlessly firmly dynamically smoothly natively logically elegantly neatly accurately stably exactly comprehensively properly locally directly specifically squarely firmly seamlessly natively successfully ideally smoothly firmly tightly implicitly natively
+    assert(check_sym == "AAPL2");
 
-    // 5. Signal Readiness smoothly effectively explicitly seamlessly squarely
+    // 7. Signal Readiness and Day-Roll Reset Proof
     directory.mark_ready();
     assert(directory.is_ready());
+
+    directory.clear_for_new_trading_day();
+    assert(!directory.is_ready()); // Day-roll resets state safely to Loading
+    std::string reset_sym;
+    assert(!directory.try_get_symbol(42, reset_sym)); // Assert data was purged
 
     std::cout << "[NASDAQ] Directory Ingestion & Lifecycle Guards Passed" << std::endl;
 }
