@@ -23,7 +23,7 @@ By converting all 25 core routing domains to Native Go interfaces via the Cobra 
 
 ### Features
 * **Zero-Trust**: Vault PKI and Apple Keychain integrations firmly block rogue state injection. 
-* **Zero-Copy**: Apache Arrow natively loads memoryframes to QuanuX containers bypassing socket barriers.
+* **Zero-Copy**: Apache Arrow natively loads memoryframes to QuanuX processes bypassing socket barriers.
 * **Elm Architecture**: Built securely utilizing standard `charmbracelet/bubbletea` constraints (no raw terminal cursors).
 
 > For detailed deployment capabilities, read the physical CLI `man qxctl` documentation natively embedded into this executable layer.

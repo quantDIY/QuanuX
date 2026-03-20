@@ -13,22 +13,28 @@ func TestArchitecturalRelapseGuards(t *testing.T) {
 	// This physical Sentinel aggressively shields the CI pipeline from lazy engineering.
 
 	wd, _ := os.Getwd()
-	cmdDir := filepath.Join(wd) // Assuming we run this IN the cmd directory natively
-
+	cmdDir := filepath.Join(wd)
+	rootDir := filepath.Join(wd, "..") // Scan the entirety of qxctl/ natively for Doctrine
+	
 	tests := []struct {
 		name     string
 		grepArgs []string
 		failMsg  string
 	}{
 		{
+			name:     "Guard against Cloud/Container Doctrine Hallucination",
+			grepArgs: []string{"-rniE", "--exclude-dir=.git", "--exclude=qxctl", "--exclude=*_test.go", "--exclude=COMMAND_CENSUS.md", "docker|kubernetes|k8s|cloud-native", rootDir},
+			failMsg:  "FATAL RELAPSE: Hallucinated container/orchestrator doctrine detected (Docker/Kubernetes). QuanuX CLI is strictly Bare Metal.",
+		},
+		{
 			name:     "Guard against Global Variables",
 			grepArgs: []string{"-rn", "--exclude=*_test.go", "var App", cmdDir},
-			failMsg:  "FATAL RELAPSE: 'var App' global state detected inside package cmd! Dependency Injection violated.",
+			failMsg:  "FATAL RELAPSE: 'var App' global state detected! Dependency Injection violated.",
 		},
 		{
 			name:     "Guard against init() registrations",
 			grepArgs: []string{"-rn", "--exclude=*_test.go", "func init()", cmdDir},
-			failMsg:  "FATAL RELAPSE: 'func init()' detected inside package cmd! Cobra commands MUST be instantiated via NewXCmd.",
+			failMsg:  "FATAL RELAPSE: 'func init()' detected! Cobra commands MUST be instantiated via NewXCmd.",
 		},
 		{
 			name:     "Guard against Raw OS Output Leaks",
