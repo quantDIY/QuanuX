@@ -33,6 +33,18 @@ struct NasdaqIngressMock {
 };
 #pragma pack(pop)
 
+// Real ITCH 5.0 'R' Stock Directory Message (Truncated explicit primary identities)
+#pragma pack(push, 1)
+struct NasdaqStockDirectoryMessage {
+    char message_type; // 'R'
+    uint16_t stock_locate; // ITCH Foundation Identity (Big-Endian)
+    uint16_t tracking_number;
+    uint64_t timestamp_nanos;
+    char stock_symbol[8];
+    char market_category; // e.g. 'Q' (NASDAQ Global Select)
+};
+#pragma pack(pop)
+
 } // namespace nasdaq
 } // namespace adapters
 } // namespace omega

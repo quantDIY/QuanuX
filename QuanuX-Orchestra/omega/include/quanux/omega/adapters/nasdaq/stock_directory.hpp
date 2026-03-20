@@ -4,11 +4,19 @@
 #include <string>
 #include <array>
 #include <mutex>
+#include <atomic>
 
 namespace quanux {
 namespace omega {
 namespace adapters {
 namespace nasdaq {
+
+enum class RegistryReadiness {
+    Stale = 0,
+    Loading = 1,
+    Ready = 2,
+    Invalid = 3
+};
 
 class StockDirectoryRegistry {
 public:
@@ -17,27 +25,52 @@ public:
         return instance;
     }
 
-    // Explicit Daily Preload Lifecycle
     void clear_for_new_trading_day() {
         std::lock_guard<std::mutex> lock(_mutex);
-        _directory.fill(""); // O(1) allocation bounds, clears all 65536 entries
+        for(size_t i=0; i<65536; ++i) {
+            _directory[i].symbol = "";
+            _directory[i].last_update_nanos = 0;
+        }
+        _state.store(RegistryReadiness::Loading, std::memory_order_release);
     }
 
-    // Handles ITCH Array Message (Type 'R')
-    void declare_locate(uint16_t stock_locate, const std::string& symbol) {
-        if (stock_locate == 0) return; // 0 is invariably discarded by ITCH docs
+    // DOCTRINE: Timestamp-Aware Overwrite. Rejects older UDP replays dynamically natively.
+    bool declare_locate(uint16_t stock_locate, const std::string& symbol, uint64_t timestamp_nanos) {
+        if (stock_locate == 0) return false;
         std::lock_guard<std::mutex> lock(_mutex);
-        _directory[stock_locate] = symbol; // Overwrites any stale/duplicate definitions inherently resolving staleness.
+        
+        auto& entry = _directory[stock_locate];
+        
+        if (!entry.symbol.empty()) {
+            if (timestamp_nanos <= entry.last_update_nanos) {
+                return false; // Rejects strictly stale UDP injections correctly natively.
+            }
+        }
+        
+        entry.symbol = symbol;
+        entry.last_update_nanos = timestamp_nanos;
+        return true;
     }
 
-    // O(1) Execution Hot Path Array Access (Thread-Safe read logic generally lock-free in production if guaranteed preloaded)
+    // Operator Lifecycle Gates
+    void mark_ready() {
+        _state.store(RegistryReadiness::Ready, std::memory_order_release);
+    }
+
+    RegistryReadiness get_readiness_state() const {
+        return _state.load(std::memory_order_acquire);
+    }
+
+    bool is_ready() const {
+        return get_readiness_state() == RegistryReadiness::Ready;
+    }
+
     bool try_get_symbol(uint16_t stock_locate, std::string& out_symbol) const {
         if (stock_locate == 0) return false;
         
-        // Normally lock-free if single-writer pre-market, placing lock strictly for staging mock proof
         std::lock_guard<std::mutex> lock(_mutex);
-        const std::string& symbol = _directory[stock_locate];
-        if (symbol.empty()) return false;
+        const std::string& symbol = _directory[stock_locate].symbol;
+        if (symbol.empty()) return false; // Graceful rejection of unmapped limits.
         
         out_symbol = symbol;
         return true;
@@ -45,16 +78,20 @@ public:
 
 private:
     StockDirectoryRegistry() {
-        _directory.fill("");
+        _state.store(RegistryReadiness::Stale, std::memory_order_release);
+        clear_for_new_trading_day();
     }
-    
-    // Disable copy/move
     StockDirectoryRegistry(const StockDirectoryRegistry&) = delete;
     StockDirectoryRegistry& operator=(const StockDirectoryRegistry&) = delete;
 
-    // uint16_t maps strictly from 0 to 65535 natively fitting entirely natively bypassing hashing limits natively.
-    std::array<std::string, 65536> _directory;
-    mutable std::mutex _mutex; // Mutable allowing const reads safely simulating locks globally
+    struct LocateEntry {
+        std::string symbol;
+        uint64_t last_update_nanos;
+    };
+
+    std::array<LocateEntry, 65536> _directory;
+    mutable std::mutex _mutex;
+    std::atomic<RegistryReadiness> _state;
 };
 
 } // namespace nasdaq

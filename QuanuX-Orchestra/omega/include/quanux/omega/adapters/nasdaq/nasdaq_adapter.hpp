@@ -40,12 +40,43 @@ public:
         size_t length, 
         core::OmegaEventEnvelope& out_envelope) noexcept 
     {
-        if (length < sizeof(NasdaqIngressMock)) {
+        if (length < 1) {
             out_envelope.provenance.parse_status = vocab::ParseStatus::Error;
-            // Missing Identity (Semantic Failure coverage)
             return false;
         }
 
+        const char message_type = static_cast<char>(buffer[0]);
+
+        // Explicit NASDAQ Stock Directory Handler ('R' Message)
+        if (message_type == 'R') {
+            if (length < sizeof(NasdaqStockDirectoryMessage)) {
+                out_envelope.provenance.parse_status = vocab::ParseStatus::Error;
+                return false;
+            }
+            const auto* dir_msg = reinterpret_cast<const NasdaqStockDirectoryMessage*>(buffer);
+            uint16_t dir_locate = __builtin_bswap16(dir_msg->stock_locate);
+            uint64_t dir_timestamp = __builtin_bswap64(dir_msg->timestamp_nanos);
+
+            size_t sym_len = 0;
+            while (sym_len < 8 && dir_msg->stock_symbol[sym_len] != ' ' && dir_msg->stock_symbol[sym_len] != '\0') sym_len++;
+            std::string symbol(dir_msg->stock_symbol, sym_len);
+            
+            // Invoke the duplicate/update lifecycle directly internally
+            bool accepted = StockDirectoryRegistry::getInstance().declare_locate(dir_locate, symbol, dir_timestamp);
+            
+            out_envelope.provenance.parse_status = vocab::ParseStatus::Error; // Do not route directory updates as executing trading signals natively.
+            return false; // Consumed natively as control state without polluting Annex Execution streams
+        }
+
+        // ------------------ Market Trading Stream ------------------
+
+        if (!StockDirectoryRegistry::getInstance().is_ready()) {
+            out_envelope.provenance.parse_status = vocab::ParseStatus::Error;
+            // Native Rejection: Trading packets dropping exactly when registry state is incomplete natively.
+            return false;
+        }
+
+        if (length < sizeof(NasdaqIngressMock)) {
         const auto* msg = reinterpret_cast<const NasdaqIngressMock*>(buffer);
 
         // ITCH 5.0 Endianness Conversions (Big-Endian to Local Execution Little-Endian)
