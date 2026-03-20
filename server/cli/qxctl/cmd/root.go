@@ -8,6 +8,10 @@ import (
 // NewRootCmd initializes the base CLI orchestrator and natively binds the explicit
 // array of execution commands passing the DI context downstream uniformly.
 func NewRootCmd(app *runtime.App) *cobra.Command {
+	if app == nil {
+		panic("FATAL: runtime.App cannot be nil")
+	}
+
 	rootCmd := &cobra.Command{
 		Use:   "qxctl",
 		Short: "QuanuX Control CLI (Go Edition)",

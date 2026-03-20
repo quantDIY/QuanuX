@@ -25,5 +25,19 @@ The QuanuX Control CLI (`qxctl`) has been meticulously restructured to entirely 
 ### 4. **Redaction Matrix (`internal/output/ux.go` + `internal/security/redact.go`)**
 - ALL raw string buffers funnel identically through `EmitRaw` masking NATS passwords, Vault Keys, and Bearer Tokens natively preventing CI log leaks entirely.
 
+### 5. **Plugin Host Boundary (`pkg/ext/plugin.go`)**
+- Abstractly couples `hashicorp/go-plugin` directly over strict Memory Handshakes targeting purely structured Protobuf formats dynamically.
+- Requires symmetrical Airgap configuration matching exactly `QUANUX_PLUGIN_SYSTEM`.
+
+### 6. **Legal Import Targets for `cmd/*`**
+Execution Limbs MUST ONLY IMPORT:
+- `github.com/QuanuX/qxctl/internal/config`
+- `github.com/QuanuX/qxctl/internal/output`
+- `github.com/QuanuX/qxctl/internal/runtime`
+- `github.com/spf13/cobra`
+- Direct downstream local abstractions bound structurally to closures securely.
+
+Any physical `pkg/` integrations MUST execute lazily through constructor execution.
+
 ## Containment Integrity Complete
 By segregating the Mock mappings, Redaction logic, and Lazy Context bounds natively, the resulting binary is completely decoupled from configuration sprawl and isolated strictly inside pure memory constraints.

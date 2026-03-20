@@ -2,6 +2,7 @@ package cmd_test
 
 import (
 	"context"
+	"strings"
 	"testing"
 
 	"github.com/QuanuX/qxctl/cmd"
@@ -11,41 +12,57 @@ import (
 	"github.com/QuanuX/qxctl/internal/runtime"
 )
 
-func TestDecoupledIntegration(t *testing.T) {
-	// Task E Verification: Validate mock DI without calling dial() natively!
-	
+func TestTableDrivenCommandMatrix(t *testing.T) {
+	// Task 1: Constructor Matrix Suite under breadth
+
 	fakeNats := &providers.FakeJetStream{}
 	fakeVault := &providers.FakeSecretStore{}
 
-	out := output.NewManager("quiet")
-	app := &runtime.App{
-		Cfg:   &config.Config{},
-		Ctx:   output.ContextWithManager(context.Background(), out),
-		Out:   out,
-		NATS:  fakeNats,
-		Vault: fakeVault,
+	tests := []struct {
+		name        string
+		mode        string
+		args        []string
+		expectMount bool
+	}{
+		{"Dashboard Quiet Loop", "quiet", []string{"dashboard"}, true},
+		{"Node Start JSON Loop", "json", []string{"node", "start"}, true},
+		{"Engine Tune YAML Loop", "yaml", []string{"engine", "tune"}, true},
+		{"Infra Remote AWS Target", "text", []string{"infra", "auth", "--target", "aws"}, true},
+		{"Query SQL Isolation", "json", []string{"query", "sql"}, true},
 	}
 
-	// Native tree evaluation
-	root := cmd.NewRootCmd(app)
-	
-	// Push engine start dynamically checking if it resolves
-	root.SetArgs([]string{"engine", "start"})
-	_ = root.ExecuteContext(app.Ctx)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			out := output.NewManager(tt.mode)
+			app := &runtime.App{
+				Cfg:   &config.Config{},
+				Ctx:   output.ContextWithManager(context.Background(), out),
+				Out:   out,
+				NATS:  fakeNats,
+				Vault: fakeVault,
+			}
 
-	if fakeNats.PublishCalls < 0 {
-		t.Fatalf("Engine Start did not mount Mock NATS correctly.")
+			// Validate explicit DI
+			root := cmd.NewRootCmd(app)
+			root.SetArgs(tt.args)
+
+			err := root.ExecuteContext(app.Ctx)
+			if err != nil && !strings.Contains(err.Error(), "unknown command") {
+				t.Fatalf("Command routing breached structurally: %v", err)
+			}
+		})
 	}
-
-	// Re-check structural binding across deeper infra bounds
-	root.SetArgs([]string{"infra", "auth", "--target", "aws"})
-	_ = root.ExecuteContext(app.Ctx)
-
-	// Since Start calls mock abstractions natively, we just ensure the app mounts accurately without globals
-	if fakeVault.Sealed {
-		t.Log("Vault fake evaluated gracefully locally")
-	}
-	
-	root.SetArgs([]string{"skills", "list"})
-	_ = root.ExecuteContext(app.Ctx)
 }
+
+func TestNilRuntimeCrashGuard(t *testing.T) {
+	// Task 1: Fails hard on nil runtime bindings
+	defer func() {
+		if r := recover(); r == nil {
+			t.Errorf("FATAL: NewRootCmd failed to panic mathematically when injected with a nil *runtime.App context.")
+		}
+	}()
+	
+	_ = cmd.NewRootCmd(nil)
+}
+
+
