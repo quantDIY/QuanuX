@@ -1,6 +1,7 @@
 #pragma once
 
 #include "quanux/omega/adapters/nasdaq/nasdaq_structs.hpp"
+#include "quanux/omega/adapters/nasdaq/stock_directory.hpp"
 #include "quanux/omega/omega_core/omega_event_envelope.hpp"
 #include "quanux/omega/omega_capability/source_capability.hpp"
 
@@ -71,8 +72,15 @@ public:
             return false;
         }
         
-        // Native ITCH mapping resolves String Identifiers explicitly through the integer map (simulated inline)
-        out_envelope.identity._backing_instrument_id = "ITCH_LOCATE_" + std::to_string(locate);
+        // Native ITCH mapping resolves String Identifiers explicitly through the physical O(1) array map
+        std::string mapped_symbol;
+        if (!StockDirectoryRegistry::getInstance().try_get_symbol(locate, mapped_symbol)) {
+            out_envelope.provenance.parse_status = vocab::ParseStatus::Error;
+            // Semantic Failure: Dropped unmapped StockLocate identifier organically
+            return false;
+        }
+        
+        out_envelope.identity._backing_instrument_id = mapped_symbol;
         out_envelope.identity.instrument_id = out_envelope.identity._backing_instrument_id;
 
         // 2. Semantics and Lifecycle State Translation

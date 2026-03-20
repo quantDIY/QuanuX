@@ -2,6 +2,7 @@
 #include <cassert>
 #include <cstring>
 #include "quanux/omega/adapters/nasdaq/nasdaq_adapter.hpp"
+#include "quanux/omega/adapters/nasdaq/stock_directory.hpp"
 #include "quanux/omega/integration/annex_publisher.hpp"
 #include "quanux/omega/integration/annex_consumer.hpp"
 
@@ -10,10 +11,16 @@ using namespace quanux::omega::adapters::nasdaq;
 using namespace quanux::omega::integration;
 
 void test_nasdaq_semantic_success() {
+    // 1. Explicit Lifecycle Mock (Pre-Market Preload Phase)
+    auto& directory = StockDirectoryRegistry::getInstance();
+    directory.clear_for_new_trading_day(); 
+    directory.declare_locate(42, "AAPL");
+
     NasdaqIngressMock msg{};
     std::memset(&msg, 0, sizeof(msg));
     msg.message_type = 'A'; // Add order
-    msg.stock_locate = __builtin_bswap16(42);
+    msg.stock_locate = __builtin_bswap16(42); // Physically exists in the registry natively
+
     msg.tracking_number = __builtin_bswap16(1);
     msg.order_reference_number = __builtin_bswap64(12345);
     std::strncpy(msg.stock_symbol, "AAPL    ", 8);
@@ -30,7 +37,7 @@ void test_nasdaq_semantic_success() {
     
     // Semantic boundaries hit
     assert(env.identity.event_id.value == 12345);
-    assert(env.identity.instrument_id == "ITCH_LOCATE_42"); // Explicit locate derivation mapped
+    assert(env.identity.instrument_id == "AAPL"); // Explicit locate derivation mapped accurately through O(1) Arrays
     assert(env.semantics.event_type == vocab::EventType::ExecutionFull); // Represents working/added
     assert(env.semantics.normalized_state == vocab::NormalizedState::New);
     assert(env.semantics.price == 150.0);
@@ -85,12 +92,42 @@ void test_nasdaq_semantic_failures() {
     unknown_state.order_reference_number = __builtin_bswap64(1234);
     unknown_state.timestamp_nanos = __builtin_bswap64(1);
 
-    core::OmegaEventEnvelope env3;
-    bool parsed3 = NasdaqAdapter::parse_ingress_message(reinterpret_cast<const uint8_t*>(&unknown_state), sizeof(unknown_state), env3);
-    assert(!parsed3);
-    assert(env3.provenance.parse_status == vocab::ParseStatus::Error);
+    // Missing/Unmapped StockLocate Validation Test
+    NasdaqIngressMock unmapped_locate{};
+    std::memset(&unmapped_locate, 0, sizeof(unmapped_locate));
+    unmapped_locate.message_type = 'A';
+    unmapped_locate.stock_locate = __builtin_bswap16(9999); // UNMAPPED
+    unmapped_locate.order_reference_number = __builtin_bswap64(54321);
+    unmapped_locate.timestamp_nanos = __builtin_bswap64(1);
+    
+    core::OmegaEventEnvelope env4;
+    bool parsed4 = NasdaqAdapter::parse_ingress_message(reinterpret_cast<const uint8_t*>(&unmapped_locate), sizeof(unmapped_locate), env4);
+    assert(!parsed4); // Rejected dynamically natively
+    assert(env4.provenance.parse_status == vocab::ParseStatus::Error);
+    
+    // Testing Stale Location Resolution
+    auto& directory = StockDirectoryRegistry::getInstance();
+    directory.declare_locate(45, "MSFT");
+    
+    NasdaqIngressMock stale_mock{};
+    std::memset(&stale_mock, 0, sizeof(stale_mock));
+    stale_mock.message_type = 'A';
+    stale_mock.stock_locate = __builtin_bswap16(45); // Valid
+    stale_mock.order_reference_number = __builtin_bswap64(9999);
+    stale_mock.timestamp_nanos = __builtin_bswap64(1);
+    
+    core::OmegaEventEnvelope env5;
+    bool parsed5 = NasdaqAdapter::parse_ingress_message(reinterpret_cast<const uint8_t*>(&stale_mock), sizeof(stale_mock), env5);
+    assert(parsed5);
+    assert(env5.identity.instrument_id == "MSFT");
+    
+    // CLEARING the Trading Day
+    directory.clear_for_new_trading_day();
+    core::OmegaEventEnvelope env6;
+    bool parsed6 = NasdaqAdapter::parse_ingress_message(reinterpret_cast<const uint8_t*>(&stale_mock), sizeof(stale_mock), env6);
+    assert(!parsed6); // Fails because dictionary was cleanly dropped natively
 
-    std::cout << "[NASDAQ] Semantic Failure Guards Passed" << std::endl;
+    std::cout << "[NASDAQ] Directory & Semantic Failure Guards Passed" << std::endl;
 }
 
 int main() {
