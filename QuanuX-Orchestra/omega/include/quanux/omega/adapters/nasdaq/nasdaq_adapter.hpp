@@ -47,24 +47,33 @@ public:
 
         const auto* msg = reinterpret_cast<const NasdaqIngressMock*>(buffer);
 
+        // ITCH 5.0 Endianness Conversions (Big-Endian to Local Execution Little-Endian)
+        uint64_t timestamp = __builtin_bswap64(msg->timestamp_nanos);
+        uint64_t order_ref = __builtin_bswap64(msg->order_reference_number);
+        uint16_t locate = __builtin_bswap16(msg->stock_locate);
+        uint32_t net_shares = __builtin_bswap32(msg->shares);
+        uint32_t net_price = __builtin_bswap32(msg->price);
+
         out_envelope.identity._backing_venue_id = "NASDAQ";
         out_envelope.identity.venue_id = out_envelope.identity._backing_venue_id;
 
-        // Map Sidentity Translation
-        if (msg->order_reference_number == 0) {
+        // Semantic Failure: Missing required venue identity reference
+        if (order_ref == 0) {
             out_envelope.provenance.parse_status = vocab::ParseStatus::Error;
-            // Semantic Failure: Missing required venue identity
+            return false;
+        }
+        out_envelope.identity.event_id = ids::EventId(order_ref);
+        
+        // StockLocate Directory Synchronization Coverage (Pre-Market Mapping Simulation)
+        if (locate == 0) {
+            out_envelope.provenance.parse_status = vocab::ParseStatus::Error;
+            // Semantic Failure: Dropped undefined mapped StockLocate identifier
             return false;
         }
         
-        out_envelope.identity.event_id = ids::EventId(msg->order_reference_number);
-        
-        size_t sym_len = 0;
-        while (sym_len < 8 && msg->stock_symbol[sym_len] != ' ' && msg->stock_symbol[sym_len] != '\0') sym_len++;
-        if (sym_len > 0) {
-            out_envelope.identity._backing_instrument_id = std::string(msg->stock_symbol, sym_len);
-            out_envelope.identity.instrument_id = out_envelope.identity._backing_instrument_id;
-        }
+        // Native ITCH mapping resolves String Identifiers explicitly through the integer map (simulated inline)
+        out_envelope.identity._backing_instrument_id = "ITCH_LOCATE_" + std::to_string(locate);
+        out_envelope.identity.instrument_id = out_envelope.identity._backing_instrument_id;
 
         // 2. Semantics and Lifecycle State Translation
         out_envelope.provenance.parse_status = vocab::ParseStatus::Success; // Assume success, downgrade on error
@@ -97,17 +106,17 @@ public:
         if (msg->side == 'B') out_envelope.semantics.side = vocab::OrderSide::Buy;
         else if (msg->side == 'S') out_envelope.semantics.side = vocab::OrderSide::Sell;
 
-        // Numeric mappings - heavily provisional
-        out_envelope.semantics.quantity = static_cast<double>(msg->shares);
-        out_envelope.semantics.price = static_cast<double>(msg->price) / 10000.0; // 4-decimal implied
+        // Numeric mappings implementing explicit conversions
+        out_envelope.semantics.quantity = static_cast<double>(net_shares);
+        out_envelope.semantics.price = static_cast<double>(net_price) / 10000.0; // 4-decimal implied
 
         // 3. Time Precedence
-        if (msg->timestamp_nanos == 0) {
+        if (timestamp == 0) {
             out_envelope.provenance.parse_status = vocab::ParseStatus::Error;
             // Semantic Failure: Malformed timestamp
             return false;
         }
-        out_envelope.time.source_time.epoch_nanos = msg->timestamp_nanos;
+        out_envelope.time.source_time.epoch_nanos = timestamp;
 
         // 4. Provenance & Survival (Strict Preservation)
         out_envelope.provenance.adapter_name = "NASDAQ_ITCH_OUCH_MOCK";

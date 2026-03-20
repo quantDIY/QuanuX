@@ -13,13 +13,15 @@ void test_nasdaq_semantic_success() {
     NasdaqIngressMock msg{};
     std::memset(&msg, 0, sizeof(msg));
     msg.message_type = 'A'; // Add order
-    msg.order_reference_number = 12345;
+    msg.stock_locate = __builtin_bswap16(42);
+    msg.tracking_number = __builtin_bswap16(1);
+    msg.order_reference_number = __builtin_bswap64(12345);
     std::strncpy(msg.stock_symbol, "AAPL    ", 8);
     std::strncpy(msg.mpid, "GSCO", 4);
     msg.side = 'B';
-    msg.shares = 100;
-    msg.price = 1500000; // $150.0000
-    msg.timestamp_nanos = 1000000000;
+    msg.shares = __builtin_bswap32(100);
+    msg.price = __builtin_bswap32(1500000); // $150.0000
+    msg.timestamp_nanos = __builtin_bswap64(1000000000);
 
     core::OmegaEventEnvelope env;
     bool parsed = NasdaqAdapter::parse_ingress_message(reinterpret_cast<const uint8_t*>(&msg), sizeof(msg), env);
@@ -28,7 +30,7 @@ void test_nasdaq_semantic_success() {
     
     // Semantic boundaries hit
     assert(env.identity.event_id.value == 12345);
-    assert(env.identity.instrument_id == "AAPL");
+    assert(env.identity.instrument_id == "ITCH_LOCATE_42"); // Explicit locate derivation mapped
     assert(env.semantics.event_type == vocab::EventType::ExecutionFull); // Represents working/added
     assert(env.semantics.normalized_state == vocab::NormalizedState::New);
     assert(env.semantics.price == 150.0);
@@ -66,7 +68,8 @@ void test_nasdaq_semantic_failures() {
     NasdaqIngressMock no_time{};
     std::memset(&no_time, 0, sizeof(no_time));
     no_time.message_type = 'A'; 
-    no_time.order_reference_number = 1234;
+    no_time.stock_locate = __builtin_bswap16(42);
+    no_time.order_reference_number = __builtin_bswap64(1234);
     no_time.timestamp_nanos = 0; // SEMANTIC FAILURE
 
     core::OmegaEventEnvelope env2;
@@ -78,8 +81,9 @@ void test_nasdaq_semantic_failures() {
     NasdaqIngressMock unknown_state{};
     std::memset(&unknown_state, 0, sizeof(unknown_state));
     unknown_state.message_type = 'Z'; // SEMANTIC FAILURE (Unknown)
-    unknown_state.order_reference_number = 1234;
-    unknown_state.timestamp_nanos = 1;
+    unknown_state.stock_locate = __builtin_bswap16(42);
+    unknown_state.order_reference_number = __builtin_bswap64(1234);
+    unknown_state.timestamp_nanos = __builtin_bswap64(1);
 
     core::OmegaEventEnvelope env3;
     bool parsed3 = NasdaqAdapter::parse_ingress_message(reinterpret_cast<const uint8_t*>(&unknown_state), sizeof(unknown_state), env3);

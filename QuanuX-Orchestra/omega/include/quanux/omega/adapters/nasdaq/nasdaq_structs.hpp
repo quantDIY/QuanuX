@@ -14,11 +14,13 @@ namespace nasdaq {
 #pragma pack(push, 1)
 struct NasdaqIngressMock {
     char message_type; // 'A' = Add Order, 'E' = Execute, 'X' = Cancel, 'C' = Execute with Price
+    uint16_t stock_locate;   // ITCH Foundation Identity (Big-Endian)
+    uint16_t tracking_number; // Internal ITCH boundary
     uint64_t timestamp_nanos;
     uint64_t order_reference_number;
     
     // Broadened identity mapping
-    char stock_symbol[8];
+    char stock_symbol[8]; // Deprecated, mapped via StockLocate Directory Sync limit
     char mpid[4]; // Market Participant ID
 
     // Semantics
