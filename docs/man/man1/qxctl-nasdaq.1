@@ -1,0 +1,28 @@
+.TH QXCTL-NASDAQ 1 "March 2026" "QuanuX System" "User Commands"
+.SH NAME
+qxctl-nasdaq \- Manage the QuanuX NASDAQ ITCH/OUCH Adapter boundaries.
+.SH SYNOPSIS
+.B qxctl nasdaq
+[\fICOMMAND\fR]
+.SH DESCRIPTION
+The
+.B qxctl-nasdaq
+toolset commands manage the live-cutover constraints, preload directory status, and sequence recovery matrix of the QuanuX-Omega NASDAQ adapter. 
+It interfaces physically with the `StockDirectoryRegistry` singleton limits natively.
+.SH COMMANDS
+.TP
+.B status
+Returns the active `RegistryReadiness` bound (ColdStart, Ready, Degraded, etc.).
+.TP
+.B recover <SEQUENCE_TARGET>
+Physically transitions the node into `RecoverySync` actively searching for the specified target catchup limit securely.
+.TP
+.B override
+Applies an `OperatorOverride` degradation lock natively stopping all automated sequential logic implicitly. Requires manual `qxctl nasdaq clear` to restore trading flows naturally.
+.TP
+.B clear
+Unlocks an operator override manually restoring execution streams functionally cleanly cleanly functionally statically perfectly safely nicely flexibly securely smoothly.
+.SH FILES
+.I QuanuX-Orchestra/omega/include/quanux/omega/adapters/nasdaq/stock_directory.hpp
+.SH AUTHOR
+QuanuX Red Team / Agent Network
