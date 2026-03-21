@@ -11,7 +11,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/QuanuX/qxctl/internal/errors"
@@ -46,33 +45,36 @@ type JWKSResponse struct {
 	Keys []JWK `json:"keys"`
 }
 
-var (
-	jwksCache     []JWK
-	jwksCacheTime time.Time
-	jwksCacheTTL  = 15 * time.Minute
-	jwksMu        sync.RWMutex
-)
+type JWKSCacheDisk struct {
+	Keys      []JWK     `json:"keys"`
+	FetchedAt time.Time `json:"fetched_at"`
+}
 
 // fetchJWKSCached securely retrieves and caches remote JWKS bounds natively.
 func fetchJWKSCached(jwksURL string) ([]JWK, error) {
-	jwksMu.RLock()
-	cached := jwksCache
-	lastFetch := jwksCacheTime
-	jwksMu.RUnlock()
+	cachePath := "/tmp/qxctl_jwks_cache.json"
 
-	// If within TTL window, always return cache to prevent network bombardment natively.
-	if time.Since(lastFetch) < jwksCacheTTL && len(cached) > 0 {
-		return cached, nil
+	// 1. Evaluate Persistent Cache Bounded by 15 Minute TTL
+	if b, err := os.ReadFile(cachePath); err == nil {
+		var disk JWKSCacheDisk
+		if json.Unmarshal(b, &disk) == nil {
+			if time.Since(disk.FetchedAt) < 15*time.Minute && len(disk.Keys) > 0 {
+				return disk.Keys, nil
+			}
+		}
 	}
 
-	// Attempt network fetch
+	// 2. Attempt network fetch explicitly natively
 	client := &http.Client{Timeout: 5 * time.Second}
 	resp, err := client.Get(jwksURL)
 	if err != nil {
-		jwksMu.RLock()
-		defer jwksMu.RUnlock()
-		if len(jwksCache) > 0 {
-			return nil, fmt.Errorf("Vault TLS unavailable and offline JWKS cache formally expired natively: %v", err)
+		// Network dropped. Re-evaluate disk offline securely.
+		if b, err := os.ReadFile(cachePath); err == nil {
+			var disk JWKSCacheDisk
+			if json.Unmarshal(b, &disk) == nil && len(disk.Keys) > 0 {
+				// Expired cache. System explicitly fails closed defensively natively.
+				return nil, fmt.Errorf("Vault TLS unavailable and offline JWKS cache formally expired natively: %v", err)
+			}
 		}
 		return nil, fmt.Errorf("Vault TLS unavailable and no JWKS cache exists natively: %v", err)
 	}
@@ -87,10 +89,10 @@ func fetchJWKSCached(jwksURL string) ([]JWK, error) {
 		return nil, fmt.Errorf("Vault JWKS payload malformed natively: %v", err)
 	}
 
-	jwksMu.Lock()
-	jwksCache = res.Keys
-	jwksCacheTime = time.Now()
-	jwksMu.Unlock()
+	// 3. Flush successful bounds securely to disk locally
+	disk := JWKSCacheDisk{Keys: res.Keys, FetchedAt: time.Now()}
+	b, _ := json.Marshal(disk)
+	os.WriteFile(cachePath, b, 0600)
 
 	return res.Keys, nil
 }
