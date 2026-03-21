@@ -32,23 +32,34 @@ type Overrides struct {
 	Verbose    bool
 }
 
-// ParseOverrides isolates pre-Cobra string token evaluations precisely matching global flags.
 func ParseOverrides(args []string) Overrides {
 	ovr := Overrides{}
 	for i, arg := range args {
 		if arg == "--config" && i+1 < len(args) {
 			ovr.ConfigFile = args[i+1]
 		}
+		if len(arg) > 9 && arg[:9] == "--config=" {
+			ovr.ConfigFile = arg[9:]
+		}
+
 		if arg == "--hub" && i+1 < len(args) {
 			ovr.HubURL = args[i+1]
 		}
+		if len(arg) > 6 && arg[:6] == "--hub=" {
+			ovr.HubURL = arg[6:]
+		}
+
 		if arg == "--output" && i+1 < len(args) {
 			ovr.Output = args[i+1]
 		}
-		if arg == "--trace" {
+		if len(arg) > 9 && arg[:9] == "--output=" {
+			ovr.Output = arg[9:]
+		}
+
+		if arg == "--trace" || arg == "--trace=true" {
 			ovr.Trace = true
 		}
-		if arg == "--verbose" {
+		if arg == "--verbose" || arg == "--verbose=true" {
 			ovr.Verbose = true
 		}
 	}

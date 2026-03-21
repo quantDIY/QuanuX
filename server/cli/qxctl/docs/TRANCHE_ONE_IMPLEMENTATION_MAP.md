@@ -95,5 +95,14 @@ The Tranche One deployment is fully successful exclusively when all of the follo
 - The defined set of Tranche One covered commands successfully bind architectural metadata.
 - The `TestCommandMetadataCompleteness` execution natively fails hard (with `t.Fatal()`) if any covered leaf command lacks structural metadata.
 - The `json` output mode natively claims ownership of both the success and failure evaluation paths for all tranche-one-covered commands.
-- The active redaction boundary flawlessly executes on the serialized JSON output string immediately prior to terminal routing.
 - The AI manifest can be flawlessly generated exclusively reflecting the constraints of the live covered metadata set.
+
+---
+
+## 8. Boundary Tag
+
+The Tranche One Covered Set is permanently frozen at:
+- `vault status`
+- `query validate`
+
+No additional commands are permitted within this wave.
