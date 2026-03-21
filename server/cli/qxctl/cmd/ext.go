@@ -106,6 +106,6 @@ func NewExtCmd(app *runtime.App) *cobra.Command {
 		Use:   "upgradeable [name]", Short: "Check for available updates", RunE: func(cmd *cobra.Command, args []string) error { return nil },
 	}
 
-	cmd.AddCommand(cleanCmd, enhanceCmd, installCmd, integrateCmd, listCmd, removeCmd, runCmd, startCmd, statusCmd, stopCmd, uninstallCmd, upgradeCmd, upgradeableCmd)
+	cmd.AddCommand(cleanCmd, enhanceCmd, installCmd, integrateCmd, listCmd, removeCmd, runCmd, startCmd, statusCmd, stopCmd, uninstallCmd, upgradeCmd, upgradeableCmd, NewManifestCmd(app))
 	return cmd
 }

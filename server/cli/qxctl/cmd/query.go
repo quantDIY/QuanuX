@@ -28,6 +28,14 @@ func NewQueryCmd(app *runtime.App) *cobra.Command {
 	}
 	validateCmd.Flags().StringP("target", "t", "bq", "Target analytics engine")
 
+	runtime.BindMetadata(validateCmd, runtime.CommandMetadata{
+		Capability:          runtime.CapValidate,
+		Risk:                runtime.RiskStable,
+		IsIdempotent:        true,
+		SupportsDryRun:      false,
+		RequiresInteractive: false,
+	})
+
 	cmd.AddCommand(estimateCmd, validateCmd)
 	return cmd
 }

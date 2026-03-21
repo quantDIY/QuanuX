@@ -22,6 +22,14 @@ func NewVaultCmd(app *runtime.App) *cobra.Command {
 	}
 	statusCmd.Flags().String("target", "gcp", "Infrastructure target (do or gcp)")
 
+	runtime.BindMetadata(statusCmd, runtime.CommandMetadata{
+		Capability:          runtime.CapInspect,
+		Risk:                runtime.RiskStable,
+		IsIdempotent:        true,
+		SupportsDryRun:      false,
+		RequiresInteractive: false,
+	})
+
 	cmd.AddCommand(statusCmd)
 	return cmd
 }

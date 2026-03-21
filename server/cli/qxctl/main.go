@@ -28,6 +28,6 @@ func main() {
 	root := cmd.NewRootCmd(app)
 
 	if err := root.ExecuteContext(ctx); err != nil {
-		qxerrors.Exit(err)
+		app.Out.ErrorExit(err)
 	}
 }
