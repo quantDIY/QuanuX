@@ -128,6 +128,8 @@ func (m *Manager) ErrorExit(err error) {
 		errType = fmt.Sprintf("CATEGORY_%d", code)
 		if code == 403 {
 			errType = "CAPABILITY_DENIED"
+		} else if code == 401 {
+			errType = "AUTH_VERIFICATION_FAILED"
 		}
 		msg = errInterface.Message
 		if errInterface.Underlying != "" {
