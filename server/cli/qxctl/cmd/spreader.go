@@ -1,8 +1,12 @@
 package cmd
 
 import (
+	"os/exec"
+
 	"github.com/QuanuX/qxctl/internal/runtime"
 	"github.com/QuanuX/qxctl/pkg/spreader"
+	cliExec "github.com/QuanuX/qxctl/internal/exec"
+	"github.com/QuanuX/qxctl/internal/output"
 	"github.com/spf13/cobra"
 )
 
@@ -24,8 +28,31 @@ func NewSpreaderCmd(app *runtime.App) *cobra.Command {
 	packageCmd := &cobra.Command{
 		Use:   "package [strategy_json]",
 		Short: "Transpile the strategy into C++ native engine bounds",
-		RunE:  func(cmd *cobra.Command, args []string) error { return nil },
+		RunE:  func(cmd *cobra.Command, args []string) error {
+			sub := exec.CommandContext(app.Ctx, "echo", "Mocking C++ transpilation successfully via bounded buffers...")
+			stdout, err := cliExec.BoundedRun(app.Ctx, sub)
+			if err != nil {
+				return err
+			}
+			if app.Out.Mode == "json" {
+				app.Out.PrintJSON(output.OutputEnvelope{
+					Status:  output.StatusSuccess,
+					Code:    0,
+					Command: "spreader package",
+					Data:    stdout,
+				})
+			}
+			return nil
+		},
 	}
+
+	runtime.BindMetadata(packageCmd, runtime.CommandMetadata{
+		Capability:          runtime.CapSimulate,
+		Risk:                runtime.RiskStable,
+		IsIdempotent:        true,
+		SupportsDryRun:      false,
+		RequiresInteractive: false,
+	})
 
 	cmd.AddCommand(deployCmd, packageCmd)
 	return cmd

@@ -37,6 +37,14 @@ func NewSecretsCmd(app *runtime.App) *cobra.Command {
 		Use:   "setup", Short: "Interactive wizard safely bound to outputs", RunE: func(cmd *cobra.Command, args []string) error { return nil },
 	}
 
+	runtime.BindMetadata(getCmd, runtime.CommandMetadata{
+		Capability:          runtime.CapSecretsRead,
+		Risk:                runtime.RiskStable,
+		IsIdempotent:        true,
+		SupportsDryRun:      false,
+		RequiresInteractive: false,
+	})
+
 	cmd.AddCommand(getCmd, listCmd, setCmd, setupCmd)
 	return cmd
 }

@@ -30,6 +30,14 @@ func NewNodeCmd(app *runtime.App) *cobra.Command {
 	deployCmd.Flags().String("token", "", "Registration Token")
 	deployCmd.Flags().Bool("dry-run", false, "Print command without executing")
 
+	runtime.BindMetadata(deployCmd, runtime.CommandMetadata{
+		Capability:          runtime.CapDeploy,
+		Risk:                runtime.RiskDangerous,
+		IsIdempotent:        false,
+		SupportsDryRun:      true,
+		RequiresInteractive: false,
+	})
+
 	cmd.AddCommand(deployCmd)
 	return cmd
 }

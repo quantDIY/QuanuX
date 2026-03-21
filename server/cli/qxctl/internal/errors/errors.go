@@ -17,6 +17,8 @@ const (
 	CategoryInternalBug
 )
 
+const CategoryCapabilityDenied ErrorCategory = 403
+
 type CliError struct {
 	Category ErrorCategory
 	Message  string

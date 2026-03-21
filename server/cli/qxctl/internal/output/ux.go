@@ -126,6 +126,9 @@ func (m *Manager) ErrorExit(err error) {
 	if errInterface != nil {
 		code = errInterface.Category
 		errType = fmt.Sprintf("CATEGORY_%d", code)
+		if code == 403 {
+			errType = "CAPABILITY_DENIED"
+		}
 		msg = errInterface.Message
 		if errInterface.Underlying != "" {
 			msg = fmt.Sprintf("%s: %s", msg, errInterface.Underlying)
@@ -164,14 +167,18 @@ type pseudoCliError struct{
 }
 
 func mapErrorDynamically(e error) *pseudoCliError {
-	// Dynamically sniff interface bounds safely skipping imports globally.
-	type localCaster interface {
-		Error() string
-	}
-	// Recreating structure checks organically if possible safely
 	errMsg := e.Error()
 	if len(errMsg) > 0 && errMsg[0] == '[' {
-		// Just defer to basic types natively without deep reflection mapping since JSON natively envelopes correctly
+		// Extract category number from brackets organically
+		endIdx := 1
+		for endIdx < len(errMsg) && errMsg[endIdx] >= '0' && errMsg[endIdx] <= '9' {
+			endIdx++
+		}
+		if endIdx > 1 && endIdx < len(errMsg) && errMsg[endIdx] == ']' {
+			var cat int
+			fmt.Sscanf(errMsg[1:endIdx], "%d", &cat)
+			return &pseudoCliError{Category: cat, Message: errMsg[endIdx+1:]}
+		}
 		return &pseudoCliError{Category: 1, Message: errMsg}
 	}
 	return nil

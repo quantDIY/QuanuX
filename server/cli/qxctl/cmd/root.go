@@ -16,6 +16,12 @@ func NewRootCmd(app *runtime.App) *cobra.Command {
 		Use:   "qxctl",
 		Short: "QuanuX Control CLI (Go Edition)",
 		Long:  "Operator-grade natively compiled orchestrator managing QuanuX cython grids and HW bounds.",
+		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			if err := app.Authorize(cmd); err != nil {
+				app.Out.ErrorExit(err)
+			}
+			return nil
+		},
 	}
 
 	rootCmd.PersistentFlags().String("config", "", "Explicit config file trajectory")
