@@ -13,7 +13,7 @@ import (
 type BoundedOutput struct {
 	Truncated     bool   `json:"truncated"`
 	CapturedBytes int    `json:"captured_bytes"`
-	SpillPath     string `json:"spill_path,omitempty"`
+	SpillPath     string `json:"spill_path"`
 	StderrPresent bool   `json:"stderr_present"`
 
 	mu       sync.Mutex   `json:"-"`

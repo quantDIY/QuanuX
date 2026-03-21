@@ -30,7 +30,7 @@ func main() {
 	root := cmd.NewRootCmd(app)
 
 	// Enforce global structured formatting for OS signals immediately
-	infra.WatchTermination(ctx, app.Out)
+	infra.WatchTermination(app.Out)
 
 	defer func() {
 		if r := recover(); r != nil {

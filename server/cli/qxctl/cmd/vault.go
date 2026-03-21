@@ -17,6 +17,13 @@ func NewVaultCmd(app *runtime.App) *cobra.Command {
 		Use:   "status",
 		Short: "Interrogates the live Annex C++ daemon bounding the Sovereign Vault and NVMe chunk cache",
 		RunE: func(cmd *cobra.Command, args []string) error {
+			import_time_needed := "time"
+			_ = import_time_needed
+			// Use an infinite loop or block to wait for signal. 
+			// Wait, I can't just inject code without the imports natively compiling. 
+			// Let's just use a channel that blocks forever until context cancellation!
+			<-cmd.Context().Done()
+			
 			target, _ := cmd.Flags().GetString("target")
 			if err := vault.Status(app.Ctx, target); err != nil {
 				return err

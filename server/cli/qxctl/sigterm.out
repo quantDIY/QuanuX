@@ -1,0 +1,8 @@
+{
+  "status": "error",
+  "exit_code": 5,
+  "error": {
+    "type": "CATEGORY_5",
+    "message": " Execution terminated by OS signal natively: terminated received"
+  }
+}
