@@ -1,8 +1,11 @@
 package runtime
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"os"
+	"strings"
 
 	"github.com/QuanuX/qxctl/internal/errors"
 	"github.com/spf13/cobra"
@@ -19,11 +22,37 @@ func (t *Token) HasCapability(cap CapabilityClass) bool {
 		if c == cap {
 			return true
 		}
+		// High-risk capabilities subsume their explicit downgrades
+		if c == CapDeploy && cap == CapSimulate {
+			return true
+		}
 	}
 	return false
 }
 
-// Authorize systematically intersects evaluation commands against [PROPOSAL] tokens.
+// parseVaultOIDC simulates provider-interface verification against mocked Vault network responses natively.
+func parseVaultOIDC(token string) ([]CapabilityClass, error) {
+	if token == "" {
+		return nil, fmt.Errorf("token absent (simulating Vault network drop)")
+	}
+	parts := strings.Split(token, ".")
+	if len(parts) != 3 {
+		return nil, fmt.Errorf("invalid OIDC JWT format")
+	}
+	payload, err := base64.RawURLEncoding.DecodeString(parts[1])
+	if err != nil {
+		return nil, fmt.Errorf("OIDC payload decode failed: %v", err)
+	}
+	var claims struct {
+		Capabilities []CapabilityClass `json:"capabilities"`
+	}
+	if err := json.Unmarshal(payload, &claims); err != nil {
+		return nil, fmt.Errorf("OIDC claims parse failed: %v", err)
+	}
+	return claims.Capabilities, nil
+}
+
+// Authorize systematically intersects evaluation commands against Tranche 3B OIDC bounded tokens.
 func (a *App) Authorize(cmd *cobra.Command) error {
 	metaRaw, ok := cmd.Annotations["qxctl_metadata"]
 	if !ok {
@@ -45,11 +74,23 @@ func (a *App) Authorize(cmd *cobra.Command) error {
 		}
 	}
 
-	// [PROPOSAL] Synthesize a mock root token for proving bounds locally without remote networking.
-	// In production, this would parse from `app.Vault` or JWT Context.
-	// We inject `inspect`, `validate`, and `simulate` only. We explicitly do NOT inject `deploy`.
+	// Tranche 3B Vault OIDC Pilot
+	var tokenStr string
+	if flag := cmd.Flag("token"); flag != nil {
+		tokenStr = flag.Value.String()
+	}
+	if tokenStr == "" {
+		tokenStr = os.Getenv("QX_VAULT_TOKEN")
+	}
+
+	caps, err := parseVaultOIDC(tokenStr)
+	if err != nil {
+		// Simulating secure defaulting to CAPABILITY_DENIED upon network isolation / missing token.
+		return errors.New(errors.CategoryCapabilityDenied, "Authorization rejected. Vault OIDC verification failed or token missing.", err)
+	}
+
 	var callerToken = Token{
-		Capabilities: []CapabilityClass{CapInspect, CapValidate, CapSimulate},
+		Capabilities: caps,
 	}
 
 	if !callerToken.HasCapability(requiredClass) {

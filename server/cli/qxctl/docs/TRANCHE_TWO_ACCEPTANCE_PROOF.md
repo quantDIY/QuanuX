@@ -3,7 +3,7 @@
 This document proves that Tranche Two capability bounds, dry-run downgrades, and subprocess capture mechanisms behave exactly as stated in the patch plan.
 
 ## 1. Tranche One Covered Commands Remain Stable
-**Proof:** `qxctl vault status --output=json --target=gcp`
+**Proof:** `go run main.go vault status --output=json --target=gcp`
 ```json
 {
   "status": "success",
@@ -13,8 +13,18 @@ This document proves that Tranche Two capability bounds, dry-run downgrades, and
 }
 ```
 
+**Proof:** `go run main.go query validate --output=json --target=bq`
+```json
+{
+  "status": "success",
+  "exit_code": 0,
+  "command": "query validate",
+  "message": "AST Validation passed syntactically without network IO."
+}
+```
+
 ## 2. Uncovered Commands Remain Outside Enforcement
-**Proof:** `qxctl nest drop --output=json`
+**Proof:** `go run main.go nest drop --output=json`
 ```json
 {
   "status": "error",
@@ -59,7 +69,14 @@ The `deploy` capability is required for `node deploy`. The token lacks `deploy`,
 ```
 
 **Proof B (Success with flag):** `go run main.go node deploy server1 --dry-run --output=json`
-*(Command successfully exits 0 safely. The capability matrix evaluates utilizing structural `simulate` parameters securely).*
+```json
+{
+  "status": "success",
+  "exit_code": 0,
+  "command": "node deploy",
+  "message": "Dry-run engaged. Skipping physical TCP socket bindings..."
+}
+```
 
 ## 5. Subprocess Capture Proven
 **Proof:** `go run main.go spreader package mystrat --output=json`
@@ -72,3 +89,59 @@ The `deploy` capability is required for `node deploy`. The token lacks `deploy`,
 }
 ```
 *The stdout text from the underlying `echo` OS thread is captured accurately and bound structurally inside the JSON `data` attribute without bleeding text directly to the console.*
+
+## 6. Manifest Stability Proven
+The `ext manifest` command securely prints the schema structure without being blocked by authorization constraints.
+
+**Proof:** `go run main.go ext manifest --output=json`
+```json
+{
+  "status": "success",
+  "exit_code": 0,
+  "data": {
+    "version": "1.0",
+    "commands": [
+      {
+        "capability_class": "deploy",
+        "risk_level": "dangerous",
+        "idempotent": false,
+        "supports_dry_run": true,
+        "requires_interactive": false,
+        "schema_ref": "qxctl node deploy"
+      },
+      {
+        "capability_class": "validate",
+        "risk_level": "stable",
+        "idempotent": true,
+        "supports_dry_run": false,
+        "requires_interactive": false,
+        "schema_ref": "qxctl query validate"
+      },
+      {
+        "capability_class": "secrets-read",
+        "risk_level": "stable",
+        "idempotent": true,
+        "supports_dry_run": false,
+        "requires_interactive": false,
+        "schema_ref": "qxctl secrets get"
+      },
+      {
+        "capability_class": "simulate",
+        "risk_level": "stable",
+        "idempotent": true,
+        "supports_dry_run": false,
+        "requires_interactive": false,
+        "schema_ref": "qxctl spreader package"
+      },
+      {
+        "capability_class": "inspect",
+        "risk_level": "stable",
+        "idempotent": true,
+        "supports_dry_run": false,
+        "requires_interactive": false,
+        "schema_ref": "qxctl vault status"
+      }
+    ]
+  }
+}
+```

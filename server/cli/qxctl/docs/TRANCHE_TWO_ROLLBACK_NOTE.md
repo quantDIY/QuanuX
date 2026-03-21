@@ -13,10 +13,10 @@ This establishes explicit escape strategies allowing rapid rollback loops revert
 ## Instantly Severing Authorization Checks
 1. Navigate to `server/cli/qxctl/cmd/root.go`.
 2. Find the `PersistentPreRunE` field inside the `rootCmd`.
-3. Replace the `if err := app.Authorize(cmd); err != nil` logical bounds explicitly substituting `return nil`.
-4. The deployment will safely return to Tranche One authorization bypass behaviors gracefully resolving cleanly natively globally perfectly reliably globally perfectly.
+3. Replace the `if err := app.Authorize(cmd); err != nil` block with `return nil`.
+4. This removes authorization checks and returns the CLI to Tranche One behavior.
 
 ## Severing Subprocess Capture Loops
 1. Navigate to `server/cli/qxctl/cmd/spreader.go`.
-2. Locate `RunE` inside `packageCmd`.
-3. Purge the `cliExec.BoundedRun` arrays cleanly safely explicitly cleanly reliably and revert substituting strictly `return nil`.
+2. Locate the `RunE` function inside `packageCmd`.
+3. Replace the `cliExec.BoundedRun` call with `return nil` to disable subprocess capture.

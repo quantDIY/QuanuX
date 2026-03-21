@@ -30,7 +30,7 @@ func NewSpreaderCmd(app *runtime.App) *cobra.Command {
 		Short: "Transpile the strategy into C++ native engine bounds",
 		RunE:  func(cmd *cobra.Command, args []string) error {
 			sub := exec.CommandContext(app.Ctx, "echo", "Mocking C++ transpilation successfully via bounded buffers...")
-			stdout, err := cliExec.BoundedRun(app.Ctx, sub)
+			bOut, err := cliExec.BoundedRun(app.Ctx, sub)
 			if err != nil {
 				return err
 			}
@@ -39,7 +39,7 @@ func NewSpreaderCmd(app *runtime.App) *cobra.Command {
 					Status:  output.StatusSuccess,
 					Code:    0,
 					Command: "spreader package",
-					Data:    stdout,
+					Data:    bOut,
 				})
 			}
 			return nil

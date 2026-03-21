@@ -21,8 +21,11 @@ func NewManifestCmd(app *runtime.App) *cobra.Command {
 			var commands []runtime.CommandMetadata
 
 			coveredCommands := map[string]bool{
-				"qxctl vault status":   true,
-				"qxctl query validate": true,
+				"qxctl vault status":     true,
+				"qxctl query validate":   true,
+				"qxctl secrets get":      true,
+				"qxctl spreader package": true,
+				"qxctl node deploy":      true,
 			}
 
 			var walk func(*cobra.Command)

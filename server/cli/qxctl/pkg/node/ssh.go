@@ -15,7 +15,16 @@ func Deploy(ctx context.Context, target, hubUrl, token string, dryRun bool) erro
 	output.FromContext(ctx).EmitRaw(theme.HeaderStyle.Render(fmt.Sprintf("QuanuX Edge Node Deployment Interlock (Target: %s)", target)))
 
 	if dryRun {
-		output.FromContext(ctx).EmitRaw(theme.DetailStyle.Render("Dry-run engaged. Skipping physical TCP socket bindings..."))
+		out := output.FromContext(ctx)
+		out.EmitRaw(theme.DetailStyle.Render("Dry-run engaged. Skipping physical TCP socket bindings..."))
+		if out.Mode == "json" {
+			out.PrintJSON(output.OutputEnvelope{
+				Status:  output.StatusSuccess,
+				Code:    0,
+				Command: "node deploy",
+				Message: "Dry-run engaged. Skipping physical TCP socket bindings...",
+			})
+		}
 		return nil
 	}
 
