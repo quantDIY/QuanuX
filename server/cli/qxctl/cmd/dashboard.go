@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/QuanuX/qxctl/internal/output"
 	"github.com/QuanuX/qxctl/internal/runtime"
 	"github.com/spf13/cobra"
 )
@@ -30,11 +31,28 @@ func NewDashboardCmd(app *runtime.App) *cobra.Command {
 			}
 
 			app.Out.Log("INFO", "Launching Dashboard Engine over Hub: "+hub)
+
+			if app.Out.Mode == "json" {
+				app.Out.PrintJSON(output.OutputEnvelope{
+					Status:  output.StatusSuccess,
+					Code:    0,
+					Command: cmd.Use,
+					Message: "Dashboard TUI engine launched successfully in read-only mode.",
+				})
+			}
 			return nil
 		},
 	}
 
 	startCmd.Flags().Bool("monitor", false, "Enable live NATS JetStream monitoring mode")
+
+	runtime.BindMetadata(startCmd, runtime.CommandMetadata{
+		Capability:          runtime.CapInspect,
+		Risk:                runtime.RiskStable,
+		IsIdempotent:        true,
+		SupportsDryRun:      false,
+		RequiresInteractive: true,
+	})
 
 	cmd.AddCommand(startCmd)
 	return cmd

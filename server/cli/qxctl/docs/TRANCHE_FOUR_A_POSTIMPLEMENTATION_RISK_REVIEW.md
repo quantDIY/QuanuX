@@ -1,12 +1,10 @@
 # Tranche 4A Post-Implementation Risk Review
 
-This document audits the remaining physical leak paths explicitly existing natively after introducing physical Vault Cryptographic JWKS bounds natively.
-
-## 1. Local Cache Integrity Bypasses
-- **Unencrypted Persisted Caching:** The new cryptographic bounds securely cache the JSON Web Key Sets (JWKS) to disk (`/tmp/qxctl_jwks_cache.json`) natively to bridge short-lived CLI command executions reliably masking network constraints. This file is written using `0600` permissions. However, malware structurally operating as the executing user locally could trivially overwrite the cached `.json` injecting a malicious `n`/`e` block mapping a locally-forged RSA key if they accurately forge the `kid` primitive, tricking the CLI into effectively authenticating tampered local physical tokens blindly against a fake structural root of trust locally.
+## 1. Local Cache Overwrite Risk
+The JWKS cache is persisted to disk at `/tmp/qxctl_jwks_cache.json` with `0600` permissions. If an attacker operating as the local execution user modifies this file, they can inject a forged RSA public key. By forging the corresponding `kid` in a local JWT, the CLI would successfully mathematically authenticate the tampered token against the locally tampered trust root.
 
 ## 2. Hardcoded JWKS Network Failures
-- **TLS Bypass Risks:** The outbound `http.Client` explicitly mapping the `QX_VAULT_JWKS_URL` environment variable does not constrain custom certificate pinning natively. While Vault implies TLS, if an attacker globally injects `QX_VAULT_JWKS_URL=http://localhost:8200/keys` directly intercepting the `go` network stack execution locally, the system physically respects it blindly bypassing physical network trust layers without structured TLS identity verification natively verifying the CA.
+The outbound HTTP client mapping `QX_VAULT_JWKS_URL` does not enforce strict TLS certificate pinning. If intercepted locally, an attacker could route `QX_VAULT_JWKS_URL` to a malicious JWKS endpoint, successfully bypassing physical Vault network trust without triggering TLS enforcement errors.
 
-## 3. OIDC Login Extraction Mock
-- **Backend-Only Trust Verification:** Because the frontend OAuth2 token negotiation flow natively opening up an interactive browser window generating the physical JWT locally is not implemented, operators structurally generate tokens independently. If operators copy-paste tokens across insecure bash histories globally generating `QX_VAULT_TOKEN=...`, these sensitive RS256 secrets natively leak across `~/.bash_history` files breaking token confidentiality globally.
+## 3. Token Storing Vulnerabilities
+Because the upstream Vault OIDC browser-flow (`vault login -method=oidc`) remains mocked, operators must manually supply the `QX_VAULT_TOKEN` environment variable to authenticate the CLI. This potentially leaks valid JWTs into persistent `~/.bash_history` files breaking token confidentiality globally.

@@ -1,19 +1,16 @@
 # Tranche 4A Acceptance Proof
 
-This document proves that Tranche 4A cryptographic boundaries behave exactly as requested safely isolating capability logic from physical trust evaluations.
+## Architecture Configuration
+- **JWKS Cache TTL:** 15 minutes.
+- **Cache Storage:** Persisted to disk at `/tmp/qxctl_jwks_cache.json`.
+- **Mocked Components:** The interactive Vault OIDC login flow (`vault login -method=oidc`) is mocked. The `QX_VAULT_TOKEN` is supplied manually via environment variables. Cryptographic signature and verification network mechanics are fully implemented and verified.
 
-## Architecture Declarations
-- **JWKS Cache TTL:** Exactly `15 * time.Minute` natively restricting remote Vault invocations.
-- **Cache Persistence Location:** The cache is **persisted to disk** at `/tmp/qxctl_jwks_cache.json` securely mapping cross-execution states structurally across short-lived CLI invocations.
-- **Remaining Mocked Pilot Boundaries:** The `QX_VAULT_TOKEN` is supplied manually via environment variables enforcing verification backend logic only. The interactive CLI OAuth2/OIDC browser-flow (`vault login -method=oidc`) generating the token physically remains completely mocked.
+## Acceptance Criteria
 
----
-
-## Output Validation Transcripts
-
-### 1. Valid Authorized Success
-*A JWT that verifies cryptographically, has 'deploy', and succeeds safely natively*
-**Proof:** `QX_VAULT_TOKEN=<valid_deploy_token> ./qxctl node deploy server1 --dry-run --output=json`
+### 1. Valid authorized success
+**Command:**
+`QX_VAULT_TOKEN=<valid_deploy_token> ./qxctl node deploy server1 --dry-run --output=json`
+**Output:**
 ```json
 {
   "status": "success",
@@ -23,9 +20,10 @@ This document proves that Tranche 4A cryptographic boundaries behave exactly as 
 }
 ```
 
-### 2. Valid but Underprivileged Token
-*A JWT that verifies correctly but only holds 'inspect' failing on a 'simulate'/'deploy' bound*
-**Proof:** `QX_VAULT_TOKEN=<valid_inspect_token> ./qxctl node deploy server1 --dry-run --output=json`
+### 2. Valid but underprivileged token
+**Command:**
+`QX_VAULT_TOKEN=<valid_inspect_token> ./qxctl node deploy server1 --dry-run --output=json`
+**Output:**
 ```json
 {
   "status": "error",
@@ -37,9 +35,10 @@ This document proves that Tranche 4A cryptographic boundaries behave exactly as 
 }
 ```
 
-### 3. Tampered Signature
-*A mathematically verifiable JWT whose payload was altered post-signature natively*
-**Proof:** `QX_VAULT_TOKEN=<tampered_payload_token> ./qxctl vault status --output=json`
+### 3. Tampered signature
+**Command:**
+`QX_VAULT_TOKEN=<tampered_payload_token> ./qxctl vault status --output=json`
+**Output:**
 ```json
 {
   "status": "error",
@@ -51,9 +50,10 @@ This document proves that Tranche 4A cryptographic boundaries behave exactly as 
 }
 ```
 
-### 4. Invalid or Missing KID / Issuer Mismatch
-*A structurally correct token signed by an unknown Key ID natively*
-**Proof:** `QX_VAULT_TOKEN=<unknown_kid_token> ./qxctl vault status --output=json`
+### 4. Invalid or missing KID / issuer mismatch
+**Command:**
+`QX_VAULT_TOKEN=<unknown_kid_token> ./qxctl vault status --output=json`
+**Output:**
 ```json
 {
   "status": "error",
@@ -65,9 +65,10 @@ This document proves that Tranche 4A cryptographic boundaries behave exactly as 
 }
 ```
 
-### 5. Expired Token
-*A structurally flawless token mathematically verified hitting execution constraints securely post expiry logic*
-**Proof:** `QX_VAULT_TOKEN=<expired_token> ./qxctl vault status --output=json`
+### 5. Expired token
+**Command:**
+`QX_VAULT_TOKEN=<expired_token> ./qxctl vault status --output=json`
+**Output:**
 ```json
 {
   "status": "error",
@@ -79,9 +80,10 @@ This document proves that Tranche 4A cryptographic boundaries behave exactly as 
 }
 ```
 
-### 6. Malformed Token
-*Unparseable JWT primitives crashing the mathematical decoding logic outright natively*
-**Proof:** `QX_VAULT_TOKEN=eyJhbGciOiJub25lIn0.malformed.signature_bytes ./qxctl vault status --output=json`
+### 6. Malformed token
+**Command:**
+`QX_VAULT_TOKEN=eyJhbGciOiJub25lIn0.malformed.signature_bytes ./qxctl vault status --output=json`
+**Output:**
 ```json
 {
   "status": "error",
@@ -93,9 +95,11 @@ This document proves that Tranche 4A cryptographic boundaries behave exactly as 
 }
 ```
 
-### 7. Network Unavailable with Valid Cached JWKS
-*Vault network explicitly drop/offline natively against a locally persisted cached `.json` within the 15m TTL*
-**Proof:** Execution against an unreachable TLS port locally `http://localhost:18202/keys`
+### 7. Network unavailable with valid cached JWKS
+**Context:** Vault server is down (port 18202 is unreachable), but `/tmp/qxctl_jwks_cache.json` holds a valid cached JWKS fetched within the last 15 minutes.
+**Command:**
+`QX_VAULT_JWKS_URL=http://localhost:18202/keys QX_VAULT_TOKEN=<valid_token> ./qxctl vault status --output=json --target=gcp`
+**Output:**
 ```json
 {
   "status": "success",
@@ -105,9 +109,11 @@ This document proves that Tranche 4A cryptographic boundaries behave exactly as 
 }
 ```
 
-### 8. Network Unavailable with Expired or Unusable Cache
-*Vault network disconnected paired with a cached `.json` artificially aged beyond 15m TTL*
-**Proof:** 
+### 8. Network unavailable with expired or unusable cache
+**Context:** Vault server is down (port 18202 is unreachable) and `/tmp/qxctl_jwks_cache.json` either does not exist or has a `fetched_at` timestamp older than 15 minutes.
+**Command:**
+`QX_VAULT_JWKS_URL=http://localhost:18202/keys QX_VAULT_TOKEN=<valid_token> ./qxctl vault status --output=json --target=gcp`
+**Output:**
 ```json
 {
   "status": "error",
