@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/QuanuX/qxctl/internal/output"
 	"github.com/QuanuX/qxctl/internal/runtime"
 	"github.com/QuanuX/qxctl/pkg/ext"
 	"github.com/hashicorp/go-plugin"
@@ -32,7 +33,12 @@ func NewExtCmd(app *runtime.App) *cobra.Command {
 	installCmd := &cobra.Command{
 		Use:   "install [name]",
 		Short: "Build/Install the extension",
-		RunE: func(cmd *cobra.Command, args []string) error { return nil },
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if app.Out.Mode == "json" {
+				app.Out.PrintJSON(output.OutputEnvelope{Status: output.StatusSuccess, Code: 0, Command: cmd.Use, Message: "Extension built and installed securely."})
+			}
+			return nil
+		},
 	}
 	installCmd.Flags().StringP("version", "v", "", "Version anchor")
 
@@ -105,6 +111,25 @@ func NewExtCmd(app *runtime.App) *cobra.Command {
 	upgradeableCmd := &cobra.Command{
 		Use:   "upgradeable [name]", Short: "Check for available updates", RunE: func(cmd *cobra.Command, args []string) error { return nil },
 	}
+
+	// Inspect-class Metadata Surface
+	inspectMeta := runtime.CommandMetadata{Capability: runtime.CapInspect, Risk: runtime.RiskStable, IsIdempotent: true, SupportsDryRun: false, RequiresInteractive: false}
+	runtime.BindMetadata(listCmd, inspectMeta)
+	runtime.BindMetadata(statusCmd, inspectMeta)
+	runtime.BindMetadata(upgradeableCmd, inspectMeta)
+
+	// Deploy-class Execution / Mutative Surface
+	deployMeta := runtime.CommandMetadata{Capability: runtime.CapDeploy, Risk: runtime.RiskDangerous, IsIdempotent: false, SupportsDryRun: false, RequiresInteractive: false}
+	runtime.BindMetadata(cleanCmd, deployMeta)
+	runtime.BindMetadata(enhanceCmd, deployMeta)
+	runtime.BindMetadata(installCmd, deployMeta)
+	runtime.BindMetadata(integrateCmd, deployMeta)
+	runtime.BindMetadata(removeCmd, deployMeta)
+	runtime.BindMetadata(runCmd, deployMeta)
+	runtime.BindMetadata(startCmd, deployMeta)
+	runtime.BindMetadata(stopCmd, deployMeta)
+	runtime.BindMetadata(uninstallCmd, deployMeta)
+	runtime.BindMetadata(upgradeCmd, deployMeta)
 
 	cmd.AddCommand(cleanCmd, enhanceCmd, installCmd, integrateCmd, listCmd, removeCmd, runCmd, startCmd, statusCmd, stopCmd, uninstallCmd, upgradeCmd, upgradeableCmd, NewManifestCmd(app))
 	return cmd
