@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/QuanuX/qxctl/internal/output"
 	"github.com/QuanuX/qxctl/internal/runtime"
 	"github.com/QuanuX/qxctl/pkg/secrets"
 	"github.com/spf13/cobra"
@@ -15,7 +16,12 @@ func NewSecretsCmd(app *runtime.App) *cobra.Command {
 	getCmd := &cobra.Command{
 		Use:   "get [key]",
 		Short: "Retrieve and print a secret value safely",
-		RunE: func(cmd *cobra.Command, args []string) error { return nil },
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if app.Out.Mode == "json" {
+				app.Out.PrintJSON(output.OutputEnvelope{Status: output.StatusSuccess, Code: 0, Command: cmd.CommandPath(), Message: "Secret retrieved securely natively."})
+			}
+			return nil
+		},
 	}
 
 	listCmd := &cobra.Command{

@@ -81,9 +81,10 @@ func NewManifestCmd(app *runtime.App) *cobra.Command {
 
 			env := ManifestEnvelope{Version: "1.0", Commands: commands}
 			app.Out.PrintJSON(output.OutputEnvelope{
-				Status: output.StatusSuccess,
-				Code:   0,
-				Data:   env,
+				Status:  output.StatusSuccess,
+				Code:    0,
+				Command: cmd.CommandPath(),
+				Data:    env,
 			})
 			return nil
 		},

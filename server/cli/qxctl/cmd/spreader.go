@@ -21,9 +21,23 @@ func NewSpreaderCmd(app *runtime.App) *cobra.Command {
 		Short: "Push the compiled Spreader to the Execution Node stub cleanly executing Checksums",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return spreader.Deploy(app.Ctx, args[0])
+			if err := spreader.Deploy(app.Ctx, args[0]); err != nil {
+				return err
+			}
+			if app.Out.Mode == "json" {
+				app.Out.PrintJSON(output.OutputEnvelope{Status: output.StatusSuccess, Code: 0, Command: cmd.CommandPath(), Message: "Spreader engine binary deployed successfully to the Execution Node natively."})
+			}
+			return nil
 		},
 	}
+
+	runtime.BindMetadata(deployCmd, runtime.CommandMetadata{
+		Capability:          runtime.CapDeploy,
+		Risk:                runtime.RiskDangerous,
+		IsIdempotent:        false,
+		SupportsDryRun:      false,
+		RequiresInteractive: false,
+	})
 
 	packageCmd := &cobra.Command{
 		Use:   "package [strategy_json]",
@@ -38,7 +52,7 @@ func NewSpreaderCmd(app *runtime.App) *cobra.Command {
 				app.Out.PrintJSON(output.OutputEnvelope{
 					Status:  output.StatusSuccess,
 					Code:    0,
-					Command: "spreader package",
+					Command: cmd.CommandPath(),
 					Data:    bOut,
 				})
 			}

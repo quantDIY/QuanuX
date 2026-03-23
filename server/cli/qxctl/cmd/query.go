@@ -34,7 +34,7 @@ func NewQueryCmd(app *runtime.App) *cobra.Command {
 				app.Out.PrintJSON(output.OutputEnvelope{
 					Status:  output.StatusSuccess,
 					Code:    0,
-					Command: "query validate",
+					Command: cmd.CommandPath(),
 					Message: "AST Validation passed syntactically without network IO.",
 				})
 			}

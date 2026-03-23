@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/QuanuX/qxctl/internal/output"
 	"github.com/QuanuX/qxctl/internal/runtime"
 	"github.com/QuanuX/qxctl/pkg/node"
 	"github.com/spf13/cobra"
@@ -23,7 +24,13 @@ func NewNodeCmd(app *runtime.App) *cobra.Command {
 			}
 			token, _ := cmd.Flags().GetString("token")
 			dryRun, _ := cmd.Flags().GetBool("dry-run")
-			return node.Deploy(app.Ctx, args[0], hub, token, dryRun)
+			if err := node.Deploy(app.Ctx, args[0], hub, token, dryRun); err != nil {
+				return err
+			}
+			if app.Out.Mode == "json" {
+				app.Out.PrintJSON(output.OutputEnvelope{Status: output.StatusSuccess, Code: 0, Command: cmd.CommandPath(), Message: "Node natively deployed across JetStream bounds!"})
+			}
+			return nil
 		},
 	}
 	deployCmd.Flags().String("hub", "", "NATS Hub URL (Falls back to app trajectory by default)")

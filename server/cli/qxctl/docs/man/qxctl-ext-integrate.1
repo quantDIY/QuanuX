@@ -1,0 +1,47 @@
+.nh
+.TH "QXCTL" "1" "Mar 2026" "QuanuX Hardware Bounds" "QuanuX Operator Manual"
+
+.SH NAME
+qxctl-ext-integrate - Inject a local proprietary SDK into the centralized extensions/sdks repository
+
+
+.SH SYNOPSIS
+\fBqxctl ext integrate [name] [flags]\fP
+
+
+.SH DESCRIPTION
+Inject a local proprietary SDK into the centralized extensions/sdks repository
+
+
+.SH OPTIONS
+\fB-h\fP, \fB--help\fP[=false]
+	help for integrate
+
+.PP
+\fB-p\fP, \fB--path\fP=""
+	Path to local SDK folder
+
+
+.SH OPTIONS INHERITED FROM PARENT COMMANDS
+\fB--config\fP=""
+	Explicit config file trajectory
+
+.PP
+\fB--hub\fP="nats://127.0.0.1:4222"
+	QuanuX JetStream Engine Hub target
+
+.PP
+\fB--output\fP="text"
+	Set the output UX mode (text, json, yaml, quiet)
+
+.PP
+\fB--trace\fP[=false]
+	Enable extreme diagnostic observability bounds
+
+.PP
+\fB--verbose\fP[=false]
+	Enable verbose payload outputs
+
+
+.SH SEE ALSO
+\fBqxctl-ext(1)\fP

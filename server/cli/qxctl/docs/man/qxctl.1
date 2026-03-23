@@ -1,0 +1,42 @@
+.nh
+.TH "QXCTL" "1" "Mar 2026" "QuanuX Hardware Bounds" "QuanuX Operator Manual"
+
+.SH NAME
+qxctl - QuanuX Control CLI (Go Edition)
+
+
+.SH SYNOPSIS
+\fBqxctl [flags]\fP
+
+
+.SH DESCRIPTION
+Operator-grade natively compiled orchestrator managing QuanuX cython grids and HW bounds.
+
+
+.SH OPTIONS
+\fB--config\fP=""
+	Explicit config file trajectory
+
+.PP
+\fB-h\fP, \fB--help\fP[=false]
+	help for qxctl
+
+.PP
+\fB--hub\fP="nats://127.0.0.1:4222"
+	QuanuX JetStream Engine Hub target
+
+.PP
+\fB--output\fP="text"
+	Set the output UX mode (text, json, yaml, quiet)
+
+.PP
+\fB--trace\fP[=false]
+	Enable extreme diagnostic observability bounds
+
+.PP
+\fB--verbose\fP[=false]
+	Enable verbose payload outputs
+
+
+.SH SEE ALSO
+\fBqxctl-bridge(1)\fP, \fBqxctl-config(1)\fP, \fBqxctl-crucible(1)\fP, \fBqxctl-dashboard(1)\fP, \fBqxctl-deploy(1)\fP, \fBqxctl-disable(1)\fP, \fBqxctl-enable(1)\fP, \fBqxctl-engine(1)\fP, \fBqxctl-ext(1)\fP, \fBqxctl-foundry(1)\fP, \fBqxctl-habitat(1)\fP, \fBqxctl-indicators(1)\fP, \fBqxctl-infra(1)\fP, \fBqxctl-install(1)\fP, \fBqxctl-lifecycle(1)\fP, \fBqxctl-module(1)\fP, \fBqxctl-nest(1)\fP, \fBqxctl-node(1)\fP, \fBqxctl-orchestra(1)\fP, \fBqxctl-predeploy(1)\fP, \fBqxctl-probe(1)\fP, \fBqxctl-query(1)\fP, \fBqxctl-remove(1)\fP, \fBqxctl-secrets(1)\fP, \fBqxctl-skills(1)\fP, \fBqxctl-spreader(1)\fP, \fBqxctl-storage(1)\fP, \fBqxctl-telemetry(1)\fP, \fBqxctl-topstepx(1)\fP, \fBqxctl-upgrade(1)\fP, \fBqxctl-upgradeable(1)\fP, \fBqxctl-vault(1)\fP, \fBqxctl-vcs(1)\fP, \fBqxctl-version(1)\fP

@@ -1,0 +1,55 @@
+.nh
+.TH "QXCTL" "1" "Mar 2026" "QuanuX Hardware Bounds" "QuanuX Operator Manual"
+
+.SH NAME
+qxctl-infra-table-register - Registers an external table against the data lake
+
+
+.SH SYNOPSIS
+\fBqxctl infra table-register [flags]\fP
+
+
+.SH DESCRIPTION
+Registers an external table against the data lake
+
+
+.SH OPTIONS
+\fB-h\fP, \fB--help\fP[=false]
+	help for table-register
+
+.PP
+\fB--project\fP=""
+	GCP Project ID
+
+.PP
+\fB--target\fP="gcp"
+	Cloud target (do or gcp)
+
+.PP
+\fB--uri\fP=""
+	GCS URI for Parquet files
+
+
+.SH OPTIONS INHERITED FROM PARENT COMMANDS
+\fB--config\fP=""
+	Explicit config file trajectory
+
+.PP
+\fB--hub\fP="nats://127.0.0.1:4222"
+	QuanuX JetStream Engine Hub target
+
+.PP
+\fB--output\fP="text"
+	Set the output UX mode (text, json, yaml, quiet)
+
+.PP
+\fB--trace\fP[=false]
+	Enable extreme diagnostic observability bounds
+
+.PP
+\fB--verbose\fP[=false]
+	Enable verbose payload outputs
+
+
+.SH SEE ALSO
+\fBqxctl-infra(1)\fP

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/QuanuX/qxctl/internal/output"
 	"github.com/QuanuX/qxctl/internal/runtime"
 	"github.com/QuanuX/qxctl/pkg/infra"
 	"github.com/spf13/cobra"
@@ -17,10 +18,24 @@ func NewInfraCmd(app *runtime.App) *cobra.Command {
 		Short: "Runs Terraform Apply strictly for the designated deployment",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			target, _ := cmd.Flags().GetString("target")
-			return infra.Apply(app.Ctx, target)
+			if err := infra.Apply(app.Ctx, target); err != nil {
+				return err
+			}
+			if app.Out.Mode == "json" {
+				app.Out.PrintJSON(output.OutputEnvelope{Status: output.StatusSuccess, Code: 0, Command: cmd.CommandPath(), Message: "Infrastructure deployed natively and immutably."})
+			}
+			return nil
 		},
 	}
 	applyCmd.Flags().String("target", "gcp", "Infrastructure target (do or gcp)")
+
+	runtime.BindMetadata(applyCmd, runtime.CommandMetadata{
+		Capability:          runtime.CapDeploy,
+		Risk:                runtime.RiskDangerous,
+		IsIdempotent:        false,
+		SupportsDryRun:      false,
+		RequiresInteractive: false,
+	})
 
 	authCmd := &cobra.Command{
 		Use:   "auth",

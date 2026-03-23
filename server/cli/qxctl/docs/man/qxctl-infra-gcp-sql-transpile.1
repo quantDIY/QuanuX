@@ -1,0 +1,47 @@
+.nh
+.TH "QXCTL" "1" "Mar 2026" "QuanuX Hardware Bounds" "QuanuX Operator Manual"
+
+.SH NAME
+qxctl-infra-gcp-sql-transpile - Emits translated BigQuery SQL if within the approved Phase 1 matrix
+
+
+.SH SYNOPSIS
+\fBqxctl infra gcp-sql transpile [query] [flags]\fP
+
+
+.SH DESCRIPTION
+Emits translated BigQuery SQL if within the approved Phase 1 matrix
+
+
+.SH OPTIONS
+\fB-h\fP, \fB--help\fP[=false]
+	help for transpile
+
+.PP
+\fB--json\fP[=false]
+	Emit purely JSON payload for machine execution
+
+
+.SH OPTIONS INHERITED FROM PARENT COMMANDS
+\fB--config\fP=""
+	Explicit config file trajectory
+
+.PP
+\fB--hub\fP="nats://127.0.0.1:4222"
+	QuanuX JetStream Engine Hub target
+
+.PP
+\fB--output\fP="text"
+	Set the output UX mode (text, json, yaml, quiet)
+
+.PP
+\fB--trace\fP[=false]
+	Enable extreme diagnostic observability bounds
+
+.PP
+\fB--verbose\fP[=false]
+	Enable verbose payload outputs
+
+
+.SH SEE ALSO
+\fBqxctl-infra-gcp-sql(1)\fP

@@ -1,0 +1,47 @@
+.nh
+.TH "QXCTL" "1" "Mar 2026" "QuanuX Hardware Bounds" "QuanuX Operator Manual"
+
+.SH NAME
+qxctl-storage-duckdb-attach - Attach a DB file to the running QuanuX Server
+
+
+.SH SYNOPSIS
+\fBqxctl storage duckdb attach [path] [alias] [flags]\fP
+
+
+.SH DESCRIPTION
+Attach a DB file to the running QuanuX Server
+
+
+.SH OPTIONS
+\fB-h\fP, \fB--help\fP[=false]
+	help for attach
+
+.PP
+\fB--server-url\fP="http://localhost:8000"
+	QuanuX Server URL
+
+
+.SH OPTIONS INHERITED FROM PARENT COMMANDS
+\fB--config\fP=""
+	Explicit config file trajectory
+
+.PP
+\fB--hub\fP="nats://127.0.0.1:4222"
+	QuanuX JetStream Engine Hub target
+
+.PP
+\fB--output\fP="text"
+	Set the output UX mode (text, json, yaml, quiet)
+
+.PP
+\fB--trace\fP[=false]
+	Enable extreme diagnostic observability bounds
+
+.PP
+\fB--verbose\fP[=false]
+	Enable verbose payload outputs
+
+
+.SH SEE ALSO
+\fBqxctl-storage-duckdb(1)\fP

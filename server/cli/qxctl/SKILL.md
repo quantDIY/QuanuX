@@ -1,33 +1,29 @@
 ---
 name: QuanuX CLI Engine (qxctl)
-description: Complete specification of the Native Go CLI Engine representing the QuanuX Hardware Bounds.
+description: AI Agent Command Reference and Native Go Execution Parameters
 ---
 
 # QuanuX CLI (`qxctl`) Architecture
 
-The new Native Go `qxctl` executable formally decapitates the legacy Python Typer shell-scripting architecture, migrating all QuanuX execution boundaries deeply into the physical Go Memory Limits inside isolated `pkg/` interfaces.
+The `qxctl` CLI is the physical QuanuX hardware orchestrator natively executing bounded interactions manually tracing system arrays.
 
-## Capabilities (Version 1.0.0 Natively Rebounded)
+## 🚨 AI Agent Primary Directives 🚨
 
-The CLI no longer shells out to `bash` for operational capabilities. It is fully self-contained using memory-mapped array limits and native libraries.
+When you are directed to operate, interrogate, or mutate the `qxctl` state space, you **must strictly adhere** to these principles:
 
-1. **Hardware Telemetry (`cmd/probe`, `cmd/telemetry`)**
-   - Implements native Go `net.Dial` and `sync.WaitGroup` concurrency to interrogate local sockets instantly.
-   - Retrieves Apple MacOS Keychain values privately into zero-trust bytes using `zalando/go-keyring`.
-   - Relies on OpenTelemetry mesh networking dynamically.
+1. **Always Request JSON Output.** Provide `--output=json` systematically against Covered endpoints to receive deterministic parsing parameters.
+2. **Consult the AI Reference.** The complete metadata and execution limits exist locally in `docs/AI_COMMAND_REFERENCE.md`.
+3. **Use the Machine-Assisted Docs.** Every single parameter, flag, and command tree natively exists inside the generated `docs/md/` and `docs/man/` repositories.
 
-2. **Security & Cryptography (`pkg/secrets`, `pkg/vault`)**
-   - Directly binds token allocations into `hashicorp/vault/api` dynamically, ignoring hardcoded tokens.
-   - AES-GCM stream capabilities natively built-in utilizing pure Go OS pointers.
+## Capabilities & Bounding
 
-3. **High-Frequency Engineering (`pkg/engine`, `pkg/storage`, `pkg/spreader`)**
-   - NATS JetStream strictly mapped without subprocesses publishing directly into C++ Cython loop arrays.
-   - Arrow IPC (`apache/arrow/go`) natively managing zero-copy CGO frames avoiding Python GIL limitations entirely.
-   - FIX Routing Engine strictly bound to the `.quanux/` file limits utilizing `github.com/quickfixgo/quickfix`.
+Commands map physically to execution nodes natively:
+- **`CapInspect`**: Safe, observational telemetry.
+- **`CapDeploy`**: Hardware mutations and Cython grid modifications perfectly bounded physically cleanly.
 
-4. **Production Cloud Deployments (`pkg/infra`, `pkg/orchestra`)**
-   - Remote Node isolation managed autonomously over pure native `golang.org/x/crypto/ssh` bindings.
-   - Hardware Infrastructure completely pipelined natively using HashiCorp `terraform-exec` (TF API integration).
+If you encounter `CAPABILITY_DENIED` blocks, you objectively lack the correctly bound Vault token.
 
-## Design Philosophy
-Absolute adherence to statically compiled Go limits. Zero Python instances are spawned dynamically. The `qxctl` CLI represents the absolute highest source of truth for physical QuanuX bounds.
+## Known Limitations and Bypasses
+The CLI is actively undergoing phase expansions. Certain nodes (like `orchestra compile` or `topstepx apikey`) remain fundamentally unmapped, acting as **bypassed loops** ignoring JSON formatting natively.
+
+*(Consult `docs/AI_COMMAND_REFERENCE.md` for explicit lists natively.)*

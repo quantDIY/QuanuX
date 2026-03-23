@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/QuanuX/qxctl/internal/output"
 	"github.com/QuanuX/qxctl/internal/runtime"
 	"github.com/QuanuX/qxctl/pkg/vcs"
 	"github.com/spf13/cobra"
@@ -23,11 +24,25 @@ func NewVcsCmd(app *runtime.App) *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			msg, _ := cmd.Flags().GetString("message")
 			all, _ := cmd.Flags().GetBool("all")
-			return vcs.Commit(app.Ctx, msg, all)
+			if err := vcs.Commit(app.Ctx, msg, all); err != nil {
+				return err
+			}
+			if app.Out.Mode == "json" {
+				app.Out.PrintJSON(output.OutputEnvelope{Status: output.StatusSuccess, Code: 0, Command: cmd.CommandPath(), Message: "Local VCS state formally committed natively."})
+			}
+			return nil
 		},
 	}
 	commitCmd.Flags().StringP("message", "m", "", "Commit message")
 	commitCmd.Flags().BoolP("all", "a", false, "Stage all modified files")
+
+	runtime.BindMetadata(commitCmd, runtime.CommandMetadata{
+		Capability:          runtime.CapDeploy,
+		Risk:                runtime.RiskDangerous,
+		IsIdempotent:        false,
+		SupportsDryRun:      false,
+		RequiresInteractive: false,
+	})
 
 	connectCmd := &cobra.Command{
 		Use: "connect [url]", Short: "Connect current directory to remote VCS", RunE: func(cmd *cobra.Command, args []string) error { return nil },

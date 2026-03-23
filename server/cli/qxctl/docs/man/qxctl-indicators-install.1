@@ -1,0 +1,47 @@
+.nh
+.TH "QXCTL" "1" "Mar 2026" "QuanuX Hardware Bounds" "QuanuX Operator Manual"
+
+.SH NAME
+qxctl-indicators-install - Install a community indicator from Git
+
+
+.SH SYNOPSIS
+\fBqxctl indicators install [url] [flags]\fP
+
+
+.SH DESCRIPTION
+Install a community indicator from Git
+
+
+.SH OPTIONS
+\fB-h\fP, \fB--help\fP[=false]
+	help for install
+
+.PP
+\fB--name\fP=""
+	Local name for the indicator package
+
+
+.SH OPTIONS INHERITED FROM PARENT COMMANDS
+\fB--config\fP=""
+	Explicit config file trajectory
+
+.PP
+\fB--hub\fP="nats://127.0.0.1:4222"
+	QuanuX JetStream Engine Hub target
+
+.PP
+\fB--output\fP="text"
+	Set the output UX mode (text, json, yaml, quiet)
+
+.PP
+\fB--trace\fP[=false]
+	Enable extreme diagnostic observability bounds
+
+.PP
+\fB--verbose\fP[=false]
+	Enable verbose payload outputs
+
+
+.SH SEE ALSO
+\fBqxctl-indicators(1)\fP

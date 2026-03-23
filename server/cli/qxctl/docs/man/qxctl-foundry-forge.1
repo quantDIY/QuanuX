@@ -1,0 +1,59 @@
+.nh
+.TH "QXCTL" "1" "Mar 2026" "QuanuX Hardware Bounds" "QuanuX Operator Manual"
+
+.SH NAME
+qxctl-foundry-forge - Forge a new sovereign trading component via AI Generation
+
+
+.SH SYNOPSIS
+\fBqxctl foundry forge [flags]\fP
+
+
+.SH DESCRIPTION
+Forge a new sovereign trading component via AI Generation
+
+
+.SH OPTIONS
+\fB-h\fP, \fB--help\fP[=false]
+	help for forge
+
+.PP
+\fB-l\fP, \fB--lang\fP=""
+	Target language constraint (python, cython, cpp)
+
+.PP
+\fB-n\fP, \fB--name\fP=""
+	Name of the component
+
+.PP
+\fB-t\fP, \fB--type\fP=""
+	Type of component to forge (entry, exit, indicator, strategy)
+
+.PP
+\fB-v\fP, \fB--version\fP=""
+	Language version constraint (e.g. 3.11, 3.14, cpp20)
+
+
+.SH OPTIONS INHERITED FROM PARENT COMMANDS
+\fB--config\fP=""
+	Explicit config file trajectory
+
+.PP
+\fB--hub\fP="nats://127.0.0.1:4222"
+	QuanuX JetStream Engine Hub target
+
+.PP
+\fB--output\fP="text"
+	Set the output UX mode (text, json, yaml, quiet)
+
+.PP
+\fB--trace\fP[=false]
+	Enable extreme diagnostic observability bounds
+
+.PP
+\fB--verbose\fP[=false]
+	Enable verbose payload outputs
+
+
+.SH SEE ALSO
+\fBqxctl-foundry(1)\fP

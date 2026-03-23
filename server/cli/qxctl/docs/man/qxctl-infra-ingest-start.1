@@ -1,0 +1,51 @@
+.nh
+.TH "QXCTL" "1" "Mar 2026" "QuanuX Hardware Bounds" "QuanuX Operator Manual"
+
+.SH NAME
+qxctl-infra-ingest-start - Starts the QuanuX asynchronous ingestion pipeline
+
+
+.SH SYNOPSIS
+\fBqxctl infra ingest-start [flags]\fP
+
+
+.SH DESCRIPTION
+Starts the QuanuX asynchronous ingestion pipeline
+
+
+.SH OPTIONS
+\fB-h\fP, \fB--help\fP[=false]
+	help for ingest-start
+
+.PP
+\fB--memory-limit-mb\fP=500
+	Memory limit in MB for JetStream batching
+
+.PP
+\fB--target\fP="gcp"
+	Cloud target (do or gcp)
+
+
+.SH OPTIONS INHERITED FROM PARENT COMMANDS
+\fB--config\fP=""
+	Explicit config file trajectory
+
+.PP
+\fB--hub\fP="nats://127.0.0.1:4222"
+	QuanuX JetStream Engine Hub target
+
+.PP
+\fB--output\fP="text"
+	Set the output UX mode (text, json, yaml, quiet)
+
+.PP
+\fB--trace\fP[=false]
+	Enable extreme diagnostic observability bounds
+
+.PP
+\fB--verbose\fP[=false]
+	Enable verbose payload outputs
+
+
+.SH SEE ALSO
+\fBqxctl-infra(1)\fP

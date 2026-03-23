@@ -1,0 +1,51 @@
+.nh
+.TH "QXCTL" "1" "Mar 2026" "QuanuX Hardware Bounds" "QuanuX Operator Manual"
+
+.SH NAME
+qxctl-probe-execute - Neural Tap: The cluster diagnostic stethoscope and surgical kit
+
+
+.SH SYNOPSIS
+\fBqxctl probe execute [flags]\fP
+
+
+.SH DESCRIPTION
+Neural Tap: The cluster diagnostic stethoscope and surgical kit
+
+
+.SH OPTIONS
+\fB--fix\fP[=false]
+	Execute Auto-Suture Protocol to repair critical systems
+
+.PP
+\fB-h\fP, \fB--help\fP[=false]
+	help for execute
+
+.PP
+\fB--timeout\fP=80
+	Timeout for TCP dial in ms
+
+
+.SH OPTIONS INHERITED FROM PARENT COMMANDS
+\fB--config\fP=""
+	Explicit config file trajectory
+
+.PP
+\fB--hub\fP="nats://127.0.0.1:4222"
+	QuanuX JetStream Engine Hub target
+
+.PP
+\fB--output\fP="text"
+	Set the output UX mode (text, json, yaml, quiet)
+
+.PP
+\fB--trace\fP[=false]
+	Enable extreme diagnostic observability bounds
+
+.PP
+\fB--verbose\fP[=false]
+	Enable verbose payload outputs
+
+
+.SH SEE ALSO
+\fBqxctl-probe(1)\fP

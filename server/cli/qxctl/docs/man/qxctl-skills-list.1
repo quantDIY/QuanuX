@@ -1,0 +1,47 @@
+.nh
+.TH "QXCTL" "1" "Mar 2026" "QuanuX Hardware Bounds" "QuanuX Operator Manual"
+
+.SH NAME
+qxctl-skills-list - List all available agent skills
+
+
+.SH SYNOPSIS
+\fBqxctl skills list [flags]\fP
+
+
+.SH DESCRIPTION
+List all available agent skills
+
+
+.SH OPTIONS
+\fB--dir\fP="."
+	Base directory to crawl
+
+.PP
+\fB-h\fP, \fB--help\fP[=false]
+	help for list
+
+
+.SH OPTIONS INHERITED FROM PARENT COMMANDS
+\fB--config\fP=""
+	Explicit config file trajectory
+
+.PP
+\fB--hub\fP="nats://127.0.0.1:4222"
+	QuanuX JetStream Engine Hub target
+
+.PP
+\fB--output\fP="text"
+	Set the output UX mode (text, json, yaml, quiet)
+
+.PP
+\fB--trace\fP[=false]
+	Enable extreme diagnostic observability bounds
+
+.PP
+\fB--verbose\fP[=false]
+	Enable verbose payload outputs
+
+
+.SH SEE ALSO
+\fBqxctl-skills(1)\fP

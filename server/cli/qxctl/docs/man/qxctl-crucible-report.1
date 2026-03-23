@@ -1,0 +1,47 @@
+.nh
+.TH "QXCTL" "1" "Mar 2026" "QuanuX Hardware Bounds" "QuanuX Operator Manual"
+
+.SH NAME
+qxctl-crucible-report - Retrieve instantaneous cache-aligned Backtest Metrics directly from the C++ Engine via Cython
+
+
+.SH SYNOPSIS
+\fBqxctl crucible report [strategy] [flags]\fP
+
+
+.SH DESCRIPTION
+Retrieve instantaneous cache-aligned Backtest Metrics directly from the C++ Engine via Cython
+
+
+.SH OPTIONS
+\fB-h\fP, \fB--help\fP[=false]
+	help for report
+
+.PP
+\fB--version\fP="1.0.0"
+	The version of the strategy.
+
+
+.SH OPTIONS INHERITED FROM PARENT COMMANDS
+\fB--config\fP=""
+	Explicit config file trajectory
+
+.PP
+\fB--hub\fP="nats://127.0.0.1:4222"
+	QuanuX JetStream Engine Hub target
+
+.PP
+\fB--output\fP="text"
+	Set the output UX mode (text, json, yaml, quiet)
+
+.PP
+\fB--trace\fP[=false]
+	Enable extreme diagnostic observability bounds
+
+.PP
+\fB--verbose\fP[=false]
+	Enable verbose payload outputs
+
+
+.SH SEE ALSO
+\fBqxctl-crucible(1)\fP

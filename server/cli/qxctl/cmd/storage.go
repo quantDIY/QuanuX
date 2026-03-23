@@ -21,7 +21,7 @@ func NewStorageCmd(app *runtime.App) *cobra.Command {
 	attachCmd := &cobra.Command{
 		Use:   "attach [path] [alias]", Short: "Attach a DB file to the running QuanuX Server", RunE: func(cmd *cobra.Command, args []string) error {
 			if app.Out.Mode == "json" {
-				app.Out.PrintJSON(output.OutputEnvelope{Status: output.StatusSuccess, Code: 0, Command: cmd.Use, Message: "DuckDB cartridge attached safely."})
+				app.Out.PrintJSON(output.OutputEnvelope{Status: output.StatusSuccess, Code: 0, Command: cmd.CommandPath(), Message: "DuckDB cartridge attached safely."})
 			}
 			return nil
 		},
@@ -31,7 +31,7 @@ func NewStorageCmd(app *runtime.App) *cobra.Command {
 	detachCmd := &cobra.Command{
 		Use:   "detach [alias]", Short: "Detach it securely", RunE: func(cmd *cobra.Command, args []string) error {
 			if app.Out.Mode == "json" {
-				app.Out.PrintJSON(output.OutputEnvelope{Status: output.StatusSuccess, Code: 0, Command: cmd.Use, Message: "DuckDB cartridge detached cleanly."})
+				app.Out.PrintJSON(output.OutputEnvelope{Status: output.StatusSuccess, Code: 0, Command: cmd.CommandPath(), Message: "DuckDB cartridge detached cleanly."})
 			}
 			return nil
 		},
@@ -41,7 +41,7 @@ func NewStorageCmd(app *runtime.App) *cobra.Command {
 	initCmd := &cobra.Command{
 		Use:   "init [path]", Short: "Initialize a new empty DuckDB file natively", RunE: func(cmd *cobra.Command, args []string) error {
 			if app.Out.Mode == "json" {
-				app.Out.PrintJSON(output.OutputEnvelope{Status: output.StatusSuccess, Code: 0, Command: cmd.Use, Message: "DuckDB database file initialized natively on disk."})
+				app.Out.PrintJSON(output.OutputEnvelope{Status: output.StatusSuccess, Code: 0, Command: cmd.CommandPath(), Message: "DuckDB database file initialized natively on disk."})
 			}
 			return nil
 		},
@@ -61,7 +61,7 @@ func NewStorageCmd(app *runtime.App) *cobra.Command {
 				return err
 			}
 			if app.Out.Mode == "json" {
-				app.Out.PrintJSON(output.OutputEnvelope{Status: output.StatusSuccess, Code: 0, Command: cmd.Use, Message: "Connected storage array telemetry scanned properly natively."})
+				app.Out.PrintJSON(output.OutputEnvelope{Status: output.StatusSuccess, Code: 0, Command: cmd.CommandPath(), Message: "Connected storage array telemetry scanned properly natively."})
 			}
 			return nil
 		},

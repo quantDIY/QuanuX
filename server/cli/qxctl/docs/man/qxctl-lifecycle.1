@@ -1,0 +1,43 @@
+.nh
+.TH "QXCTL" "1" "Mar 2026" "QuanuX Hardware Bounds" "QuanuX Operator Manual"
+
+.SH NAME
+qxctl-lifecycle - Dynamic Habitat Deployment & Telemetry Lifecycle
+
+
+.SH SYNOPSIS
+\fBqxctl lifecycle [flags]\fP
+
+
+.SH DESCRIPTION
+Dynamic Habitat Deployment & Telemetry Lifecycle
+
+
+.SH OPTIONS
+\fB-h\fP, \fB--help\fP[=false]
+	help for lifecycle
+
+
+.SH OPTIONS INHERITED FROM PARENT COMMANDS
+\fB--config\fP=""
+	Explicit config file trajectory
+
+.PP
+\fB--hub\fP="nats://127.0.0.1:4222"
+	QuanuX JetStream Engine Hub target
+
+.PP
+\fB--output\fP="text"
+	Set the output UX mode (text, json, yaml, quiet)
+
+.PP
+\fB--trace\fP[=false]
+	Enable extreme diagnostic observability bounds
+
+.PP
+\fB--verbose\fP[=false]
+	Enable verbose payload outputs
+
+
+.SH SEE ALSO
+\fBqxctl(1)\fP, \fBqxctl-lifecycle-deploy(1)\fP, \fBqxctl-lifecycle-predeploy(1)\fP, \fBqxctl-lifecycle-ssh(1)\fP

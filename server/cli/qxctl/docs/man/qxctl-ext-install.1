@@ -1,0 +1,47 @@
+.nh
+.TH "QXCTL" "1" "Mar 2026" "QuanuX Hardware Bounds" "QuanuX Operator Manual"
+
+.SH NAME
+qxctl-ext-install - Build/Install the extension
+
+
+.SH SYNOPSIS
+\fBqxctl ext install [name] [flags]\fP
+
+
+.SH DESCRIPTION
+Build/Install the extension
+
+
+.SH OPTIONS
+\fB-h\fP, \fB--help\fP[=false]
+	help for install
+
+.PP
+\fB-v\fP, \fB--version\fP=""
+	Version anchor
+
+
+.SH OPTIONS INHERITED FROM PARENT COMMANDS
+\fB--config\fP=""
+	Explicit config file trajectory
+
+.PP
+\fB--hub\fP="nats://127.0.0.1:4222"
+	QuanuX JetStream Engine Hub target
+
+.PP
+\fB--output\fP="text"
+	Set the output UX mode (text, json, yaml, quiet)
+
+.PP
+\fB--trace\fP[=false]
+	Enable extreme diagnostic observability bounds
+
+.PP
+\fB--verbose\fP[=false]
+	Enable verbose payload outputs
+
+
+.SH SEE ALSO
+\fBqxctl-ext(1)\fP

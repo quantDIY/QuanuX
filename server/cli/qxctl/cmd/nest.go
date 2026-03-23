@@ -23,7 +23,7 @@ func NewNestCmd(app *runtime.App) *cobra.Command {
 				return err
 			}
 			if app.Out.Mode == "json" {
-				app.Out.PrintJSON(output.OutputEnvelope{Status: output.StatusSuccess, Code: 0, Command: cmd.Use, Message: "C++ Engine deployed successfully."})
+				app.Out.PrintJSON(output.OutputEnvelope{Status: output.StatusSuccess, Code: 0, Command: cmd.CommandPath(), Message: "C++ Engine deployed successfully."})
 			}
 			return nil
 		},

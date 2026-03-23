@@ -28,7 +28,7 @@ func NewTelemetryCmd(app *runtime.App) *cobra.Command {
 	startCmd := &cobra.Command{
 		Use:   "start", Short: "Start a remote telemetry service", RunE: func(cmd *cobra.Command, args []string) error {
 			if app.Out.Mode == "json" {
-				app.Out.PrintJSON(output.OutputEnvelope{Status: output.StatusSuccess, Code: 0, Command: cmd.Use, Message: "Telemetry service started successfully."})
+				app.Out.PrintJSON(output.OutputEnvelope{Status: output.StatusSuccess, Code: 0, Command: cmd.CommandPath(), Message: "Telemetry service started successfully."})
 			}
 			return nil
 		},
@@ -39,7 +39,7 @@ func NewTelemetryCmd(app *runtime.App) *cobra.Command {
 	statusCmd := &cobra.Command{
 		Use:   "status", Short: "Check the status of a remote telemetry service", RunE: func(cmd *cobra.Command, args []string) error {
 			if app.Out.Mode == "json" {
-				app.Out.PrintJSON(output.OutputEnvelope{Status: output.StatusSuccess, Code: 0, Command: cmd.Use, Message: "Telemetry service status OK."})
+				app.Out.PrintJSON(output.OutputEnvelope{Status: output.StatusSuccess, Code: 0, Command: cmd.CommandPath(), Message: "Telemetry service status OK."})
 			}
 			return nil
 		},

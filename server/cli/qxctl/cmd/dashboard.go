@@ -36,7 +36,7 @@ func NewDashboardCmd(app *runtime.App) *cobra.Command {
 				app.Out.PrintJSON(output.OutputEnvelope{
 					Status:  output.StatusSuccess,
 					Code:    0,
-					Command: cmd.Use,
+					Command: cmd.CommandPath(),
 					Message: "Dashboard TUI engine launched successfully in read-only mode.",
 				})
 			}
