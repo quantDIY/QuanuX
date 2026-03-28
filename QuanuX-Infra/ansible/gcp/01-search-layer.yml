@@ -1,7 +1,7 @@
 ---
 - name: "QECD Phase 3: Provision Search Layer (Qdrant & USearch Bridge)"
   hosts: quanux_search
-  become: yes
+  become: true
   vars:
     qdrant_version: "v1.8.2"
 
@@ -15,7 +15,7 @@
           - software-properties-common
           - python3-docker
         state: present
-        update_cache: yes
+        update_cache: true
 
     - name: "Add Docker GPG Key"
       apt_key:
@@ -47,8 +47,8 @@
         state: started
         restart_policy: unless-stopped
         ports:
-          - "6333:6333" # HTTP API
-          - "6334:6334" # gRPC API
+          - "6333:6333"  # HTTP API
+          - "6334:6334"  # gRPC API
         volumes:
           - "/opt/qdrant_data:/qdrant/storage"
         env:
