@@ -27,7 +27,16 @@
       "qs": "6.14.2",
       "minimatch": ">=10.2.3",
       "ajv": ">=8.18.0",
-      "@tootallnate/once": ">=3.0.1"
+      "@tootallnate/once": ">=3.0.1",
+      "brace-expansion@>0": ">=5.0.5",
+      "file-type": ">=21.3.1",
+      "flatted": ">=3.4.2",
+      "node-forge": ">=1.4.0",
+      "path-to-regexp@8": ">=8.4.0",
+      "express>path-to-regexp": ">=0.1.13",
+      "picomatch@^2": ">=2.3.2",
+      "micromatch>picomatch": ">=4.0.4",
+      "srvx": ">=0.11.13"
     },
     "peerDependencyRules": {
       "allowedVersions": {
