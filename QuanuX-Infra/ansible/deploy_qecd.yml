@@ -21,7 +21,7 @@
         path: /etc/default/grub
         regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
         line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet splash isolcpus=2-7 default_hugepagesz=1G hugepagesz=1G hugepages=16"'
-        
+
     - name: Update GRUB
       command: update-grub
 
@@ -36,7 +36,7 @@
           net.ipv4.tcp_wmem=4096 65536 16777216
           net.ipv4.tcp_low_latency=1
           net.core.netdev_max_backlog=5000
-      
+
     - name: Reload sysctl definitions
       command: sysctl --system
 
@@ -59,7 +59,7 @@
 
     - name: Install OS-level Native C++ Dependencies (Apt Foundation)
       apt:
-        name: 
+        name:
           - build-essential
           - cmake
           - g++
@@ -128,7 +128,7 @@
       apt:
         name: python3-venv
         state: present
-    
+
     - name: Setup Aleph Ingest Worker VENV
       command: python3 -m venv /opt/quanux/QuanuX-Observability/python/aleph_ingest/venv
       args:
@@ -136,7 +136,7 @@
 
     - name: Install NATS python SDK
       shell: /opt/quanux/QuanuX-Observability/python/aleph_ingest/venv/bin/pip install nats-py
-      
+
     - name: Create Aleph Ingest Systemd Service
       copy:
         dest: /etc/systemd/system/quanux-aleph-ingest.service
@@ -144,12 +144,12 @@
           [Unit]
           Description=QuanuX Aleph Protocol JSON-to-Markdown Ingestion
           After=network.target nats.service
-          
+
           [Service]
           WorkingDirectory=/opt/quanux/QuanuX-Observability/python/aleph_ingest
           ExecStart=/opt/quanux/QuanuX-Observability/python/aleph_ingest/venv/bin/python supergraph_ingest_worker.py
           Restart=always
-          
+
           [Install]
           WantedBy=multi-user.target
 
@@ -235,7 +235,7 @@
           [Unit]
           Description=Hasura GraphQL Engine (QuanuX superGraph Synapse)
           After=network-online.target postgresql.service
-          
+
           [Service]
           Environment="HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/hasura_metadata"
           Environment="HASURA_GRAPHQL_ENABLE_CONSOLE=true"
@@ -246,7 +246,7 @@
           Environment="QUANUX_LOOKBACK_IPC_SOCKET=/tmp/quanux_lookback.arrow"
           ExecStart=/usr/local/bin/graphql-engine serve
           Restart=always
-          
+
           [Install]
           WantedBy=multi-user.target
 
