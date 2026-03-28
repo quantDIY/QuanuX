@@ -5,8 +5,8 @@ import os
 
 def get_terraform_outputs():
     # Run terraform output -json to extract the active IPs securely
-    target = os.environ.get("QUANUX_TARGET", "do")
-    sub = "gcp" if target == "gcp" else ""
+    target = os.environ.get("QUANUX_TARGET", "do").lower()
+    sub = "gcp" if target == "gcp" else "do"
     terraform_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), f"../terraform/{sub}"))
     try:
         result = subprocess.run(["terraform", "output", "-json"], capture_output=True, text=True, cwd=terraform_dir, check=True)
@@ -149,6 +149,52 @@ def build_inventory():
             "ansible_host": pub_ip_annex,
             "ansible_user": "quanux" if os.environ.get("QUANUX_TARGET", "do") == "gcp" else "root",
             "internal_ip": priv_ip_annex
+        }
+
+    # -- NEW GCP QECD Master Architecture Nodes --
+    if "quanux_orchestra_public_ip" in outputs:
+        inventory.setdefault("quanux_orchestra", {"hosts": []})
+        pub = outputs["quanux_orchestra_public_ip"]["value"]
+        inventory["quanux_orchestra"]["hosts"].append("quanux-orchestra-01")
+        inventory["_meta"]["hostvars"]["quanux-orchestra-01"] = {
+            "ansible_host": pub,
+            "ansible_user": "quanux"
+        }
+    
+    if "quanux_nexus_public_ip" in outputs:
+        inventory.setdefault("quanux_nexus", {"hosts": []})
+        pub = outputs["quanux_nexus_public_ip"]["value"]
+        inventory["quanux_nexus"]["hosts"].append("quanux-nexus-01")
+        inventory["_meta"]["hostvars"]["quanux-nexus-01"] = {
+            "ansible_host": pub,
+            "ansible_user": "quanux"
+        }
+
+    if "quanux_search_public_ip" in outputs:
+        inventory.setdefault("quanux_search", {"hosts": []})
+        pub = outputs["quanux_search_public_ip"]["value"]
+        inventory["quanux_search"]["hosts"].append("quanux-search-01")
+        inventory["_meta"]["hostvars"]["quanux-search-01"] = {
+            "ansible_host": pub,
+            "ansible_user": "quanux"
+        }
+
+    if "quanux_annex_public_ip" in outputs:
+        inventory.setdefault("quanux_annex", {"hosts": []})
+        pub = outputs["quanux_annex_public_ip"]["value"]
+        inventory["quanux_annex"]["hosts"].append("quanux-annex-01")
+        inventory["_meta"]["hostvars"]["quanux-annex-01"] = {
+            "ansible_host": pub,
+            "ansible_user": "quanux"
+        }
+
+    if "quanux_exec_spreader_aapl_public_ip" in outputs:
+        inventory.setdefault("quanux_exec", {"hosts": []})
+        pub = outputs["quanux_exec_spreader_aapl_public_ip"]["value"]
+        inventory["quanux_exec"]["hosts"].append("quanux-exec-spreader-aapl")
+        inventory["_meta"]["hostvars"]["quanux-exec-spreader-aapl"] = {
+            "ansible_host": pub,
+            "ansible_user": "quanux"
         }
 
     return inventory

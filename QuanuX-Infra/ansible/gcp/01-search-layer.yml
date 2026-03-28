@@ -1,0 +1,74 @@
+---
+- name: "QECD Phase 3: Provision Search Layer (Qdrant & USearch Bridge)"
+  hosts: quanux_search
+  become: yes
+  vars:
+    qdrant_version: "v1.8.2"
+
+  tasks:
+    - name: "Install base Docker dependencies"
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - python3-docker
+        state: present
+        update_cache: yes
+
+    - name: "Add Docker GPG Key"
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: "Add Docker APT Repo"
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+        state: present
+
+    - name: "Install Docker engine"
+      apt:
+        name: docker-ce
+        state: latest
+
+    - name: "Ensure Qdrant Data Directory exists"
+      file:
+        path: "/opt/qdrant_data"
+        state: directory
+        mode: '0755'
+        owner: root
+        group: root
+
+    - name: "Deploy Qdrant Neural Vector Engine"
+      docker_container:
+        name: "quanux-qdrant"
+        image: "qdrant/qdrant:{{ qdrant_version }}"
+        state: started
+        restart_policy: unless-stopped
+        ports:
+          - "6333:6333" # HTTP API
+          - "6334:6334" # gRPC API
+        volumes:
+          - "/opt/qdrant_data:/qdrant/storage"
+        env:
+          QDRANT__TELEMETRY_DISABLED: "true"
+          QDRANT__LOG_LEVEL: "INFO"
+
+    - name: "Scaffold USearch C++ Bridge Integration Point"
+      file:
+        path: "/opt/quanux_usearch"
+        state: directory
+        mode: '0755'
+        owner: "quanux"
+        group: "quanux"
+
+    - name: "[Validation] Ensure Qdrant is responding"
+      uri:
+        url: "http://localhost:6333/readyz"
+        method: GET
+        status_code: 200
+      register: qdrant_health
+      retries: 5
+      delay: 5
+      until: qdrant_health.status == 200

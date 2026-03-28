@@ -66,7 +66,7 @@ def _get_ssh_fingerprint_and_key():
 def get_terraform_cwd(target="do"):
     current_dir = os.path.abspath(os.path.dirname(__file__))
     repo_root = os.path.abspath(os.path.join(current_dir, "../../../../../"))
-    sub = "gcp" if target == "gcp" else ""
+    sub = "gcp" if target.lower() == "gcp" else "do"
     possible_paths = [
         os.path.join(repo_root, "QuanuX-Infra/terraform", sub),
         os.path.expanduser(f"~/Antigravity/QuanuX/QuanuX/QuanuX-Infra/terraform/{sub}")
@@ -148,20 +148,36 @@ def status(target: str = typer.Option("gcp", help="Infrastructure target (do or 
         
     try:
         outputs = json.loads(res.stdout)
-        nexus_pub = outputs.get("quanux_panopticon_nexus_public_ip", {}).get("value", "N/A")
-        nexus_int = outputs.get("quanux_panopticon_nexus_internal_ip", {}).get("value", "N/A")
-        annex_pub = outputs.get("quanux_annex_node_public_ip", {}).get("value", "N/A")
-        annex_int = outputs.get("quanux_annex_node_internal_ip", {}).get("value", "N/A")
         
         console.print(f"\n[bold blue]=== {target.upper()} QuanuX Nodes ===[/bold blue]")
-        console.print(f"[bold green]Panopticon Nexus:[/bold green] {nexus_pub} (Internal: {nexus_int})")
-        console.print(f"[bold green]Annex Ingestion Node:[/bold green] {annex_pub} (Internal: {annex_int})\n")
         
+        if target.lower() == "do":
+            nexus_pub = outputs.get("quanux_panopticon_nexus_public_ip", {}).get("value", "N/A")
+            nexus_int = outputs.get("quanux_panopticon_nexus_internal_ip", {}).get("value", "N/A")
+            annex_pub = outputs.get("quanux_annex_node_public_ip", {}).get("value", "N/A")
+            annex_int = outputs.get("quanux_annex_node_internal_ip", {}).get("value", "N/A")
+            console.print(f"[bold green]Panopticon Nexus:[/bold green] {nexus_pub} (Internal: {nexus_int})")
+            console.print(f"[bold green]Annex Ingestion Node:[/bold green] {annex_pub} (Internal: {annex_int})\n")
+        else:
+            # New GCP QECD Master Architecture
+            orchestra_pub = outputs.get("quanux_orchestra_public_ip", {}).get("value", "N/A")
+            nexus_pub = outputs.get("quanux_nexus_public_ip", {}).get("value", "N/A")
+            annex_pub = outputs.get("quanux_annex_public_ip", {}).get("value", "N/A")
+            search_pub = outputs.get("quanux_search_public_ip", {}).get("value", "N/A")
+            spreader_pub = outputs.get("quanux_exec_spreader_aapl_public_ip", {}).get("value", "N/A")
+            
+            console.print(f"[bold green]Orchestra Control:[/bold green] {orchestra_pub}")
+            console.print(f"[bold green]Nexus Supergraph:[/bold green] {nexus_pub}")
+            console.print(f"[bold green]Annex Ingestion:[/bold green] {annex_pub}")
+            console.print(f"[bold green]Search Layer:[/bold green] {search_pub}")
+            console.print(f"[bold green]Spreader Nest (Edge):[/bold green] {spreader_pub}\n")
+            
         vault_name = outputs.get("quanux_zarr_vault_name", {}).get("value", "N/A")
         vault_endpoint = outputs.get("quanux_zarr_vault_endpoint", {}).get("value", "N/A")
         if vault_name != "N/A":
-            console.print(f"[bold green]Zarr Vault Name:[/bold green] {vault_name}")
-            console.print(f"[bold green]Zarr Vault Endpoint:[/bold green] {vault_endpoint}\n")
+            console.print(f"[bold cyan]Zarr Vault Name:[/bold cyan] {vault_name}")
+            console.print(f"[bold cyan]Zarr Vault Endpoint:[/bold cyan] {vault_endpoint}\n")
+            
     except Exception as e:
         console.print(f"[red]Error parsing terraform output: {e}[/red]")
 
