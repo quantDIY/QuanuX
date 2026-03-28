@@ -8,8 +8,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CLOUD_TARGET "NONE" CACHE STRING "Target cloud environment: DO, AWS, GCP, AZURE")
 
-if(CLOUD_TARGET STREQUAL "NONE")
-    message(FATAL_ERROR "You must specify a CLOUD_TARGET (e.g., -DCLOUD_TARGET=AWS)")
+if(CLOUD_TARGET STREQUAL "NONE" OR CLOUD_TARGET STREQUAL "")
+    message(FATAL_ERROR "You must specify a CLOUD_TARGET. Example: -DCLOUD_TARGET=AWS")
 endif()
 
 message(STATUS "Configuring QuanuX-Annex Storage Abstraction Layer for cloud target: ${CLOUD_TARGET}")
@@ -45,7 +45,9 @@ find_package(Threads REQUIRED)
 find_package(arrow REQUIRED)
 find_package(HDF5 REQUIRED COMPONENTS C)
 find_package(blosc2 REQUIRED)
-find_package(google_cloud_cpp_storage REQUIRED)
+if(CLOUD_TARGET STREQUAL "GCP")
+    find_package(google_cloud_cpp_storage REQUIRED)
+endif()
 
 set(QECD_SOURCES
     src/TranslationMatrix.cpp
@@ -70,5 +72,8 @@ target_link_libraries(quanux_annex PRIVATE
     arrow_shared 
     HDF5::HDF5 
     blosc2 
-    google-cloud-cpp::storage
 )
+
+if(CLOUD_TARGET STREQUAL "GCP")
+    target_link_libraries(quanux_annex PRIVATE google-cloud-cpp::storage)
+endif()

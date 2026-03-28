@@ -35,7 +35,7 @@ if(DEFINED STRATEGY_HEADER)
 else()
     # Default to the stub if no strategy is injected
     add_compile_definitions(INJECTED_STRATEGY_HEADER="spreader/strategy_stub.hpp")
-    message(WARNING "No STRATEGY_HEADER provided. Compiling with default stub.")
+    message(STATUS "No STRATEGY_HEADER provided. Compiling with default stub.")
 endif()
 
 # Executable target
