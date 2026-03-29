@@ -13,7 +13,7 @@
         "react-native": "0.76.3"
     },
     "dependencies": {
-        "@rn-primitives/avatar": "^1.2.0",
+        "@rn-primitives/avatar": "^1.4.0",
         "@rn-primitives/checkbox": "^1.2.0",
         "@rn-primitives/dialog": "^1.2.0",
         "@rn-primitives/label": "^1.2.0",

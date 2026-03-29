@@ -439,8 +439,8 @@ importers:
   client/react-native/ui:
     dependencies:
       '@rn-primitives/avatar':
-        specifier: ^1.2.0
-        version: 1.2.0(react-native-web@0.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-native@0.76.3(@babel/core@7.28.6)(@babel/preset-env@7.28.5(@babel/core@7.28.6))(@types/react@18.3.27)(react@18.3.1))(react@18.3.1)
+        specifier: ^1.4.0
+        version: 1.4.0(react-native-web@0.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-native@0.76.3(@babel/core@7.28.6)(@babel/preset-env@7.28.5(@babel/core@7.28.6))(@types/react@18.3.27)(react@18.3.1))(react@18.3.1)
       '@rn-primitives/checkbox':
         specifier: ^1.2.0
         version: 1.2.0(@types/react-dom@18.3.7(@types/react@18.3.27))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react-native-web@0.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-native@0.76.3(@babel/core@7.28.6)(@babel/preset-env@7.28.5(@babel/core@7.28.6))(@types/react@18.3.27)(react@18.3.1))(react@18.3.1)
@@ -1984,7 +1984,7 @@ packages:
 
   '@expo/bunyan@4.0.1':
     resolution: {integrity: sha512-+Lla7nYSiHZirgK+U/uYzsLv/X+HaJienbD5AKX1UQZHYfWaP+9uuQluRB4GrEVWF0GZ7vEVp/jzaOT9k/SQlg==}
-    engines: {'0': node >=0.10.0}
+    engines: {node: '>=0.10.0'}
 
   '@expo/cli@0.18.31':
     resolution: {integrity: sha512-v9llw9fT3Uv+TCM6Xllo54t672CuYtinEQZ2LPJ2EJsCwuTc4Cd2gXQaouuIVD21VoeGQnr5JtJuWbF97sBKzQ==}
@@ -3205,8 +3205,8 @@ packages:
       react-native:
         optional: true
 
-  '@rn-primitives/avatar@1.2.0':
-    resolution: {integrity: sha512-ic029KaJRADdjmjPzpaSaZ9QrtgGF8DnAA7TcQ/gYqUfLXjkbfzsjARKv7NtEoJLjWAcjIAK6R8JkcbMfPtYig==}
+  '@rn-primitives/avatar@1.4.0':
+    resolution: {integrity: sha512-OOS5QSET4XEVcv4q20PAwkzZPC6LlE0mMFAMjbJ4hLA6stzQJxNaK9PaUl1AXt+x4Prh4MPOC7ktuERIKkNeYg==}
     peerDependencies:
       react: '*'
       react-native: '*'
@@ -3244,6 +3244,18 @@ packages:
 
   '@rn-primitives/hooks@1.3.0':
     resolution: {integrity: sha512-BR97reSu7uVDpyMeQdRJHT0w8KdS6jdYnOL6xQtqS2q3H6N7vXBlX4LFERqJZphD+aziJFIAJ3HJF1vtt6XlpQ==}
+    peerDependencies:
+      react: '*'
+      react-native: '*'
+      react-native-web: '*'
+    peerDependenciesMeta:
+      react-native:
+        optional: true
+      react-native-web:
+        optional: true
+
+  '@rn-primitives/hooks@1.4.0':
+    resolution: {integrity: sha512-uzu4NrThR5BEy+MHvTwHCs+KUXTmTLZrSzPHL9L8q5uGXv/BIxYJdpvlodn+DnxgTMzdul+H8rpqPLjyYQEyKw==}
     peerDependencies:
       react: '*'
       react-native: '*'
@@ -3339,6 +3351,18 @@ packages:
       react-native-web:
         optional: true
 
+  '@rn-primitives/slot@1.4.0':
+    resolution: {integrity: sha512-p8qIYH44HgXDbsxPFIbRS/IrKWOqb2/JDT8ivFAfhL8QSW0gtVZZo8I/wFip1vV9vRl8D3zMHUBB/PrzrN0Qww==}
+    peerDependencies:
+      react: '*'
+      react-native: '*'
+      react-native-web: '*'
+    peerDependenciesMeta:
+      react-native:
+        optional: true
+      react-native-web:
+        optional: true
+
   '@rn-primitives/switch@1.2.0':
     resolution: {integrity: sha512-M4r4LvLUFgn3SIkrMuEkDIxnRbHPLZF2cvKhdHmsk1vk6DSIw3WxYEA+0GkU6a8wnOCFzWRl4kHh5+x86bo1/w==}
     peerDependencies:
@@ -3390,6 +3414,18 @@ packages:
 
   '@rn-primitives/types@1.2.0':
     resolution: {integrity: sha512-b+6zKgdKVqAfaFPSfhwlQL0dnPQXPpW890m3eguC0VDI1eOsoEvUfVb6lmgH4bum9MmI0xymq4tOUI/fsKLoCQ==}
+    peerDependencies:
+      react: '*'
+      react-native: '*'
+      react-native-web: '*'
+    peerDependenciesMeta:
+      react-native:
+        optional: true
+      react-native-web:
+        optional: true
+
+  '@rn-primitives/types@1.4.0':
+    resolution: {integrity: sha512-U7El2BbYXZG8WZrOIV4y1wpxH8aJA/sKH3SL2tZTL153ENj8aOpZ9QwyUoAU2t+sKVPDejrKjo89HeNuIuwPGQ==}
     peerDependencies:
       react: '*'
       react-native: '*'
@@ -12134,11 +12170,11 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@rn-primitives/avatar@1.2.0(react-native-web@0.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-native@0.76.3(@babel/core@7.28.6)(@babel/preset-env@7.28.5(@babel/core@7.28.6))(@types/react@18.3.27)(react@18.3.1))(react@18.3.1)':
+  '@rn-primitives/avatar@1.4.0(react-native-web@0.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-native@0.76.3(@babel/core@7.28.6)(@babel/preset-env@7.28.5(@babel/core@7.28.6))(@types/react@18.3.27)(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@rn-primitives/hooks': 1.3.0(react-native-web@0.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-native@0.76.3(@babel/core@7.28.6)(@babel/preset-env@7.28.5(@babel/core@7.28.6))(@types/react@18.3.27)(react@18.3.1))(react@18.3.1)
-      '@rn-primitives/slot': 1.2.0(react-native-web@0.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-native@0.76.3(@babel/core@7.28.6)(@babel/preset-env@7.28.5(@babel/core@7.28.6))(@types/react@18.3.27)(react@18.3.1))(react@18.3.1)
-      '@rn-primitives/types': 1.2.0(react-native-web@0.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-native@0.76.3(@babel/core@7.28.6)(@babel/preset-env@7.28.5(@babel/core@7.28.6))(@types/react@18.3.27)(react@18.3.1))(react@18.3.1)
+      '@rn-primitives/hooks': 1.4.0(react-native-web@0.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-native@0.76.3(@babel/core@7.28.6)(@babel/preset-env@7.28.5(@babel/core@7.28.6))(@types/react@18.3.27)(react@18.3.1))(react@18.3.1)
+      '@rn-primitives/slot': 1.4.0(react-native-web@0.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-native@0.76.3(@babel/core@7.28.6)(@babel/preset-env@7.28.5(@babel/core@7.28.6))(@types/react@18.3.27)(react@18.3.1))(react@18.3.1)
+      '@rn-primitives/types': 1.4.0(react-native-web@0.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-native@0.76.3(@babel/core@7.28.6)(@babel/preset-env@7.28.5(@babel/core@7.28.6))(@types/react@18.3.27)(react@18.3.1))(react@18.3.1)
       react: 18.3.1
     optionalDependencies:
       react-native: 0.76.3(@babel/core@7.28.6)(@babel/preset-env@7.28.5(@babel/core@7.28.6))(@types/react@18.3.27)(react@18.3.1)
@@ -12178,6 +12214,14 @@ snapshots:
   '@rn-primitives/hooks@1.3.0(react-native-web@0.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-native@0.76.3(@babel/core@7.28.6)(@babel/preset-env@7.28.5(@babel/core@7.28.6))(@types/react@18.3.27)(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@rn-primitives/types': 1.2.0(react-native-web@0.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-native@0.76.3(@babel/core@7.28.6)(@babel/preset-env@7.28.5(@babel/core@7.28.6))(@types/react@18.3.27)(react@18.3.1))(react@18.3.1)
+      react: 18.3.1
+    optionalDependencies:
+      react-native: 0.76.3(@babel/core@7.28.6)(@babel/preset-env@7.28.5(@babel/core@7.28.6))(@types/react@18.3.27)(react@18.3.1)
+      react-native-web: 0.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+
+  '@rn-primitives/hooks@1.4.0(react-native-web@0.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-native@0.76.3(@babel/core@7.28.6)(@babel/preset-env@7.28.5(@babel/core@7.28.6))(@types/react@18.3.27)(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@rn-primitives/types': 1.4.0(react-native-web@0.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-native@0.76.3(@babel/core@7.28.6)(@babel/preset-env@7.28.5(@babel/core@7.28.6))(@types/react@18.3.27)(react@18.3.1))(react@18.3.1)
       react: 18.3.1
     optionalDependencies:
       react-native: 0.76.3(@babel/core@7.28.6)(@babel/preset-env@7.28.5(@babel/core@7.28.6))(@types/react@18.3.27)(react@18.3.1)
@@ -12274,6 +12318,13 @@ snapshots:
       react-native: 0.76.3(@babel/core@7.28.6)(@babel/preset-env@7.28.5(@babel/core@7.28.6))(@types/react@18.3.27)(react@18.3.1)
       react-native-web: 0.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
+  '@rn-primitives/slot@1.4.0(react-native-web@0.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-native@0.76.3(@babel/core@7.28.6)(@babel/preset-env@7.28.5(@babel/core@7.28.6))(@types/react@18.3.27)(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      react: 18.3.1
+    optionalDependencies:
+      react-native: 0.76.3(@babel/core@7.28.6)(@babel/preset-env@7.28.5(@babel/core@7.28.6))(@types/react@18.3.27)(react@18.3.1)
+      react-native-web: 0.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+
   '@rn-primitives/switch@1.2.0(@types/react-dom@18.3.7(@types/react@18.3.27))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react-native-web@0.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-native@0.76.3(@babel/core@7.28.6)(@babel/preset-env@7.28.5(@babel/core@7.28.6))(@types/react@18.3.27)(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@radix-ui/react-switch': 1.2.6(@types/react-dom@18.3.7(@types/react@18.3.27))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -12333,6 +12384,13 @@ snapshots:
       - react-dom
 
   '@rn-primitives/types@1.2.0(react-native-web@0.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-native@0.76.3(@babel/core@7.28.6)(@babel/preset-env@7.28.5(@babel/core@7.28.6))(@types/react@18.3.27)(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      react: 18.3.1
+    optionalDependencies:
+      react-native: 0.76.3(@babel/core@7.28.6)(@babel/preset-env@7.28.5(@babel/core@7.28.6))(@types/react@18.3.27)(react@18.3.1)
+      react-native-web: 0.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+
+  '@rn-primitives/types@1.4.0(react-native-web@0.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-native@0.76.3(@babel/core@7.28.6)(@babel/preset-env@7.28.5(@babel/core@7.28.6))(@types/react@18.3.27)(react@18.3.1))(react@18.3.1)':
     dependencies:
       react: 18.3.1
     optionalDependencies:
