@@ -23,7 +23,7 @@
         "@rn-primitives/separator": "^1.2.0",
         "@rn-primitives/slot": "^1.2.0",
         "@rn-primitives/switch": "^1.2.0",
-        "@rn-primitives/tabs": "^1.2.0",
+        "@rn-primitives/tabs": "^1.4.0",
         "@rn-primitives/toggle": "^1.2.0",
         "@rn-primitives/tooltip": "^1.2.0",
         "class-variance-authority": "^0.7.1",
