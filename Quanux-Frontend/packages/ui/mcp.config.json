@@ -1,0 +1,29 @@
+{
+  "mcpServers": {
+    "shadcn": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@shadcn/mcp"
+      ]
+    },
+    "figma": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@figma/mcp"
+      ],
+      "env": {
+        "FIGMA_DESIGN_SYSTEM_URL": "https://www.figma.com/community/file/1203061493325953101",
+        "FIGMA_FILE_ID": "1203061493325953101"
+      }
+    },
+    "stitch": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@google/stitch-mcp"
+      ]
+    }
+  }
+}

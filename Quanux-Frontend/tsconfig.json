@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "jsx": "react-jsx",
+    "types": ["node", "vite/client"],
+    "declaration": true,
+    "outDir": "dist"
+  },
+  "include": ["packages/ui/src", "packages/ui/env.d.ts", "packages/network/src", "index.ts"],
+  "exclude": ["node_modules", "dist"]
+}

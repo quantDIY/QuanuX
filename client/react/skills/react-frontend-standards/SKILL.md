@@ -18,8 +18,8 @@ Your primary responsibility is to implement high-performance, aesthetically plea
 **All data presented on the frontend MUST be generated on the backend.**
 - **Do not** create mock data arrays in client components.
 - **Do not** implement business logic or data transformation in the client.
-- **Do not** guess data shapes. Ask to see the Pydantic model or API response from the backend.
-- **Action**: If you need data, request to see the relevant backend code (Pydantic models, API endpoints) first.
+- **Do not** guess data shapes. Ask to see the GraphQL schema or API response from the backend.
+- **Action**: If you need data, request to see the relevant backend code (GraphQL schema, API endpoints) first.
 
 ### [RULE 2] Dynamic Presentation Layer Only
 **The frontend is a dynamic presentation layer only.**

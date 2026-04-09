@@ -60,6 +60,7 @@ func NewRootCmd(app *runtime.App) *cobra.Command {
 		NewStorageCmd(app),
 		NewTelemetryCmd(app),
 		NewTopstepxCmd(app),
+		NewUpdateCmd(app),
 		NewUpgradeCmd(app),
 		NewUpgradeableCmd(app),
 		NewVaultCmd(app),
